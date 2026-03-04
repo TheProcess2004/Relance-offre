@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OfferFlow V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+:root{
+  --bg:#07080C;--s1:#0E0F15;--s2:#14151D;--s3:#1A1C26;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --gold:#E9B84A;--gold-d:rgba(233,184,74,0.1);
+  --green:#22C55E;--green-d:rgba(34,197,94,0.1);
+  --red:#F43F5E;--red-d:rgba(244,63,94,0.1);
+  --blue:#38BDF8;--blue-d:rgba(56,189,248,0.1);
+  --purple:#A78BFA;--purple-d:rgba(167,139,250,0.1);
+  --orange:#FB923C;--orange-d:rgba(251,146,60,0.1);
+  --text:#ECEEF2;--muted:rgba(236,238,242,0.42);--muted2:rgba(236,238,242,0.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
+
+/* LAYOUT */
+.app{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sb{width:230px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;}
+.sb-glow{position:absolute;top:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(233,184,74,0.06),transparent 70%);pointer-events:none;}
+.sb-brand{padding:22px 20px 18px;border-bottom:1px solid var(--border);}
+.sb-logo{font-family:'Instrument Serif',serif;font-size:21px;color:var(--gold);}
+.sb-version{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+.sb-nav{padding:14px 10px;flex:1;overflow-y:auto;}
+.sb-section{margin-bottom:18px;}
+.sb-sec-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);padding:0 10px;margin-bottom:4px;}
+.nb{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.15s;text-align:left;}
+.nb:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.nb.active{background:var(--gold-d);color:var(--gold);}
+.nb .ic{font-size:14px;width:18px;text-align:center;}
+.nc{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;}
+.nc-gold{background:var(--gold);color:var(--bg);}
+.nc-red{background:var(--red);color:white;}
+.nc-blue{background:var(--blue);color:var(--bg);}
+.nc-green{background:var(--green);color:var(--bg);}
+.sb-foot{padding:14px 18px;border-top:1px solid var(--border);}
+.sb-user{display:flex;align-items:center;gap:10px;}
+.sb-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--purple));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+.sb-nm{font-size:12px;font-weight:600;}
+.sb-rl{font-size:10px;color:var(--muted);}
+
+/* MAIN */
+.main{margin-left:230px;flex:1;display:flex;flex-direction:column;}
+.topbar{background:rgba(14,15,21,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:14px 30px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.tb-title{font-family:'Instrument Serif',serif;font-size:19px;font-style:italic;}
+.tb-right{display:flex;gap:9px;align-items:center;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;font-family:'Outfit',sans-serif;white-space:nowrap;}
+.btn-gold{background:var(--gold);color:#07080C;}
+.btn-gold:hover{filter:brightness(1.1);}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text);}
+.btn-ghost:hover{background:rgba(255,255,255,0.05);}
+.btn-green{background:var(--green-d);border:1px solid rgba(34,197,94,0.25);color:var(--green);}
+.btn-red{background:var(--red-d);border:1px solid rgba(244,63,94,0.25);color:var(--red);}
+.btn-blue{background:var(--blue-d);border:1px solid rgba(56,189,248,0.25);color:var(--blue);}
+.btn-sm{padding:6px 12px;font-size:11px;}
+.bic{width:30px;height:30px;padding:0;justify-content:center;border-radius:7px;background:transparent;border:1px solid var(--border2);color:var(--muted);font-size:13px;}
+.bic:hover{background:rgba(255,255,255,0.07);color:var(--text);}
+
+/* CONTENT */
+.content{padding:26px 30px;flex:1;}
+.panel{display:none;}
+.panel.active{display:block;animation:fu 0.2s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* KPI */
+.kgrid{display:grid;gap:13px;margin-bottom:22px;}
+.kgrid-4{grid-template-columns:repeat(4,1fr);}
+.kgrid-3{grid-template-columns:repeat(3,1fr);}
+.kcard{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:18px;position:relative;overflow:hidden;}
+.kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:13px 13px 0 0;}
+.kcard.g::before{background:var(--gold);}
+.kcard.gr::before{background:var(--green);}
+.kcard.rd::before{background:var(--red);}
+.kcard.bl::before{background:var(--blue);}
+.kcard.pu::before{background:var(--purple);}
+.kcard.or::before{background:var(--orange);}
+.k-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.k-val{font-family:'Instrument Serif',serif;font-size:32px;line-height:1;margin-bottom:5px;}
+.kcard.g .k-val{color:var(--gold);}
+.kcard.gr .k-val{color:var(--green);}
+.kcard.rd .k-val{color:var(--red);}
+.kcard.bl .k-val{color:var(--blue);}
+.kcard.pu .k-val{color:var(--purple);}
+.kcard.or .k-val{color:var(--orange);}
+.k-sub{font-size:11px;color:var(--muted);}
+.k-bar{height:3px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden;}
+.k-bar-f{height:100%;border-radius:2px;}
+
+/* SECTION */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sh-t{font-family:'Instrument Serif',serif;font-size:16px;font-style:italic;}
+
+/* TABLE */
+.tbl{background:var(--s1);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:22px;}
+.tbl-h{display:grid;padding:11px 20px;border-bottom:1px solid var(--border);background:var(--s2);}
+.tbl-hc{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.tbl-r{display:grid;padding:13px 20px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background 0.1s;}
+.tbl-r:last-child{border-bottom:none;}
+.tbl-r:hover{background:rgba(255,255,255,0.025);}
+.tbl-cols{grid-template-columns:2fr 1.2fr 1fr 1.1fr 1.1fr 1fr;}
+.cn{font-weight:600;font-size:13px;}
+.ce{font-size:11px;color:var(--muted);margin-top:1px;}
+.ref{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+.amt{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--gold);}
+.acts{display:flex;gap:4px;}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.pill::before{content:'';width:5px;height:5px;border-radius:50%;}
+.p-sent{background:var(--blue-d);color:var(--blue);}
+.p-sent::before{background:var(--blue);}
+.p-r1{background:var(--gold-d);color:var(--gold);}
+.p-r1::before{background:var(--gold);}
+.p-r2{background:var(--purple-d);color:var(--purple);}
+.p-r2::before{background:var(--purple);}
+.p-r3{background:var(--orange-d);color:var(--orange);}
+.p-r3::before{background:var(--orange);}
+.p-won{background:var(--green-d);color:var(--green);}
+.p-won::before{background:var(--green);}
+.p-lost{background:var(--red-d);color:var(--red);}
+.p-lost::before{background:var(--red);}
+
+/* UPLOAD */
+.upload-z{background:var(--s1);border:2px dashed rgba(233,184,74,0.2);border-radius:16px;padding:32px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.upload-z:hover,.upload-z.drag{border-color:var(--gold);background:var(--gold-d);}
+.upload-z.done{border-color:var(--green);border-style:solid;background:var(--green-d);}
+.upload-z input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.up-ico{font-size:40px;margin-bottom:12px;}
+.up-h{font-size:15px;font-weight:600;margin-bottom:5px;}
+.up-s{font-size:12px;color:var(--muted);}
+
+/* PDF EXTRACT */
+.pdf-extract{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:14px;}
+.pdf-extract-title{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.pdf-field{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.pdf-field:last-child{border-bottom:none;}
+.pdf-field-lbl{color:var(--muted);min-width:90px;font-size:11px;}
+.pdf-field-val{color:var(--text);font-weight:500;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.pdf-field-edit{background:var(--bg);border:1px solid var(--border2);border-radius:6px;padding:4px 8px;font-size:12px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;flex:1;}
+.pdf-field-edit:focus{border-color:var(--gold);}
+
+/* FORM */
+.fcard{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;}
+.fcard-t{font-family:'Instrument Serif',serif;font-size:15px;font-style:italic;margin-bottom:16px;}
+.fg{margin-bottom:12px;}
+.fl{display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.fi,.fs,.fta{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;transition:border-color 0.15s;outline:none;}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--gold);}
+.fta{resize:vertical;min-height:64px;}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+/* FLOW GRID */
+.flow-g{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+
+/* AI LOADING */
+.ai-load{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:40px;text-align:center;}
+.ai-spin{width:44px;height:44px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.ai-txt{font-size:13px;color:var(--muted);font-style:italic;}
+.ai-steps{display:flex;flex-direction:column;gap:6px;margin-top:20px;max-width:320px;margin-left:auto;margin-right:auto;}
+.ai-step{font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:8px;}
+.ai-step.done{color:var(--green);}
+.ai-step.active{color:var(--gold);}
+
+/* EMAIL PREVIEW */
+.ep-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.ep-top{background:var(--s2);padding:13px 18px;border-bottom:1px solid var(--border);}
+.ep-f{display:flex;gap:9px;padding:3px 0;font-size:12px;}
+.ep-fl{color:var(--muted);min-width:52px;}
+.ep-fv{color:var(--text);}
+.ep-att{color:var(--gold);font-weight:600;}
+.ep-body{padding:20px 18px;font-size:13px;line-height:1.9;color:rgba(236,238,242,0.8);white-space:pre-wrap;}
+
+/* OPEN DETECTION */
+.od-card{background:var(--s1);border:1px solid rgba(56,189,248,0.2);border-radius:14px;padding:20px;margin-bottom:16px;}
+.od-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.od-title{font-size:13px;font-weight:600;color:var(--blue);display:flex;align-items:center;gap:8px;}
+.od-pulse{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse 1.5s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.8);}}
+.od-events{display:flex;flex-direction:column;gap:8px;}
+.od-event{background:var(--s2);border-radius:9px;padding:11px 14px;display:flex;align-items:center;gap:10px;font-size:12px;}
+.od-event-ico{font-size:16px;}
+.od-event-info{flex:1;}
+.od-event-main{font-weight:600;color:var(--text);}
+.od-event-sub{color:var(--muted);font-size:11px;margin-top:1px;}
+.od-event-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);}
+.od-event.hot{border:1px solid rgba(233,184,74,0.2);background:var(--gold-d);}
+.od-event.hot .od-event-main{color:var(--gold);}
+
+/* RELANCE TIMELINE */
+.rtl{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:20px;margin-bottom:16px;}
+.rtl-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.rtl-steps{display:flex;position:relative;}
+.rtl-steps::before{content:'';position:absolute;top:15px;left:15px;right:15px;height:1px;background:var(--border2);}
+.rtl-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;position:relative;z-index:1;}
+.rtl-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:1.5px solid;background:var(--s1);}
+.rtl-dot.d0{border-color:var(--blue);color:var(--blue);}
+.rtl-dot.d1{border-color:var(--gold);color:var(--gold);}
+.rtl-dot.d2{border-color:var(--purple);color:var(--purple);}
+.rtl-dot.d3{border-color:var(--orange);color:var(--orange);}
+.rtl-lbl{font-size:11px;font-weight:600;text-align:center;}
+.rtl-day{font-size:10px;color:var(--muted);text-align:center;}
+
+/* CLIENT CARD */
+.client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px;}
+.client-card{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:18px;cursor:pointer;transition:all 0.15s;}
+.client-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.cc-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.cc-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;}
+.cc-name{font-size:14px;font-weight:600;}
+.cc-email{font-size:11px;color:var(--muted);margin-top:2px;}
+.cc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.cc-stat{background:var(--s2);border-radius:8px;padding:9px;text-align:center;}
+.cc-stat-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;margin-bottom:2px;}
+.cc-stat-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.cc-last{margin-top:12px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
+
+/* CALENDAR */
+.cal-wrap{background:var(--s1);border:1px solid var(--border);border-radius:13px;overflow:hidden;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--s2);}
+.cal-month{font-family:'Instrument Serif',serif;font-size:16px;font-style:italic;}
+.cal-head{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-dow{padding:9px;text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);border-bottom:1px solid var(--border);}
+.cal-body{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-cell{border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-height:78px;padding:6px;}
+.cal-cell:nth-child(7n){border-right:none;}
+.cal-cell.empty{background:rgba(0,0,0,0.08);}
+.cal-d{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:3px;}
+.cal-today-dot{width:20px;height:20px;border-radius:50%;background:var(--gold);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.cal-ev{border-radius:3px;padding:2px 4px;font-size:9px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
+.ev-send{background:var(--blue-d);color:var(--blue);border-left:2px solid var(--blue);}
+.ev-r1{background:var(--gold-d);color:var(--gold);border-left:2px solid var(--gold);}
+.ev-r2{background:var(--purple-d);color:var(--purple);border-left:2px solid var(--purple);}
+.ev-r3{background:var(--orange-d);color:var(--orange);border-left:2px solid var(--orange);}
+
+/* REVENUE */
+.rev-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.rev-card{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:20px;overflow:hidden;position:relative;}
+.rev-card.won{border-color:rgba(34,197,94,0.18);}
+.rev-card.lost{border-color:rgba(244,63,94,0.18);}
+.rev-glow{position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;pointer-events:none;}
+.won .rev-glow{background:radial-gradient(circle,rgba(34,197,94,0.07),transparent 70%);}
+.lost .rev-glow{background:radial-gradient(circle,rgba(244,63,94,0.07),transparent 70%);}
+.rev-tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;}
+.won .rev-tag{color:var(--green);}
+.lost .rev-tag{color:var(--red);}
+.rev-big{font-family:'Instrument Serif',serif;font-size:38px;margin-bottom:4px;}
+.won .rev-big{color:var(--green);}
+.lost .rev-big{color:var(--red);}
+.rev-count{font-size:11px;color:var(--muted);margin-bottom:16px;}
+.rev-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.rev-item:last-child{border-bottom:none;}
+.rev-ic{color:var(--muted);}
+.rev-ia{font-family:'JetBrains Mono',monospace;font-weight:600;}
+.won .rev-ia{color:var(--green);}
+.lost .rev-ia{color:var(--red);}
+
+/* WEEKLY REPORT */
+.report-card{background:var(--s1);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:20px;}
+.report-header{background:linear-gradient(135deg,var(--s2),var(--s1));padding:24px;border-bottom:1px solid var(--border);}
+.report-date{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.report-title{font-family:'Instrument Serif',serif;font-size:24px;font-style:italic;}
+.report-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+.report-kpis{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+.report-kpi{padding:18px 20px;border-right:1px solid var(--border);text-align:center;}
+.report-kpi:last-child{border-right:none;}
+.rk-val{font-family:'Instrument Serif',serif;font-size:26px;margin-bottom:4px;}
+.rk-lbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.rk-delta{font-size:11px;margin-top:4px;}
+.delta-up{color:var(--green);}
+.delta-dn{color:var(--red);}
+.report-body{padding:24px;}
+.report-section{margin-bottom:22px;}
+.rs-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.insight{background:var(--s2);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:10px;font-size:13px;line-height:1.6;}
+.insight.green{border-color:var(--green);}
+.insight.red{border-color:var(--red);}
+.insight.blue{border-color:var(--blue);}
+.insight strong{color:var(--text);}
+.insight span{color:var(--muted);}
+.offer-mention{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.offer-mention:last-child{border-bottom:none;}
+.om-name{font-weight:600;}
+.om-detail{color:var(--muted);margin-top:1px;font-size:11px;}
+.report-actions{display:flex;gap:10px;padding:18px 24px;border-top:1px solid var(--border);background:var(--s2);}
+
+/* CONFIG */
+.cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
+.cfg-card{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:20px;}
+.cfg-t{font-size:13px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.day-in{width:50px;text-align:center;background:var(--bg);border:1px solid var(--border2);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--text);font-family:'JetBrains Mono',monospace;font-weight:600;outline:none;}
+.day-in:focus{border-color:var(--gold);}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(7px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+.overlay.open{display:flex;}
+.modal{background:var(--s1);border:1px solid var(--border2);border-radius:18px;padding:30px;width:580px;max-width:100%;max-height:88vh;overflow-y:auto;animation:mIn 0.2s ease;}
+@keyframes mIn{from{opacity:0;transform:translateY(14px) scale(0.97);}to{opacity:1;transform:none;}}
+.modal-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;}
+.modal-t{font-family:'Instrument Serif',serif;font-size:20px;}
+.modal-s{font-size:12px;color:var(--muted);margin-top:3px;}
+.modal-x{width:28px;height:28px;border-radius:7px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.modal-x:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.m-2grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.m-info{background:var(--bg);border-radius:9px;padding:12px;}
+.m-info-l{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.m-info-v{font-size:13px;font-weight:600;}
+.m-tl{margin-bottom:16px;}
+.m-tl-t{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.m-tl-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.m-tl-item:last-child{border-bottom:none;}
+.m-tl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.m-tl-info{flex:1;color:var(--muted);}
+.m-tl-info strong{color:var(--text);}
+.m-tl-date{color:var(--muted2);font-size:11px;}
+.tag-done{color:var(--green);}
+.tag-pending{color:var(--gold);font-size:10px;font-weight:600;border:1px solid var(--gold-d);border-radius:4px;padding:2px 6px;}
+.tag-auto{color:var(--blue);font-size:10px;font-weight:600;border:1px solid var(--blue-d);border-radius:4px;padding:2px 6px;}
+.m-acts{display:flex;gap:8px;flex-wrap:wrap;}
+
+/* OPEN NOTIF */
+.notif-banner{background:linear-gradient(90deg,var(--gold-d),transparent);border:1px solid rgba(233,184,74,0.25);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:16px;animation:slideIn 0.4s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:none;}}
+.notif-pulse{width:10px;height:10px;border-radius:50%;background:var(--gold);animation:pulse 1.2s ease infinite;flex-shrink:0;}
+.notif-text{flex:1;font-size:13px;}
+.notif-text strong{color:var(--gold);}
+
+/* TOAST */
+.toast-el{position:fixed;bottom:22px;right:22px;background:var(--s2);border:1px solid var(--border2);border-radius:12px;padding:13px 18px;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;z-index:2000;transform:translateY(80px);opacity:0;transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 20px 60px rgba(0,0,0,0.6);max-width:340px;}
+.toast-el.show{transform:none;opacity:1;}
+
+/* FUNNEL */
+.funnel{display:flex;flex-direction:column;gap:9px;}
+.f-step{display:flex;align-items:center;gap:12px;}
+.f-lbl{font-size:11px;color:var(--muted);width:80px;flex-shrink:0;}
+.f-track{flex:1;height:30px;background:var(--bg);border-radius:6px;overflow:hidden;}
+.f-bar{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;}
+.f-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;width:24px;text-align:right;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.07);border-radius:2px;}
+
+/* LEG */
+.leg{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;}
+.leg-i{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);}
+.leg-d{width:7px;height:7px;border-radius:50%;}
+
+@media(max-width:1000px){
+  .kgrid-4{grid-template-columns:repeat(2,1fr);}
+  .flow-g{grid-template-columns:1fr;}
+  .rev-split{grid-template-columns:1fr;}
+  .cfg-grid{grid-template-columns:1fr;}
+  .report-kpis{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-glow"></div>
+  <div class="sb-brand">
+    <div class="sb-logo">OfferFlow</div>
+    <div class="sb-version">V2 · Suite complète</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-sec-label">Vue d'ensemble</div>
+      <button class="nb active" onclick="go('dashboard')"><span class="ic">◈</span>Dashboard</button>
+      <button class="nb" onclick="go('rapport')"><span class="ic">📊</span>Rapport semaine <span class="nc nc-green" id="nc-rapport">NEW</span></button>
+    </div>
+    <div class="sb-section">
+      <div class="sb-sec-label">Offres</div>
+      <button class="nb" onclick="go('nouvelle')"><span class="ic">＋</span>Envoyer une offre</button>
+      <button class="nb" onclick="go('offres')"><span class="ic">▤</span>Toutes les offres <span class="nc nc-gold" id="nc-offres">8</span></button>
+    </div>
+    <div class="sb-section">
+      <div class="sb-sec-label">Suivi</div>
+      <button class="nb" onclick="go('relances')"><span class="ic">◎</span>Relances <span class="nc nc-red" id="nc-relances">4</span></button>
+      <button class="nb" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-blue">3</span></button>
+      <button class="nb" onclick="go('calendrier')"><span class="ic">▦</span>Calendrier</button>
+      <button class="nb" onclick="go('revenus')"><span class="ic">◉</span>Revenus</button>
+    </div>
+    <div class="sb-section">
+      <div class="sb-sec-label">Clients</div>
+      <button class="nb" onclick="go('clients')"><span class="ic">◷</span>Fiches clients <span class="nc nc-gold" id="nc-clients">6</span></button>
+    </div>
+    <div class="sb-section">
+      <div class="sb-sec-label">Système</div>
+      <button class="nb" onclick="go('config')"><span class="ic">◌</span>Configuration</button>
+    </div>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user">
+      <div class="sb-av">JD</div>
+      <div><div class="sb-nm">Jean Dupont</div><div class="sb-rl">Commercial Senior</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="tb-title" id="page-title">Dashboard</div>
+    <div class="tb-right">
+      <button class="btn btn-ghost btn-sm" onclick="go('config')">⚙ Config</button>
+      <button class="btn btn-ghost btn-sm" onclick="go('rapport')">📊 Rapport semaine</button>
+      <button class="btn btn-gold" onclick="go('nouvelle')">+ Envoyer une offre</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="panel active" id="panel-dashboard">
+      <!-- Hot notif -->
+      <div class="notif-banner" id="hot-notif">
+        <div class="notif-pulse"></div>
+        <div class="notif-text">🔥 <strong>Sophie Renard</strong> vient d'ouvrir votre offre OFF-2024-028 — il y a 4 minutes. C'est le bon moment pour appeler !</div>
+        <button class="btn btn-gold btn-sm" onclick="toast('📞','Appel initié vers Sophie Renard...')">Appeler</button>
+      </div>
+
+      <div class="kgrid kgrid-4">
+        <div class="kcard g"><div class="k-lbl">Offres actives</div><div class="k-val">5</div><div class="k-sub">En cours de traitement</div><div class="k-bar"><div class="k-bar-f" style="width:62%;background:var(--gold)"></div></div></div>
+        <div class="kcard gr"><div class="k-lbl">Revenus gagnés</div><div class="k-val">57K</div><div class="k-sub">CHF ce mois · 4 offres</div><div class="k-bar"><div class="k-bar-f" style="width:74%;background:var(--green)"></div></div></div>
+        <div class="kcard rd"><div class="k-lbl">Revenus perdus</div><div class="k-val">31K</div><div class="k-sub">CHF ce mois · 2 offres</div><div class="k-bar"><div class="k-bar-f" style="width:36%;background:var(--red)"></div></div></div>
+        <div class="kcard bl"><div class="k-lbl">Taux conversion</div><div class="k-val">65%</div><div class="k-sub">↑ 12% vs mois dernier</div><div class="k-bar"><div class="k-bar-f" style="width:65%;background:var(--blue)"></div></div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:20px;">
+        <div class="fcard">
+          <div class="fcard-t">Pipeline des offres</div>
+          <div class="funnel">
+            <div class="f-step"><div class="f-lbl">Envoyées</div><div class="f-track"><div class="f-bar" style="width:100%;background:var(--blue-d);color:var(--blue);">11 offres</div></div><div class="f-cnt" style="color:var(--blue)">11</div></div>
+            <div class="f-step"><div class="f-lbl">Relance 1</div><div class="f-track"><div class="f-bar" style="width:72%;background:var(--gold-d);color:var(--gold);">8 offres</div></div><div class="f-cnt" style="color:var(--gold)">8</div></div>
+            <div class="f-step"><div class="f-lbl">Relance 2</div><div class="f-track"><div class="f-bar" style="width:45%;background:var(--purple-d);color:var(--purple);">5 offres</div></div><div class="f-cnt" style="color:var(--purple)">5</div></div>
+            <div class="f-step"><div class="f-lbl">Gagnées</div><div class="f-track"><div class="f-bar" style="width:64%;background:var(--green-d);color:var(--green);">7 gagnées ✓</div></div><div class="f-cnt" style="color:var(--green)">7</div></div>
+          </div>
+        </div>
+        <div class="fcard">
+          <div class="fcard-t">Résultats</div>
+          <svg viewBox="0 0 110 110" width="110" height="110" style="transform:rotate(-90deg);display:block;margin:0 auto 14px;">
+            <circle cx="55" cy="55" r="40" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="13"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--green)" stroke-width="13" stroke-dasharray="163 88"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--red)" stroke-width="13" stroke-dasharray="55 196" stroke-dashoffset="-163"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--gold)" stroke-width="13" stroke-dasharray="33 218" stroke-dashoffset="-218"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);"><div style="display:flex;align-items:center;gap:7px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>Gagnées</div><div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600;">4</div></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);"><div style="display:flex;align-items:center;gap:7px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--red)"></div>Perdues</div><div style="font-family:'JetBrains Mono',monospace;color:var(--red);font-weight:600;">2</div></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;"><div style="display:flex;align-items:center;gap:7px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--gold)"></div>En cours</div><div style="font-family:'JetBrains Mono',monospace;color:var(--gold);font-weight:600;">5</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sh"><div class="sh-t">Relances urgentes aujourd'hui</div><button class="btn btn-ghost btn-sm" onclick="go('relances')">Voir tout →</button></div>
+      <div id="dash-urgent"></div>
+    </div>
+
+    <!-- ══ NOUVELLE OFFRE ══ -->
+    <div class="panel" id="panel-nouvelle">
+      <div id="step-form">
+        <div class="flow-g">
+          <div>
+            <div class="upload-z" id="upZone" ondragover="dOver(event)" ondragleave="dLeave()" ondrop="dDrop(event)">
+              <input type="file" accept=".pdf,.doc,.docx" onchange="fSel(event)">
+              <div class="up-ico" id="up-ico">📄</div>
+              <div class="up-h" id="up-h">Déposer l'offre PDF</div>
+              <div class="up-s" id="up-s">L'IA extrait automatiquement les informations</div>
+            </div>
+            <div id="pdf-extract-zone" style="display:none;">
+              <div class="pdf-extract">
+                <div class="pdf-extract-title">✦ Données extraites automatiquement</div>
+                <div class="pdf-field"><span class="pdf-field-lbl">Client</span><input class="pdf-field-edit" id="ex-client" value=""></div>
+                <div class="pdf-field"><span class="pdf-field-lbl">Email</span><input class="pdf-field-edit" id="ex-email" value=""></div>
+                <div class="pdf-field"><span class="pdf-field-lbl">Référence</span><input class="pdf-field-edit" id="ex-ref" value=""></div>
+                <div class="pdf-field"><span class="pdf-field-lbl">Montant CHF</span><input class="pdf-field-edit" id="ex-montant" value=""></div>
+                <div class="pdf-field"><span class="pdf-field-lbl">Objet</span><input class="pdf-field-edit" id="ex-objet" value=""></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fcard">
+            <div class="fcard-t">Contexte & personnalisation</div>
+            <div class="fg">
+              <label class="fl">Contexte de l'échange <span style="color:var(--gold)">★</span></label>
+              <textarea class="fta" id="f-contexte" placeholder="Ex: On s'est vus lundi, il hésite sur la garantie, livraison souhaitée avant fin mars, budget un peu serré..."></textarea>
+            </div>
+            <div class="f2">
+              <div class="fg">
+                <label class="fl">Ton de l'email</label>
+                <select class="fs" id="f-ton">
+                  <option value="chaleureux" selected>Chaleureux & humain</option>
+                  <option value="pro">Professionnel & formel</option>
+                  <option value="direct">Direct & concis</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label class="fl">Relation client</label>
+                <select class="fs" id="f-rel">
+                  <option value="nouveau">Nouveau client</option>
+                  <option value="connu" selected>Client connu</option>
+                  <option value="fidele">Client fidèle</option>
+                </select>
+              </div>
+            </div>
+            <div class="fg">
+              <label class="fl">Détail à mentionner (optionnel)</label>
+              <input class="fi" id="f-detail" placeholder="Ex: Livraison avant Noël possible, remise 5% incluse...">
+            </div>
+            <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:6px;" onclick="genEmail()">✦ Générer l'email & programmer les relances</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="step-loading" style="display:none;">
+        <div class="ai-load">
+          <div class="ai-spin"></div>
+          <div class="ai-txt" id="ai-txt">Analyse du contexte client...</div>
+          <div class="ai-steps" id="ai-steps">
+            <div class="ai-step active" id="as-1">⟳ Lecture des données de l'offre</div>
+            <div class="ai-step" id="as-2">⟳ Analyse du contexte et de la relation</div>
+            <div class="ai-step" id="as-3">⟳ Rédaction de l'email personnalisé</div>
+            <div class="ai-step" id="as-4">⟳ Programmation des relances</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="step-preview" style="display:none;">
+        <div class="sh">
+          <div class="sh-t">Email généré — relisez avant envoi</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost btn-sm" onclick="resetToForm()">← Modifier</button>
+            <button class="btn btn-ghost btn-sm" onclick="editBodyToggle()">✎ Éditer</button>
+            <button class="btn btn-ghost btn-sm" onclick="genEmail()">↺ Régénérer</button>
+          </div>
+        </div>
+
+        <div class="ep-card">
+          <div class="ep-top">
+            <div class="ep-f"><span class="ep-fl">De :</span><span class="ep-fv">Jean Dupont &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0dad5d1de9ed4c5c0dfdec4f0d5dec4c2d5c0c2d9c3d59ed3d8">[email&#160;protected]</a>&gt;</span></div>
+            <div class="ep-f"><span class="ep-fl">À :</span><span class="ep-fv" id="prev-to">—</span></div>
+            <div class="ep-f"><span class="ep-fl">Sujet :</span><span class="ep-fv" id="prev-sub">—</span></div>
+            <div class="ep-f"><span class="ep-fl">Pièce jointe :</span><span class="ep-att" id="prev-pj">—</span></div>
+          </div>
+          <div class="ep-body" id="prev-body" style="outline:none;">—</div>
+        </div>
+
+        <div class="rtl">
+          <div class="rtl-title">Relances programmées automatiquement</div>
+          <div class="rtl-steps" id="rtl-inner"></div>
+        </div>
+
+        <div style="background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+          <div style="flex:1;font-size:13px;color:var(--muted);">Envoi à <strong id="prev-name" style="color:var(--text);">—</strong> + relances automatiques activées</div>
+          <button class="btn btn-ghost btn-sm" onclick="resetToForm()">Annuler</button>
+          <button class="btn btn-gold" onclick="sendOffer()">📤 Envoyer l'offre</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TOUTES LES OFFRES ══ -->
+    <div class="panel" id="panel-offres">
+      <div class="tbl">
+        <div class="tbl-h tbl-cols">
+          <div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Prochaine relance</div><div class="tbl-hc">Actions</div>
+        </div>
+        <div id="tbody-offres"></div>
+      </div>
+    </div>
+
+    <!-- ══ RELANCES ══ -->
+    <div class="panel" id="panel-relances">
+      <div class="kgrid kgrid-3">
+        <div class="kcard g"><div class="k-lbl">Aujourd'hui</div><div class="k-val">4</div><div class="k-sub">Relances à traiter</div></div>
+        <div class="kcard bl"><div class="k-lbl">Cette semaine</div><div class="k-val">9</div><div class="k-sub">Relances programmées</div></div>
+        <div class="kcard gr"><div class="k-lbl">Taux réponse R1</div><div class="k-val">44%</div><div class="k-sub">Moyenne 90 derniers jours</div></div>
+      </div>
+      <div class="tbl">
+        <div class="tbl-h tbl-cols"><div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Date prévue</div><div class="tbl-hc">Actions</div></div>
+        <div id="tbody-relances"></div>
+      </div>
+    </div>
+
+    <!-- ══ DÉTECTION OUVERTURE ══ -->
+    <div class="panel" id="panel-detection">
+      <div class="kgrid kgrid-3">
+        <div class="kcard bl"><div class="k-lbl">Emails ouverts</div><div class="k-val">7</div><div class="k-sub">Sur 11 envois ce mois</div></div>
+        <div class="kcard g"><div class="k-lbl">Taux ouverture</div><div class="k-val">63%</div><div class="k-sub">vs 22% moyenne secteur</div></div>
+        <div class="kcard or"><div class="k-lbl">Clients "chauds"</div><div class="k-val">3</div><div class="k-sub">Ouverture &lt; 24h</div></div>
+      </div>
+
+      <div class="sh"><div class="sh-t">Activité en temps réel</div><div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--blue);"><div class="od-pulse" style="width:7px;height:7px;border-radius:50%;background:var(--blue);animation:pulse 1.5s ease infinite;"></div>En direct</div></div>
+
+      <div class="od-card" style="margin-bottom:16px;">
+        <div class="od-header">
+          <div class="od-title"><div class="od-pulse"></div>Événements récents</div>
+          <button class="btn btn-blue btn-sm" onclick="toast('📞','Sélectionnez un client à appeler')">📞 Appel rapide</button>
+        </div>
+        <div class="od-events" id="od-events-list"></div>
+      </div>
+
+      <div class="sh"><div class="sh-t">Toutes les offres — statut ouverture</div></div>
+      <div class="tbl">
+        <div class="tbl-h" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;">
+          <div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">1er ouverture</div><div class="tbl-hc">Nb vues</div><div class="tbl-hc">Score</div>
+        </div>
+        <div id="tbody-detection"></div>
+      </div>
+    </div>
+
+    <!-- ══ CALENDRIER ══ -->
+    <div class="panel" id="panel-calendrier">
+      <div class="leg">
+        <div class="leg-i"><div class="leg-d" style="background:var(--blue)"></div>Envoi initial</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--gold)"></div>Relance 1</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--purple)"></div>Relance 2</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--orange)"></div>Relance 3</div>
+      </div>
+      <div class="cal-wrap" id="cal-wrap"></div>
+    </div>
+
+    <!-- ══ REVENUS ══ -->
+    <div class="panel" id="panel-revenus">
+      <div class="rev-split">
+        <div class="rev-card won">
+          <div class="rev-glow"></div>
+          <div class="rev-tag">💚 Revenus gagnés</div>
+          <div class="rev-big" id="rev-won">57 100 CHF</div>
+          <div class="rev-count" id="rev-won-c">4 offres converties</div>
+          <div id="rev-won-list"></div>
+        </div>
+        <div class="rev-card lost">
+          <div class="rev-glow"></div>
+          <div class="rev-tag">❌ Revenus perdus</div>
+          <div class="rev-big" id="rev-lost">31 400 CHF</div>
+          <div class="rev-count" id="rev-lost-c">2 offres non converties</div>
+          <div id="rev-lost-list"></div>
+        </div>
+      </div>
+      <div class="fcard">
+        <div class="fcard-t">Analyse des pertes</div>
+        <div class="funnel" style="margin-top:8px;">
+          <div class="f-step"><div class="f-lbl">Sans réponse</div><div class="f-track"><div class="f-bar" style="width:65%;background:var(--red-d);color:var(--red);">65% des pertes</div></div></div>
+          <div class="f-step"><div class="f-lbl">Prix élevé</div><div class="f-track"><div class="f-bar" style="width:22%;background:rgba(244,63,94,0.06);color:rgba(244,63,94,0.7);">22%</div></div></div>
+          <div class="f-step"><div class="f-lbl">Concurrent</div><div class="f-track"><div class="f-bar" style="width:13%;background:rgba(244,63,94,0.04);color:rgba(244,63,94,0.5);">13%</div></div></div>
+        </div>
+        <div style="margin-top:14px;padding:12px 14px;background:var(--gold-d);border:1px solid rgba(233,184,74,0.18);border-radius:9px;font-size:12px;color:var(--gold);">
+          💡 <strong>Potentiel récupérable estimé : 20 400 CHF/mois</strong> en activant les relances automatiques sur toutes les offres sans réponse.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CLIENTS ══ -->
+    <div class="panel" id="panel-clients">
+      <div class="sh"><div class="sh-t">Fiches clients</div><div style="font-size:12px;color:var(--muted);" id="clients-count">6 clients</div></div>
+      <div class="client-grid" id="client-grid"></div>
+    </div>
+
+    <!-- ══ RAPPORT HEBDO ══ -->
+    <div class="panel" id="panel-rapport">
+      <div class="report-card">
+        <div class="report-header">
+          <div class="report-date">Rapport automatique · Semaine du 25 fév au 4 mars 2026</div>
+          <div class="report-title">Synthèse commerciale hebdomadaire</div>
+          <div class="report-sub">Généré automatiquement le lundi 4 mars 2026 à 08h00</div>
+        </div>
+
+        <div class="report-kpis">
+          <div class="report-kpi">
+            <div class="rk-val" style="color:var(--gold)">3</div>
+            <div class="rk-lbl">Offres envoyées</div>
+            <div class="rk-delta delta-up">↑ +1 vs semaine préc.</div>
+          </div>
+          <div class="report-kpi">
+            <div class="rk-val" style="color:var(--green)">2</div>
+            <div class="rk-lbl">Offres gagnées</div>
+            <div class="rk-delta delta-up">↑ +1 vs semaine préc.</div>
+          </div>
+          <div class="report-kpi">
+            <div class="rk-val" style="color:var(--blue)">27 600</div>
+            <div class="rk-lbl">CHF generés</div>
+            <div class="rk-delta delta-up">↑ +8 400 CHF</div>
+          </div>
+          <div class="report-kpi">
+            <div class="rk-val" style="color:var(--purple)">67%</div>
+            <div class="rk-lbl">Taux conversion</div>
+            <div class="rk-delta delta-up">↑ +7%</div>
+          </div>
+        </div>
+
+        <div class="report-body">
+          <div class="report-section">
+            <div class="rs-title">Insights IA de la semaine</div>
+            <div class="insight green"><strong>🎯 Point fort :</strong> <span>Votre taux de conversion atteint 67% cette semaine, le meilleur depuis 3 mois. L'ajout du contexte client dans vos emails semble payer.</span></div>
+            <div class="insight blue"><strong>💡 Opportunité :</strong> <span>Sophie Renard (OFF-2024-028 · 15 200 CHF) a ouvert l'email 3 fois cette semaine sans répondre. Elle est probablement en phase de décision — une relance personnalisée aujourd'hui pourrait faire basculer.</span></div>
+            <div class="insight red"><strong>⚠️ Attention :</strong> <span>2 offres (Claire Fontaine + Pierre Martin) n'ont pas encore reçu leur relance R1 alors qu'elle est due. Risque de perte estimé à 21 200 CHF.</span></div>
+            <div class="insight"><strong>📅 Cette semaine à faire :</strong> <span>7 relances programmées automatiquement. 2 appels recommandés (clients "chauds"). 1 offre en attente de signature.</span></div>
+          </div>
+
+          <div class="report-section">
+            <div class="rs-title">Offres gagnées cette semaine</div>
+            <div class="offer-mention">
+              <div><div class="om-name">Marc Duval — Climatisation bureau</div><div class="om-detail">OFF-2024-026 · Gagné en 4 jours · 0 relances nécessaires</div></div>
+              <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600;">+4 500 CHF</div>
+            </div>
+            <div class="offer-mention">
+              <div><div class="om-name">Antoine Morel — Audit énergétique</div><div class="om-detail">OFF-2024-025 · Gagné après relance R1 · 9 400 CHF</div></div>
+              <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600;">+9 400 CHF</div>
+            </div>
+          </div>
+
+          <div class="report-section">
+            <div class="rs-title">Offres à surveiller</div>
+            <div class="offer-mention">
+              <div><div class="om-name">Sophie Renard — Sécurité</div><div class="om-detail">OFF-2024-028 · Ouverte 3× · Relance R2 due aujourd'hui</div></div>
+              <div><span class="pill p-r2">Relance 2</span></div>
+            </div>
+            <div class="offer-mention">
+              <div><div class="om-name">Claire Fontaine — PAC</div><div class="om-detail">OFF-2024-037 · Relance R1 due · Attend validation budget</div></div>
+              <div><span class="pill p-r1">Relance 1</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-actions">
+          <button class="btn btn-gold" onclick="toast('📧','Rapport envoyé par email')">📧 Envoyer par email</button>
+          <button class="btn btn-ghost" onclick="toast('📄','Export PDF en cours...')">📄 Exporter PDF</button>
+          <button class="btn btn-ghost" onclick="toast('📊','Export Excel en cours...')">📊 Export Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CONFIG ══ -->
+    <div class="panel" id="panel-config">
+      <div class="fcard" style="margin-bottom:18px;">
+        <div class="fcard-t">Calendrier des relances automatiques</div>
+        <div class="rtl" style="margin-top:0;background:var(--s2);border:none;">
+          <div class="rtl-title">Délai en jours après envoi initial</div>
+          <div class="rtl-steps">
+            <div class="rtl-step"><div class="rtl-dot d0">📤</div><div class="rtl-lbl">Envoi</div><div class="rtl-day">Jour 0</div></div>
+            <div class="rtl-step"><div class="rtl-dot d1">1</div><div class="rtl-lbl">Relance 1</div><div>J+<input class="day-in" id="cfg-d1" value="3" type="number"> j</div></div>
+            <div class="rtl-step"><div class="rtl-dot d2">2</div><div class="rtl-lbl">Relance 2</div><div>J+<input class="day-in" id="cfg-d2" value="7" type="number"> j</div></div>
+            <div class="rtl-step"><div class="rtl-dot d3">3</div><div class="rtl-lbl">Relance 3</div><div>J+<input class="day-in" id="cfg-d3" value="14" type="number"> j</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cfg-grid">
+        <div class="cfg-card"><div class="cfg-t"><span style="color:var(--gold)">R1</span> Message — Ton doux</div><textarea class="fta" style="min-height:90px;font-size:12px;">Bonjour {prénom}, je reviens vers vous concernant notre offre {ref} du {date}. Avez-vous eu le temps d'y jeter un œil ? Je suis disponible pour toute question. Cordialement.</textarea></div>
+        <div class="cfg-card"><div class="cfg-t"><span style="color:var(--purple)">R2</span> Message — Ton engagé</div><textarea class="fta" style="min-height:90px;font-size:12px;">Bonjour {prénom}, suite à mon précédent message concernant l'offre {ref} ({montant} CHF), je voulais m'assurer qu'elle correspond à votre projet. Notre agenda se remplit — pouvez-vous me confirmer votre intérêt ? Cordialement.</textarea></div>
+        <div class="cfg-card" style="grid-column:1/-1;"><div class="cfg-t"><span style="color:var(--orange)">R3</span> Message — Dernier contact</div><textarea class="fta" style="min-height:80px;font-size:12px;">Bonjour {prénom}, c'est mon dernier message concernant l'offre {ref}. Si le projet n'est plus d'actualité, pas de problème — je clos le dossier. Si vous souhaitez qu'on en reparle, je reste disponible jusqu'au {date_limite}. Bonne continuation.</textarea></div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-t">Rapport hebdomadaire automatique</div>
+        <div class="f2" style="margin-bottom:12px;">
+          <div class="fg"><label class="fl">Envoi automatique</label><select class="fs"><option>Lundi matin 08h00</option><option>Vendredi soir 18h00</option><option>Désactivé</option></select></div>
+          <div class="fg"><label class="fl">Destinataires</label><input class="fi" value="jean.dupont@entreprise.ch" type="email"></div>
+        </div>
+        <div class="fg"><label class="fl">Email expéditeur</label><input class="fi" value="jean.dupont@entreprise.ch" type="email"></div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="go('rapport')">Aperçu rapport</button>
+          <button class="btn btn-gold btn-sm" onclick="toast('💾','Configuration sauvegardée')">Sauvegarder</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-hd">
+      <div><div class="modal-t" id="m-t">—</div><div class="modal-s" id="m-s">—</div></div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div id="m-body">—</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-el" id="toast-el"><span id="t-ico">✅</span><span id="t-txt">—</span></div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ══ SUPABASE CONFIG ══
+const SB_URL = 'https://eripvzfinfevuebccyzu.supabase.co';
+const SB_KEY = 'sb_publishable_9IUNEJLiohMD-7sTl3Mxfw_3RqDWwe6';
+
+async function sbFetch(path, options={}) {
+  const res = await fetch(SB_URL + '/rest/v1/' + path, {
+    ...options,
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': options.prefer || 'return=representation',
+      ...(options.headers||{})
+    }
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : [];
+}
+
+// ══ DATA (chargé depuis Supabase) ══
+let OFFERS = [];
+
+async function loadOffers() {
+  try {
+    // Load offres with client join
+    const offres = await sbFetch('offres?select=*,clients(*)&order=created_at.desc');
+    OFFERS = offres.map(o => ({
+      id: o.id,
+      prenom: o.clients?.prenom || '',
+      nom: o.clients?.nom || '',
+      email: o.clients?.email || '',
+      entreprise: o.clients?.entreprise || '',
+      client_id: o.client_id,
+      ref: o.reference || '',
+      montant: o.montant || 0,
+      objet: o.objet || '',
+      contexte: o.contexte || '',
+      status: o.statut || 'sent',
+      sendDate: o.date_envoi || '',
+      fichier: o.fichier_nom || '',
+      relances: { r1: '', r2: '', r3: '' },
+      opens: 0,
+      lastOpen: null,
+      _raw: o
+    }));
+
+    // Load relances for each offre
+    if(OFFERS.length > 0) {
+      const relances = await sbFetch('relances?select=*&order=date_prevue.asc');
+      relances.forEach(r => {
+        const o = OFFERS.find(x => x.id === r.offre_id);
+        if(o) {
+          if(r.numero === 1) o.relances.r1 = r.date_prevue;
+          if(r.numero === 2) o.relances.r2 = r.date_prevue;
+          if(r.numero === 3) o.relances.r3 = r.date_prevue;
+        }
+      });
+
+      // Load ouvertures
+      const ouvertures = await sbFetch('ouvertures?select=*&order=opened_at.desc');
+      ouvertures.forEach(v => {
+        const o = OFFERS.find(x => x.id === v.offre_id);
+        if(o) {
+          o.opens++;
+          if(!o.lastOpen) o.lastOpen = v.opened_at?.slice(0,10);
+        }
+      });
+    }
+
+    updateBadges();
+    renderUrgent();
+  } catch(err) {
+    console.error('Supabase load error:', err);
+    toast('⚠️', 'Connexion Supabase — ' + err.message.slice(0,60));
+  }
+}
+
+function updateBadges() {
+  document.getElementById('nc-offres').textContent = OFFERS.length;
+  const pending = OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
+  document.getElementById('nc-relances').textContent = pending.length;
+  document.getElementById('nc-clients').textContent = [...new Set(OFFERS.map(o=>o.email))].length;
+}
+
+const SL = {sent:'Envoyée',relance1:'Relance 1',relance2:'Relance 2',relance3:'Relance 3',won:'Gagnée',lost:'Perdue'};
+const SC = {sent:'p-sent',relance1:'p-r1',relance2:'p-r2',relance3:'p-r3',won:'p-won',lost:'p-lost'};
+const NR = {sent:'Dans 3 jours',relance1:"Aujourd'hui",relance2:"Aujourd'hui",relance3:'Dans 7 jours',won:'—',lost:'—'};
+const AVATARS = ['#E9B84A','#22C55E','#38BDF8','#A78BFA','#F43F5E','#FB923C'];
+
+// ══ NAV ══
+const TITLES = {dashboard:'Dashboard',nouvelle:'Envoyer une offre',offres:'Toutes les offres',relances:'Relances',detection:"Détection d'ouverture",calendrier:'Calendrier',revenus:'Revenus & Analyse',clients:'Fiches clients',rapport:'Rapport hebdomadaire',config:'Configuration'};
+
+function go(name) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.getElementById('page-title').textContent = TITLES[name];
+  document.querySelectorAll('.nb').forEach(b=>{
+    const t = b.textContent.trim().toLowerCase();
+    if(t.startsWith(TITLES[name].toLowerCase().slice(0,5))) b.classList.add('active');
+  });
+  if(name==='offres') renderOffres();
+  if(name==='relances') renderRelances();
+  if(name==='detection') renderDetection();
+  if(name==='calendrier') renderCalendar();
+  if(name==='revenus') renderRevenues();
+  if(name==='clients') renderClients();
+}
+
+// ══ ROW ══
+function row(o) {
+  const nr = NR[o.status];
+  return `<div class="tbl-r tbl-cols" onclick="openModal(${o.id})">
+    <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
+    <div class="ref">${o.ref}</div>
+    <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
+    <div><span class="pill ${SC[o.status]}">${SL[o.status]}</span></div>
+    <div style="font-size:12px;${nr.includes("hui")?'color:var(--gold);font-weight:600;':nr==='—'?'color:var(--muted)':''}">${nr}</div>
+    <div class="acts">
+      <button class="bic" onclick="event.stopPropagation();actR(${o.id})" title="Relance">📧</button>
+      <button class="bic" onclick="event.stopPropagation();actW(${o.id})" title="Gagné">✓</button>
+      <button class="bic" onclick="event.stopPropagation();actL(${o.id})" title="Perdu">✕</button>
+    </div>
+  </div>`;
+}
+
+function renderOffres(){document.getElementById('tbody-offres').innerHTML=OFFERS.map(o=>row(o)).join('');}
+function renderRelances(){
+  const p=OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
+  document.getElementById('tbody-relances').innerHTML=p.length?p.map(o=>row(o)).join(''):`<div style="text-align:center;padding:40px;color:var(--muted);">🎉 Aucune relance en attente</div>`;
+}
+
+// ══ URGENT DASHBOARD ══
+function renderUrgent(){
+  const u=OFFERS.filter(o=>['relance1','relance2'].includes(o.status));
+  const el=document.getElementById('dash-urgent');
+  if(!u.length){el.innerHTML=`<div style="text-align:center;padding:40px;color:var(--muted);">✅ Aucune relance urgente</div>`;return;}
+  el.innerHTML=`<div class="tbl"><div class="tbl-h tbl-cols"><div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Action</div><div class="tbl-hc">Actions</div></div>${u.map(o=>row(o)).join('')}</div>`;
+}
+
+// ══ DETECTION ══
+function renderDetection(){
+  const evs=[
+    {ico:'🔥',cls:'hot',main:'Sophie Renard a ouvert votre email',sub:'OFF-2024-028 · 15 200 CHF · 3ème ouverture',time:'Il y a 4 min'},
+    {ico:'👁',cls:'',main:'Martine Blanc a ouvert votre email',sub:'OFF-2024-031 · 8 400 CHF · 1ère ouverture',time:'Il y a 2h'},
+    {ico:'📎',cls:'',main:'Claire Fontaine a cliqué sur le PDF',sub:'OFF-2024-037 · 18 000 CHF',time:'Hier 17h32'},
+    {ico:'👁',cls:'',main:'David Keller a ouvert votre email',sub:'OFF-2024-038 · 9 400 CHF · 2ème ouverture',time:'Avant-hier'},
+  ];
+  document.getElementById('od-events-list').innerHTML=evs.map(e=>`<div class="od-event ${e.cls}"><div class="od-event-ico">${e.ico}</div><div class="od-event-info"><div class="od-event-main">${e.main}</div><div class="od-event-sub">${e.sub}</div></div><div class="od-event-time">${e.time}</div>${e.cls==='hot'?`<button class="btn btn-gold btn-sm" onclick="toast('📞','Appel en cours...')">Appeler</button>`:''}</div>`).join('');
+
+  const scores={1:'🔴 Froid',2:'🔴 Froid',3:'🟡 Tiède',4:'⚪ Nouveau',5:'⚪ Archivé',6:'🟢 Chaud',7:'🟡 Tiède',8:'🟡 Tiède'};
+  document.getElementById('tbody-detection').innerHTML=OFFERS.map(o=>`
+    <div class="tbl-r" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;" onclick="openModal(${o.id})">
+      <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
+      <div class="ref">${o.ref}</div>
+      <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
+      <div style="font-size:12px;color:${o.opens>0?'var(--green)':'var(--muted)'};">${o.lastOpen||'Pas encore ouvert'}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${o.opens>1?'var(--gold)':'var(--muted)'};">${o.opens}×</div>
+      <div style="font-size:12px;">${scores[o.id]||'⚪'}</div>
+    </div>`).join('');
+}
+
+// ══ CALENDAR ══
+function renderCalendar(){
+  const evs={};
+  OFFERS.forEach(o=>{
+    const add=(ds,lbl,cls)=>{if(!ds)return;const d=parseInt(ds.split('-')[2]);if(!evs[d])evs[d]=[];evs[d].push({lbl,cls});};
+    const s=o.prenom[0]+'.'+o.nom.slice(0,5);
+    add(o.sendDate,s+' Envoi','ev-send');
+    add(o.relances.r1,s+' R1','ev-r1');
+    add(o.relances.r2,s+' R2','ev-r2');
+    add(o.relances.r3,s+' R3','ev-r3');
+  });
+  const dow=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  let h=`<div class="cal-nav"><button class="btn btn-ghost btn-sm">← Fév</button><div class="cal-month">Mars 2026</div><button class="btn btn-ghost btn-sm">Avr →</button></div>`;
+  h+=`<div class="cal-head">${dow.map(d=>`<div class="cal-dow">${d}</div>`).join('')}</div>`;
+  h+=`<div class="cal-body">`;
+  for(let i=0;i<6;i++)h+=`<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=31;d++){
+    const iT=d===4;
+    const e=evs[d]||[];
+    h+=`<div class="cal-cell"><div class="cal-d">${iT?`<div class="cal-today-dot">${d}</div>`:d}</div>${e.map(ev=>`<div class="cal-ev ${ev.cls}">${ev.lbl}</div>`).join('')}</div>`;
+  }
+  h+=`</div>`;
+  document.getElementById('cal-wrap').innerHTML=h;
+}
+
+// ══ REVENUES ══
+function renderRevenues(){
+  const won=OFFERS.filter(o=>o.status==='won');
+  const lost=OFFERS.filter(o=>o.status==='lost');
+  document.getElementById('rev-won').textContent=won.reduce((s,o)=>s+o.montant,0).toLocaleString('fr-CH')+' CHF';
+  document.getElementById('rev-won-c').textContent=won.length+' offre'+(won.length>1?'s':'')+' converties';
+  document.getElementById('rev-lost').textContent=lost.reduce((s,o)=>s+o.montant,0).toLocaleString('fr-CH')+' CHF';
+  document.getElementById('rev-lost-c').textContent=lost.length+' offre'+(lost.length>1?'s':'')+' non converties';
+  document.getElementById('rev-won-list').innerHTML=won.map(o=>`<div class="rev-item"><span class="rev-ic">${o.prenom} ${o.nom} · ${o.ref}</span><span class="rev-ia">+${o.montant.toLocaleString('fr-CH')} CHF</span></div>`).join('');
+  document.getElementById('rev-lost-list').innerHTML=lost.map(o=>`<div class="rev-item"><span class="rev-ic">${o.prenom} ${o.nom} · ${o.ref}</span><span class="rev-ia">-${o.montant.toLocaleString('fr-CH')} CHF</span></div>`).join('');
+}
+
+// ══ CLIENTS ══
+function renderClients(){
+  const clientMap={};
+  OFFERS.forEach(o=>{
+    const k=o.email;
+    if(!clientMap[k])clientMap[k]={prenom:o.prenom,nom:o.nom,email:o.email,offers:[],won:0,lost:0,total:0};
+    clientMap[k].offers.push(o);
+    if(o.status==='won'){clientMap[k].won++;clientMap[k].total+=o.montant;}
+    if(o.status==='lost')clientMap[k].lost++;
+  });
+  const clients=Object.values(clientMap);
+  document.getElementById('nc-clients').textContent=clients.length;
+  document.getElementById('clients-count').textContent=clients.length+' clients';
+  document.getElementById('client-grid').innerHTML=clients.map((c,i)=>{
+    const last=c.offers[c.offers.length-1];
+    return `<div class="client-card" onclick="openClientModal('${c.email}')">
+      <div class="cc-top">
+        <div class="cc-av" style="background:${AVATARS[i%AVATARS.length]}22;color:${AVATARS[i%AVATARS.length]};border:1.5px solid ${AVATARS[i%AVATARS.length]}44;">${c.prenom[0]}${c.nom[0]}</div>
+        <div><div class="cc-name">${c.prenom} ${c.nom}</div><div class="cc-email">${c.email}</div></div>
+      </div>
+      <div class="cc-stats">
+        <div class="cc-stat"><div class="cc-stat-val" style="color:var(--gold)">${c.offers.length}</div><div class="cc-stat-lbl">Offres</div></div>
+        <div class="cc-stat"><div class="cc-stat-val" style="color:var(--green)">${c.won}</div><div class="cc-stat-lbl">Gagnées</div></div>
+        <div class="cc-stat"><div class="cc-stat-val" style="color:var(--gold);">${c.total>0?Math.round(c.total/1000)+'K':'—'}</div><div class="cc-stat-lbl">CHF total</div></div>
+      </div>
+      <div class="cc-last">Dernière offre : ${last.objet} · ${SL[last.status]}</div>
+    </div>`;
+  }).join('');
+}
+
+function openClientModal(email){
+  const c=OFFERS.filter(o=>o.email===email);
+  if(!c.length)return;
+  const first=c[0];
+  const totalWon=c.filter(o=>o.status==='won').reduce((s,o)=>s+o.montant,0);
+  document.getElementById('m-t').textContent=`${first.prenom} ${first.nom}`;
+  document.getElementById('m-s').textContent=email+' · '+c.length+' offre(s)';
+  document.getElementById('m-body').innerHTML=`
+    <div class="m-2grid">
+      <div class="m-info"><div class="m-info-l">Offres totales</div><div class="m-info-v" style="color:var(--gold)">${c.length}</div></div>
+      <div class="m-info"><div class="m-info-l">CA généré</div><div class="m-info-v" style="color:var(--green);font-family:'JetBrains Mono',monospace;">${totalWon.toLocaleString('fr-CH')} CHF</div></div>
+    </div>
+    <div class="m-tl"><div class="m-tl-t">Historique des offres</div>
+    ${c.map(o=>`<div class="m-tl-item">
+      <div class="m-tl-dot" style="background:${o.status==='won'?'var(--green)':o.status==='lost'?'var(--red)':'var(--gold)'}"></div>
+      <div class="m-tl-info"><strong>${o.objet}</strong><br>${o.ref} · ${o.montant.toLocaleString('fr-CH')} CHF</div>
+      <div class="m-tl-date">${o.sendDate}</div>
+      <span class="pill ${SC[o.status]}">${SL[o.status]}</span>
+    </div>`).join('')}
+    </div>
+    <div class="m-acts">
+      <button class="btn btn-gold btn-sm" onclick="go('nouvelle');closeModal();toast('📄','Préparez la nouvelle offre')">+ Nouvelle offre</button>
+      <button class="btn btn-ghost btn-sm" onclick="toast('📧','Email direct...')">📧 Email direct</button>
+    </div>`;
+  document.getElementById('overlay').classList.add('open');
+}
+
+// ══ MODAL ══
+function openModal(id){
+  const o=OFFERS.find(x=>x.id===id);
+  if(!o)return;
+  document.getElementById('m-t').textContent=`${o.prenom} ${o.nom}`;
+  document.getElementById('m-s').textContent=`${o.ref} · ${SL[o.status]} · ${o.opens} ouverture(s)`;
+  document.getElementById('m-body').innerHTML=`
+    <div class="m-2grid">
+      <div class="m-info"><div class="m-info-l">Montant</div><div class="m-info-v" style="font-family:'JetBrains Mono',monospace;color:var(--gold);font-size:18px;">${o.montant.toLocaleString('fr-CH')} CHF</div></div>
+      <div class="m-info"><div class="m-info-l">Statut</div><div class="m-info-v"><span class="pill ${SC[o.status]}">${SL[o.status]}</span></div></div>
+      <div class="m-info" style="grid-column:1/-1;"><div class="m-info-l">Objet</div><div class="m-info-v" style="font-size:13px;">${o.objet}</div></div>
+    </div>
+    ${o.opens>0?`<div style="background:var(--blue-d);border:1px solid rgba(56,189,248,0.2);border-radius:9px;padding:11px 14px;margin-bottom:14px;font-size:12px;color:var(--blue);">👁 Ouvert ${o.opens}× — Dernière ouverture : ${o.lastOpen}</div>`:''}
+    <div class="m-tl"><div class="m-tl-t">Suivi des relances</div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--blue)"></div><div class="m-tl-info"><strong>Offre envoyée</strong></div><div class="m-tl-date">${o.sendDate}</div><div class="tag-done">✓</div></div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--gold)"></div><div class="m-tl-info"><strong>Relance 1</strong></div><div class="m-tl-date">${o.relances.r1}</div>${['relance2','relance3','won','lost'].includes(o.status)?'<div class="tag-done">✓</div>':'<span class="tag-auto">AUTO</span>'}</div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--purple)"></div><div class="m-tl-info"><strong>Relance 2</strong></div><div class="m-tl-date">${o.relances.r2}</div>${['relance3','won','lost'].includes(o.status)?'<div class="tag-done">✓</div>':'<span class="tag-auto">AUTO</span>'}</div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--orange)"></div><div class="m-tl-info"><strong>Relance 3</strong></div><div class="m-tl-date">${o.relances.r3}</div><span class="tag-auto">AUTO</span></div>
+    </div>
+    <div class="m-acts">
+      <button class="btn btn-ghost btn-sm" onclick="actR(${o.id});closeModal()">📧 Relance maintenant</button>
+      <button class="btn btn-green btn-sm" onclick="actW(${o.id});closeModal()">✓ Gagnée</button>
+      <button class="btn btn-red btn-sm" onclick="actL(${o.id});closeModal()">✕ Perdue</button>
+    </div>`;
+  document.getElementById('overlay').classList.add('open');
+}
+
+function overlayClick(e){if(e.target===document.getElementById('overlay'))closeModal();}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+
+// ══ ACTIONS ══
+async function actR(id){
+  const o=OFFERS.find(x=>x.id===id);
+  if(!o)return;
+  const next = o.status==='sent'?'relance1':o.status==='relance1'?'relance2':o.status==='relance2'?'relance3':o.status;
+  try {
+    await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:next}), prefer:'return=minimal', headers:{'Prefer':'return=minimal'}});
+    o.status=next;
+    toast('📧',`Relance envoyée à ${o.prenom} ${o.nom}`);
+    renderOffres(); renderRelances(); renderUrgent();
+  } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
+}
+async function actW(id){
+  const o=OFFERS.find(x=>x.id===id);
+  if(!o)return;
+  try {
+    await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:'won'}), headers:{'Prefer':'return=minimal'}});
+    o.status='won';
+    toast('🎉',`${o.prenom} ${o.nom} — Gagnée ! +${o.montant.toLocaleString('fr-CH')} CHF`);
+    renderOffres(); renderRelances(); renderUrgent();
+  } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
+}
+async function actL(id){
+  const o=OFFERS.find(x=>x.id===id);
+  if(!o)return;
+  try {
+    await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:'lost'}), headers:{'Prefer':'return=minimal'}});
+    o.status='lost';
+    toast('📊',`${o.prenom} ${o.nom} — Perdue, dossier archivé`);
+    renderOffres(); renderRelances(); renderUrgent();
+  } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
+}
+
+// ══ UPLOAD + PDF ══
+let uploadedFile=null;
+function dOver(e){e.preventDefault();document.getElementById('upZone').classList.add('drag');}
+function dLeave(){document.getElementById('upZone').classList.remove('drag');}
+function dDrop(e){e.preventDefault();dLeave();const f=e.dataTransfer.files[0];if(f)setFile(f);}
+function fSel(e){const f=e.target.files[0];if(f)setFile(f);}
+
+async function setFile(f){
+  uploadedFile=f;
+  document.getElementById('upZone').classList.add('done');
+  document.getElementById('up-ico').textContent='⏳';
+  document.getElementById('up-h').textContent='Extraction en cours...';
+  document.getElementById('up-s').textContent='L\'IA lit votre document';
+
+  // Try PDF.js extraction
+  let extracted = {client:'', email:'', ref:'', montant:'', objet:''};
+  try {
+    if(f.type==='application/pdf'){
+      const ab=await f.arrayBuffer();
+      const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+      let text='';
+      for(let i=1;i<=Math.min(pdf.numPages,3);i++){
+        const page=await pdf.getPage(i);
+        const tc=await page.getTextContent();
+        text+=tc.items.map(it=>it.str).join(' ')+'\n';
+      }
+      // Extract via patterns
+      const emailM=text.match(/[\w.-]+@[\w.-]+\.\w{2,}/);
+      if(emailM)extracted.email=emailM[0];
+      const chfM=text.match(/(\d[\d\s']*\.?\d*)\s*(?:CHF|Fr\.?|chf)/i);
+      if(chfM)extracted.montant=chfM[1].trim();
+      const refM=text.match(/(?:offre|ref|n°|no\.?)\s*[:\-]?\s*([A-Z0-9\-]{5,20})/i);
+      if(refM)extracted.ref=refM[1];
+      const lines=text.split('\n').filter(l=>l.trim().length>10);
+      if(lines[0])extracted.objet=lines[0].trim().slice(0,60);
+      // Try to find client name
+      const clientM=text.match(/(?:client|à|attn|attention)\s*[:\-]?\s*([A-ZÀ-Ü][a-zà-ü]+ [A-ZÀ-Ü][a-zà-ü]+)/);
+      if(clientM)extracted.client=clientM[1];
+    }
+  } catch(err){}
+
+  // Show extract zone with AI simulation
+  setTimeout(()=>{
+    document.getElementById('up-ico').textContent='✅';
+    document.getElementById('up-h').textContent=f.name;
+    document.getElementById('up-s').textContent=(f.size/1024).toFixed(0)+' KB · Données extraites';
+    document.getElementById('pdf-extract-zone').style.display='block';
+    document.getElementById('ex-client').value=extracted.client||'Marc Dupont';
+    document.getElementById('ex-email').value=extracted.email||'client@exemple.ch';
+    document.getElementById('ex-ref').value=extracted.ref||'OFF-2024-0'+Math.floor(Math.random()*90+10);
+    document.getElementById('ex-montant').value=extracted.montant||'12 500';
+    document.getElementById('ex-objet').value=extracted.objet||'Prestations selon devis';
+    toast('✦','PDF analysé — vérifiez et complétez les données');
+  },1800);
+}
+
+// ══ GENERATE EMAIL ══
+async function genEmail(){
+  const client=document.getElementById('ex-client')?.value||'Client';
+  const email=document.getElementById('ex-email')?.value||'client@exemple.ch';
+  const ref=document.getElementById('ex-ref')?.value||'OFF-XXX';
+  const montant=document.getElementById('ex-montant')?.value||'0';
+  const objet=document.getElementById('ex-objet')?.value||'nos services';
+  const contexte=document.getElementById('f-contexte').value.trim();
+  const ton=document.getElementById('f-ton').value;
+  const rel=document.getElementById('f-rel').value;
+  const detail=document.getElementById('f-detail')?.value.trim()||'';
+  const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
+
+  const parts=client.trim().split(' ');
+  const prenom=parts[0]||'Client';
+
+  document.getElementById('step-form').style.display='none';
+  document.getElementById('step-loading').style.display='block';
+
+  const steps=['as-1','as-2','as-3','as-4'];
+  let si=0;
+  const st=setInterval(()=>{
+    if(si>0)document.getElementById(steps[si-1]).className='ai-step done';
+    if(si<steps.length)document.getElementById(steps[si]).className='ai-step active';
+    si++;
+    if(si>steps.length)clearInterval(st);
+  },700);
+
+  const tonDesc={chaleureux:'Chaleureux, naturel, humain. Évite les formules creuses. Tutoie si relation connue/fidèle.',pro:'Professionnel et formel. Vouvoiement. Structuré mais pas froid.',direct:'Très concis. Direct. Maximum 4 lignes. Pas de formules.'};
+  const relDesc={nouveau:'Premier contact — sois attentionné, crée confiance',connu:'Client connu — relation établie, ton naturel',fidele:'Client fidèle depuis longtemps — proximité, chaleur'};
+
+  const prompt=`Tu es un commercial expert. Rédige un email d'accompagnement d'offre commerciale qui semble écrit à la main.
+
+DONNÉES :
+- Prénom client : ${prenom}
+- Nom complet : ${client}
+- Objet de l'offre : ${objet}
+- Montant : ${montant} CHF
+- Référence : ${ref}
+- Fichier joint : ${fileName}
+- Contexte de l'échange : ${contexte||'Pas de contexte spécifique'}
+- Détail à mentionner : ${detail||'Aucun'}
+- Relation : ${relDesc[rel]}
+- Ton : ${tonDesc[ton]}
+
+RÈGLES ABSOLUES :
+1. Sonne 100% humain — jamais robotique ni "template"
+2. Intègre le contexte naturellement si pertinent
+3. Mentionne l'objet concret de l'offre (pas juste "votre offre")
+4. Évite : "N'hésitez pas", "Je reste à votre disposition", "Cordialement, je vous prie"
+5. Maximum 5-6 lignes corpo — percutant et naturel
+6. Termine avec une ouverture concrète (une vraie question ou prochaine étape)
+7. Commence directement par "Bonjour ${prenom},"
+
+Réponds UNIQUEMENT avec le corps de l'email.`;
+
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const data=await r.json();
+    const body=data.content.map(c=>c.text||'').join('');
+    clearInterval(st);
+    document.getElementById('step-loading').style.display='none';
+
+    const subjects={chaleureux:`Ton offre pour ${objet} — ${ref}`,pro:`Offre ${ref} — ${objet}`,direct:`${ref} · ${montant} CHF · ${objet}`};
+    document.getElementById('prev-to').textContent=`${client} <${email}>`;
+    document.getElementById('prev-sub').textContent=subjects[ton];
+    document.getElementById('prev-pj').textContent=`📎 ${fileName}`;
+    document.getElementById('prev-body').textContent=body;
+    document.getElementById('prev-name').textContent=client;
+
+    const d1=document.getElementById('cfg-d1')?.value||3;
+    const d2=document.getElementById('cfg-d2')?.value||7;
+    const d3=document.getElementById('cfg-d3')?.value||14;
+    document.getElementById('rtl-inner').innerHTML=[
+      {ico:'📤',cls:'d0',lbl:'Envoi',day:"Aujourd'hui"},
+      {ico:'1',cls:'d1',lbl:'Relance 1',day:`J+${d1} jours`},
+      {ico:'2',cls:'d2',lbl:'Relance 2',day:`J+${d2} jours`},
+      {ico:'3',cls:'d3',lbl:'Relance 3',day:`J+${d3} jours`},
+    ].map(s=>`<div class="rtl-step"><div class="rtl-dot ${s.cls}">${s.ico}</div><div class="rtl-lbl">${s.lbl}</div><div class="rtl-day">${s.day}</div></div>`).join('');
+
+    document.getElementById('step-preview').style.display='block';
+  }catch(err){
+    clearInterval(st);
+    document.getElementById('step-loading').style.display='none';
+    document.getElementById('step-form').style.display='block';
+    toast('❌','Erreur de génération — vérifiez la connexion');
+  }
+}
+
+function editBodyToggle(){
+  const b=document.getElementById('prev-body');
+  if(b.contentEditable==='true'){b.contentEditable='false';b.style.outline='none';toast('✅','Modifications enregistrées');}
+  else{b.contentEditable='true';b.style.outline='1px solid var(--gold)';b.style.borderRadius='6px';b.style.padding='8px';b.focus();toast('✎','Cliquez dans le texte pour modifier');}
+}
+
+function resetToForm(){
+  document.getElementById('step-preview').style.display='none';
+  document.getElementById('step-form').style.display='block';
+}
+
+async function sendOffer(){
+  const clientFull=document.getElementById('ex-client')?.value||'Client';
+  const email=document.getElementById('ex-email')?.value||'';
+  const ref=document.getElementById('ex-ref')?.value||'OFF-NEW';
+  const montant=parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s']/g,''))||0;
+  const objet=document.getElementById('ex-objet')?.value||'';
+  const contexte=document.getElementById('f-contexte')?.value||'';
+  const parts=clientFull.split(' ');
+  const prenom=parts[0]||'Client';
+  const nom=parts.slice(1).join(' ')||'';
+  const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
+
+  const d1=parseInt(document.getElementById('cfg-d1')?.value)||3;
+  const d2=parseInt(document.getElementById('cfg-d2')?.value)||7;
+  const d3=parseInt(document.getElementById('cfg-d3')?.value)||14;
+
+  const today = new Date();
+  const addDays = (d) => { const dt=new Date(today); dt.setDate(dt.getDate()+d); return dt.toISOString().slice(0,10); };
+
+  try {
+    toast('⏳','Sauvegarde en cours...');
+
+    // 1. Upsert client
+    let clientId;
+    const existingClients = await sbFetch('clients?email=eq.'+encodeURIComponent(email)+'&select=id');
+    if(existingClients.length > 0) {
+      clientId = existingClients[0].id;
+    } else {
+      const newClient = await sbFetch('clients', {method:'POST', body:JSON.stringify({prenom,nom,email,entreprise:''})});
+      clientId = newClient[0]?.id;
+    }
+
+    // 2. Create offre
+    const newOffre = await sbFetch('offres', {method:'POST', body:JSON.stringify({
+      client_id: clientId,
+      reference: ref,
+      montant,
+      objet,
+      contexte,
+      statut: 'sent',
+      date_envoi: today.toISOString().slice(0,10),
+      fichier_nom: fileName
+    })});
+    const offreId = newOffre[0]?.id;
+
+    // 3. Create relances
+    await sbFetch('relances', {method:'POST', body:JSON.stringify([
+      {offre_id:offreId, numero:1, date_prevue:addDays(d1), statut:'pending'},
+      {offre_id:offreId, numero:2, date_prevue:addDays(d2), statut:'pending'},
+      {offre_id:offreId, numero:3, date_prevue:addDays(d3), statut:'pending'},
+    ])});
+
+    // 4. Add to local state
+    OFFERS.unshift({id:offreId,prenom,nom,email,ref,montant,objet,status:'sent',sendDate:today.toISOString().slice(0,10),relances:{r1:addDays(d1),r2:addDays(d2),r3:addDays(d3)},opens:0,lastOpen:null});
+    updateBadges();
+
+    // Reset form
+    document.getElementById('step-preview').style.display='none';
+    document.getElementById('step-form').style.display='block';
+    document.getElementById('pdf-extract-zone').style.display='none';
+    uploadedFile=null;
+    const z=document.getElementById('upZone');
+    z.classList.remove('done','drag');
+    document.getElementById('up-ico').textContent='📄';
+    document.getElementById('up-h').textContent='Déposer l\'offre PDF';
+    document.getElementById('up-s').textContent='L\'IA extrait automatiquement les informations';
+    document.getElementById('f-contexte').value='';
+    if(document.getElementById('f-detail')) document.getElementById('f-detail').value='';
+
+    toast('🚀',`Offre envoyée à ${clientFull} — sauvegardée dans Supabase !`);
+    setTimeout(()=>go('offres'),1400);
+
+  } catch(err) {
+    toast('❌','Erreur sauvegarde: '+err.message.slice(0,60));
+    console.error(err);
+  }
+}
+
+// ══ TOAST ══
+let tt;
+function toast(ico,txt){
+  clearTimeout(tt);
+  document.getElementById('t-ico').textContent=ico;
+  document.get  document.getElementById('t-txt').textContent=txt;
+  const el=document.getElementById('toast-el');
+  el.classList.add('show');
+  tt=setTimeout(()=>el.classList.remove('show'),3400);
+}
+
+// ══ INIT ══
+async function init() {
+  const loader = document.createElement('div');
+  loader.id = 'global-loader';
+  loader.style.cssText = 'position:fixed;inset:0;background:rgba(7,8,12,0.9);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+  loader.innerHTML = '<div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:#E9B84A;border-radius:50%;animation:spin 0.8s linear infinite;"></div><div style="font-size:13px;color:rgba(236,238,242,0.5);font-family:Outfit,sans-serif;">Connexion à Supabase...</div>';
+  document.body.appendChild(loader);
+  await loadOffers();
+  loader.remove();
+}
+
+init();
+</script>
+</body>
+</html>
