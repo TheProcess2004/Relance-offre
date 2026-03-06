@@ -1,3 +1,18 @@
+const https = require('https');
+const http = require('http');
+
+function fetchBuffer(url) {
+  return new Promise((resolve, reject) => {
+    const client = url.startsWith('https') ? https : http;
+    client.get(url, (res) => {
+      const chunks = [];
+      res.on('data', chunk => chunks.push(chunk));
+      res.on('end', () => resolve(Buffer.concat(chunks)));
+      res.on('error', reject);
+    }).on('error', reject);
+  });
+}
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -11,8 +26,7 @@ module.exports = async (req, res) => {
   if (!BREVO_KEY) return res.status(500).json({ error: 'BREVO_API_KEY manquante' });
   if (!to) return res.status(400).json({ error: 'Destinataire manquant' });
 
-  // TOUJOURS envoyer depuis contact@followoffer.com
-  // L'adresse du commercial va en Reply-To
+  // TOUJOURS depuis contact@followoffer.com
   const SENDER_EMAIL = 'contact@followoffer.com';
   const SENDER_NAME = fromName ? `${fromName} via FollowOffer` : 'FollowOffer';
 
@@ -21,19 +35,30 @@ module.exports = async (req, res) => {
       sender: { name: SENDER_NAME, email: SENDER_EMAIL },
       to: [{ name: toName || to, email: to }],
       replyTo: { email: from || SENDER_EMAIL, name: fromName || 'FollowOffer' },
-      subject,
-      textContent: body,
+      subject: subject || 'Votre offre',
+      textContent: body || '',
       htmlContent: htmlBody || `<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#333;">${(body||'').replace(/\n/g,'<br>')}</div>`,
     };
 
+    // Attacher le PDF
     if (pdfUrl && pdfName) {
       try {
-        const pdfResp = await fetch(pdfUrl);
-        if (pdfResp.ok) {
-          const buf = await pdfResp.arrayBuffer();
-          payload.attachment = [{ name: pdfName, content: Buffer.from(buf).toString('base64') }];
+        console.log('Downloading PDF from:', pdfUrl);
+        const pdfBuffer = await fetchBuffer(pdfUrl);
+        if (pdfBuffer && pdfBuffer.length > 0) {
+          payload.attachment = [{ 
+            name: pdfName, 
+            content: pdfBuffer.toString('base64') 
+          }];
+          console.log('PDF attached, size:', pdfBuffer.length);
+        } else {
+          console.warn('PDF buffer empty');
         }
-      } catch(e) { console.warn('PDF attach failed:', e.message); }
+      } catch(e) { 
+        console.warn('PDF download failed:', e.message);
+      }
+    } else {
+      console.log('No PDF to attach, pdfUrl:', pdfUrl, 'pdfName:', pdfName);
     }
 
     const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
@@ -43,10 +68,14 @@ module.exports = async (req, res) => {
     });
 
     const data = await brevoRes.json();
-    if (!brevoRes.ok) return res.status(brevoRes.status).json({ error: data.message || 'Erreur Brevo' });
+    if (!brevoRes.ok) {
+      console.error('Brevo error:', data);
+      return res.status(brevoRes.status).json({ error: data.message || 'Erreur Brevo' });
+    }
     return res.status(200).json({ success: true, messageId: data.messageId });
 
   } catch(e) {
+    console.error('send-email error:', e);
     return res.status(500).json({ error: e.message });
   }
 };
