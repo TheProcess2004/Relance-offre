@@ -2569,6 +2569,26 @@ function saveSession(session) {
   CURRENT_USER = session.user;
   localStorage.setItem('of_token', session.access_token);
   localStorage.setItem('of_user', JSON.stringify(session.user));
+  if(session.refresh_token) localStorage.setItem('of_refresh', session.refresh_token);
+}
+
+async function refreshToken() {
+  const refresh = localStorage.getItem('of_refresh');
+  if(!refresh) return false;
+  try {
+    const res = await fetch(SB_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refresh })
+    });
+    if(res.ok) {
+      const session = await res.json();
+      saveSession(session);
+      console.log('✅ Token rafraîchi');
+      return true;
+    }
+  } catch(e) {}
+  return false;
 }
 
 function loadSession() {
@@ -2576,11 +2596,14 @@ function loadSession() {
   const user = localStorage.getItem('of_user');
   if(token && user) {
     USER_TOKEN = token;
-    CURRENT_USER = JSON.parse(user);
+    try { CURRENT_USER = JSON.parse(user); } catch(e) {}
     return true;
   }
   return false;
 }
+
+// Appel au démarrage pour s'assurer que USER_TOKEN est chargé
+loadSession();
 
 async function sbFetch(path, options={}) {
   const token = USER_TOKEN || SB_KEY;
@@ -2887,6 +2910,16 @@ async function init() {
         const t = new Promise((_,r) => setTimeout(()=>r(new Error('timeout')), 4000));
         check = await Promise.race([sbAuthFetch('user'), t]);
       } catch(e) { check = null; }
+      // Si token expiré, tenter un refresh
+      if(!check) {
+        const refreshed = await refreshToken();
+        if(refreshed) {
+          try {
+            const t2 = new Promise((_,r) => setTimeout(()=>r(new Error('timeout')), 4000));
+            check = await Promise.race([sbAuthFetch('user'), t2]);
+          } catch(e) { check = null; }
+        }
+      }
 
       if(check && check.id) {
         CURRENT_USER = check;
