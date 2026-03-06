@@ -2239,16 +2239,21 @@ async function uploadPDFToStorage(file, offreId) {
     const ab = await file.arrayBuffer();
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
     const path = `${offreId}/${safeName}`;
+    const token = USER_TOKEN || SB_KEY;
     const res = await fetch(`${SB_URL}/storage/v1/object/offres/${path}`, {
       method: 'POST',
-      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY, 'Content-Type': file.type||'application/pdf', 'x-upsert': 'true' },
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer '+token, 'Content-Type': file.type||'application/pdf', 'x-upsert': 'true' },
       body: ab
     });
     if(res.ok) {
       const publicUrl = `${SB_URL}/storage/v1/object/public/offres/${path}`;
       await sbFetch('offres?id=eq.'+offreId, {method:'PATCH', body:JSON.stringify({pdf_url:publicUrl}), headers:{'Prefer':'return=minimal'}});
       return publicUrl;
-    } else { console.warn('Storage upload failed:', res.status); }
+    } else { 
+      const errText = await res.text().catch(()=>'');
+      console.warn('Storage upload failed:', res.status, errText);
+      toast('⚠️', 'PDF non joint: ' + res.status + ' ' + errText.slice(0,50));
+    }
   } catch(e) { console.warn('PDF upload skipped:', e.message); }
   return null;
 }
