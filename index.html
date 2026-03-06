@@ -1,0 +1,3057 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FollowOffer — Suite commerciale</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+:root{
+  --bg:#07080C;--s1:#0E0F15;--s2:#14151D;--s3:#1A1C26;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --gold:#E9B84A;--gold-d:rgba(233,184,74,0.1);
+  --green:#22C55E;--green-d:rgba(34,197,94,0.1);
+  --red:#F43F5E;--red-d:rgba(244,63,94,0.1);
+  --blue:#38BDF8;--blue-d:rgba(56,189,248,0.1);
+  --purple:#A78BFA;--purple-d:rgba(167,139,250,0.1);
+  --orange:#FB923C;--orange-d:rgba(251,146,60,0.1);
+  --text:#ECEEF2;--muted:rgba(236,238,242,0.42);--muted2:rgba(236,238,242,0.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
+
+/* LAYOUT */
+.app{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sb{width:230px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;}
+.sb-glow{position:absolute;top:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(233,184,74,0.06),transparent 70%);pointer-events:none;}
+.sb-brand{padding:18px 20px 16px;border-bottom:1px solid var(--border);}
+.sb-logo{font-family:'Instrument Serif',serif;font-size:20px;color:var(--gold);display:flex;align-items:center;gap:9px;}
+.sb-version{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.sb-nav{padding:14px 10px;flex:1;overflow-y:auto;}
+.sb-section{margin-bottom:18px;}
+.sb-sec-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);padding:0 10px;margin-bottom:4px;}
+.nb{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.15s;text-align:left;}
+.nb:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.nb.active{background:var(--gold-d);color:var(--gold);}
+.nb .ic{font-size:14px;width:18px;text-align:center;}
+.nc{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;}
+.nc-gold{background:var(--gold);color:var(--bg);}
+.nc-red{background:var(--red);color:white;}
+.nc-blue{background:var(--blue);color:var(--bg);}
+.nc-green{background:var(--green);color:var(--bg);}
+.sb-foot{padding:14px 18px;border-top:1px solid var(--border);}
+.sb-user{display:flex;align-items:center;gap:10px;}
+.sb-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--purple));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+.sb-nm{font-size:12px;font-weight:600;}
+.sb-rl{font-size:10px;color:var(--muted);}
+
+/* MAIN */
+.main{margin-left:230px;flex:1;display:flex;flex-direction:column;}
+.topbar{background:rgba(14,15,21,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:14px 30px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.tb-title{font-family:'Instrument Serif',serif;font-size:19px;font-style:italic;}
+.tb-right{display:flex;gap:9px;align-items:center;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;font-family:'Outfit',sans-serif;white-space:nowrap;}
+.btn-gold{background:var(--gold);color:#07080C;}
+.btn-gold:hover{filter:brightness(1.1);}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text);}
+.btn-ghost:hover{background:rgba(255,255,255,0.05);}
+.btn-green{background:var(--green-d);border:1px solid rgba(34,197,94,0.25);color:var(--green);}
+.btn-red{background:var(--red-d);border:1px solid rgba(244,63,94,0.25);color:var(--red);}
+.btn-blue{background:var(--blue-d);border:1px solid rgba(56,189,248,0.25);color:var(--blue);}
+.btn-sm{padding:6px 12px;font-size:11px;}
+.bic{width:30px;height:30px;padding:0;justify-content:center;border-radius:7px;background:transparent;border:1px solid var(--border2);color:var(--muted);font-size:13px;}
+.bic:hover{background:rgba(255,255,255,0.07);color:var(--text);}
+
+/* CONTENT */
+.content{padding:26px 30px;flex:1;}
+.panel{display:none;}
+.panel.active{display:block;animation:fu 0.2s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* KPI */
+.kgrid{display:grid;gap:13px;margin-bottom:22px;}
+.kgrid-4{grid-template-columns:repeat(4,1fr);}
+.kgrid-3{grid-template-columns:repeat(3,1fr);}
+.kcard{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:18px;position:relative;overflow:hidden;}
+.kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:13px 13px 0 0;}
+.kcard.g::before{background:var(--gold);}
+.kcard.gr::before{background:var(--green);}
+.kcard.rd::before{background:var(--red);}
+.kcard.bl::before{background:var(--blue);}
+.kcard.pu::before{background:var(--purple);}
+.kcard.or::before{background:var(--orange);}
+.k-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.k-val{font-family:'Instrument Serif',serif;font-size:32px;line-height:1;margin-bottom:5px;}
+.kcard.g .k-val{color:var(--gold);}
+.kcard.gr .k-val{color:var(--green);}
+.kcard.rd .k-val{color:var(--red);}
+.kcard.bl .k-val{color:var(--blue);}
+.kcard.pu .k-val{color:var(--purple);}
+.kcard.or .k-val{color:var(--orange);}
+.k-sub{font-size:11px;color:var(--muted);}
+.k-bar{height:3px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden;}
+.k-bar-f{height:100%;border-radius:2px;}
+
+/* SECTION */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sh-t{font-family:'Instrument Serif',serif;font-size:16px;font-style:italic;}
+
+/* TABLE */
+.tbl{background:var(--s1);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:22px;}
+.tbl-h{display:grid;padding:11px 20px;border-bottom:1px solid var(--border);background:var(--s2);}
+.tbl-hc{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.tbl-r{display:grid;padding:13px 20px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background 0.1s;}
+.tbl-r:last-child{border-bottom:none;}
+.tbl-r:hover{background:rgba(255,255,255,0.025);}
+.tbl-cols{grid-template-columns:2fr 1.2fr 1fr 1.1fr 1.1fr 1fr;}
+.cn{font-weight:600;font-size:13px;}
+.ce{font-size:11px;color:var(--muted);margin-top:1px;}
+.ref{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+.amt{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--gold);}
+.acts{display:flex;gap:4px;}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.pill::before{content:'';width:5px;height:5px;border-radius:50%;}
+.p-sent{background:var(--blue-d);color:var(--blue);}
+.p-sent::before{background:var(--blue);}
+.p-r1{background:var(--gold-d);color:var(--gold);}
+.p-r1::before{background:var(--gold);}
+.p-r2{background:var(--purple-d);color:var(--purple);}
+.p-r2::before{background:var(--purple);}
+.p-r3{background:var(--orange-d);color:var(--orange);}
+.p-r3::before{background:var(--orange);}
+.p-won{background:var(--green-d);color:var(--green);}
+.p-won::before{background:var(--green);}
+.p-lost{background:var(--red-d);color:var(--red);}
+.p-lost::before{background:var(--red);}
+
+/* UPLOAD */
+.upload-z{background:var(--s1);border:2px dashed rgba(233,184,74,0.2);border-radius:16px;padding:32px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.upload-z:hover,.upload-z.drag{border-color:var(--gold);background:var(--gold-d);}
+.upload-z.done{border-color:var(--green);border-style:solid;background:var(--green-d);}
+.upload-z input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.up-ico{font-size:40px;margin-bottom:12px;}
+.up-h{font-size:15px;font-weight:600;margin-bottom:5px;}
+.up-s{font-size:12px;color:var(--muted);}
+
+/* PDF EXTRACT */
+.pdf-extract{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:14px;}
+.pdf-extract-title{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.pdf-field{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.pdf-field:last-child{border-bottom:none;}
+.pdf-field-lbl{color:var(--muted);min-width:90px;font-size:11px;}
+.pdf-field-val{color:var(--text);font-weight:500;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.pdf-field-edit{background:var(--bg);border:1px solid var(--border2);border-radius:6px;padding:4px 8px;font-size:12px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;flex:1;}
+.pdf-field-edit:focus{border-color:var(--gold);}
+
+/* FORM */
+.fcard{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;}
+.fcard-t{font-family:'Instrument Serif',serif;font-size:15px;font-style:italic;margin-bottom:16px;}
+.fg{margin-bottom:12px;}
+.fl{display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.fi,.fs,.fta{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;transition:border-color 0.15s;outline:none;}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--gold);}
+.fta{resize:vertical;min-height:64px;}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+/* FLOW GRID */
+.flow-g{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+
+/* AI LOADING */
+.ai-load{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:40px;text-align:center;}
+.ai-spin{width:44px;height:44px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.ai-txt{font-size:13px;color:var(--muted);font-style:italic;}
+.ai-steps{display:flex;flex-direction:column;gap:6px;margin-top:20px;max-width:320px;margin-left:auto;margin-right:auto;}
+.ai-step{font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:8px;}
+.ai-step.done{color:var(--green);}
+.ai-step.active{color:var(--gold);}
+
+/* EMAIL PREVIEW */
+.ep-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.ep-top{background:var(--s2);padding:13px 18px;border-bottom:1px solid var(--border);}
+.ep-f{display:flex;gap:9px;padding:3px 0;font-size:12px;}
+.ep-fl{color:var(--muted);min-width:52px;}
+.ep-fv{color:var(--text);}
+.ep-att{color:var(--gold);font-weight:600;}
+.ep-body{padding:20px 18px;font-size:13px;line-height:1.9;color:rgba(236,238,242,0.8);white-space:pre-wrap;}
+
+/* OPEN DETECTION */
+.od-card{background:var(--s1);border:1px solid rgba(56,189,248,0.2);border-radius:14px;padding:20px;margin-bottom:16px;}
+.od-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.od-title{font-size:13px;font-weight:600;color:var(--blue);display:flex;align-items:center;gap:8px;}
+.od-pulse{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse 1.5s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.8);}}
+.od-events{display:flex;flex-direction:column;gap:8px;}
+.od-event{background:var(--s2);border-radius:9px;padding:11px 14px;display:flex;align-items:center;gap:10px;font-size:12px;}
+.od-event-ico{font-size:16px;}
+.od-event-info{flex:1;}
+.od-event-main{font-weight:600;color:var(--text);}
+.od-event-sub{color:var(--muted);font-size:11px;margin-top:1px;}
+.od-event-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);}
+.od-event.hot{border:1px solid rgba(233,184,74,0.2);background:var(--gold-d);}
+.od-event.hot .od-event-main{color:var(--gold);}
+
+/* RELANCE TIMELINE */
+.rtl{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:20px;margin-bottom:16px;}
+.rtl-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.rtl-steps{display:flex;position:relative;}
+.rtl-steps::before{content:'';position:absolute;top:15px;left:15px;right:15px;height:1px;background:var(--border2);}
+.rtl-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;position:relative;z-index:1;}
+.rtl-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:1.5px solid;background:var(--s1);}
+.rtl-dot.d0{border-color:var(--blue);color:var(--blue);}
+.rtl-dot.d1{border-color:var(--gold);color:var(--gold);}
+.rtl-dot.d2{border-color:var(--purple);color:var(--purple);}
+.rtl-dot.d3{border-color:var(--orange);color:var(--orange);}
+.rtl-lbl{font-size:11px;font-weight:600;text-align:center;}
+.rtl-day{font-size:10px;color:var(--muted);text-align:center;}
+
+/* CLIENT CARD */
+.client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px;}
+.client-card{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:18px;cursor:pointer;transition:all 0.15s;}
+.client-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.cc-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.cc-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;}
+.cc-name{font-size:14px;font-weight:600;}
+.cc-email{font-size:11px;color:var(--muted);margin-top:2px;}
+.cc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.cc-stat{background:var(--s2);border-radius:8px;padding:9px;text-align:center;}
+.cc-stat-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;margin-bottom:2px;}
+.cc-stat-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.cc-last{margin-top:12px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
+
+/* CALENDAR */
+.cal-wrap{background:var(--s1);border:1px solid var(--border);border-radius:13px;overflow:hidden;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--s2);}
+.cal-month{font-family:'Instrument Serif',serif;font-size:16px;font-style:italic;}
+.cal-head{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-dow{padding:9px;text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);border-bottom:1px solid var(--border);}
+.cal-body{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-cell{border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-height:78px;padding:6px;}
+.cal-cell:nth-child(7n){border-right:none;}
+.cal-cell.empty{background:rgba(0,0,0,0.08);}
+.cal-d{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:3px;}
+.cal-today-dot{width:20px;height:20px;border-radius:50%;background:var(--gold);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.cal-ev{border-radius:3px;padding:2px 4px;font-size:9px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
+.ev-send{background:var(--blue-d);color:var(--blue);border-left:2px solid var(--blue);}
+.ev-r1{background:var(--gold-d);color:var(--gold);border-left:2px solid var(--gold);}
+.ev-r2{background:var(--purple-d);color:var(--purple);border-left:2px solid var(--purple);}
+.ev-r3{background:var(--orange-d);color:var(--orange);border-left:2px solid var(--orange);}
+
+/* REVENUE */
+.rev-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.rev-card{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:20px;overflow:hidden;position:relative;}
+.rev-card.won{border-color:rgba(34,197,94,0.18);}
+.rev-card.lost{border-color:rgba(244,63,94,0.18);}
+.rev-glow{position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;pointer-events:none;}
+.won .rev-glow{background:radial-gradient(circle,rgba(34,197,94,0.07),transparent 70%);}
+.lost .rev-glow{background:radial-gradient(circle,rgba(244,63,94,0.07),transparent 70%);}
+.rev-tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;}
+.won .rev-tag{color:var(--green);}
+.lost .rev-tag{color:var(--red);}
+.rev-big{font-family:'Instrument Serif',serif;font-size:38px;margin-bottom:4px;}
+.won .rev-big{color:var(--green);}
+.lost .rev-big{color:var(--red);}
+.rev-count{font-size:11px;color:var(--muted);margin-bottom:16px;}
+.rev-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.rev-item:last-child{border-bottom:none;}
+.rev-ic{color:var(--muted);}
+.rev-ia{font-family:'JetBrains Mono',monospace;font-weight:600;}
+.won .rev-ia{color:var(--green);}
+.lost .rev-ia{color:var(--red);}
+
+/* WEEKLY REPORT */
+.report-card{background:var(--s1);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:20px;}
+.report-header{background:linear-gradient(135deg,var(--s2),var(--s1));padding:24px;border-bottom:1px solid var(--border);}
+.report-date{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.report-title{font-family:'Instrument Serif',serif;font-size:24px;font-style:italic;}
+.report-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+.report-kpis{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+.report-kpi{padding:18px 20px;border-right:1px solid var(--border);text-align:center;}
+.report-kpi:last-child{border-right:none;}
+.rk-val{font-family:'Instrument Serif',serif;font-size:26px;margin-bottom:4px;}
+.rk-lbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.rk-delta{font-size:11px;margin-top:4px;}
+.delta-up{color:var(--green);}
+.delta-dn{color:var(--red);}
+.report-body{padding:24px;}
+.report-section{margin-bottom:22px;}
+.rs-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.insight{background:var(--s2);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:10px;font-size:13px;line-height:1.6;}
+.insight.green{border-color:var(--green);}
+.insight.red{border-color:var(--red);}
+.insight.blue{border-color:var(--blue);}
+.insight strong{color:var(--text);}
+.insight span{color:var(--muted);}
+.offer-mention{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.offer-mention:last-child{border-bottom:none;}
+.om-name{font-weight:600;}
+.om-detail{color:var(--muted);margin-top:1px;font-size:11px;}
+.report-actions{display:flex;gap:10px;padding:18px 24px;border-top:1px solid var(--border);background:var(--s2);}
+
+/* CONFIG */
+.cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
+.cfg-card{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:20px;}
+.cfg-t{font-size:13px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.day-in{width:50px;text-align:center;background:var(--bg);border:1px solid var(--border2);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--text);font-family:'JetBrains Mono',monospace;font-weight:600;outline:none;}
+.day-in:focus{border-color:var(--gold);}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(7px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+.overlay.open{display:flex;}
+.modal{background:var(--s1);border:1px solid var(--border2);border-radius:18px;padding:30px;width:580px;max-width:100%;max-height:88vh;overflow-y:auto;animation:mIn 0.2s ease;}
+@keyframes mIn{from{opacity:0;transform:translateY(14px) scale(0.97);}to{opacity:1;transform:none;}}
+.modal-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;}
+.modal-t{font-family:'Instrument Serif',serif;font-size:20px;}
+.modal-s{font-size:12px;color:var(--muted);margin-top:3px;}
+.modal-x{width:28px;height:28px;border-radius:7px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.modal-x:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.m-2grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.m-info{background:var(--bg);border-radius:9px;padding:12px;}
+.m-info-l{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.m-info-v{font-size:13px;font-weight:600;}
+.m-tl{margin-bottom:16px;}
+.m-tl-t{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.m-tl-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.m-tl-item:last-child{border-bottom:none;}
+.m-tl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.m-tl-info{flex:1;color:var(--muted);}
+.m-tl-info strong{color:var(--text);}
+.m-tl-date{color:var(--muted2);font-size:11px;}
+.tag-done{color:var(--green);}
+.tag-pending{color:var(--gold);font-size:10px;font-weight:600;border:1px solid var(--gold-d);border-radius:4px;padding:2px 6px;}
+.tag-auto{color:var(--blue);font-size:10px;font-weight:600;border:1px solid var(--blue-d);border-radius:4px;padding:2px 6px;}
+.m-acts{display:flex;gap:8px;flex-wrap:wrap;}
+
+/* OPEN NOTIF */
+.notif-banner{background:linear-gradient(90deg,var(--gold-d),transparent);border:1px solid rgba(233,184,74,0.25);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:16px;animation:slideIn 0.4s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:none;}}
+.notif-pulse{width:10px;height:10px;border-radius:50%;background:var(--gold);animation:pulse 1.2s ease infinite;flex-shrink:0;}
+.notif-text{flex:1;font-size:13px;}
+.notif-text strong{color:var(--gold);}
+
+/* TOAST */
+.toast-el{position:fixed;bottom:22px;right:22px;background:var(--s2);border:1px solid var(--border2);border-radius:12px;padding:13px 18px;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;z-index:2000;transform:translateY(80px);opacity:0;transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 20px 60px rgba(0,0,0,0.6);max-width:340px;}
+.toast-el.show{transform:none;opacity:1;}
+
+/* FUNNEL */
+.funnel{display:flex;flex-direction:column;gap:9px;}
+.f-step{display:flex;align-items:center;gap:12px;}
+.f-lbl{font-size:11px;color:var(--muted);width:80px;flex-shrink:0;}
+.f-track{flex:1;height:30px;background:var(--bg);border-radius:6px;overflow:hidden;}
+.f-bar{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;}
+.f-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;width:24px;text-align:right;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.07);border-radius:2px;}
+
+/* LEG */
+.leg{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;}
+.leg-i{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);}
+.leg-d{width:7px;height:7px;border-radius:50%;}
+
+@media(max-width:1000px){
+  .kgrid-4{grid-template-columns:repeat(2,1fr);}
+  .flow-g{grid-template-columns:1fr;}
+  .rev-split{grid-template-columns:1fr;}
+  .cfg-grid{grid-template-columns:1fr;}
+  .report-kpis{grid-template-columns:repeat(2,1fr);}
+}
+
+/* FILTER BAR */
+.filter-bar{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap;}
+
+/* ══ ONBOARDING WIZARD ══ */
+.ob-overlay{position:fixed;inset:0;background:rgba(7,8,12,0.97);backdrop-filter:blur(12px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
+.ob-overlay.open{display:flex;}
+.ob-card{width:100%;max-width:540px;background:var(--s1);border:1px solid var(--border2);border-radius:20px;padding:36px;animation:mIn 0.3s ease;position:relative;overflow:hidden;}
+.ob-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(233,184,74,0.08),transparent 70%);pointer-events:none;}
+.ob-steps{display:flex;gap:8px;margin-bottom:32px;}
+.ob-step-dot{height:3px;flex:1;border-radius:4px;background:var(--border2);transition:background 0.3s;}
+.ob-step-dot.done{background:var(--gold);}
+.ob-step-dot.active{background:var(--gold);opacity:0.5;}
+.ob-ico{width:52px;height:52px;border-radius:14px;background:var(--gold-d);border:1px solid rgba(233,184,74,0.2);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px;}
+.ob-title{font-family:'Instrument Serif',serif;font-size:22px;margin-bottom:8px;color:var(--text);}
+.ob-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:24px;}
+.ob-field{margin-bottom:16px;}
+.ob-field label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;}
+.ob-field input,.ob-field select{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;font-family:'Outfit',sans-serif;outline:none;transition:border-color 0.2s;}
+.ob-field input:focus,.ob-field select:focus{border-color:var(--gold);}
+.ob-actions{display:flex;justify-content:space-between;align-items:center;margin-top:24px;}
+.ob-skip{font-size:12px;color:var(--muted);cursor:pointer;background:none;border:none;padding:0;font-family:'Outfit',sans-serif;transition:color 0.2s;}
+.ob-skip:hover{color:var(--text);}
+.ob-checklist{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.ob-check-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--s2);border-radius:10px;border:1px solid var(--border);font-size:13px;transition:all 0.2s;}
+.ob-check-item.checked{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.05);}
+.ob-check-box{width:20px;height:20px;border-radius:6px;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;font-size:11px;}
+.ob-check-item.checked .ob-check-box{background:var(--green);border-color:var(--green);}
+.ob-email-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--s2);border:1px solid var(--border);border-radius:10px;cursor:pointer;color:var(--text);font-size:13px;font-family:'Outfit',sans-serif;transition:border-color 0.2s;width:100%;margin-bottom:10px;}
+.ob-email-btn:hover{border-color:rgba(255,255,255,0.2);}
+
+/* ══ MOBILE NAV ══ */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--s1);border-top:1px solid var(--border);z-index:300;padding:8px 0 max(8px,env(safe-area-inset-bottom));}
+.mobile-nav-items{display:flex;justify-content:space-around;align-items:center;}
+.mob-nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;border:none;background:transparent;color:var(--muted);font-size:10px;font-family:'Outfit',sans-serif;cursor:pointer;transition:color 0.2s;position:relative;min-width:56px;}
+.mob-nav-btn .mob-ico{font-size:20px;line-height:1;}
+.mob-nav-btn.active{color:var(--gold);}
+.mob-nav-btn .mob-badge{position:absolute;top:2px;right:8px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--s1);}
+.mob-header{display:none;position:fixed;top:0;left:0;right:0;height:56px;background:var(--s1);border-bottom:1px solid var(--border);z-index:250;align-items:center;justify-content:space-between;padding:0 16px;}
+.mob-logo{font-family:'Instrument Serif',serif;font-size:18px;color:var(--gold);}
+.mob-burger{width:36px;height:36px;background:var(--s2);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
+.sb-drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:190;backdrop-filter:blur(4px);}
+.sb-drawer-overlay.open{display:block;}
+
+@media(max-width:768px){
+  .sb{transform:translateX(-100%);transition:transform 0.25s ease;}
+  .sb.mob-open{transform:translateX(0);}
+  .mob-header{display:flex;}
+  .mobile-nav{display:block;}
+  .main{margin-left:0 !important;padding-top:56px !important;padding-bottom:72px !important;}
+  .panel{padding:0 !important;}
+  .content{padding:16px !important;}
+  .kgrid-4{grid-template-columns:1fr 1fr !important;}
+  .kcard{padding:14px !important;}
+  .k-val{font-size:22px !important;}
+  [style*="grid-template-columns:1.3fr 1fr"]{grid-template-columns:1fr !important;}
+  .tbl-h{display:none !important;}
+  .tbl-r{grid-template-columns:1fr !important;padding:14px !important;gap:4px !important;border-radius:10px !important;margin-bottom:8px !important;border:1px solid var(--border) !important;}
+  .modal{width:100% !important;max-width:100% !important;border-radius:20px 20px 0 0 !important;max-height:85vh !important;}
+  .overlay{align-items:flex-end !important;padding:0 !important;}
+  .flow-g{grid-template-columns:1fr !important;}
+  .f3{grid-template-columns:1fr !important;}
+  .f2{grid-template-columns:1fr !important;}
+  .cfg-grid{grid-template-columns:1fr !important;}
+  .ob-card{border-radius:20px 20px 0 0 !important;max-height:90vh;overflow-y:auto;}
+  .ob-overlay{align-items:flex-end !important;padding:0 !important;}
+  .sh{flex-direction:column !important;align-items:flex-start !important;gap:8px !important;}
+  .tb-right{gap:6px !important;}
+  .tb-right .btn-ghost{display:none;}
+}
+@media(max-width:480px){
+  .kgrid-4{grid-template-columns:1fr !important;}
+  .btn-gold{width:100%;justify-content:center;}
+}
+.search-in{background:var(--s1);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;min-width:220px;}
+.search-in:focus{border-color:var(--gold);}
+.filter-btn{padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--s1);color:var(--muted);font-family:'Outfit',sans-serif;transition:all 0.15s;}
+.filter-btn:hover,.filter-btn.active{background:var(--gold-d);border-color:rgba(233,184,74,0.3);color:var(--gold);}
+.filter-btn.f-all.active{background:var(--gold-d);border-color:rgba(233,184,74,0.3);color:var(--gold);}
+.filter-btn.f-sent.active{background:var(--blue-d);border-color:rgba(56,189,248,0.3);color:var(--blue);}
+.filter-btn.f-won.active{background:var(--green-d);border-color:rgba(34,197,94,0.3);color:var(--green);}
+.filter-btn.f-lost.active{background:var(--red-d);border-color:rgba(244,63,94,0.3);color:var(--red);}
+
+/* CONFIRM DIALOG */
+.confirm-modal{background:var(--s2);border:1px solid var(--border2);border-radius:16px;padding:28px;width:380px;max-width:100%;text-align:center;animation:mIn 0.2s ease;}
+.confirm-ico{font-size:36px;margin-bottom:12px;}
+.confirm-t{font-family:'Instrument Serif',serif;font-size:18px;margin-bottom:8px;}
+.confirm-s{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.6;}
+.confirm-acts{display:flex;gap:10px;justify-content:center;}
+
+/* RELANCE PREVIEW TABS */
+.rp-tab-bar{display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:12px;}
+.rp-tab{padding:6px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;transition:all 0.15s;}
+.rp-tab.active{background:var(--gold-d);border-color:rgba(233,184,74,0.3);color:var(--gold);}
+.rp-email{background:var(--bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;}
+.rp-email-head{background:var(--s2);padding:10px 14px;border-bottom:1px solid var(--border);font-size:11px;}
+.rp-email-row{display:flex;gap:8px;padding:2px 0;color:var(--muted);}
+.rp-email-row span:last-child{color:var(--text);}
+.rp-email-body{padding:14px;font-size:12px;line-height:1.8;color:rgba(236,238,242,0.8);white-space:pre-wrap;outline:none;min-height:80px;}
+.rp-email-body[contenteditable="true"]{border-top:1px solid var(--gold);background:rgba(233,184,74,0.03);}
+
+/* NOTES */
+.notes-field{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--text);font-family:'Outfit',sans-serif;resize:vertical;min-height:56px;outline:none;margin-top:4px;}
+.notes-field:focus{border-color:var(--gold);}
+
+/* CAL INTERACTIVE */
+.cal-ev{cursor:pointer;transition:opacity 0.1s;}
+.cal-ev:hover{opacity:0.75;transform:scale(1.01);}
+
+/* PRINT / PDF */
+@media print{
+  @page { margin: 12mm 14mm; size: A4; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { background: white !important; color: #111 !important; font-family: 'Outfit', sans-serif !important; }
+  .sb, .topbar, .btn, .acts, .bic, .toast-el, .overlay, .filter-bar, .report-actions { display: none !important; }
+  .main { margin-left: 0 !important; }
+  .content { padding: 0 !important; }
+  .panel { display: none !important; }
+  .panel.active { display: block !important; }
+  .report-card { border: none !important; background: white !important; }
+
+  /* Header band */
+  .report-header {
+    background: #1a1060 !important;
+    border-radius: 10px !important;
+    padding: 20px 24px !important;
+    margin-bottom: 14px !important;
+    border-left: 6px solid #E9B84A !important;
+  }
+  .report-date { color: #bbb !important; font-size: 10px !important; }
+  .report-title { color: #ffffff !important; font-size: 20px !important; }
+  .report-sub { color: #aaa !important; font-size: 11px !important; }
+
+  /* KPI grid */
+  .report-kpis { display: grid !important; grid-template-columns: repeat(4,1fr) !important; gap: 8px !important; margin-bottom: 14px !important; border: none !important; }
+  .report-kpi { background: #f4f4ff !important; border: 2px solid #ddd !important; border-radius: 8px !important; padding: 12px !important; text-align: center !important; border-bottom: none !important; border-right: none !important; }
+  .report-kpi:nth-child(1) { border-top: 3px solid #E9B84A !important; }
+  .report-kpi:nth-child(2) { border-top: 3px solid #22C55E !important; }
+  .report-kpi:nth-child(3) { border-top: 3px solid #38BDF8 !important; }
+  .report-kpi:nth-child(4) { border-top: 3px solid #A78BFA !important; }
+  .rk-val { font-size: 22px !important; color: #1a1060 !important; font-weight: 700 !important; }
+  .rk-lbl { color: #666 !important; font-size: 9px !important; text-transform: uppercase !important; }
+  .delta-up { color: #16a34a !important; font-weight: 600 !important; }
+  .delta-dn { color: #dc2626 !important; font-weight: 600 !important; }
+
+  /* Insights */
+  .report-body { padding: 0 !important; }
+  .rs-title { color: #555 !important; font-size: 9px !important; letter-spacing: 1.5px !important; border-bottom: 1px solid #eee !important; padding-bottom: 4px !important; margin-bottom: 8px !important; }
+  .insight { border-left: 4px solid #E9B84A !important; background: #fffbeb !important; padding: 8px 12px !important; margin-bottom: 7px !important; border-radius: 0 6px 6px 0 !important; color: #222 !important; font-size: 12px !important; line-height: 1.5 !important; }
+  .insight.green { border-color: #16a34a !important; background: #f0fdf4 !important; }
+  .insight.red { border-color: #dc2626 !important; background: #fff1f2 !important; }
+  .insight.blue { border-color: #0ea5e9 !important; background: #f0f9ff !important; }
+  .insight strong { color: #111 !important; }
+  .insight span { color: #555 !important; }
+
+  /* Offers list */
+  .offer-mention { display: flex !important; justify-content: space-between !important; align-items: center !important; padding: 7px 0 !important; border-bottom: 1px solid #eee !important; color: #111 !important; font-size: 12px !important; }
+  .om-name { font-weight: 600 !important; }
+  .om-detail { color: #666 !important; font-size: 10px !important; }
+  .report-section { margin-bottom: 14px !important; page-break-inside: avoid !important; }
+}
+</style>
+</head>
+<body>
+<div class="app" id="app-shell">
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-glow"></div>
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <svg width="30" height="26" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Barres montantes -->
+        <rect x="1" y="20" width="3.5" height="4" rx="1" fill="rgba(233,184,74,0.35)"/>
+        <rect x="6" y="16" width="3.5" height="8" rx="1" fill="rgba(233,184,74,0.5)"/>
+        <rect x="11" y="11" width="3.5" height="13" rx="1" fill="rgba(233,184,74,0.7)"/>
+        <rect x="16" y="7" width="3.5" height="17" rx="1" fill="rgba(233,184,74,0.85)"/>
+        <rect x="21" y="3" width="3.5" height="21" rx="1" fill="#E9B84A"/>
+        <!-- Ligne de base -->
+        <line x1="0" y1="24.5" x2="30" y2="24.5" stroke="rgba(233,184,74,0.2)" stroke-width="1"/>
+        <!-- Flèche courbe -->
+        <path d="M2,19 Q8,12 15,8 Q20,5 26,1" stroke="#E9B84A" stroke-width="1.8" stroke-linecap="round" fill="none" stroke-dasharray="0"/>
+        <!-- Pointe de flèche -->
+        <polygon points="26,1 22,3 24.5,5" fill="#E9B84A"/>
+      </svg>
+      FollowOffer
+    </div>
+    <div class="sb-version">Suite commerciale suisse</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-sec-label">Vue d'ensemble</div>
+      <button class="nb active" onclick="go('dashboard')"><span class="ic">◈</span>Dashboard</button>
+      <button class="nb" onclick="go('rapport')"><span class="ic">📊</span>Rapport semaine <span class="nc nc-green" id="nc-rapport">NEW</span></button>
+    </div>
+    <div class="sb-section">
+      <div class="sb-sec-label">Offres</div>
+      <button class="nb" onclick="go('nouvelle')"><span class="ic">＋</span>Envoyer une offre</button>
+      <button class="nb" onclick="go('offres')"><span class="ic">▤</span>Toutes les offres <span class="nc nc-gold" id="nc-offres">0</span></button>
+    </div>
+    <div class="sb-section">
+      <div class="sb-sec-label">Suivi</div>
+      <button class="nb" onclick="go('relances')"><span class="ic">◎</span>Relances <span class="nc nc-red" id="nc-relances">0</span></button>
+      <button class="nb" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-blue" id="nc-detection">0</span></button>
+      <button class="nb" onclick="go('calendrier')"><span class="ic">▦</span>Calendrier</button>
+      <button class="nb" onclick="go('revenus')"><span class="ic">◉</span>Revenus</button>
+    </div>
+    <div class="sb-section">
+      <div class="sb-sec-label">Clients</div>
+      <button class="nb" onclick="go('clients')"><span class="ic">◷</span>Fiches clients <span class="nc nc-gold" id="nc-clients">0</span></button>
+    </div>
+    <div class="sb-section">
+      <div class="sb-sec-label">Système</div>
+      <button class="nb" onclick="go('config')"><span class="ic">◌</span>Configuration</button>
+    </div>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user">
+      <div class="sb-av" id="user-avatar">—</div>
+      <div>
+        <div class="sb-nm" id="user-name">—</div>
+        <div class="sb-rl" id="user-role">—</div>
+        <button onclick="if(confirm('Se déconnecter ?')) signOut();" style="font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-family:'Outfit',sans-serif;">🚪 Déconnexion</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="tb-title" id="page-title">Dashboard</div>
+    <div class="tb-right">
+      <button class="btn btn-ghost btn-sm" onclick="go('config')">⚙ Config</button>
+      <button class="btn btn-ghost btn-sm" onclick="go('rapport')">📊 Rapport semaine</button>
+      <button class="btn btn-gold" onclick="go('nouvelle')">+ Envoyer une offre</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="kgrid kgrid-4">
+        <div class="kcard g"><div class="k-lbl">Offres actives</div><div class="k-val" id="kpi-offres">—</div><div class="k-sub" id="kpi-sub-offres">En cours de traitement</div><div class="k-bar"><div class="k-bar-f" style="width:60%;background:var(--gold)"></div></div></div>
+        <div class="kcard gr"><div class="k-lbl">CA gagné</div><div class="k-val" id="kpi-ca" style="font-size:20px;line-height:1.4;">—</div><div class="k-sub" id="kpi-sub-ca">CHF converti</div><div class="k-bar"><div class="k-bar-f" style="width:70%;background:var(--green)"></div></div></div>
+        <div class="kcard bl"><div class="k-lbl">Pipeline en cours</div><div class="k-val" id="kpi-pending" style="font-size:20px;line-height:1.4;">—</div><div class="k-sub">CHF à convertir</div><div class="k-bar"><div class="k-bar-f" style="width:50%;background:var(--blue)"></div></div></div>
+        <div class="kcard pu"><div class="k-lbl">Taux conversion</div><div class="k-val" id="kpi-conv">—</div><div class="k-sub">Sur toutes les offres</div><div class="k-bar"><div class="k-bar-f" id="kpi-conv-bar" style="width:0%;background:var(--purple)"></div></div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:20px;">
+        <div class="fcard">
+          <div class="fcard-t">Pipeline des offres</div>
+          <div class="funnel" id="dash-funnel">
+            <div class="f-step"><div class="f-lbl">Chargement…</div></div>
+          </div>
+        </div>
+        <div class="fcard">
+          <div class="fcard-t">Résultats</div>
+          <svg id="dash-donut" viewBox="0 0 110 110" width="110" height="110" style="transform:rotate(-90deg);display:block;margin:0 auto 14px;">
+            <circle cx="55" cy="55" r="40" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="13"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--green)" stroke-width="13" id="donut-won" stroke-dasharray="0 251"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--red)" stroke-width="13" id="donut-lost" stroke-dasharray="0 251" stroke-dashoffset="0"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--gold)" stroke-width="13" id="donut-pend" stroke-dasharray="0 251" stroke-dashoffset="0"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;gap:6px;" id="dash-legend"></div>
+        </div>
+      </div>
+
+      <div class="sh"><div class="sh-t">Relances urgentes aujourd'hui</div><button class="btn btn-ghost btn-sm" onclick="go('relances')">Voir tout →</button></div>
+      <div id="dash-urgent"></div>
+    </div>
+
+    <!-- ══ NOUVELLE OFFRE ══ -->
+    <div class="panel" id="panel-nouvelle">
+      <div id="step-form">
+        <div class="flow-g">
+          <div>
+            <div class="upload-z" id="upZone" ondragover="dOver(event)" ondragleave="dLeave()" ondrop="dDrop(event)">
+              <input type="file" accept=".pdf,.doc,.docx" onchange="fSel(event)">
+              <div class="up-ico" id="up-ico">📄</div>
+              <div class="up-h" id="up-h">Déposer l'offre PDF</div>
+              <div class="up-s" id="up-s">L'IA extrait automatiquement les informations</div>
+            </div>
+            <div id="pdf-extract-zone" style="display:none;">
+              <div class="pdf-extract">
+                <div class="pdf-extract-title">✦ Données extraites automatiquement</div>
+                <div class="pdf-field" style="position:relative;">
+                  <span class="pdf-field-lbl">Client</span>
+                  <div style="flex:1;position:relative;">
+                    <input class="pdf-field-edit" id="ex-client" value="" oninput="clientAutoComplete(this.value)" onblur="setTimeout(()=>closeACDropdown(),180)" placeholder="Nom complet du client">
+                    <div id="ac-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--s2);border:1px solid var(--border2);border-radius:8px;z-index:300;max-height:180px;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.4);margin-top:3px;"></div>
+                  </div>
+                </div>
+                <div id="client-history-badge" style="display:none;background:var(--blue-d);border:1px solid rgba(56,189,248,0.2);border-radius:7px;padding:8px 12px;margin:6px 0;font-size:11px;color:var(--blue);cursor:pointer;" onclick="showClientHistory()">
+                  👤 Client connu — <span id="client-history-count"></span> offre(s) précédente(s) · <strong>Voir l'historique</strong>
+                </div>
+                <div class="pdf-field"><span class="pdf-field-lbl">Email</span><input class="pdf-field-edit" id="ex-email" value=""></div>
+                <div class="pdf-field"><span class="pdf-field-lbl">Référence</span><input class="pdf-field-edit" id="ex-ref" value=""></div>
+                <div class="pdf-field"><span class="pdf-field-lbl">Montant CHF</span><input class="pdf-field-edit" id="ex-montant" value=""></div>
+                <div class="pdf-field"><span class="pdf-field-lbl">Objet</span><input class="pdf-field-edit" id="ex-objet" value=""></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fcard">
+            <div class="fcard-t">Contexte & personnalisation</div>
+            <div class="fg">
+              <label class="fl">Contexte de l'échange <span style="color:var(--gold)">★</span></label>
+              <textarea class="fta" id="f-contexte" placeholder="Ex: On s'est vus lundi, il hésite sur la garantie, livraison souhaitée avant fin mars, budget un peu serré..."></textarea>
+            </div>
+            <div class="f2">
+              <div class="fg">
+                <label class="fl">Ton de l'email</label>
+                <select class="fs" id="f-ton">
+                  <option value="chaleureux" selected>Chaleureux & humain</option>
+                  <option value="pro">Professionnel & formel</option>
+                  <option value="direct">Direct & concis</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label class="fl">Relation client</label>
+                <select class="fs" id="f-rel">
+                  <option value="nouveau">Nouveau client</option>
+                  <option value="connu" selected>Client connu</option>
+                  <option value="fidele">Client fidèle</option>
+                </select>
+              </div>
+            </div>
+            <div class="fg">
+              <label class="fl">Détail à mentionner (optionnel)</label>
+              <input class="fi" id="f-detail" placeholder="Ex: Livraison avant Noël possible, remise 5% incluse...">
+            </div>
+            <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:6px;" onclick="genEmail()">✦ Générer l'email & programmer les relances</button>
+            <div style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px;">
+              <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">⏱ Intervalles de relance pour cette offre</div>
+              <div class="f3">
+                <div class="fg"><label class="fl">Relance 1 (jours)</label><input class="fi" id="of-d1" type="number" min="1" max="30" value="3" style="text-align:center;font-family:'JetBrains Mono',monospace;"></div>
+                <div class="fg"><label class="fl">Relance 2 (jours)</label><input class="fi" id="of-d2" type="number" min="1" max="60" value="7" style="text-align:center;font-family:'JetBrains Mono',monospace;"></div>
+                <div class="fg"><label class="fl">Relance 3 (jours)</label><input class="fi" id="of-d3" type="number" min="1" max="90" value="14" style="text-align:center;font-family:'JetBrains Mono',monospace;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="step-loading" style="display:none;">
+        <div class="ai-load">
+          <div class="ai-spin"></div>
+          <div class="ai-txt" id="ai-txt">Analyse du contexte client...</div>
+          <div class="ai-steps" id="ai-steps">
+            <div class="ai-step active" id="as-1">⟳ Lecture des données de l'offre</div>
+            <div class="ai-step" id="as-2">⟳ Analyse du contexte et de la relation</div>
+            <div class="ai-step" id="as-3">⟳ Rédaction de l'email personnalisé</div>
+            <div class="ai-step" id="as-4">⟳ Programmation des relances</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="step-preview" style="display:none;">
+        <div class="sh">
+          <div class="sh-t">Email généré — relisez avant envoi</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost btn-sm" onclick="resetToForm()">← Modifier</button>
+            <button class="btn btn-ghost btn-sm" onclick="editBodyToggle()">✎ Éditer</button>
+            <button class="btn btn-ghost btn-sm" onclick="genEmail()">↺ Régénérer</button>
+          </div>
+        </div>
+
+        <div class="ep-card">
+          <div class="ep-top">
+            <div class="ep-f"><span class="ep-fl">De :</span><span class="ep-fv" id="prev-from">—</span></div>
+            <div class="ep-f"><span class="ep-fl">À :</span><span class="ep-fv" id="prev-to">—</span></div>
+            <div class="ep-f"><span class="ep-fl">Sujet :</span><span class="ep-fv" id="prev-sub">—</span></div>
+            <div class="ep-f"><span class="ep-fl">Pièce jointe :</span><span class="ep-att" id="prev-pj">—</span></div>
+          </div>
+          <div class="ep-body" id="prev-body" style="outline:none;">—</div>
+        </div>
+
+        <div class="rtl">
+          <div class="rtl-title">Relances programmées automatiquement</div>
+          <div class="rtl-steps" id="rtl-inner"></div>
+        </div>
+
+        <div style="background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+          <div style="flex:1;font-size:13px;color:var(--muted);">Envoi à <strong id="prev-name" style="color:var(--text);">—</strong> + relances automatiques activées</div>
+          <button class="btn btn-ghost btn-sm" onclick="resetToForm()">Annuler</button>
+          <button class="btn btn-ghost btn-sm" onclick="previewNewRelances()">👁 Voir relances</button>
+          <button class="btn btn-gold" onclick="sendOffer()">📤 Envoyer l'offre</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TOUTES LES OFFRES ══ -->
+    <div class="panel" id="panel-offres">
+      <div class="filter-bar">
+        <input type="text" class="search-in" id="search-offres" placeholder="🔍 Rechercher par client, référence..." oninput="renderOffres()">
+        <button class="filter-btn f-all active" id="f-all" onclick="setFilter('all')">Toutes</button>
+        <button class="filter-btn f-sent" id="f-sent" onclick="setFilter('sent')">Envoyées</button>
+        <button class="filter-btn" id="f-relance" onclick="setFilter('relance')">En relance</button>
+        <button class="filter-btn f-won" id="f-won" onclick="setFilter('won')">Gagnées</button>
+        <button class="filter-btn f-lost" id="f-lost" onclick="setFilter('lost')">Perdues</button>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto;" onclick="exportCSV()">📊 Export Excel</button>
+      </div>
+      <div class="tbl">
+        <div class="tbl-h tbl-cols">
+          <div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Prochaine relance</div><div class="tbl-hc">Actions</div>
+        </div>
+        <div id="tbody-offres"></div>
+      </div>
+    </div>
+
+    <!-- ══ RELANCES ══ -->
+    <div class="panel" id="panel-relances">
+      <div class="kgrid kgrid-3">
+        <div class="kcard g"><div class="k-lbl">Aujourd'hui</div><div class="k-val" id="kpi-relances-today">—</div><div class="k-sub">Relances à traiter</div></div>
+        <div class="kcard bl"><div class="k-lbl">Cette semaine</div><div class="k-val" id="kpi-relances-week">—</div><div class="k-sub">Relances programmées</div></div>
+        <div class="kcard gr"><div class="k-lbl">Taux réponse R1</div><div class="k-val" id="kpi-relances-taux">—</div><div class="k-sub" id="kpi-relances-taux-sub">Calculé sur vos offres</div></div>
+      </div>
+      <div class="tbl">
+        <div class="tbl-h tbl-cols"><div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Date prévue</div><div class="tbl-hc">Actions</div></div>
+        <div id="tbody-relances"></div>
+      </div>
+    </div>
+
+    <!-- ══ DÉTECTION OUVERTURE ══ -->
+    <div class="panel" id="panel-detection">
+      <div class="kgrid kgrid-3">
+        <div class="kcard bl"><div class="k-lbl">Emails ouverts</div><div class="k-val" id="kpi-det-opens">—</div><div class="k-sub" id="kpi-det-opens-sub">Sur vos envois</div></div>
+        <div class="kcard g"><div class="k-lbl">Taux ouverture</div><div class="k-val" id="kpi-det-taux">—</div><div class="k-sub">De vos offres envoyées</div></div>
+        <div class="kcard or"><div class="k-lbl">Clients "chauds"</div><div class="k-val" id="kpi-det-hot">—</div><div class="k-sub">Ouverture &lt; 24h</div></div>
+      </div>
+
+      <div class="sh"><div class="sh-t">Activité en temps réel</div><div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--blue);"><div class="od-pulse" style="width:7px;height:7px;border-radius:50%;background:var(--blue);animation:pulse 1.5s ease infinite;"></div>En direct</div></div>
+
+      <div class="od-card" style="margin-bottom:16px;">
+        <div class="od-header">
+          <div class="od-title"><div class="od-pulse"></div>Événements récents</div>
+          <button class="btn btn-blue btn-sm" onclick="toast('📞','Sélectionnez un client à appeler')">📞 Appel rapide</button>
+        </div>
+        <div class="od-events" id="od-events-list"></div>
+      </div>
+
+      <div class="sh"><div class="sh-t">Toutes les offres — statut ouverture</div></div>
+      <div class="tbl">
+        <div class="tbl-h" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;">
+          <div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">1er ouverture</div><div class="tbl-hc">Nb vues</div><div class="tbl-hc">Score</div>
+        </div>
+        <div id="tbody-detection"></div>
+      </div>
+    </div>
+
+    <!-- ══ CALENDRIER ══ -->
+    <div class="panel" id="panel-calendrier">
+      <div class="leg">
+        <div class="leg-i"><div class="leg-d" style="background:var(--blue)"></div>Envoi initial</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--gold)"></div>Relance 1</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--purple)"></div>Relance 2</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--orange)"></div>Relance 3</div>
+      </div>
+      <div class="cal-wrap" id="cal-wrap"></div>
+    </div>
+
+    <!-- ══ REVENUS ══ -->
+    <div class="panel" id="panel-revenus">
+      <div class="rev-split">
+        <div class="rev-card won">
+          <div class="rev-glow"></div>
+          <div class="rev-tag">💚 Revenus gagnés</div>
+          <div class="rev-big" id="rev-won">0 CHF</div>
+          <div class="rev-count" id="rev-won-c">0 offre convertie</div>
+          <div id="rev-won-list"></div>
+        </div>
+        <div class="rev-card lost">
+          <div class="rev-glow"></div>
+          <div class="rev-tag">❌ Revenus perdus</div>
+          <div class="rev-big" id="rev-lost">0 CHF</div>
+          <div class="rev-count" id="rev-lost-c">0 offre non convertie</div>
+          <div id="rev-lost-list"></div>
+        </div>
+      </div>
+      <div class="fcard">
+        <div class="fcard-t">Analyse des pertes</div>
+        <div class="funnel" style="margin-top:8px;" id="rev-analyse-pertes">
+          <div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Marquez des offres comme perdues pour voir l'analyse.</div>
+        </div>
+        <div style="margin-top:14px;padding:12px 14px;background:var(--gold-d);border:1px solid rgba(233,184,74,0.18);border-radius:9px;font-size:12px;color:var(--gold);display:none;" id="rev-potentiel"></div>
+      </div>
+    </div>
+
+    <!-- ══ CLIENTS ══ -->
+    <div class="panel" id="panel-clients">
+      <div class="sh"><div class="sh-t">Fiches clients</div><div style="font-size:12px;color:var(--muted);" id="clients-count">6 clients</div></div>
+      <div class="client-grid" id="client-grid"></div>
+    </div>
+
+    <!-- ══ RAPPORT HEBDO ══ -->
+    <div class="panel" id="panel-rapport">
+      <div class="report-card" id="rapport-content"></div>
+    </div>
+
+    <!-- ══ CONFIG ══ -->
+    <div class="panel" id="panel-config">
+
+      <!-- BREVO EMAIL -->
+      <div class="fcard" style="margin-bottom:18px;border-color:rgba(34,197,94,0.2);">
+        <div class="fcard-t" style="color:var(--green);">📨 Envoi des emails — Configuration expéditeur</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.7;">Les emails (offre initiale + 3 relances avec PDF) seront envoyés <strong style="color:var(--text);">depuis votre adresse</strong>. Les réponses de vos clients arriveront directement dans votre boîte.</p>
+        <div class="f2" style="margin-bottom:12px;">
+          <div class="fg"><label class="fl">Votre adresse email</label><input class="fi" id="cfg-sender-email" type="email" placeholder="votre@email.ch"></div>
+          <div class="fg"><label class="fl">Nom affiché</label><input class="fi" id="cfg-name-email" placeholder="Jean Dupont"></div>
+        </div>
+        <div id="brevo-status" style="font-size:12px;"></div>
+      </div>
+
+      <!-- EMAIL OAUTH (futur) -->
+      <div class="fcard" style="margin-bottom:18px;opacity:0.6;">
+        <div class="fcard-t">📧 Gmail / Outlook OAuth — <span style="color:var(--muted);font-weight:400;font-size:11px;">En attente validation Google (3-5 jours)</span></div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Une fois validé, les emails partiront directement depuis votre boîte Gmail ou Outlook sans passer par Brevo.</p>
+        <div id="email-connection-status" style="margin-bottom:16px;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;">
+            <div style="font-size:28px;margin-bottom:8px;">📬</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Gmail / Google Workspace</div>
+            <div id="gmail-status" style="margin-bottom:10px;"></div>
+            <button class="btn btn-gold" style="width:100%;opacity:0.5;" disabled>Connecter Gmail — bientôt</button>
+          </div>
+          <div style="background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;">
+            <div style="font-size:28px;margin-bottom:8px;">💼</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Outlook / Microsoft 365</div>
+            <div id="outlook-status" style="margin-bottom:10px;"></div>
+            <button class="btn btn-blue" style="width:100%;opacity:0.5;" disabled>Connecter Outlook — bientôt</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFIL COMMERCIAL -->
+      <div class="fcard" style="margin-bottom:18px;">
+        <div class="fcard-t">👤 Profil commercial — Signature des emails</div>
+        <div class="f2" style="margin-bottom:12px;">
+          <div class="fg"><label class="fl">Prénom & Nom</label><input class="fi" id="cfg-name" placeholder="Jean Dupont"></div>
+          <div class="fg"><label class="fl">Titre / Fonction</label><input class="fi" id="cfg-role" placeholder="Commercial, Responsable..."></div>
+        </div>
+        <div class="f2" style="margin-bottom:12px;">
+          <div class="fg"><label class="fl">Entreprise</label><input class="fi" id="cfg-company" placeholder="Mon Entreprise SA"></div>
+          <div class="fg"><label class="fl">Téléphone</label><input class="fi" id="cfg-phone" placeholder="+41 79 000 00 00"></div>
+        </div>
+        <div style="background:var(--s2);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted);border-left:3px solid var(--border2);" id="sig-preview">
+          <em>Aperçu signature — remplissez les champs ci-dessus</em>
+        </div>
+      </div>
+
+      <div class="fcard" style="margin-bottom:18px;">
+        <div class="fcard-t">Calendrier des relances automatiques</div>
+        <div class="rtl" style="margin-top:0;background:var(--s2);border:none;">
+          <div class="rtl-title">Délai en jours après envoi initial</div>
+          <div class="rtl-steps">
+            <div class="rtl-step"><div class="rtl-dot d0">📤</div><div class="rtl-lbl">Envoi</div><div class="rtl-day">Jour 0</div></div>
+            <div class="rtl-step"><div class="rtl-dot d1">1</div><div class="rtl-lbl">Relance 1</div><div>J+<input class="day-in" id="cfg-d1" value="3" type="number"> j</div></div>
+            <div class="rtl-step"><div class="rtl-dot d2">2</div><div class="rtl-lbl">Relance 2</div><div>J+<input class="day-in" id="cfg-d2" value="7" type="number"> j</div></div>
+            <div class="rtl-step"><div class="rtl-dot d3">3</div><div class="rtl-lbl">Relance 3</div><div>J+<input class="day-in" id="cfg-d3" value="14" type="number"> j</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cfg-grid">
+        <div class="cfg-card"><div class="cfg-t"><span style="color:var(--gold)">R1</span> Message — Ton doux</div><textarea class="fta" id="tpl-r1" style="min-height:90px;font-size:12px;">Bonjour {prénom}, je reviens vers vous concernant notre offre {ref} du {date}. Avez-vous eu le temps d'y jeter un œil ? Je suis disponible pour toute question. Cordialement.</textarea></div>
+        <div class="cfg-card"><div class="cfg-t"><span style="color:var(--purple)">R2</span> Message — Ton engagé</div><textarea class="fta" id="tpl-r2" style="min-height:90px;font-size:12px;">Bonjour {prénom}, suite à mon précédent message concernant l'offre {ref} ({montant} CHF), je voulais m'assurer qu'elle correspond à votre projet. Notre agenda se remplit — pouvez-vous me confirmer votre intérêt ? Cordialement.</textarea></div>
+        <div class="cfg-card" style="grid-column:1/-1;"><div class="cfg-t"><span style="color:var(--orange)">R3</span> Message — Dernier contact</div><textarea class="fta" id="tpl-r3" style="min-height:80px;font-size:12px;">Bonjour {prénom}, c'est mon dernier message concernant l'offre {ref}. Si le projet n'est plus d'actualité, pas de problème — je clos le dossier. Si vous souhaitez qu'on en reparle, je reste disponible jusqu'au {date_limite}. Bonne continuation.</textarea></div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px;">
+        <button class="btn btn-ghost btn-sm" onclick="go('rapport')">Aperçu rapport</button>
+        <button class="btn btn-gold" onclick="saveConfig()">💾 Sauvegarder la configuration</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-hd">
+      <div><div class="modal-t" id="m-t">—</div><div class="modal-s" id="m-s">—</div></div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div id="m-body">—</div>
+  </div>
+</div>
+
+<!-- PDF VIEWER OVERLAY -->
+<div class="overlay" id="pdf-overlay" onclick="closePDFViewer()" style="align-items:stretch;padding:20px;">
+  <div style="background:var(--s1);border:1px solid var(--border2);border-radius:16px;width:780px;max-width:100%;display:flex;flex-direction:column;max-height:100%;" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);flex-shrink:0;">
+      <div style="font-family:'Instrument Serif',serif;font-size:16px;" id="pdf-viewer-title">Offre PDF</div>
+      <div style="display:flex;gap:8px;">
+        <a id="pdf-download-link" download style="text-decoration:none;"><button class="btn btn-ghost btn-sm">⬇ Télécharger</button></a>
+        <button class="modal-x" onclick="closePDFViewer()">✕</button>
+      </div>
+    </div>
+    <div style="flex:1;overflow:hidden;border-radius:0 0 16px 16px;">
+      <iframe id="pdf-frame" style="width:100%;height:100%;border:none;min-height:70vh;" src=""></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-el" id="toast-el"><span id="t-ico">✅</span><span id="t-txt">—</span></div>
+
+<!-- CONFIRM OVERLAY -->
+<div class="overlay" id="confirm-overlay" onclick="closeConfirm()">
+  <div class="confirm-modal" onclick="event.stopPropagation()">
+    <div class="confirm-ico" id="conf-ico">⚠️</div>
+    <div class="confirm-t" id="conf-t">Confirmer</div>
+    <div class="confirm-s" id="conf-s">Êtes-vous sûr ?</div>
+    <div class="confirm-acts">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Annuler</button>
+      <button class="btn" id="conf-btn" onclick="confirmAction()">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- RELANCE PREVIEW OVERLAY -->
+<div class="overlay" id="rp-overlay" onclick="closeRPOverlay()">
+  <div class="modal" style="width:640px;" onclick="event.stopPropagation()">
+    <div class="modal-hd">
+      <div><div class="modal-t">✦ Aperçu des relances</div><div class="modal-s">Vérifiez et modifiez chaque email avant l'envoi</div></div>
+      <button class="modal-x" onclick="closeRPOverlay()">✕</button>
+    </div>
+    <div class="rp-tab-bar" id="rp-tabs"></div>
+    <div id="rp-content"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--border);padding-top:16px;margin-top:4px;">
+      <button class="btn btn-ghost" onclick="closeRPOverlay()">Retour</button>
+      <button class="btn btn-ghost btn-sm" onclick="toggleEditRelance()" id="rp-edit-btn">✎ Modifier</button>
+      <button class="btn btn-gold" onclick="confirmSendOffer()">🚀 Confirmer & Envoyer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ══ SUPABASE CONFIG ══
+const SB_URL = 'https://eripvzfinfevuebccyzu.supabase.co';
+const SB_KEY = 'sb_publishable_9IUNEJLiohMD-7sTl3Mxfw_3RqDWwe6';
+
+// ══ DATA (chargé depuis Supabase) ══
+let OFFERS = [];
+
+async function loadOffers() {
+  try {
+    // Load offres with client join
+    const offres = await sbFetch('offres?select=*,clients(*)&order=created_at.desc');
+    OFFERS = offres.map(o => ({
+      id: o.id,
+      prenom: o.clients?.prenom || '',
+      nom: o.clients?.nom || '',
+      email: o.clients?.email || '',
+      entreprise: o.clients?.entreprise || '',
+      client_id: o.client_id,
+      ref: o.reference || '',
+      montant: o.montant || 0,
+      objet: o.objet || '',
+      contexte: o.contexte || '',
+      status: o.statut || 'sent',
+      sendDate: o.date_envoi || '',
+      fichier: o.fichier_nom || '',
+      pdfUrl: o.pdf_url || '',
+      notes: o.notes || '',
+      relances: { r1: '', r2: '', r3: '' },
+      opens: 0,
+      lastOpen: null,
+      _raw: o
+    }));
+
+    // Load relances for each offre
+    if(OFFERS.length > 0) {
+      const relances = await sbFetch('relances?select=*&order=date_prevue.asc');
+      relances.forEach(r => {
+        const o = OFFERS.find(x => x.id === r.offre_id);
+        if(o) {
+          if(r.numero === 1) o.relances.r1 = r.date_prevue;
+          if(r.numero === 2) o.relances.r2 = r.date_prevue;
+          if(r.numero === 3) o.relances.r3 = r.date_prevue;
+        }
+      });
+
+      // Load ouvertures
+      const ouvertures = await sbFetch('ouvertures?select=*&order=opened_at.desc');
+      ouvertures.forEach(v => {
+        const o = OFFERS.find(x => x.id === v.offre_id);
+        if(o) {
+          o.opens++;
+          if(!o.lastOpen) o.lastOpen = v.opened_at?.slice(0,10);
+        }
+      });
+    }
+
+    updateBadges();
+    renderUrgent();
+  } catch(err) {
+    console.error('Supabase load error:', err);
+    toast('⚠️', 'Connexion Supabase — ' + err.message.slice(0,60));
+  }
+}
+
+function updateBadges() {
+  const pending = OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
+  const opened = OFFERS.filter(o=>o.opens > 0);
+  const clients = [...new Set(OFFERS.map(o=>o.email))];
+  const setEl = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  setEl('nc-offres', OFFERS.length);
+  setEl('nc-relances', pending.length);
+  setEl('nc-detection', opened.length);
+  setEl('nc-clients', clients.length);
+  // Mobile badge
+  const mob = document.getElementById('mob-relance-badge');
+  if(mob) { mob.style.display = pending.length > 0 ? 'block' : 'none'; }
+  updateDashboardKPIs();
+}
+
+function updateDashboardKPIs() {
+  const won = OFFERS.filter(o=>o.status==='won');
+  const lost = OFFERS.filter(o=>o.status==='lost');
+  const pending = OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
+  const total = OFFERS.length;
+  const caGagne = won.reduce((s,o)=>s+o.montant,0);
+  const caPending = pending.reduce((s,o)=>s+o.montant,0);
+  const txConv = total>0 ? Math.round(won.length/total*100) : 0;
+  const setKpi = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  setKpi('kpi-offres', total);
+  const fmtK = v => v>=1000?(v/1000).toFixed(1)+'K CHF':v+' CHF';
+  setKpi('kpi-ca', caGagne>0?fmtK(caGagne):'0 CHF');
+  setKpi('kpi-pending', caPending>0?fmtK(caPending):'0 CHF');
+  setKpi('kpi-conv', txConv+'%');
+  const bar = document.getElementById('kpi-conv-bar');
+  if(bar) bar.style.width = txConv+'%';
+  // Funnel
+  const counts = {sent:OFFERS.filter(o=>o.status==='sent').length,r1:OFFERS.filter(o=>o.status==='relance1').length,r2:OFFERS.filter(o=>o.status==='relance2').length,r3:OFFERS.filter(o=>o.status==='relance3').length,won:won.length};
+  const maxC = Math.max(...Object.values(counts),1);
+  const funnelEl = document.getElementById('dash-funnel');
+  if(funnelEl){const steps=[{lbl:'Envoyées',n:counts.sent,bg:'var(--blue-d)',c:'var(--blue)'},{lbl:'Relance 1',n:counts.r1,bg:'var(--gold-d)',c:'var(--gold)'},{lbl:'Relance 2',n:counts.r2,bg:'var(--purple-d)',c:'var(--purple)'},{lbl:'Relance 3',n:counts.r3,bg:'var(--orange-d)',c:'var(--orange)'},{lbl:'Gagnées ✓',n:counts.won,bg:'var(--green-d)',c:'var(--green)'}];funnelEl.innerHTML=steps.map(s=>`<div class="f-step"><div class="f-lbl">${s.lbl}</div><div class="f-track"><div class="f-bar" style="width:${s.n===0?8:Math.round(s.n/maxC*100)}%;background:${s.bg};color:${s.c};">${s.n} offre${s.n>1?'s':''}</div></div><div class="f-cnt" style="color:${s.c}">${s.n}</div></div>`).join('');}
+  // Donut
+  const circ=251.2,wonD=total>0?won.length/total*circ:0,lostD=total>0?lost.length/total*circ:0,pendD=total>0?pending.length/total*circ:0;
+  const dWon=document.getElementById('donut-won'),dLost=document.getElementById('donut-lost'),dPend=document.getElementById('donut-pend');
+  if(dWon)dWon.setAttribute('stroke-dasharray',`${wonD} ${circ-wonD}`);
+  if(dLost){dLost.setAttribute('stroke-dasharray',`${lostD} ${circ-lostD}`);dLost.setAttribute('stroke-dashoffset',`-${wonD}`);}
+  if(dPend){dPend.setAttribute('stroke-dasharray',`${pendD} ${circ-pendD}`);dPend.setAttribute('stroke-dashoffset',`-${wonD+lostD}`);}
+  const legEl=document.getElementById('dash-legend');
+  if(legEl)legEl.innerHTML=[{lbl:'Gagnées',n:won.length,c:'var(--green)'},{lbl:'Perdues',n:lost.length,c:'var(--red)'},{lbl:'En cours',n:pending.length,c:'var(--gold)'}].map(l=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--border);"><div style="display:flex;align-items:center;gap:7px;"><div style="width:8px;height:8px;border-radius:50%;background:${l.c}"></div>${l.lbl}</div><div style="font-family:'JetBrains Mono',monospace;color:${l.c};font-weight:600;">${l.n}</div></div>`).join('');
+}
+
+const SL = {sent:'Envoyée',relance1:'Relance 1',relance2:'Relance 2',relance3:'Relance 3',won:'Gagnée',lost:'Perdue'};
+const SC = {sent:'p-sent',relance1:'p-r1',relance2:'p-r2',relance3:'p-r3',won:'p-won',lost:'p-lost'};
+const NR = {sent:'Dans 3 jours',relance1:"Aujourd'hui",relance2:"Aujourd'hui",relance3:'Dans 7 jours',won:'—',lost:'—'};
+const AVATARS = ['#E9B84A','#22C55E','#38BDF8','#A78BFA','#F43F5E','#FB923C'];
+
+// ══ NAV ══
+const TITLES = {dashboard:'Dashboard',nouvelle:'Envoyer une offre',offres:'Toutes les offres',relances:'Relances',detection:"Détection d'ouverture",calendrier:'Calendrier',revenus:'Revenus & Analyse',clients:'Fiches clients',rapport:'Rapport hebdomadaire',config:'Configuration'};
+
+function go(name) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.getElementById('page-title').textContent = TITLES[name];
+  document.querySelectorAll('.nb').forEach(b=>{
+    const t = b.textContent.trim().toLowerCase();
+    if(t.startsWith(TITLES[name].toLowerCase().slice(0,5))) b.classList.add('active');
+  });
+  if(name==='offres') renderOffres();
+  if(name==='relances') renderRelances();
+  if(name==='detection') renderDetection();
+  if(name==='calendrier') renderCalendar();
+  if(name==='revenus') renderRevenues();
+  if(name==='clients') renderClients();
+  if(name==='rapport') renderRapport();
+  setMobActive(name);
+}
+
+// ══ ROW ══
+function row(o) {
+  const nr = NR[o.status];
+  return `<div class="tbl-r tbl-cols" onclick="openModal('${o.id}')">
+    <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
+    <div class="ref">${o.ref}</div>
+    <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
+    <div><span class="pill ${SC[o.status]}">${SL[o.status]}</span></div>
+    <div style="font-size:12px;${nr.includes("hui")?'color:var(--gold);font-weight:600;':nr==='—'?'color:var(--muted)':''}">${nr}</div>
+    <div class="acts">
+      <button class="bic" onclick="event.stopPropagation();actR('${o.id}')" title="Relance">📧</button>
+      <button class="bic" onclick="event.stopPropagation();actW('${o.id}')" title="Gagné">✓</button>
+      <button class="bic" onclick="event.stopPropagation();actL('${o.id}')" title="Perdu">✕</button>
+    </div>
+  </div>`;
+}
+
+let currentFilter = 'all';
+let currentSearch = '';
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  const map = {all:'f-all',sent:'f-sent',relance:'f-relance',won:'f-won',lost:'f-lost'};
+  if(document.getElementById(map[f])) document.getElementById(map[f]).classList.add('active');
+  renderOffres();
+}
+
+function renderOffres(){
+  const search = (document.getElementById('search-offres')?.value||'').toLowerCase();
+  let list = OFFERS.filter(o => {
+    const matchSearch = !search || 
+      (o.prenom+' '+o.nom).toLowerCase().includes(search) ||
+      o.ref.toLowerCase().includes(search) ||
+      o.email.toLowerCase().includes(search) ||
+      (o.objet||'').toLowerCase().includes(search);
+    const matchFilter = currentFilter === 'all' ? true :
+      currentFilter === 'sent' ? o.status === 'sent' :
+      currentFilter === 'relance' ? ['relance1','relance2','relance3'].includes(o.status) :
+      currentFilter === 'won' ? o.status === 'won' :
+      currentFilter === 'lost' ? o.status === 'lost' : true;
+    return matchSearch && matchFilter;
+  });
+  const empty = `<div style="text-align:center;padding:40px;color:var(--muted);">Aucune offre trouvée</div>`;
+  document.getElementById('tbody-offres').innerHTML = list.length ? list.map(o=>row(o)).join('') : empty;
+}
+function renderRelances(){
+  const today = new Date().toISOString().slice(0,10);
+  const p = OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
+
+  // KPIs dynamiques
+  const todayRelances = p.filter(o => {
+    const r = o.relances;
+    return r.r1 === today || r.r2 === today || r.r3 === today;
+  });
+  const weekRelances = p.filter(o => {
+    const r = o.relances;
+    const inWeek = d => { if(!d) return false; const diff = (new Date(d)-new Date(today))/86400000; return diff >= 0 && diff <= 7; };
+    return inWeek(r.r1) || inWeek(r.r2) || inWeek(r.r3);
+  });
+  const won = OFFERS.filter(o=>o.status==='won');
+  const total = OFFERS.length;
+  const txReponse = total > 0 ? Math.round(won.length / total * 100) : 0;
+
+  const el1 = document.getElementById('kpi-relances-today');
+  const el2 = document.getElementById('kpi-relances-week');
+  const el3 = document.getElementById('kpi-relances-taux');
+  const el3s = document.getElementById('kpi-relances-taux-sub');
+  if(el1) el1.textContent = todayRelances.length;
+  if(el2) el2.textContent = weekRelances.length;
+  if(el3) el3.textContent = total > 0 ? txReponse + '%' : '—';
+  if(el3s) el3s.textContent = total > 0 ? `Sur ${total} offre${total>1?'s':''} envoyée${total>1?'s':''}` : 'Pas encore d\'offres';
+
+  document.getElementById('tbody-relances').innerHTML = p.length
+    ? p.map(o=>row(o)).join('')
+    : `<div style="text-align:center;padding:40px;color:var(--muted);">🎉 Aucune relance en attente</div>`;
+}
+
+// ══ URGENT DASHBOARD ══
+function renderUrgent(){
+  const u=OFFERS.filter(o=>['relance1','relance2'].includes(o.status));
+  const el=document.getElementById('dash-urgent');
+  if(!u.length){el.innerHTML=`<div style="text-align:center;padding:40px;color:var(--muted);">✅ Aucune relance urgente</div>`;return;}
+  el.innerHTML=`<div class="tbl"><div class="tbl-h tbl-cols"><div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Action</div><div class="tbl-hc">Actions</div></div>${u.map(o=>row(o)).join('')}</div>`;
+}
+
+// ══ DETECTION ══
+function renderDetection(){
+  // KPIs dynamiques
+  const total = OFFERS.length;
+  const opened = OFFERS.filter(o => o.opens > 0);
+  const taux = total > 0 ? Math.round(opened.length / total * 100) : 0;
+  const now = new Date();
+  const hot = OFFERS.filter(o => {
+    if(!o.lastOpen) return false;
+    const d = new Date(o.lastOpen);
+    return (now - d) < 86400000;
+  });
+  document.getElementById('kpi-det-opens').textContent = opened.length;
+  document.getElementById('kpi-det-opens-sub').textContent = `Sur ${total} offre${total>1?'s':''} envoyée${total>1?'s':''}`;
+  document.getElementById('kpi-det-taux').textContent = total > 0 ? taux + '%' : '—';
+  document.getElementById('kpi-det-hot').textContent = hot.length;
+
+  // Événements depuis OFFERS réels (triés par lastOpen desc)
+  const events = OFFERS
+    .filter(o => o.opens > 0 && o.lastOpen)
+    .sort((a,b) => new Date(b.lastOpen) - new Date(a.lastOpen))
+    .slice(0, 5)
+    .map(o => {
+      const daysAgo = Math.floor((now - new Date(o.lastOpen)) / 86400000);
+      const timeStr = daysAgo === 0 ? 'Aujourd\'hui' : daysAgo === 1 ? 'Hier' : `Il y a ${daysAgo}j`;
+      const isHot = daysAgo === 0;
+      return `<div class="od-event ${isHot?'hot':''}">
+        <div class="od-event-ico">${isHot?'🔥':'👁'}</div>
+        <div class="od-event-info">
+          <div class="od-event-main">${o.prenom} ${o.nom} a ouvert votre email</div>
+          <div class="od-event-sub">${o.ref} · ${o.montant.toLocaleString('fr-CH')} CHF · ${o.opens}ème ouverture</div>
+        </div>
+        <div class="od-event-time">${timeStr}</div>
+        ${isHot?`<button class="btn btn-gold btn-sm" onclick="toast('📞','Appelez ${o.prenom} ${o.nom} — ${o.email}')">Appeler</button>`:''}
+      </div>`;
+    });
+
+  document.getElementById('od-events-list').innerHTML = events.length > 0
+    ? events.join('')
+    : '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Aucune ouverture détectée pour l\'instant.<br><span style="font-size:11px;opacity:0.6;">Les ouvertures apparaissent ici dès qu\'un client ouvre votre email.</span></div>';
+
+  // Tableau statut ouverture
+  const scores = o => {
+    if(o.opens === 0) return '⚪ Pas ouvert';
+    if(o.opens >= 3) return '🔥 Très chaud';
+    const d = o.lastOpen ? Math.floor((now - new Date(o.lastOpen)) / 86400000) : 99;
+    if(d < 1) return '🟢 Chaud';
+    if(d < 3) return '🟡 Tiède';
+    return '🔵 Lu';
+  };
+  document.getElementById('tbody-detection').innerHTML = OFFERS.length > 0
+    ? OFFERS.map(o=>`
+      <div class="tbl-r" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;" onclick="openModal('${o.id}')">
+        <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
+        <div class="ref">${o.ref}</div>
+        <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
+        <div style="font-size:12px;color:${o.opens>0?'var(--green)':'var(--muted)'};">${o.lastOpen||'—'}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${o.opens>1?'var(--gold)':'var(--muted)'};">${o.opens}×</div>
+        <div style="font-size:12px;">${scores(o)}</div>
+      </div>`).join('')
+    : '<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;">Aucune offre envoyée pour l\'instant.</div>';
+}
+
+// ══ CALENDAR ══
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+
+function renderCalendar(){
+  const today = new Date();
+  const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const MONTHS_SHORT = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const evs = {};
+  OFFERS.forEach(o => {
+    const add = (ds, lbl, cls) => {
+      if(!ds) return;
+      const parts = ds.split('-');
+      if(parseInt(parts[0]) !== calYear || parseInt(parts[1])-1 !== calMonth) return;
+      const d = parseInt(parts[2]);
+      if(!evs[d]) evs[d] = [];
+      evs[d].push({lbl, cls, id: o.id, full: `${o.prenom} ${o.nom} — ${o.objet}`});
+    };
+    const s = (o.prenom[0]||'?')+'.'+o.nom.slice(0,5);
+    add(o.sendDate, s+' Envoi', 'ev-send');
+    add(o.relances.r1, s+' R1', 'ev-r1');
+    add(o.relances.r2, s+' R2', 'ev-r2');
+    add(o.relances.r3, s+' R3', 'ev-r3');
+  });
+  const prevM = MONTHS_SHORT[calMonth === 0 ? 11 : calMonth - 1];
+  const nextM = MONTHS_SHORT[calMonth === 11 ? 0 : calMonth + 1];
+  const dow = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const offset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  let h = `<div class="cal-nav">
+    <button class="btn btn-ghost btn-sm" onclick="calNav(-1)">← ${prevM}</button>
+    <div class="cal-month">${MONTHS[calMonth]} ${calYear}</div>
+    <button class="btn btn-ghost btn-sm" onclick="calNav(1)">${nextM} →</button>
+  </div>`;
+  h += `<div class="cal-head">${dow.map(d=>`<div class="cal-dow">${d}</div>`).join('')}</div>`;
+  h += `<div class="cal-body">`;
+  for(let i=0;i<offset;i++) h += `<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday = d===today.getDate() && calMonth===today.getMonth() && calYear===today.getFullYear();
+    const e = evs[d]||[];
+    h += `<div class="cal-cell">
+      <div class="cal-d">${isToday?`<div class="cal-today-dot">${d}</div>`:d}</div>
+      ${e.map(ev=>`<div class="cal-ev ${ev.cls}" onclick="openModal('${ev.id}')" title="${ev.full}">${ev.lbl}</div>`).join('')}
+    </div>`;
+  }
+  h += `</div>`;
+  document.getElementById('cal-wrap').innerHTML = h;
+}
+
+function calNav(dir) {
+  calMonth += dir;
+  if(calMonth > 11) { calMonth = 0; calYear++; }
+  if(calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+// ══ REVENUES ══
+function renderRevenues(){
+  const won=OFFERS.filter(o=>o.status==='won');
+  const lost=OFFERS.filter(o=>o.status==='lost');
+  const pending=OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
+  document.getElementById('rev-won').textContent=won.reduce((s,o)=>s+o.montant,0).toLocaleString('fr-CH')+' CHF';
+  document.getElementById('rev-won-c').textContent=won.length+' offre'+(won.length>1?'s':'')+' convertie'+(won.length>1?'s':'');
+  document.getElementById('rev-lost').textContent=lost.reduce((s,o)=>s+o.montant,0).toLocaleString('fr-CH')+' CHF';
+  document.getElementById('rev-lost-c').textContent=lost.length+' offre'+(lost.length>1?'s':'')+' non convertie'+(lost.length>1?'s':'');
+  document.getElementById('rev-won-list').innerHTML=won.map(o=>`<div class="rev-item"><span class="rev-ic">${o.prenom} ${o.nom} · ${o.ref}</span><span class="rev-ia">+${o.montant.toLocaleString('fr-CH')} CHF</span></div>`).join('');
+  document.getElementById('rev-lost-list').innerHTML=lost.map(o=>`<div class="rev-item"><span class="rev-ic">${o.prenom} ${o.nom} · ${o.ref}</span><span class="rev-ia">-${o.montant.toLocaleString('fr-CH')} CHF</span></div>`).join('');
+  // Potentiel récupérable
+  const potEl = document.getElementById('rev-potentiel');
+  if(potEl && pending.length > 0) {
+    const pot = pending.reduce((s,o)=>s+o.montant,0);
+    potEl.innerHTML = `💡 <strong>Potentiel récupérable : ${pot.toLocaleString('fr-CH')} CHF</strong> sur ${pending.length} offre${pending.length>1?'s':''} en attente de réponse.`;
+    potEl.style.display = 'block';
+  } else if(potEl) { potEl.style.display = 'none'; }
+  updateAnalysePertes();
+}
+
+// ══ RAPPORT ══
+function renderRapport() {
+  const now = new Date();
+  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay() + 1);
+  const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('fr-CH', {day:'numeric',month:'short',year:'numeric'});
+  const fmtDate = d => d.toLocaleDateString('fr-CH', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  const total = OFFERS.length;
+  const won = OFFERS.filter(o=>o.status==='won');
+  const lost = OFFERS.filter(o=>o.status==='lost');
+  const pending = OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
+  const caGagne = won.reduce((s,o)=>s+o.montant,0);
+  const txConv = total > 0 ? Math.round(won.length/total*100) : 0;
+  const chauds = OFFERS.filter(o=>o.opens>=2 && ['sent','relance1','relance2','relance3'].includes(o.status));
+  const urgents = pending.filter(o=>o.status==='relance2'||o.status==='relance3');
+
+  // Insights dynamiques
+  const insights = [];
+  if(total === 0) {
+    insights.push(`<div class="insight blue"><strong>🚀 Commencez :</strong> <span>Envoyez votre première offre pour voir apparaître vos statistiques ici.</span></div>`);
+  } else {
+    if(txConv >= 50) insights.push(`<div class="insight green"><strong>🎯 Excellent :</strong> <span>Votre taux de conversion est de ${txConv}% — au-dessus de la moyenne du secteur (30%). Continuez sur cette lancée.</span></div>`);
+    else if(txConv > 0) insights.push(`<div class="insight"><strong>📈 En progression :</strong> <span>Taux de conversion à ${txConv}% sur ${total} offre${total>1?'s':''}. Les relances automatiques peuvent améliorer ce chiffre.</span></div>`);
+    if(chauds.length > 0) insights.push(`<div class="insight blue"><strong>💡 Opportunité :</strong> <span>${chauds[0].prenom} ${chauds[0].nom} (${chauds[0].ref} · ${chauds[0].montant.toLocaleString('fr-CH')} CHF) a ouvert votre email ${chauds[0].opens}× sans répondre — relancez maintenant.</span></div>`);
+    if(urgents.length > 0) {
+      const risque = urgents.reduce((s,o)=>s+o.montant,0);
+      insights.push(`<div class="insight red"><strong>⚠️ Attention :</strong> <span>${urgents.length} offre${urgents.length>1?'s':''} en relance avancée (R2/R3) — risque de perte estimé à ${risque.toLocaleString('fr-CH')} CHF.</span></div>`);
+    }
+    if(pending.length > 0) insights.push(`<div class="insight"><strong>📅 Cette semaine :</strong> <span>${pending.length} offre${pending.length>1?'s':''} en attente · ${chauds.length} client${chauds.length>1?'s':''} "chaud${chauds.length>1?'s':''}" à rappeler.</span></div>`);
+  }
+
+  document.getElementById('rapport-content').innerHTML = `
+    <div class="report-header">
+      <div class="report-date">Rapport automatique · Semaine du ${fmt(weekStart)} au ${fmt(weekEnd)}</div>
+      <div class="report-title">Synthèse commerciale hebdomadaire</div>
+      <div class="report-sub">Généré le ${fmtDate(now)}</div>
+    </div>
+    <div class="report-kpis">
+      <div class="report-kpi"><div class="rk-val" style="color:var(--gold)">${total}</div><div class="rk-lbl">Offres envoyées</div><div class="rk-delta" style="color:var(--muted)">Total cumulé</div></div>
+      <div class="report-kpi"><div class="rk-val" style="color:var(--green)">${won.length}</div><div class="rk-lbl">Offres gagnées</div><div class="rk-delta ${won.length>0?'delta-up':''}"">${won.length>0?'✓ Converties':'—'}</div></div>
+      <div class="report-kpi"><div class="rk-val" style="color:var(--blue);font-size:${caGagne>999?'20px':'28px'}">${caGagne.toLocaleString('fr-CH')}</div><div class="rk-lbl">CHF générés</div><div class="rk-delta ${caGagne>0?'delta-up':''}">${caGagne>0?'CA confirmé':'—'}</div></div>
+      <div class="report-kpi"><div class="rk-val" style="color:var(--purple)">${txConv}%</div><div class="rk-lbl">Taux conversion</div><div class="rk-delta ${txConv>30?'delta-up':'delta-dn'}">${total>0?`Sur ${total} offre${total>1?'s':''}`:'—'}</div></div>
+    </div>
+    <div class="report-body">
+      <div class="report-section">
+        <div class="rs-title">Insights de la semaine</div>
+        ${insights.join('')}
+      </div>
+      ${won.length > 0 ? `
+      <div class="report-section">
+        <div class="rs-title">Offres gagnées</div>
+        ${won.map(o=>`<div class="offer-mention">
+          <div><div class="om-name">${o.prenom} ${o.nom} — ${o.objet||o.ref}</div><div class="om-detail">${o.ref} · Gagné${o.opens>0?' · Ouvert '+o.opens+'×':''}</div></div>
+          <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600;">+${o.montant.toLocaleString('fr-CH')} CHF</div>
+        </div>`).join('')}
+      </div>` : ''}
+      ${pending.length > 0 ? `
+      <div class="report-section">
+        <div class="rs-title">Offres à surveiller (${pending.length})</div>
+        ${pending.slice(0,5).map(o=>`<div class="offer-mention">
+          <div><div class="om-name">${o.prenom} ${o.nom} — ${o.objet||o.ref}</div><div class="om-detail">${o.ref} · ${o.opens>0?'Ouvert '+o.opens+'×':'Pas encore ouvert'} · Envoyé le ${o.sendDate}</div></div>
+          <div><span class="pill ${SC[o.status]||'p-sent'}">${SL[o.status]||'Envoyé'}</span></div>
+        </div>`).join('')}
+      </div>` : ''}
+    </div>
+    <div class="report-actions">
+      <button class="btn btn-gold" onclick="toast('📧','Rapport envoyé par email !')">📧 Envoyer par email</button>
+      <button class="btn btn-ghost" onclick="exportPDF()">📄 Exporter PDF</button>
+      <button class="btn btn-ghost" onclick="exportCSV()">📊 Export Excel</button>
+    </div>`;
+}
+
+// ══ CLIENTS ══
+function renderClients(){
+  const clientMap={};
+  OFFERS.forEach(o=>{
+    const k=o.email;
+    if(!clientMap[k])clientMap[k]={prenom:o.prenom,nom:o.nom,email:o.email,offers:[],won:0,lost:0,total:0};
+    clientMap[k].offers.push(o);
+    if(o.status==='won'){clientMap[k].won++;clientMap[k].total+=o.montant;}
+    if(o.status==='lost')clientMap[k].lost++;
+  });
+  const clients=Object.values(clientMap);
+  document.getElementById('nc-clients').textContent=clients.length;
+  document.getElementById('clients-count').textContent=clients.length+' clients';
+  document.getElementById('client-grid').innerHTML=clients.map((c,i)=>{
+    const last=c.offers[c.offers.length-1];
+    return `<div class="client-card" onclick="openClientModal('${c.email}')">
+      <div class="cc-top">
+        <div class="cc-av" style="background:${AVATARS[i%AVATARS.length]}22;color:${AVATARS[i%AVATARS.length]};border:1.5px solid ${AVATARS[i%AVATARS.length]}44;">${c.prenom[0]}${c.nom[0]}</div>
+        <div><div class="cc-name">${c.prenom} ${c.nom}</div><div class="cc-email">${c.email}</div></div>
+      </div>
+      <div class="cc-stats">
+        <div class="cc-stat"><div class="cc-stat-val" style="color:var(--gold)">${c.offers.length}</div><div class="cc-stat-lbl">Offres</div></div>
+        <div class="cc-stat"><div class="cc-stat-val" style="color:var(--green)">${c.won}</div><div class="cc-stat-lbl">Gagnées</div></div>
+        <div class="cc-stat"><div class="cc-stat-val" style="color:var(--gold);">${c.total>0?Math.round(c.total/1000)+'K':'—'}</div><div class="cc-stat-lbl">CHF total</div></div>
+      </div>
+      <div class="cc-last">Dernière offre : ${last.objet} · ${SL[last.status]}</div>
+    </div>`;
+  }).join('');
+}
+
+function openClientModal(email){
+  const c=OFFERS.filter(o=>o.email===email);
+  if(!c.length)return;
+  const first=c[0];
+  const totalWon=c.filter(o=>o.status==='won').reduce((s,o)=>s+o.montant,0);
+  document.getElementById('m-t').textContent=`${first.prenom} ${first.nom}`;
+  document.getElementById('m-s').textContent=email+' · '+c.length+' offre(s)';
+  document.getElementById('m-body').innerHTML=`
+    <div class="m-2grid">
+      <div class="m-info"><div class="m-info-l">Offres totales</div><div class="m-info-v" style="color:var(--gold)">${c.length}</div></div>
+      <div class="m-info"><div class="m-info-l">CA généré</div><div class="m-info-v" style="color:var(--green);font-family:'JetBrains Mono',monospace;">${totalWon.toLocaleString('fr-CH')} CHF</div></div>
+    </div>
+    <div class="m-tl"><div class="m-tl-t">Historique des offres</div>
+    ${c.map(o=>`<div class="m-tl-item">
+      <div class="m-tl-dot" style="background:${o.status==='won'?'var(--green)':o.status==='lost'?'var(--red)':'var(--gold)'}"></div>
+      <div class="m-tl-info"><strong>${o.objet}</strong><br>${o.ref} · ${o.montant.toLocaleString('fr-CH')} CHF</div>
+      <div class="m-tl-date">${o.sendDate}</div>
+      <span class="pill ${SC[o.status]}">${SL[o.status]}</span>
+    </div>`).join('')}
+    </div>
+    <div class="m-acts">
+      <button class="btn btn-gold btn-sm" onclick="go('nouvelle');closeModal();toast('📄','Préparez la nouvelle offre')">+ Nouvelle offre</button>
+      <button class="btn btn-ghost btn-sm" onclick="toast('📧','Email direct...')">📧 Email direct</button>
+    </div>`;
+  document.getElementById('overlay').classList.add('open');
+}
+
+// ══ MODAL ══
+function openModal(id){
+  const o=OFFERS.find(x=>x.id===id);
+  if(!o)return;
+  document.getElementById('m-t').textContent=o.entreprise||`${o.prenom} ${o.nom}`;
+  document.getElementById('m-s').textContent=`${o.ref} · ${SL[o.status]} · ${o.opens} ouverture(s)`;
+  document.getElementById('m-body').innerHTML=`
+    <div class="m-2grid">
+      <div class="m-info"><div class="m-info-l">Montant</div><div class="m-info-v" style="font-family:'JetBrains Mono',monospace;color:var(--gold);font-size:18px;" id="modal-montant">${o.montant.toLocaleString('fr-CH')} CHF</div></div>
+      <div class="m-info"><div class="m-info-l">Statut</div><div class="m-info-v"><span class="pill ${SC[o.status]}">${SL[o.status]}</span></div></div>
+      <div class="m-info"><div class="m-info-l">Contact</div><div class="m-info-v" style="font-size:12px;">${o.prenom} ${o.nom}<br><span style="color:var(--muted);font-size:11px;">${o.email}</span></div></div>
+      <div class="m-info"><div class="m-info-l">Objet</div><div class="m-info-v" style="font-size:13px;" id="modal-objet">${o.objet}</div></div>
+    </div>
+    ${o.opens>0?`<div style="background:var(--blue-d);border:1px solid rgba(56,189,248,0.2);border-radius:9px;padding:11px 14px;margin-bottom:14px;font-size:12px;color:var(--blue);">👁 Ouvert ${o.opens}× — Dernière ouverture : ${o.lastOpen}</div>`:''}
+    <div class="m-tl"><div class="m-tl-t">Suivi des relances</div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--blue)"></div><div class="m-tl-info"><strong>Offre envoyée</strong></div><div class="m-tl-date">${o.sendDate}</div><div class="tag-done">✓</div></div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--gold)"></div><div class="m-tl-info"><strong>Relance 1</strong></div><div class="m-tl-date">${o.relances.r1}</div>${['relance2','relance3','won','lost'].includes(o.status)?'<div class="tag-done">✓</div>':'<span class="tag-auto">AUTO</span>'}</div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--purple)"></div><div class="m-tl-info"><strong>Relance 2</strong></div><div class="m-tl-date">${o.relances.r2}</div>${['relance3','won','lost'].includes(o.status)?'<div class="tag-done">✓</div>':'<span class="tag-auto">AUTO</span>'}</div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--orange)"></div><div class="m-tl-info"><strong>Relance 3</strong></div><div class="m-tl-date">${o.relances.r3}</div><span class="tag-auto">AUTO</span></div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">📝 Notes commerciales</div>
+      <textarea class="notes-field" id="modal-notes" placeholder="Ajouter une note... (hésitations, budget, timing...)" onblur="saveNote('${o.id}',this.value)">${o.notes||''}</textarea>
+    </div>
+    <div class="m-acts">
+      <button class="btn btn-ghost btn-sm" onclick="previewRelance('${o.id}')">👁 Voir relances</button>
+      <button class="btn btn-ghost btn-sm" onclick="actR('${o.id}');closeModal()">📧 Relancer</button>
+      ${o.pdfUrl?`<button class="btn btn-blue btn-sm" onclick="viewPDF('${o.pdfUrl}','${o.fichier}')">📄 Voir PDF</button>`:''}
+      <button class="btn btn-green btn-sm" onclick="askConfirm('won','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✓ Gagnée</button>
+      <button class="btn btn-red btn-sm" onclick="askConfirm('lost','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✕ Perdue</button>
+      <button class="btn btn-ghost btn-sm" onclick="editOffer('${o.id}')">✎ Modifier</button>
+    </div>`;
+  document.getElementById('overlay').classList.add('open');
+}
+
+function overlayClick(e){if(e.target===document.getElementById('overlay'))closeModal();}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+
+// ══ ACTIONS ══
+async function actR(id){
+  const o=OFFERS.find(x=>x.id===id);
+  if(!o)return;
+  const next = o.status==='sent'?'relance1':o.status==='relance1'?'relance2':o.status==='relance2'?'relance3':o.status;
+  const rNum = {relance1:1,relance2:2,relance3:3}[next]||1;
+  try {
+    await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:next}), prefer:'return=minimal', headers:{'Prefer':'return=minimal'}});
+    o.status=next;
+
+    // Generate relance email via AI then send
+    const tones = [
+      'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max.',
+      'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes.',
+      'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes percutantes.'
+    ];
+    let emailBody = '';
+    try {
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:`Rédige une relance commerciale (Relance ${rNum}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[rNum-1]}\nCommence par "Bonjour ${o.prenom}," — corps de l'email uniquement, pas de signature.`}]})});
+      const data = await r.json();
+      emailBody = data.content?.[0]?.text||'';
+    } catch(e) { emailBody = `Bonjour ${o.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${o.ref} — ${o.objet} (${o.montant.toLocaleString('fr-CH')} CHF).\n\nN'hésitez pas à me contacter pour toute question.`; }
+
+    emailBody += buildSignature();
+
+    // Send real email if connected
+    if(CFG.provider && CFG.accessToken) {
+      const sent = await sendRealEmail({
+        to: o.email, toName: `${o.prenom} ${o.nom}`,
+        subject: `Re: Offre ${o.ref} — ${o.objet}`,
+        body: emailBody,
+        pdfUrl: o.pdfUrl||'', pdfName: o.fichier||`${o.ref}.pdf`,
+        offerId: o.id
+      });
+      if(sent) toast('📧',`Relance ${rNum} envoyée à ${o.prenom} ${o.nom} depuis ${CFG.senderEmail}`);
+      else toast('⚠️',`Statut mis à jour — email non envoyé (vérifiez la connexion)`);
+    } else {
+      toast('📧',`Statut → Relance ${rNum} — connectez Gmail/Outlook pour envoyer réellement`);
+    }
+    renderOffres(); renderRelances(); renderUrgent();
+  } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
+}
+async function actW(id){
+  const o=OFFERS.find(x=>x.id===id);
+  if(!o)return;
+  try {
+    await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:'won'}), headers:{'Prefer':'return=minimal'}});
+    o.status='won';
+    toast('🎉',`${o.prenom} ${o.nom} — Gagnée ! +${o.montant.toLocaleString('fr-CH')} CHF`);
+    renderOffres(); renderRelances(); renderUrgent();
+  } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
+}
+async function actL(id){
+  const o=OFFERS.find(x=>x.id===id);
+  if(!o)return;
+  // Modal de confirmation avec raison
+  const raisons = ['Sans réponse', 'Prix trop élevé', 'Concurrent choisi', 'Projet annulé', 'Autre'];
+  const raison = await new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    overlay.innerHTML = `<div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:360px;width:90%;">
+      <div style="font-family:'Instrument Serif',serif;font-size:18px;color:var(--text);margin-bottom:6px;">❌ Marquer comme perdue</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:18px;">${o.prenom} ${o.nom} — ${o.montant.toLocaleString('fr-CH')} CHF<br><span style="font-size:11px;">Les relances automatiques seront annulées.</span></div>
+      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Raison du refus</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;">
+        ${raisons.map(r=>`<button onclick="this.closest('[data-modal]').dataset.choice='${r}';document.querySelectorAll('[data-raison-btn]').forEach(b=>b.style.background='var(--s2)');this.style.background='var(--gold-d)';this.style.borderColor='var(--gold)';" data-raison-btn style="text-align:left;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;cursor:pointer;">${r}</button>`).join('')}
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="this.closest('[data-modal]').dataset.choice='cancel';this.closest('[data-modal]').dispatchEvent(new Event('done'));" style="flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--muted);cursor:pointer;">Annuler</button>
+        <button onclick="this.closest('[data-modal]').dispatchEvent(new Event('done'));" style="flex:1;background:var(--red-d);border:1px solid rgba(244,63,94,0.3);border-radius:8px;padding:10px;color:var(--red);font-weight:600;cursor:pointer;">Confirmer perte</button>
+      </div>
+    </div>`;
+    const modal = overlay.querySelector('div');
+    modal.setAttribute('data-modal', '');
+    modal.addEventListener('done', () => { overlay.remove(); resolve(modal.dataset.choice||''); });
+    document.body.appendChild(overlay);
+  });
+  if(!raison || raison === 'cancel') return;
+  try {
+    await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:'lost', notes: (o.notes||'') + (o.notes?'\n':'') + `Perdu — ${raison}`}), headers:{'Prefer':'return=minimal'}});
+    o.status='lost';
+    o.notes = (o.notes||'') + (o.notes?'\n':'') + `Perdu — ${raison}`;
+    toast('📊',`Dossier archivé — relances annulées pour ${o.prenom} ${o.nom}`);
+    renderOffres(); renderRelances(); renderUrgent(); updateBadges();
+    updateAnalysePertes();
+  } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
+}
+
+function updateAnalysePertes() {
+  const el = document.getElementById('rev-analyse-pertes');
+  if(!el) return;
+  const lost = OFFERS.filter(o=>o.status==='lost');
+  if(lost.length === 0) {
+    el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Marquez des offres comme perdues pour voir l\'analyse.</div>';
+    return;
+  }
+  // Compter les raisons depuis les notes
+  const counts = {'Sans réponse':0,'Prix trop élevé':0,'Concurrent choisi':0,'Projet annulé':0,'Autre':0};
+  lost.forEach(o => {
+    const note = o.notes||'';
+    const match = Object.keys(counts).find(r => note.includes(r));
+    if(match) counts[match]++; else counts['Sans réponse']++;
+  });
+  const total = lost.length;
+  const colors = {'Sans réponse':'var(--red)','Prix trop élevé':'var(--orange)','Concurrent choisi':'var(--purple)','Projet annulé':'var(--gold)','Autre':'var(--muted)'};
+  const bgs = {'Sans réponse':'var(--red-d)','Prix trop élevé':'rgba(249,115,22,0.08)','Concurrent choisi':'rgba(168,85,247,0.08)','Projet annulé':'var(--gold-d)','Autre':'var(--s2)'};
+  el.innerHTML = Object.entries(counts)
+    .filter(([,n])=>n>0)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([r,n])=>{
+      const pct = Math.round(n/total*100);
+      return `<div class="f-step"><div class="f-lbl">${r}</div><div class="f-track"><div class="f-bar" style="width:${Math.max(pct,8)}%;background:${bgs[r]};color:${colors[r]};">${pct}%</div></div></div>`;
+    }).join('');
+}
+
+// ══ UPLOAD + PDF ══
+let uploadedFile=null;
+function dOver(e){e.preventDefault();document.getElementById('upZone').classList.add('drag');}
+function dLeave(){document.getElementById('upZone').classList.remove('drag');}
+function dDrop(e){e.preventDefault();dLeave();const f=e.dataTransfer.files[0];if(f)setFile(f);}
+function fSel(e){const f=e.target.files[0];if(f)setFile(f);}
+
+async function setFile(f){
+  uploadedFile=f;
+  document.getElementById('upZone').classList.add('done');
+  document.getElementById('up-ico').textContent='⏳';
+  document.getElementById('up-h').textContent='Analyse IA en cours...';
+  document.getElementById('up-s').textContent='Claude Vision lit votre document';
+
+  let extracted = {client:'', email:'', ref:'', montant:'', objet:''};
+  try {
+    const ab = await f.arrayBuffer();
+    const bytes = new Uint8Array(ab);
+    let binary = '';
+    for(let i=0;i<bytes.byteLength;i++) binary += String.fromCharCode(bytes[i]);
+    const base64 = btoa(binary);
+    const mediaType = f.type === 'application/pdf' ? 'application/pdf' : f.type;
+
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'document', source: { type: 'base64', media_type: mediaType, data: base64 } },
+            { type: 'text', text: `Extrait les informations de cette offre commerciale. Réponds UNIQUEMENT en JSON valide sans texte avant ou après:\n{"client":"Nom du destinataire/client (pas le fournisseur émetteur)","email":"email du client si présent sinon vide","ref":"numéro de référence de l'offre","montant":"montant TOTAL en chiffres seulement sans CHF ni espaces ni apostrophes","objet":"description courte du produit ou service vendu"}` }
+          ]
+        }]
+      })
+    });
+    const data = await response.json();
+    const txt = data.content?.[0]?.text || '';
+    const clean = txt.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    extracted = { client: parsed.client||'', email: parsed.email||'', ref: parsed.ref||'', montant: parsed.montant||'', objet: parsed.objet||'' };
+  } catch(err) {
+    console.error('Vision error:', err);
+  }
+
+  // Show extract zone
+  {
+    document.getElementById('up-ico').textContent='✅';
+    document.getElementById('up-h').textContent=f.name;
+    document.getElementById('up-s').textContent=(f.size/1024).toFixed(0)+' KB · Données extraites';
+    document.getElementById('pdf-extract-zone').style.display='block';
+    document.getElementById('ex-client').value=extracted.client||'';
+    document.getElementById('ex-email').value=extracted.email||'';
+    document.getElementById('ex-ref').value=extracted.ref||'';
+    document.getElementById('ex-montant').value=extracted.montant||'';
+    document.getElementById('ex-objet').value=extracted.objet||'';
+    toast('✦','PDF analysé par IA — vérifiez les données');
+  }
+}
+
+// ══ GENERATE EMAIL ══
+async function genEmail(){
+  const client=document.getElementById('ex-client')?.value||'Client';
+  const email=document.getElementById('ex-email')?.value||'client@exemple.ch';
+  const ref=document.getElementById('ex-ref')?.value||'OFF-XXX';
+  const montant=document.getElementById('ex-montant')?.value||'0';
+  const objet=document.getElementById('ex-objet')?.value||'nos services';
+  const contexte=document.getElementById('f-contexte').value.trim();
+  const ton=document.getElementById('f-ton').value;
+  const rel=document.getElementById('f-rel').value;
+  const detail=document.getElementById('f-detail')?.value.trim()||'';
+  const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
+
+  const parts=client.trim().split(' ');
+  const prenom=parts[0]||'Client';
+
+  document.getElementById('step-form').style.display='none';
+  document.getElementById('step-loading').style.display='block';
+
+  const steps=['as-1','as-2','as-3','as-4'];
+  let si=0;
+  const st=setInterval(()=>{
+    if(si>0)document.getElementById(steps[si-1]).className='ai-step done';
+    if(si<steps.length)document.getElementById(steps[si]).className='ai-step active';
+    si++;
+    if(si>steps.length)clearInterval(st);
+  },700);
+
+  const tonDesc={chaleureux:'Chaleureux, naturel, humain. Évite les formules creuses. Tutoie si relation connue/fidèle.',pro:'Professionnel et formel. Vouvoiement. Structuré mais pas froid.',direct:'Très concis. Direct. Maximum 4 lignes. Pas de formules.'};
+  const relDesc={nouveau:'Premier contact — sois attentionné, crée confiance',connu:'Client connu — relation établie, ton naturel',fidele:'Client fidèle depuis longtemps — proximité, chaleur'};
+
+  const prompt=`Tu es un commercial expert. Rédige un email d'accompagnement d'offre commerciale qui semble écrit à la main.
+
+DONNÉES :
+- Prénom client : ${prenom}
+- Nom complet : ${client}
+- Objet de l'offre : ${objet}
+- Montant : ${montant} CHF
+- Référence : ${ref}
+- Fichier joint : ${fileName}
+- Contexte de l'échange : ${contexte||'Pas de contexte spécifique'}
+- Détail à mentionner : ${detail||'Aucun'}
+- Relation : ${relDesc[rel]}
+- Ton : ${tonDesc[ton]}
+
+RÈGLES ABSOLUES :
+1. Sonne 100% humain — jamais robotique ni "template"
+2. Intègre le contexte naturellement si pertinent
+3. Mentionne l'objet concret de l'offre (pas juste "votre offre")
+4. Évite : "N'hésitez pas", "Je reste à votre disposition", "Cordialement, je vous prie"
+5. Maximum 5-6 lignes corpo — percutant et naturel
+6. Termine avec une ouverture concrète (une vraie question ou prochaine étape)
+7. Commence directement par "Bonjour ${prenom},"
+8. INTERDIT : N'écris JAMAIS de placeholders comme [Prénom], [Nom], [Votre nom], [Signature]. Utilise uniquement les données fournies ci-dessus.
+9. Ne mets PAS de signature — elle sera ajoutée automatiquement.
+
+Réponds UNIQUEMENT avec le corps de l'email.`;
+
+  try{
+    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const data=await r.json();
+    const body=data.content.map(c=>c.text||'').join('');
+    clearInterval(st);
+    document.getElementById('step-loading').style.display='none';
+
+    const subjects={chaleureux:`Ton offre pour ${objet} — ${ref}`,pro:`Offre ${ref} — ${objet}`,direct:`${ref} · ${montant} CHF · ${objet}`};
+    document.getElementById('prev-to').textContent=`${client} <${email}>`;
+    document.getElementById('prev-from').textContent=`${CFG.name||CURRENT_USER?.email||'—'} <${CFG.senderEmail||CURRENT_USER?.email||'—'}>`;
+    document.getElementById('prev-sub').textContent=subjects[ton];
+    document.getElementById('prev-pj').textContent=`📎 ${fileName}`;
+    document.getElementById('prev-body').textContent=body;
+    document.getElementById('prev-name').textContent=client;
+
+    const d1=document.getElementById('of-d1')?.value||document.getElementById('cfg-d1')?.value||3;
+    const d2=document.getElementById('of-d2')?.value||document.getElementById('cfg-d2')?.value||7;
+    const d3=document.getElementById('of-d3')?.value||document.getElementById('cfg-d3')?.value||14;
+    document.getElementById('rtl-inner').innerHTML=[
+      {ico:'📤',cls:'d0',lbl:'Envoi',day:"Aujourd'hui"},
+      {ico:'1',cls:'d1',lbl:'Relance 1',day:`J+${d1} jours`},
+      {ico:'2',cls:'d2',lbl:'Relance 2',day:`J+${d2} jours`},
+      {ico:'3',cls:'d3',lbl:'Relance 3',day:`J+${d3} jours`},
+    ].map(s=>`<div class="rtl-step"><div class="rtl-dot ${s.cls}">${s.ico}</div><div class="rtl-lbl">${s.lbl}</div><div class="rtl-day">${s.day}</div></div>`).join('');
+
+    document.getElementById('step-preview').style.display='block';
+  }catch(err){
+    clearInterval(st);
+    document.getElementById('step-loading').style.display='none';
+    document.getElementById('step-form').style.display='block';
+    toast('❌','Erreur de génération — vérifiez la connexion');
+  }
+}
+
+function editBodyToggle(){
+  const b=document.getElementById('prev-body');
+  if(b.contentEditable==='true'){b.contentEditable='false';b.style.outline='none';toast('✅','Modifications enregistrées');}
+  else{b.contentEditable='true';b.style.outline='1px solid var(--gold)';b.style.borderRadius='6px';b.style.padding='8px';b.focus();toast('✎','Cliquez dans le texte pour modifier');}
+}
+
+function resetToForm(){
+  document.getElementById('step-preview').style.display='none';
+  document.getElementById('step-form').style.display='block';
+}
+
+async function sendOffer(){
+  const clientFull=document.getElementById('ex-client')?.value||'Client';
+  const email=document.getElementById('ex-email')?.value||'';
+  const ref=document.getElementById('ex-ref')?.value||'OFF-NEW';
+  const montant=parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s']/g,''))||0;
+  const objet=document.getElementById('ex-objet')?.value||'';
+  const contexte=document.getElementById('f-contexte')?.value||'';
+  const parts=clientFull.split(' ');
+  const prenom=parts[0]||'Client';
+  const nom=parts.slice(1).join(' ')||'';
+  const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
+
+  const d1=parseInt(document.getElementById('of-d1')?.value)||parseInt(document.getElementById('cfg-d1')?.value)||3;
+  const d2=parseInt(document.getElementById('of-d2')?.value)||parseInt(document.getElementById('cfg-d2')?.value)||7;
+  const d3=parseInt(document.getElementById('of-d3')?.value)||parseInt(document.getElementById('cfg-d3')?.value)||14;
+
+  const today = new Date();
+  const addDays = (d) => { const dt=new Date(today); dt.setDate(dt.getDate()+d); return dt.toISOString().slice(0,10); };
+
+  try {
+    toast('⏳','Sauvegarde en cours...');
+
+    // 1. Upsert client
+    let clientId;
+    const existingClients = await sbFetch('clients?email=eq.'+encodeURIComponent(email)+'&select=id');
+    if(existingClients.length > 0) {
+      clientId = existingClients[0].id;
+    } else {
+      const newClient = await sbFetch('clients', {method:'POST', body:JSON.stringify({prenom,nom,email,entreprise:''})});
+      clientId = newClient[0]?.id;
+    }
+
+    // 2. Create offre
+    const newOffre = await sbFetch('offres', {method:'POST', body:JSON.stringify({
+      client_id: clientId,
+      reference: ref,
+      montant,
+      objet,
+      contexte,
+      statut: 'sent',
+      date_envoi: today.toISOString().slice(0,10),
+      fichier_nom: fileName
+    })});
+    const offerId = newOffre[0]?.id;
+    if(!offerId) throw new Error('Offre non créée — vérifiez les permissions Supabase (RLS)');
+
+    // 3. Create relances
+    await sbFetch('relances', {method:'POST', body:JSON.stringify([
+      {offre_id:offerId, numero:1, date_prevue:addDays(d1), statut:'pending'},
+      {offre_id:offerId, numero:2, date_prevue:addDays(d2), statut:'pending'},
+      {offre_id:offerId, numero:3, date_prevue:addDays(d3), statut:'pending'},
+    ])});
+
+    // 4. Upload PDF to Supabase Storage
+    let pdfUrl = '';
+    if(uploadedFile && offerId) {
+      pdfUrl = await uploadPDFToStorage(uploadedFile, offerId) || '';
+    }
+
+    // 5. Add to local state
+    OFFERS.unshift({id:offerId,prenom,nom,email,ref,montant,objet,status:'sent',sendDate:today.toISOString().slice(0,10),relances:{r1:addDays(d1),r2:addDays(d2),r3:addDays(d3)},opens:0,lastOpen:null,pdfUrl,notes:''});
+    updateBadges();
+
+    // 6. Send initial email — la clé Brevo est sur le serveur Vercel
+    let emailSent = false;
+    if(email && CFG.senderEmail) {
+      const rawBody = document.getElementById('prev-body')?.innerText?.trim();
+      const emailBody = rawBody && rawBody !== '—'
+        ? rawBody
+        : `Bonjour ${prenom},\n\nVeuillez trouver ci-joint notre offre ${ref} — ${objet} pour un montant de ${montant.toLocaleString('fr-CH')} CHF.\n\nN'hésitez pas à me contacter pour toute question.${buildSignature()}`;
+      emailSent = await sendBrevoEmail({to:email, toName:`${prenom} ${nom}`, subject:`Offre ${ref} — ${objet}`, body:emailBody, pdfUrl, pdfName:uploadedFile?.name||`${ref}.pdf`, offerId});
+    } else if(email && !CFG.senderEmail) {
+      toast('⚠️', 'Renseignez votre email expéditeur dans Configuration pour envoyer');
+    }
+
+    // Reset form
+    document.getElementById('step-preview').style.display='none';
+    document.getElementById('step-form').style.display='block';
+    document.getElementById('pdf-extract-zone').style.display='none';
+    uploadedFile=null;
+    const z=document.getElementById('upZone');
+    z.classList.remove('done','drag');
+    document.getElementById('up-ico').textContent='📄';
+    document.getElementById('up-h').textContent='Déposer l\'offre PDF';
+    document.getElementById('up-s').textContent='L\'IA extrait automatiquement les informations';
+    document.getElementById('f-contexte').value='';
+    if(document.getElementById('f-detail')) document.getElementById('f-detail').value='';
+
+    if(emailSent) toast('🚀',`Email envoyé à ${clientFull} depuis ${CFG.senderEmail} ✅`);
+    else toast('🚀',`Offre sauvegardée — ${email?'configurez Brevo pour envoyer':'email manquant'}`);
+    setTimeout(()=>go('offres'),1400);
+
+  } catch(err) {
+    toast('❌','Erreur sauvegarde: '+err.message.slice(0,60));
+    console.error(err);
+  }
+}
+
+// ══ CONFIRM DIALOG ══
+let pendingConfirm = null;
+function askConfirm(type, id, name, montant) {
+  pendingConfirm = {type, id};
+  closeModal();
+  const ico = type === 'won' ? '🎉' : '📊';
+  const t = type === 'won' ? `Marquer comme gagnée ?` : `Marquer comme perdue ?`;
+  const s = type === 'won' 
+    ? `${name} — +${parseFloat(montant).toLocaleString('fr-CH')} CHF seront ajoutés à votre chiffre d'affaires.`
+    : `${name} — L'offre sera archivée. Cette action est réversible.`;
+  document.getElementById('conf-ico').textContent = ico;
+  document.getElementById('conf-t').textContent = t;
+  document.getElementById('conf-s').textContent = s;
+  const btn = document.getElementById('conf-btn');
+  btn.className = `btn ${type==='won'?'btn-green':'btn-red'}`;
+  btn.textContent = type === 'won' ? '✓ Confirmer Gagnée' : '✕ Confirmer Perdue';
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+async function confirmAction() {
+  if(!pendingConfirm) return;
+  closeConfirm();
+  if(pendingConfirm.type === 'won') await actW(pendingConfirm.id);
+  else await actL(pendingConfirm.id);
+  pendingConfirm = null;
+}
+function closeConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('open');
+}
+
+// ══ SAVE NOTE ══
+async function saveNote(id, val) {
+  const o = OFFERS.find(x=>x.id===id);
+  if(!o) return;
+  o.notes = val;
+  try {
+    await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({notes:val}), headers:{'Prefer':'return=minimal'}});
+  } catch(e) {}
+}
+
+// ══ EDIT OFFER ══
+function editOffer(id) {
+  const o = OFFERS.find(x=>x.id===id);
+  if(!o) return;
+  document.getElementById('m-t').textContent = '✎ Modifier l\'offre';
+  document.getElementById('m-s').textContent = o.ref;
+  document.getElementById('m-body').innerHTML = `
+    <div class="fg"><label class="fl">Client</label><input class="fi" id="edit-client" value="${o.prenom} ${o.nom}"></div>
+    <div class="fg"><label class="fl">Email</label><input class="fi" id="edit-email" value="${o.email}" type="email"></div>
+    <div class="f2">
+      <div class="fg"><label class="fl">Référence</label><input class="fi" id="edit-ref" value="${o.ref}"></div>
+      <div class="fg"><label class="fl">Montant CHF</label><input class="fi" id="edit-montant" value="${o.montant}" type="number"></div>
+    </div>
+    <div class="fg"><label class="fl">Objet</label><input class="fi" id="edit-objet" value="${o.objet}"></div>
+    <div class="fg"><label class="fl">Notes</label><textarea class="notes-field" id="edit-notes">${o.notes||''}</textarea></div>
+    <div class="f2" style="margin-top:8px;">
+      <div class="fg"><label class="fl">Relance 1 (jours)</label><input class="fi" id="edit-d1" type="number" value="3" style="text-align:center;"></div>
+      <div class="fg"><label class="fl">Relance 2 (jours)</label><input class="fi" id="edit-d2" type="number" value="7" style="text-align:center;"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <button class="btn btn-ghost" style="flex:1;" onclick="openModal('${id}')">Annuler</button>
+      <button class="btn btn-gold" style="flex:1;" onclick="saveEdit('${id}')">💾 Sauvegarder</button>
+    </div>`;
+}
+
+async function saveEdit(id) {
+  const o = OFFERS.find(x=>x.id===id);
+  if(!o) return;
+  const clientFull = document.getElementById('edit-client').value;
+  const parts = clientFull.split(' ');
+  o.prenom = parts[0]||'';
+  o.nom = parts.slice(1).join(' ')||'';
+  o.email = document.getElementById('edit-email').value;
+  o.ref = document.getElementById('edit-ref').value;
+  o.montant = parseFloat(document.getElementById('edit-montant').value)||0;
+  o.objet = document.getElementById('edit-objet').value;
+  o.notes = document.getElementById('edit-notes').value;
+  try {
+    await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({reference:o.ref,montant:o.montant,objet:o.objet,notes:o.notes}), headers:{'Prefer':'return=minimal'}});
+    if(o.client_id) {
+      await sbFetch('clients?id=eq.'+o.client_id, {method:'PATCH', body:JSON.stringify({prenom:o.prenom,nom:o.nom,email:o.email}), headers:{'Prefer':'return=minimal'}});
+    }
+    toast('✅','Offre mise à jour');
+    closeModal();
+    renderOffres();
+    renderUrgent();
+  } catch(e) { toast('❌','Erreur: '+e.message.slice(0,50)); }
+}
+
+// ══ RELANCE PREVIEW ══
+let rpDrafts = ['','',''];
+let rpActive = 0;
+
+async function previewRelance(id) {
+  const o = OFFERS.find(x=>x.id===id);
+  if(!o) return;
+  closeModal();
+  document.getElementById('rp-overlay').classList.add('open');
+  document.getElementById('rp-tabs').innerHTML = [
+    {lbl:'Relance 1',col:'var(--gold)',day:o.relances.r1},
+    {lbl:'Relance 2',col:'var(--purple)',day:o.relances.r2},
+    {lbl:'Relance 3',col:'var(--orange)',day:o.relances.r3},
+  ].map((t,i)=>`<button class="rp-tab ${i===0?'active':''}" onclick="switchRPTab(${i})" style="${i===0?`border-color:${t.col};color:${t.col};background:${t.col}22;`:''}">${t.lbl}<br><span style="font-weight:400;font-size:9px;opacity:0.7;">${t.day||'—'}</span></button>`).join('');
+
+  const msgs = ['Chargement...','Chargement...','Chargement...'];
+  showRPContent(o, msgs, 0);
+
+  // Generate all 3 relances via AI
+  const tones = [
+    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max.',
+    'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes.',
+    'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes percutantes.'
+  ];
+  const delays = ['J+3','J+7','J+14'];
+  
+  for(let i=0;i<3;i++) {
+    try {
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\nCommence par "Bonjour ${o.prenom}," — corps de l'email uniquement, sans objet.`}]})});
+      const data = await r.json();
+      rpDrafts[i] = data.content?.[0]?.text||'';
+      msgs[i] = rpDrafts[i];
+      if(i===rpActive) showRPContent(o, msgs, rpActive);
+    } catch(e) { rpDrafts[i] = 'Erreur de génération.'; }
+  }
+  showRPContent(o, msgs, rpActive);
+}
+
+function showRPContent(o, msgs, idx) {
+  const labels = ['Relance 1','Relance 2','Relance 3'];
+  const days = [o.relances.r1,o.relances.r2,o.relances.r3];
+  document.getElementById('rp-content').innerHTML = `
+    <div class="rp-email">
+      <div class="rp-email-head">
+        <div class="rp-email-row"><span>À :</span><span>${o.prenom} ${o.nom} &lt;${o.email}&gt;</span></div>
+        <div class="rp-email-row"><span>Objet :</span><span>Re: Offre ${o.ref} — ${o.objet}</span></div>
+        <div class="rp-email-row"><span>Date :</span><span>${days[idx]||'Programmée'} — ${labels[idx]}</span></div>
+      </div>
+      <div class="rp-email-body" id="rp-body-text">${msgs[idx]==='Chargement...'?'<div style="color:var(--muted);font-style:italic;">⏳ Génération en cours...</div>':msgs[idx]}</div>
+    </div>`;
+}
+
+function switchRPTab(idx) {
+  rpActive = idx;
+  document.querySelectorAll('.rp-tab').forEach((t,i)=>{
+    t.classList.toggle('active',i===idx);
+    const cols=['var(--gold)','var(--purple)','var(--orange)'];
+    if(i===idx) t.style.cssText=`border-color:${cols[idx]};color:${cols[idx]};background:${cols[idx]}22;`;
+    else t.style.cssText='';
+  });
+  const el = document.getElementById('rp-body-text');
+  if(el) el.textContent = rpDrafts[idx]||'⏳ Génération...';
+}
+
+function toggleEditRelance() {
+  const el = document.getElementById('rp-body-text');
+  if(!el) return;
+  if(el.contentEditable==='true') {
+    rpDrafts[rpActive] = el.textContent;
+    el.contentEditable = 'false';
+    document.getElementById('rp-edit-btn').textContent = '✎ Modifier';
+    toast('✅','Modifications sauvegardées');
+  } else {
+    el.contentEditable = 'true';
+    el.focus();
+    document.getElementById('rp-edit-btn').textContent = '✓ Valider';
+  }
+}
+
+function closeRPOverlay() {
+  document.getElementById('rp-overlay').classList.remove('open');
+  rpDrafts = ['','',''];
+  rpActive = 0;
+}
+
+function previewNewRelances() {
+  const client = document.getElementById('ex-client')?.value||'Client';
+  const email = document.getElementById('ex-email')?.value||'';
+  const ref = document.getElementById('ex-ref')?.value||'OFF-XXX';
+  const montant = parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s']/g,''))||0;
+  const objet = document.getElementById('ex-objet')?.value||'';
+  const d1 = parseInt(document.getElementById('of-d1')?.value)||3;
+  const d2 = parseInt(document.getElementById('of-d2')?.value)||7;
+  const d3 = parseInt(document.getElementById('of-d3')?.value)||14;
+  const today = new Date();
+  const addDays = (d) => { const dt=new Date(today); dt.setDate(dt.getDate()+d); return dt.toISOString().slice(0,10); };
+  const fakeOffer = {id:'preview',prenom:client.split(' ')[0]||'Client',nom:client.split(' ').slice(1).join(' '),email,ref,montant,objet,relances:{r1:addDays(d1),r2:addDays(d2),r3:addDays(d3)}};
+  previewRelance_obj(fakeOffer);
+}
+
+async function previewRelance_obj(o) {
+  document.getElementById('rp-overlay').classList.add('open');
+  rpActive = 0;
+  document.getElementById('rp-tabs').innerHTML = [
+    {lbl:'Relance 1',col:'var(--gold)',day:o.relances.r1},
+    {lbl:'Relance 2',col:'var(--purple)',day:o.relances.r2},
+    {lbl:'Relance 3',col:'var(--orange)',day:o.relances.r3},
+  ].map((t,i)=>`<button class="rp-tab ${i===0?'active':''}" onclick="switchRPTab(${i})" style="${i===0?`border-color:${t.col};color:${t.col};background:${t.col}22;`:''}">${t.lbl}<br><span style="font-weight:400;font-size:9px;opacity:0.7;">${t.day||'—'}</span></button>`).join('');
+  const msgs = ['⏳ Génération...','⏳ Génération...','⏳ Génération...'];
+  showRPContent(o, msgs, 0);
+  const tones = [
+    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max.',
+    'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes.',
+    'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes percutantes.'
+  ];
+  const delays = ['J+3','J+7','J+14'];
+  for(let i=0;i<3;i++) {
+    try {
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\nCommence par "Bonjour ${o.prenom}," — corps de l'email uniquement.`}]})});
+      const data = await r.json();
+      rpDrafts[i] = data.content?.[0]?.text||'';
+      msgs[i] = rpDrafts[i];
+      if(i===rpActive) showRPContent(o, msgs, rpActive);
+    } catch(e) { rpDrafts[i] = 'Erreur de génération.'; }
+  }
+}
+
+function confirmSendOffer() {
+  closeRPOverlay();
+  sendOffer();
+}
+
+// ══ EXPORTS ══
+function exportCSV() {
+  const rows = [['Client','Email','Référence','Montant CHF','Objet','Statut','Date envoi','Relance 1','Relance 2','Relance 3','Ouvertures']];
+  OFFERS.forEach(o => {
+    rows.push([
+      `${o.prenom} ${o.nom}`,
+      o.email, o.ref, o.montant, `"${o.objet}"`,
+      SL[o.status], o.sendDate,
+      o.relances.r1, o.relances.r2, o.relances.r3, o.opens
+    ]);
+  });
+  const csv = rows.map(r=>r.join(';')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `FollowOffer_Export_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('📊','Export Excel téléchargé');
+}
+
+function exportPDF() {
+  toast('📄','Ouverture impression...');
+  setTimeout(()=>window.print(), 400);
+}
+
+// ══ CLIENT AUTOCOMPLETE ══
+function clientAutoComplete(val) {
+  const dd = document.getElementById('ac-dropdown');
+  if(!dd) return;
+  const badge = document.getElementById('client-history-badge');
+  if(badge) badge.style.display='none';
+  if(val.length < 2) { dd.style.display='none'; return; }
+  const q = val.toLowerCase();
+  const seen = new Set();
+  const matches = [];
+  OFFERS.forEach(o => {
+    const key = o.email;
+    const name = `${o.prenom} ${o.nom}`;
+    if(!seen.has(key) && (name.toLowerCase().includes(q) || (o.entreprise||'').toLowerCase().includes(q) || (o.email||'').toLowerCase().includes(q))) {
+      seen.add(key);
+      matches.push({prenom:o.prenom,nom:o.nom,email:o.email,entreprise:o.entreprise,count:OFFERS.filter(x=>x.email===key).length});
+    }
+  });
+  if(!matches.length) { dd.style.display='none'; return; }
+  dd.style.display = 'block';
+  dd.innerHTML = matches.slice(0,5).map(c=>`
+    <div onclick="fillClient('${c.prenom.replace(/'/g,"\\'")}','${c.nom.replace(/'/g,"\\'")}','${c.email}','${(c.entreprise||'').replace(/'/g,"\\'")}',${c.count})"
+         style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);" 
+         onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background=''">
+      <div style="font-size:12px;font-weight:600;">${c.prenom} ${c.nom}${c.entreprise?` <span style="color:var(--muted);font-weight:400">· ${c.entreprise}</span>`:''}</div>
+      <div style="font-size:11px;color:var(--muted);">${c.email} · ${c.count} offre${c.count>1?'s':''}</div>
+    </div>`).join('');
+}
+
+function fillClient(prenom, nom, email, entreprise, count) {
+  document.getElementById('ex-client').value = `${prenom} ${nom}`;
+  document.getElementById('ex-email').value = email;
+  closeACDropdown();
+  const badge = document.getElementById('client-history-badge');
+  const cnt = document.getElementById('client-history-count');
+  if(badge && cnt) { cnt.textContent = count; badge.style.display='block'; badge._clientEmail=email; }
+  toast('👤', `Client reconnu — ${count} offre${count>1?'s':''} précédente${count>1?'s':''}`);
+}
+
+function closeACDropdown() {
+  const dd = document.getElementById('ac-dropdown');
+  if(dd) dd.style.display = 'none';
+}
+
+function showClientHistory() {
+  const badge = document.getElementById('client-history-badge');
+  const email = (badge && badge._clientEmail) || document.getElementById('ex-email')?.value;
+  if(!email) return;
+  openClientModal(email);
+}
+
+// ══ PDF STORAGE & VIEWER ══
+async function uploadPDFToStorage(file, offreId) {
+  try {
+    const ab = await file.arrayBuffer();
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    const path = `${offreId}/${safeName}`;
+    const res = await fetch(`${SB_URL}/storage/v1/object/offres/${path}`, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY, 'Content-Type': file.type||'application/pdf', 'x-upsert': 'true' },
+      body: ab
+    });
+    if(res.ok) {
+      const publicUrl = `${SB_URL}/storage/v1/object/public/offres/${path}`;
+      await sbFetch('offres?id=eq.'+offreId, {method:'PATCH', body:JSON.stringify({pdf_url:publicUrl}), headers:{'Prefer':'return=minimal'}});
+      return publicUrl;
+    } else { console.warn('Storage upload failed:', res.status); }
+  } catch(e) { console.warn('PDF upload skipped:', e.message); }
+  return null;
+}
+
+function viewPDF(url, filename) {
+  document.getElementById('pdf-viewer-title').textContent = filename || 'Offre PDF';
+  document.getElementById('pdf-frame').src = url;
+  const dl = document.getElementById('pdf-download-link');
+  if(dl) dl.href = url;
+  document.getElementById('pdf-overlay').classList.add('open');
+}
+
+function closePDFViewer() {
+  document.getElementById('pdf-overlay').classList.remove('open');
+  setTimeout(()=>{ document.getElementById('pdf-frame').src=''; }, 300);
+}
+
+// ══ CONFIG ══
+let CFG = { name:'', role:'', company:'', phone:'', provider:null, accessToken:null, senderEmail:'', brevoKey:'' };
+
+async function loadConfig() {
+  // 1. Charger depuis localStorage en premier (instant)
+  const cached = localStorage.getItem('of_cfg');
+  if(cached) { try { Object.assign(CFG, JSON.parse(cached)); } catch(e) {} }
+
+  // 2. Charger depuis Supabase (persistant cross-device)
+  try {
+    const rows = await sbFetch('settings?select=key,value');
+    if(Array.isArray(rows) && rows.length > 0) {
+      rows.forEach(r => { if(r.key && r.key in CFG) CFG[r.key] = r.value || ''; });
+      // Sauvegarder en cache local
+      localStorage.setItem('of_cfg', JSON.stringify(CFG));
+    }
+  } catch(e) {
+    console.warn('loadConfig Supabase error:', e.message);
+    // On continue avec le cache localStorage
+  }
+
+  // 3. Peupler les champs UI
+  const setVal = (id, val) => { const el = document.getElementById(id); if(el && val) el.value = val; };
+  setVal('cfg-name', CFG.name);
+  setVal('cfg-name-email', CFG.name);
+  setVal('cfg-role', CFG.role);
+  setVal('cfg-company', CFG.company);
+  setVal('cfg-phone', CFG.phone);
+  setVal('cfg-sender-email', CFG.senderEmail);
+  setVal('cfg-brevo-key', CFG.brevoKey);
+  updateSigPreview();
+  updateEmailConnectionStatus();
+  updateBrevoStatus();
+  updateUserUI();
+}
+
+async function saveConfig() {
+  CFG.name = document.getElementById('cfg-name')?.value || document.getElementById('cfg-name-email')?.value || '';
+  CFG.role = document.getElementById('cfg-role')?.value||'';
+  CFG.company = document.getElementById('cfg-company')?.value||'';
+  CFG.phone = document.getElementById('cfg-phone')?.value||'';
+  CFG.senderEmail = document.getElementById('cfg-sender-email')?.value||'';
+  CFG.brevoKey = document.getElementById('cfg-brevo-key')?.value||'';
+  // Sauvegarder en localStorage immédiatement
+  localStorage.setItem('of_cfg', JSON.stringify(CFG));
+  try {
+    for(const k of ['name','role','company','phone','senderEmail','brevoKey']) {
+      await saveSetting(k, CFG[k]);
+    }
+    updateSigPreview();
+    updateBrevoStatus();
+    updateUserUI();
+    toast('💾','Configuration sauvegardée ✅');
+  } catch(e) {
+    console.error('saveConfig error:', e.message);
+    toast('⚠️','Erreur config: ' + e.message.slice(0,80));
+  }
+}
+
+async function saveSetting(key, value) {
+  const token = USER_TOKEN || SB_KEY;
+  // Essai UPSERT via POST avec résolution de doublon
+  const res = await fetch(SB_URL + '/rest/v1/settings', {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates,return=minimal'
+    },
+    body: JSON.stringify({key, value})
+  });
+  if(res.status === 204 || res.status === 201 || res.status === 200) return;
+  // Si ça échoue, essayer PATCH
+  const errText = await res.text().catch(()=>'');
+  if(res.status === 409 || (errText && errText.includes('23505'))) {
+    // Duplicate → PATCH
+    const patch = await fetch(SB_URL + '/rest/v1/settings?key=eq.' + encodeURIComponent(key), {
+      method: 'PATCH',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({value})
+    });
+    if(!patch.ok) {
+      const pErr = await patch.text().catch(()=>'');
+      throw new Error(pErr || 'PATCH settings failed');
+    }
+    return;
+  }
+  if(!res.ok) throw new Error(errText || `HTTP ${res.status}`);
+}
+
+function updateBrevoStatus() {
+  const el = document.getElementById('brevo-status');
+  if(!el) return;
+  if(CFG.senderEmail) {
+    el.innerHTML = `<span style="color:var(--green);">✅ Prêt — emails envoyés depuis <strong>${CFG.senderEmail}</strong></span>`;
+  } else {
+    el.innerHTML = `<span style="color:var(--orange);">⚠️ Renseignez votre adresse email pour activer l'envoi</span>`;
+  }
+}
+
+function updateSigPreview() {
+  const n = document.getElementById('cfg-name')?.value||'';
+  const r = document.getElementById('cfg-role')?.value||'';
+  const c = document.getElementById('cfg-company')?.value||'';
+  const p = document.getElementById('cfg-phone')?.value||'';
+  const el = document.getElementById('sig-preview');
+  if(!el) return;
+  if(!n) { el.innerHTML='<em style="color:var(--muted)">Aperçu signature — remplissez les champs ci-dessus</em>'; return; }
+  el.innerHTML = `<span style="color:var(--text);font-weight:600;">${n}</span>${r?`<br><span style="color:var(--muted)">${r}</span>`:''}${c?`<br><span style="color:var(--muted)">${c}</span>`:''}${p?`<br><span style="color:var(--blue)">${p}</span>`:''}`;
+}
+
+['cfg-name','cfg-role','cfg-company','cfg-phone'].forEach(id => {
+  document.addEventListener('DOMContentLoaded',()=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('input',updateSigPreview);
+  });
+});
+
+function updateEmailConnectionStatus() {
+  const statusEl = document.getElementById('email-connection-status');
+  const gmailEl = document.getElementById('gmail-status');
+  const outlookEl = document.getElementById('outlook-status');
+  if(!statusEl) return;
+  if(CFG.provider && CFG.senderEmail) {
+    statusEl.innerHTML = `<div style="background:var(--green-d);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--green);display:flex;align-items:center;gap:10px;">
+      <span style="font-size:16px;">✅</span>
+      <div><strong>Connecté</strong> — Les emails sont envoyés depuis <strong>${CFG.senderEmail}</strong> via ${CFG.provider==='gmail'?'Gmail':'Outlook'}</div>
+      <button class="btn btn-ghost btn-sm" style="margin-left:auto;" onclick="disconnectEmail()">Déconnecter</button>
+    </div>`;
+  } else {
+    statusEl.innerHTML = `<div style="background:var(--red-d);border:1px solid rgba(244,63,94,0.15);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red);">
+      ⚠️ Aucune messagerie connectée — les emails ne sont pas encore envoyés réellement.
+    </div>`;
+  }
+  if(gmailEl) gmailEl.innerHTML = CFG.provider==='gmail' ? `<div style="font-size:11px;color:var(--green);">✅ ${CFG.senderEmail}</div>` : '';
+  if(outlookEl) outlookEl.innerHTML = CFG.provider==='outlook' ? `<div style="font-size:11px;color:var(--green);">✅ ${CFG.senderEmail}</div>` : '';
+}
+
+function disconnectEmail() {
+  CFG.provider=null; CFG.accessToken=null; CFG.senderEmail='';
+  updateEmailConnectionStatus();
+  toast('🔌','Messagerie déconnectée');
+}
+
+// ══ OAUTH CONNECT ══
+function connectGmail() {
+  const clientId = '288829772697-1gg33r5kfb21o2u9md6jdme80eprpigb.apps.googleusercontent.com';
+  const redirect = encodeURIComponent(window.location.origin + '/api/auth-google-callback');
+  const scope = encodeURIComponent('https://www.googleapis.com/auth/gmail.send email profile');
+  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirect}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+  const popup = window.open(url,'oauth','width=500,height=600,left=400,top=100');
+  window.addEventListener('message', async (e) => {
+    if(e.data?.type === 'GMAIL_CONNECTED') {
+      CFG.provider = 'gmail';
+      CFG.senderEmail = e.data.email;
+      CFG.accessToken = e.data.token;
+      updateEmailConnectionStatus();
+      toast('✅', `Gmail connecté — ${e.data.email}`);
+      popup?.close();
+    }
+  }, {once:true});
+}
+
+function connectOutlook() {
+  const clientId = window.OUTLOOK_CLIENT_ID || '';
+  if(!clientId) { toast('⚠️','Client ID Outlook non configuré'); return; }
+  const redirect = encodeURIComponent(window.location.origin + '/api/auth-outlook-callback');
+  const scope = encodeURIComponent('https://graph.microsoft.com/Mail.Send https://graph.microsoft.com/User.Read offline_access');
+  const url = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&redirect_uri=${redirect}&response_type=code&scope=${scope}&prompt=consent`;
+  const popup = window.open(url,'oauth','width=500,height=600,left=400,top=100');
+  window.addEventListener('message', async (e) => {
+    if(e.data?.type === 'OUTLOOK_CONNECTED') {
+      CFG.provider = 'outlook';
+      CFG.senderEmail = e.data.email;
+      CFG.accessToken = e.data.token;
+      updateEmailConnectionStatus();
+      toast('✅', `Outlook connecté — ${e.data.email}`);
+      popup?.close();
+    }
+  }, {once:true});
+}
+
+// ══ SEND REAL EMAIL ══
+async function sendRealEmail({to, toName, subject, body, pdfUrl, pdfName, offerId}) {
+  // Brevo via serveur Vercel (clé côté serveur dans BREVO_API_KEY)
+  if(CFG.senderEmail) {
+    return await sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName, offerId});
+  }
+  // OAuth Gmail/Outlook (futur)
+  if(CFG.provider && CFG.accessToken) {
+    try {
+      const r = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({provider:CFG.provider, accessToken:CFG.accessToken, from:CFG.senderEmail, fromName:CFG.name||CFG.senderEmail, to, toName, subject, body, pdfUrl, pdfName, signature:buildSignature()})
+      });
+      return r.ok;
+    } catch(e) { return false; }
+  }
+  toast('⚠️', 'Configurez votre email expéditeur dans Configuration → Email');
+  return false;
+}
+
+function buildSignature() {
+  const n = CFG.name || CURRENT_USER?.user_metadata?.full_name || '';
+  const r = CFG.role || '';
+  const c = CFG.company || '';
+  const p = CFG.phone || '';
+  if(!n && !c) return '';
+  return `\n\n--\n${n||''}${r?'\n'+r:''}${c?'\n'+c:''}${p?'\n'+p:''}`;
+}
+
+// ══ TOAST ══
+let tt;
+function toast(ico,txt){
+  clearTimeout(tt);
+  document.getElementById('t-ico').textContent=ico;
+  document.getElementById('t-txt').textContent=txt;
+  const el=document.getElementById('toast-el');
+  el.classList.add('show');
+  tt=setTimeout(()=>el.classList.remove('show'),3400);
+}
+
+// ══ INIT ══
+// ══ AUTH ══
+let CURRENT_USER = null;
+let USER_TOKEN = null;
+
+async function sbAuthFetch(path, options={}) {
+  const token = USER_TOKEN || SB_KEY;
+  const res = await fetch(SB_URL + '/auth/v1/' + path, {
+    ...options,
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json',
+      ...(options.headers||{})
+    }
+  });
+  return res.json();
+}
+
+async function signUp(email, password, name) {
+  const data = await sbAuthFetch('signup', {
+    method: 'POST',
+    body: JSON.stringify({ email, password, data: { full_name: name } })
+  });
+  if(data.error) throw new Error(data.error.message || data.msg || 'Erreur inscription');
+  return data;
+}
+
+async function signIn(email, password) {
+  const data = await sbAuthFetch('token?grant_type=password', {
+    method: 'POST',
+    body: JSON.stringify({ email, password })
+  });
+  if(data.error || data.error_description) throw new Error(data.error_description || data.error || 'Email ou mot de passe incorrect');
+  return data;
+}
+
+async function signOut() {
+  await sbAuthFetch('logout', { method: 'POST' });
+  CURRENT_USER = null; USER_TOKEN = null;
+  localStorage.removeItem('of_token');
+  localStorage.removeItem('of_user');
+  showAuthScreen();
+}
+
+function saveSession(session) {
+  USER_TOKEN = session.access_token;
+  CURRENT_USER = session.user;
+  localStorage.setItem('of_token', session.access_token);
+  localStorage.setItem('of_user', JSON.stringify(session.user));
+}
+
+function loadSession() {
+  const token = localStorage.getItem('of_token');
+  const user = localStorage.getItem('of_user');
+  if(token && user) {
+    USER_TOKEN = token;
+    CURRENT_USER = JSON.parse(user);
+    return true;
+  }
+  return false;
+}
+
+async function sbFetch(path, options={}) {
+  const token = USER_TOKEN || SB_KEY;
+  // Construire les headers avec merge intelligent
+  const customHeaders = options.headers || {};
+  const preferHeader = customHeaders['Prefer'] || options.prefer ||
+    (options.method === 'POST' ? 'return=representation' :
+     options.method === 'PATCH' ? 'return=minimal' : '');
+
+  const res = await fetch(SB_URL + '/rest/v1/' + path, {
+    ...options,
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json',
+      ...(preferHeader ? {'Prefer': preferHeader} : {}),
+      ...customHeaders
+    }
+  });
+  if(res.status === 204) return [];
+  const text = await res.text();
+  if(!text) return [];
+  const data = JSON.parse(text);
+  // Propager les erreurs Supabase
+  if(data && data.code && data.message) throw new Error(`Supabase [${data.code}]: ${data.message}`);
+  if(data && data.error) throw new Error(data.error);
+  return Array.isArray(data) ? data : [data];
+}
+
+// ══ AUTH SCREEN ══
+function showAuthScreen() {
+  document.getElementById('app-shell').style.display = 'none';
+  let authEl = document.getElementById('auth-screen');
+  if(!authEl) {
+    authEl = document.createElement('div');
+    authEl.id = 'auth-screen';
+    document.body.appendChild(authEl);
+  }
+  authEl.style.display = 'flex';
+  authEl.innerHTML = `
+    <div style="min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px;">
+      <div style="width:100%;max-width:420px;">
+        <div style="text-align:center;margin-bottom:32px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:6px;">
+            <!-- Logo centré grand format -->
+            <svg width="72" height="60" viewBox="0 0 72 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Barres montantes -->
+              <rect x="2" y="46" width="8" height="10" rx="2" fill="rgba(233,184,74,0.3)"/>
+              <rect x="13" y="38" width="8" height="18" rx="2" fill="rgba(233,184,74,0.45)"/>
+              <rect x="24" y="28" width="8" height="28" rx="2" fill="rgba(233,184,74,0.6)"/>
+              <rect x="35" y="18" width="8" height="38" rx="2" fill="rgba(233,184,74,0.78)"/>
+              <rect x="46" y="8" width="8" height="48" rx="2" fill="#E9B84A"/>
+              <!-- Reflets sur les barres -->
+              <rect x="2" y="46" width="2" height="10" rx="1" fill="rgba(255,255,255,0.15)"/>
+              <rect x="13" y="38" width="2" height="18" rx="1" fill="rgba(255,255,255,0.15)"/>
+              <rect x="24" y="28" width="2" height="28" rx="1" fill="rgba(255,255,255,0.15)"/>
+              <rect x="35" y="18" width="2" height="38" rx="1" fill="rgba(255,255,255,0.15)"/>
+              <rect x="46" y="8" width="2" height="48" rx="1" fill="rgba(255,255,255,0.2)"/>
+              <!-- Ligne de base -->
+              <line x1="0" y1="57" x2="72" y2="57" stroke="rgba(233,184,74,0.18)" stroke-width="1.5"/>
+              <!-- Flèche courbe de croissance -->
+              <path d="M4,44 Q14,34 26,24 Q36,16 50,6" stroke="#E9B84A" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+              <path d="M4,44 Q14,34 26,24 Q36,16 50,6" stroke="rgba(233,184,74,0.12)" stroke-width="8" stroke-linecap="round" fill="none"/>
+              <!-- Pointe de flèche -->
+              <polygon points="50,6 43,10 46,14" fill="#E9B84A"/>
+              <!-- Point lumineux au sommet -->
+              <circle cx="50" cy="6" r="3.5" fill="#E9B84A"/>
+              <circle cx="50" cy="6" r="6" fill="rgba(233,184,74,0.2)"/>
+            </svg>
+            <div style="font-family:'Instrument Serif',serif;font-size:30px;color:var(--gold);letter-spacing:-0.5px;">FollowOffer</div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;">Suite commerciale suisse</div>
+        </div>
+        <div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;">
+          <div style="display:flex;background:var(--s2);border-radius:8px;padding:3px;margin-bottom:24px;">
+            <button id="tab-login" onclick="authTab('login')" style="flex:1;padding:8px;border-radius:6px;border:none;background:var(--gold);color:#000;font-size:13px;font-weight:600;cursor:pointer;">Connexion</button>
+            <button id="tab-register" onclick="authTab('register')" style="flex:1;padding:8px;border-radius:6px;border:none;background:transparent;color:var(--muted);font-size:13px;cursor:pointer;">Créer un compte</button>
+          </div>
+          <div id="auth-login">
+            <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Email</label><input id="auth-email" type="email" placeholder="jean@entreprise.ch" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;"></div>
+            <div style="margin-bottom:20px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Mot de passe</label>
+              <div style="position:relative;">
+                <input id="auth-pass" type="password" placeholder="••••••••" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 40px 10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;" onkeydown="if(event.key==='Enter')doLogin()">
+                <button type="button" onclick="togglePass('auth-pass','eye0')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;" id="eye0">👁</button>
+              </div>
+            </div>
+            <div id="auth-error" style="display:none;background:var(--red-d);border:1px solid rgba(244,63,94,0.2);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;"></div>
+            <button onclick="doLogin()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;">Se connecter</button>
+          </div>
+          <div id="auth-register" style="display:none;">
+            <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Nom complet</label><input id="reg-name" type="text" placeholder="Jean Dupont" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;"></div>
+            <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Email</label><input id="reg-email" type="email" placeholder="jean@entreprise.ch" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;"></div>
+            <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Mot de passe</label>
+              <div style="position:relative;">
+                <input id="reg-pass" type="password" placeholder="8 caractères minimum" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 40px 10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;">
+                <button type="button" onclick="togglePass('reg-pass','eye1')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;" id="eye1">👁</button>
+              </div>
+            </div>
+            <div style="margin-bottom:20px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Confirmer le mot de passe</label>
+              <div style="position:relative;">
+                <input id="reg-pass2" type="password" placeholder="Répétez le mot de passe" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 40px 10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;">
+                <button type="button" onclick="togglePass('reg-pass2','eye2')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;" id="eye2">👁</button>
+              </div>
+            </div>
+            <div id="reg-error" style="display:none;background:var(--red-d);border:1px solid rgba(244,63,94,0.2);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;"></div>
+            <button onclick="doRegister()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;">Créer mon compte</button>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--muted);">🔒 Vos données sont privées et sécurisées</div>
+      </div>
+    </div>`;
+}
+
+function authTab(tab) {
+  document.getElementById('auth-login').style.display = tab==='login'?'block':'none';
+  document.getElementById('auth-register').style.display = tab==='register'?'block':'none';
+  document.getElementById('tab-login').style.background = tab==='login'?'var(--gold)':'transparent';
+  document.getElementById('tab-login').style.color = tab==='login'?'#000':'var(--muted)';
+  document.getElementById('tab-register').style.background = tab==='register'?'var(--gold)':'transparent';
+  document.getElementById('tab-register').style.color = tab==='register'?'#000':'var(--muted)';
+}
+
+async function doLogin() {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass = document.getElementById('auth-pass').value;
+  const errEl = document.getElementById('auth-error');
+  errEl.style.display = 'none';
+  try {
+    const session = await signIn(email, pass);
+    saveSession(session);
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('app-shell').style.display = '';
+    injectMobileNav();
+    updateUserUI();
+    await loadApp();
+  } catch(e) {
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+function togglePass(inputId, eyeId) {
+  const input = document.getElementById(inputId);
+  const eye = document.getElementById(eyeId);
+  if(input.type === 'password') {
+    input.type = 'text';
+    eye.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    eye.textContent = '👁';
+  }
+}
+
+async function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  const errEl = document.getElementById('reg-error');
+  errEl.style.display = 'none';
+  if(!name || !email || !pass || !pass2) { errEl.textContent = 'Tous les champs sont requis'; errEl.style.display='block'; return; }
+  if(pass.length < 8) { errEl.textContent = 'Mot de passe trop court (8 caractères min)'; errEl.style.display='block'; return; }
+  if(pass !== pass2) { errEl.textContent = 'Les mots de passe ne correspondent pas'; errEl.style.display='block'; return; }
+  try {
+    await signUp(email, pass, name);
+    const session = await signIn(email, pass);
+    saveSession(session);
+    // Pré-remplir CFG avec les données d'inscription
+    CFG.name = name;
+    CFG.senderEmail = email;
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('app-shell').style.display = '';
+    injectMobileNav();
+    updateUserUI();
+    await loadApp();
+    // Sauvegarder nom + email dans settings immédiatement
+    try {
+      for(const [k,v] of [['name',name],['senderEmail',email]]) {
+        await sbFetch('settings', {
+          method:'POST', body:JSON.stringify({key:k, value:v}),
+          headers:{'Prefer':'resolution=merge-duplicates,return=minimal','Content-Type':'application/json'}
+        });
+      }
+    } catch(e) {}
+    if(shouldShowOnboarding()) startOnboarding();
+  } catch(e) {
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+function updateUserUI() {
+  if(!CURRENT_USER) return;
+  const name = CFG.name || CURRENT_USER.user_metadata?.full_name || CURRENT_USER.email.split('@')[0];
+  const role = CFG.role || CFG.senderEmail || CURRENT_USER.email;
+  const initials = name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  const nameEl = document.getElementById('user-name');
+  const roleEl = document.getElementById('user-role');
+  const avatarEl = document.getElementById('user-avatar');
+  if(nameEl) nameEl.textContent = name;
+  if(roleEl) roleEl.textContent = role;
+  if(avatarEl) avatarEl.textContent = initials;
+}
+
+async function loadApp() {
+  await loadOffers();
+  await loadConfig();
+  initRealtimeTracking();
+}
+
+// ══ BREVO EMAIL ══
+function buildTrackingPixel(offerId) {
+  if(!offerId) return '';
+  const base = window.location.origin;
+  return `<img src="${base}/api/track-open?id=${offerId}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="" />`;
+}
+
+async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName, offerId}) {
+  const fromEmail = CFG.senderEmail || CURRENT_USER?.email;
+  const fromName = CFG.name || fromEmail;
+  if(!fromEmail) { toast('⚠️','Configurez votre email expéditeur dans Configuration'); return false; }
+  if(!to) { toast('⚠️','Email destinataire manquant'); return false; }
+  const sig = buildSignature();
+  const pixel = offerId ? buildTrackingPixel(offerId) : '';
+  const htmlBody = `<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#333;">${(body + sig).replace(/\n/g,'<br>')}</div>${pixel}`;
+  try {
+    const res = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        provider: 'brevo',
+        from: fromEmail,
+        fromName,
+        to, toName, subject,
+        body: body + sig,
+        htmlBody,
+        pdfUrl, pdfName
+      })
+    });
+    if(!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      console.error('Brevo API error:', err);
+      toast('❌', `Erreur envoi: ${err.error||res.status} — vérifiez votre clé Brevo`);
+      return false;
+    }
+    return true;
+  } catch(e) {
+    console.error('sendBrevoEmail network error:', e);
+    toast('❌', 'Erreur réseau — impossible de contacter le serveur');
+    return false;
+  }
+}
+
+// ══ REALTIME TRACKING ══
+let _trackingInterval = null;
+let _lastOpenCounts = {};
+
+function initRealtimeTracking() {
+  if(_trackingInterval) clearInterval(_trackingInterval);
+  _trackingInterval = setInterval(async () => {
+    try {
+      const ouvertures = await sbFetch('ouvertures?select=offre_id&order=opened_at.desc');
+      const counts = {};
+      ouvertures.forEach(o => { counts[o.offre_id] = (counts[o.offre_id]||0) + 1; });
+      Object.keys(counts).forEach(oid => {
+        const prev = _lastOpenCounts[oid] || 0;
+        if(counts[oid] > prev) {
+          const offre = OFFERS.find(o => o.id === oid);
+          if(offre && prev > 0) showOpenNotification(offre);
+          if(offre) offre.opens = counts[oid];
+        }
+      });
+      _lastOpenCounts = counts;
+    } catch(e) {}
+  }, 30000);
+}
+
+function showOpenNotification(offre) {
+  toast('👁', `${offre.prenom} ${offre.nom} vient d'ouvrir votre offre ${offre.ref} !`);
+  const badge = document.getElementById('nc-detection');
+  if(badge) { badge.textContent = parseInt(badge.textContent||0)+1; badge.style.display='inline'; }
+}
+
+async function init() {
+  const loader = document.createElement('div');
+  loader.id = 'global-loader';
+  loader.style.cssText = 'position:fixed;inset:0;background:rgba(7,8,12,0.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+  loader.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:16px;"><svg width="52" height="44" viewBox="0 0 52 44" fill="none"><rect x="1" y="34" width="6" height="8" rx="1.5" fill="rgba(233,184,74,0.3)"/><rect x="9" y="27" width="6" height="15" rx="1.5" fill="rgba(233,184,74,0.5)"/><rect x="17" y="19" width="6" height="23" rx="1.5" fill="rgba(233,184,74,0.65)"/><rect x="25" y="12" width="6" height="30" rx="1.5" fill="rgba(233,184,74,0.82)"/><rect x="33" y="5" width="6" height="37" rx="1.5" fill="#E9B84A"/><line x1="0" y1="42" x2="52" y2="42" stroke="rgba(233,184,74,0.15)" stroke-width="1"/><path d="M3,32 Q11,23 20,16 Q27,11 37,4" stroke="#E9B84A" stroke-width="2" stroke-linecap="round" fill="none"/><polygon points="37,4 31,8 33.5,12" fill="#E9B84A"/><circle cx="37" cy="4" r="3" fill="#E9B84A"/></svg><div style="font-family:\'Instrument Serif\',serif;font-size:22px;color:var(--gold);">FollowOffer</div></div><div style="width:36px;height:36px;border:2.5px solid rgba(255,255,255,0.1);border-top-color:#E9B84A;border-radius:50%;animation:spin 0.8s linear infinite;"></div><div style="font-size:11px;color:rgba(236,238,242,0.35);font-family:Outfit,sans-serif;letter-spacing:1.5px;margin-top:10px;">Chargement...</div>';
+  document.body.appendChild(loader);
+
+  // Try to restore session
+  const hasSession = loadSession();
+  if(hasSession) {
+    // Verify token is still valid
+    try {
+      const check = await sbAuthFetch('user');
+      if(check.id) {
+        CURRENT_USER = check;
+        loader.remove();
+        injectMobileNav();
+        updateUserUI();
+        await loadApp();
+        return;
+      }
+    } catch(e) {}
+    // Token expired
+    localStorage.removeItem('of_token');
+    localStorage.removeItem('of_user');
+    CURRENT_USER = null; USER_TOKEN = null;
+  }
+
+  loader.remove();
+  document.getElementById('app-shell').style.display = 'none';
+  showAuthScreen();
+}
+
+// ══ ONBOARDING ══
+function shouldShowOnboarding() {
+  return !localStorage.getItem('of_onboarding_done') && OFFERS.length === 0;
+}
+
+function startOnboarding() {
+  let overlay = document.getElementById('ob-overlay');
+  if(!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'ob-overlay';
+    overlay.className = 'ob-overlay';
+    overlay.innerHTML = `<div class="ob-card" id="ob-card"></div>`;
+    document.body.appendChild(overlay);
+  }
+  overlay.classList.add('open');
+  renderObStep(0);
+}
+
+function renderObStep(step) {
+  const card = document.getElementById('ob-card');
+  if(!card) return;
+  const steps = ['Bienvenue','Profil','Email','Flux','Prêt'];
+  const dots = steps.map((_,i) => `<div class="ob-step-dot ${i<step?'done':i===step?'active':''}"></div>`).join('');
+
+  const content = [
+    // Step 0 — Bienvenue
+    `<div class="ob-ico">🎉</div>
+    <div class="ob-title">Bienvenue sur FollowOffer</div>
+    <div class="ob-sub">Votre suite commerciale pour envoyer, suivre et relancer vos offres automatiquement. Configurons tout en 2 minutes.</div>
+    <div class="ob-checklist">
+      <div class="ob-check-item checked"><div class="ob-check-box">✓</div><div><strong>Compte créé</strong> — Vous êtes connecté</div></div>
+      <div class="ob-check-item"><div class="ob-check-box"></div><div>Remplir votre profil commercial</div></div>
+      <div class="ob-check-item"><div class="ob-check-box"></div><div>Connecter votre email</div></div>
+      <div class="ob-check-item"><div class="ob-check-box"></div><div>Envoyer votre première offre</div></div>
+    </div>`,
+    // Step 1 — Profil (nom déjà connu depuis inscription)
+    `<div class="ob-ico">👤</div>
+    <div class="ob-title">Votre profil commercial</div>
+    <div class="ob-sub">Ces infos apparaîtront dans vos emails et signature. Votre nom et email ont été récupérés automatiquement.</div>
+    <div class="ob-field" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:4px;"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Nom</div><div style="font-size:13px;color:var(--text);">${CFG.name||CURRENT_USER?.email?.split('@')[0]||'—'} <span style="color:var(--green);font-size:11px;">✓ Récupéré</span></div></div>
+    <div class="ob-field" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:12px;"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Email</div><div style="font-size:13px;color:var(--text);">${CFG.senderEmail||CURRENT_USER?.email||'—'} <span style="color:var(--green);font-size:11px;">✓ Récupéré</span></div></div>
+    <div class="ob-field"><label>Entreprise</label><input id="ob-company" type="text" placeholder="Dupont SA" value="${CFG.company||''}"></div>
+    <div class="ob-field"><label>Rôle / Fonction</label><input id="ob-role" type="text" placeholder="Responsable commercial" value="${CFG.role||''}"></div>
+    <div class="ob-field"><label>Téléphone</label><input id="ob-phone" type="tel" placeholder="+41 79 000 00 00" value="${CFG.phone||''}"></div>`,
+    // Step 2 — Email
+    `<div class="ob-ico">📧</div>
+    <div class="ob-title">Connecter votre email</div>
+    <div class="ob-sub">Configurez l'adresse email depuis laquelle vos offres seront envoyées via Brevo.</div>
+    <div class="ob-field"><label>Email expéditeur</label><input id="ob-sender-email" type="email" placeholder="jean@entreprise.ch" value="${CFG.senderEmail||CURRENT_USER?.email||''}"></div>
+    <div class="ob-field"><label>Clé API Brevo (optionnel)</label><input id="ob-brevo-key" type="text" placeholder="xkeysib-..." value="${CFG.brevoKey||''}"></div>
+    <div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:12px;color:var(--muted);line-height:1.6;">💡 Sans clé Brevo, les emails passent par notre serveur par défaut. Pour un volume élevé, créez un compte <strong style="color:var(--text);">brevo.com</strong> gratuit.</div>`,
+    // Step 3 — Flux
+    `<div class="ob-ico">⚡</div>
+    <div class="ob-title">Comment ça marche</div>
+    <div class="ob-sub">FollowOffer automatise tout votre suivi commercial en 4 étapes.</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      ${[['📄','Déposez votre PDF','L\'IA extrait automatiquement client, montant, référence'],['🚀','Envoi automatique','L\'offre est envoyée par email avec votre signature'],['👁','Tracking ouverture','Vous êtes notifié dès que le client ouvre l\'email'],['🔔','Relances auto','J+7, J+14, J+21 — FollowOffer relance à votre place']].map(([ico,t,s])=>`<div style="display:flex;gap:12px;align-items:flex-start;padding:10px;background:var(--s2);border-radius:8px;"><div style="font-size:20px;min-width:28px;">${ico}</div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px;">${t}</div><div style="font-size:12px;color:var(--muted);">${s}</div></div></div>`).join('')}
+    </div>`,
+    // Step 4 — Prêt
+    `<div class="ob-ico" style="background:var(--green-d);border-color:rgba(34,197,94,0.3);">🎯</div>
+    <div class="ob-title">Vous êtes prêt !</div>
+    <div class="ob-sub">Tout est configuré. Commencez par envoyer votre première offre — cela prend moins de 30 secondes.</div>
+    <div style="background:var(--gold-d);border:1px solid rgba(233,184,74,0.2);border-radius:12px;padding:16px;margin-bottom:20px;">
+      <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:6px;">🏆 Objectif semaine 1</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;">Envoyez 3 offres → FollowOffer s\'occupe des relances → Convertissez votre premier client</div>
+    </div>`
+  ][step];
+
+  card.innerHTML = `
+    <div class="ob-steps">${dots}</div>
+    ${content}
+    <div class="ob-actions">
+      <button class="ob-skip" onclick="skipOnboarding()">Passer la configuration</button>
+      <div style="display:flex;gap:8px;">
+        ${step > 0 ? `<button class="btn btn-ghost btn-sm" onclick="renderObStep(${step-1})">← Retour</button>` : ''}
+        ${step < 4
+          ? `<button class="btn btn-gold" onclick="obNext(${step})">Continuer →</button>`
+          : `<button class="btn btn-gold" onclick="obFinish()">🚀 Envoyer ma première offre</button>`
+        }
+      </div>
+    </div>`;
+}
+
+async function obNext(currentStep) {
+  if(currentStep === 1) await obSaveProfile();
+  if(currentStep === 2) await obSaveEmail();
+  renderObStep(currentStep + 1);
+}
+
+async function obSaveProfile() {
+  const name = document.getElementById('ob-name')?.value.trim();
+  const company = document.getElementById('ob-company')?.value.trim();
+  const role = document.getElementById('ob-role')?.value.trim();
+  const phone = document.getElementById('ob-phone')?.value.trim();
+  if(name) CFG.name = name;
+  if(company) CFG.company = company;
+  if(role) CFG.role = role;
+  if(phone) CFG.phone = phone;
+  if(name || company) {
+    try {
+      for(const [k,v] of [['name',name],['company',company],['role',role],['phone',phone]]) {
+        if(v) await sbFetch('settings', {method:'POST', body:JSON.stringify({key:k, value:v}), headers:{'Prefer':'resolution=merge-duplicates,return=minimal','Content-Type':'application/json'}});
+      }
+    } catch(e) {}
+    updateUserUI();
+  }
+}
+
+async function obSaveEmail() {
+  const email = document.getElementById('ob-sender-email')?.value.trim();
+  const key = document.getElementById('ob-brevo-key')?.value.trim();
+  if(email) CFG.senderEmail = email;
+  if(key) CFG.brevoKey = key;
+  if(email || key) {
+    try {
+      for(const [k,v] of [['senderEmail',email],['brevoKey',key]]) {
+        if(v) await sbFetch('settings', {method:'POST', body:JSON.stringify({key:k, value:v}), headers:{'Prefer':'resolution=merge-duplicates,return=minimal','Content-Type':'application/json'}});
+      }
+    } catch(e) {}
+  }
+}
+
+function obFinish() {
+  localStorage.setItem('of_onboarding_done','1');
+  const overlay = document.getElementById('ob-overlay');
+  if(overlay) overlay.classList.remove('open');
+  go('nouvelle');
+  toast('🎯','Configuration terminée — Envoyez votre première offre !');
+}
+
+function skipOnboarding() {
+  localStorage.setItem('of_onboarding_done','1');
+  const overlay = document.getElementById('ob-overlay');
+  if(overlay) overlay.classList.remove('open');
+}
+
+// ══ MOBILE NAV ══
+function injectMobileNav() {
+  if(document.getElementById('mob-header')) return;
+  const header = document.createElement('div');
+  header.id = 'mob-header';
+  header.className = 'mob-header';
+  header.innerHTML = `<div class="mob-logo" style="display:flex;align-items:center;gap:8px;"><svg width="22" height="20" viewBox="0 0 22 20" fill="none"><rect x="1" y="14" width="3" height="5" rx="1" fill="rgba(233,184,74,0.4)"/><rect x="5.5" y="10" width="3" height="9" rx="1" fill="rgba(233,184,74,0.58)"/><rect x="10" y="6" width="3" height="13" rx="1" fill="rgba(233,184,74,0.78)"/><rect x="14.5" y="2" width="3" height="17" rx="1" fill="#E9B84A"/><line x1="0" y1="19" x2="22" y2="19" stroke="rgba(233,184,74,0.15)" stroke-width="1"/><path d="M2,13 Q7,8 11,5 Q15,2 17,1" stroke="#E9B84A" stroke-width="1.5" stroke-linecap="round" fill="none"/><polygon points="17,1 14,4 16,5.5" fill="#E9B84A"/></svg>FollowOffer</div><div class="mob-burger" onclick="toggleMobileMenu()">☰</div>`;
+  document.body.appendChild(header);
+
+  const overlay = document.createElement('div');
+  overlay.id = 'sb-drawer-overlay';
+  overlay.className = 'sb-drawer-overlay';
+  overlay.onclick = closeMobileMenu;
+  document.body.appendChild(overlay);
+
+  const nav = document.createElement('div');
+  nav.id = 'mobile-nav';
+  nav.className = 'mobile-nav';
+  nav.innerHTML = `<div class="mobile-nav-items">
+    <button class="mob-nav-btn" onclick="go('dashboard');setMobActive('dashboard')" data-page="dashboard"><div class="mob-ico">◉</div>Dashboard</button>
+    <button class="mob-nav-btn" onclick="go('offres');setMobActive('offres')" data-page="offres"><div class="mob-ico">📋</div>Offres</button>
+    <button class="mob-nav-btn" onclick="go('nouvelle');setMobActive('nouvelle')" data-page="nouvelle"><div class="mob-ico" style="width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;margin:0 auto;">+</div><span style="margin-top:2px;">Nouveau</span></button>
+    <button class="mob-nav-btn" onclick="go('relances');setMobActive('relances')" data-page="relances"><div class="mob-ico">◎</div>Relances<div class="mob-badge" id="mob-relance-badge" style="display:none;"></div></button>
+    <button class="mob-nav-btn" onclick="go('config');setMobActive('config')" data-page="config"><div class="mob-ico">⚙</div>Config</button>
+  </div>`;
+  document.body.appendChild(nav);
+}
+
+function toggleMobileMenu() {
+  const sb = document.querySelector('.sb');
+  const overlay = document.getElementById('sb-drawer-overlay');
+  if(!sb) return;
+  const isOpen = sb.classList.contains('mob-open');
+  if(isOpen) { sb.classList.remove('mob-open'); overlay.classList.remove('open'); }
+  else { sb.classList.add('mob-open'); overlay.classList.add('open'); }
+}
+
+function closeMobileMenu() {
+  const sb = document.querySelector('.sb');
+  const overlay = document.getElementById('sb-drawer-overlay');
+  if(sb) sb.classList.remove('mob-open');
+  if(overlay) overlay.classList.remove('open');
+}
+
+function setMobActive(page) {
+  document.querySelectorAll('.mob-nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.page === page);
+  });
+  closeMobileMenu();
+}
+
+function updateMobBadge() {
+  const badge = document.getElementById('mob-relance-badge');
+  if(!badge) return;
+  const urgent = OFFERS.filter(o => ['sent','relance1','relance2','relance3'].includes(o.status));
+  badge.style.display = urgent.length > 0 ? 'block' : 'none';
+}
+
+init();
+</script>
+</body>
+</html>
