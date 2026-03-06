@@ -1568,20 +1568,19 @@ async function actR(id){
 
     emailBody += buildSignature();
 
-    // Send real email if connected
-    if(CFG.provider && CFG.accessToken) {
-      const sent = await sendRealEmail({
-        to: o.email, toName: `${o.prenom} ${o.nom}`,
-        subject: `Re: Offre ${o.ref} — ${o.objet}`,
-        body: emailBody,
-        pdfUrl: o.pdfUrl||'', pdfName: o.fichier||`${o.ref}.pdf`,
-        offerId: o.id
-      });
-      if(sent) toast('📧',`Relance ${rNum} envoyée à ${o.prenom} ${o.nom} depuis ${CFG.senderEmail}`);
-      else toast('⚠️',`Statut mis à jour — email non envoyé (vérifiez la connexion)`);
-    } else {
-      toast('📧',`Statut → Relance ${rNum} — connectez Gmail/Outlook pour envoyer réellement`);
+    // Envoyer via Brevo (toujours, pas besoin d'OAuth)
+    if(!CFG.name || !CFG.senderEmail) {
+      try { const cfg = localStorage.getItem('of_cfg'); if(cfg) Object.assign(CFG, JSON.parse(cfg)); } catch(e) {}
     }
+    const sent = await sendBrevoEmail({
+      to: o.email, toName: `${o.prenom} ${o.nom}`,
+      subject: `Re: Offre ${o.ref} — ${o.objet}`,
+      body: emailBody,
+      pdfUrl: o.pdfUrl||'', pdfName: o.fichier||`${o.ref}.pdf`,
+      offerId: o.id
+    });
+    if(sent) toast('📧',`Relance ${rNum} envoyée à ${o.prenom} ${o.nom} ✅`);
+    else toast('⚠️',`Statut mis à jour — vérifiez Configuration → Email`);
     renderOffres(); renderRelances(); renderUrgent();
   } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
 }
@@ -2868,10 +2867,14 @@ async function init() {
         CURRENT_USER = check;
         clearTimeout(killLoader);
         loader.remove();
+        // Afficher l'app immédiatement
+        document.getElementById('app-shell').style.display = '';
+        document.getElementById('auth-screen') && (document.getElementById('auth-screen').style.display = 'none');
         // Cache config local immédiat
         try { const cfg = localStorage.getItem('of_cfg'); if(cfg) Object.assign(CFG, JSON.parse(cfg)); } catch(e) {}
         injectMobileNav();
         updateUserUI();
+        go('dashboard');
         // Chargement données en arrière-plan (non bloquant)
         loadApp().catch(e => console.warn('loadApp:', e.message));
         return;
