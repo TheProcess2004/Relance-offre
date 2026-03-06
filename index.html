@@ -2241,29 +2241,38 @@ async function uploadPDFToStorage(file, offreId) {
     const path = `${offreId}/${safeName}`;
     const token = USER_TOKEN || SB_KEY;
     
-    // Essayer d'abord "offres" (minuscule), puis "Offres" (majuscule)
-    const buckets = ['offres', 'Offres'];
-    let publicUrl = null;
+    console.log('=== PDF UPLOAD DEBUG ===');
+    console.log('File:', file.name, 'Size:', file.size, 'Type:', file.type);
+    console.log('OffreId:', offreId);
+    console.log('Token type:', USER_TOKEN ? 'USER_TOKEN' : 'SB_KEY (anon)');
+    console.log('SB_URL:', SB_URL);
     
-    for(const bucket of buckets) {
-      const res = await fetch(`${SB_URL}/storage/v1/object/${bucket}/${path}`, {
-        method: 'POST',
-        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer '+token, 'Content-Type': file.type||'application/pdf', 'x-upsert': 'true' },
-        body: ab
-      });
-      if(res.ok) {
-        publicUrl = `${SB_URL}/storage/v1/object/public/${bucket}/${path}`;
-        console.log('PDF uploadé dans bucket:', bucket, publicUrl);
-        await sbFetch('offres?id=eq.'+offreId, {method:'PATCH', body:JSON.stringify({pdf_url:publicUrl}), headers:{'Prefer':'return=minimal'}});
-        return publicUrl;
-      } else {
-        const errText = await res.text().catch(()=>'');
-        console.warn(`Bucket ${bucket} failed:`, res.status, errText);
-      }
+    const res = await fetch(`${SB_URL}/storage/v1/object/offres/${path}`, {
+      method: 'POST',
+      headers: { 
+        'apikey': SB_KEY, 
+        'Authorization': 'Bearer '+token, 
+        'Content-Type': 'application/pdf',
+        'x-upsert': 'true'
+      },
+      body: ab
+    });
+    
+    console.log('Upload response status:', res.status);
+    const resText = await res.text();
+    console.log('Upload response body:', resText);
+    
+    if(res.ok || res.status === 200) {
+      const publicUrl = `${SB_URL}/storage/v1/object/public/offres/${path}`;
+      console.log('✅ PDF public URL:', publicUrl);
+      await sbFetch('offres?id=eq.'+offreId, {method:'PATCH', body:JSON.stringify({pdf_url:publicUrl}), headers:{'Prefer':'return=minimal'}});
+      return publicUrl;
+    } else {
+      console.error('❌ Upload failed:', res.status, resText);
+      toast('⚠️', 'PDF erreur ' + res.status + ': ' + resText.slice(0,80));
     }
-    toast('⚠️', 'PDF non uploadé — vérifiez le bucket Supabase Storage');
   } catch(e) { 
-    console.warn('PDF upload error:', e.message);
+    console.error('PDF upload exception:', e.message);
     toast('⚠️', 'Erreur PDF: ' + e.message.slice(0,60));
   }
   return null;
