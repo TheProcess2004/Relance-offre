@@ -109,7 +109,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .tbl-r{display:grid;padding:13px 20px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background 0.1s;}
 .tbl-r:last-child{border-bottom:none;}
 .tbl-r:hover{background:rgba(255,255,255,0.025);}
-.tbl-cols{grid-template-columns:2fr 1.2fr 1fr 1.1fr 1.1fr 1fr;}
+.tbl-cols{grid-template-columns:2fr 1fr 1fr 1fr 1.2fr 0.7fr 90px;}
 .cn{font-weight:600;font-size:13px;}
 .ce{font-size:11px;color:var(--muted);margin-top:1px;}
 .ref{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
@@ -773,7 +773,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       </div>
       <div class="tbl">
         <div class="tbl-h tbl-cols">
-          <div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Prochaine relance</div><div class="tbl-hc">Actions</div>
+          <div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Date relance</div><div class="tbl-hc">Vues</div><div class="tbl-hc">Actions</div>
         </div>
         <div id="tbody-offres"></div>
       </div>
@@ -1150,15 +1150,35 @@ function go(name) {
 
 // ══ ROW ══
 function row(o) {
-  const nr = NR[o.status];
+  // Date réelle de prochaine relance pending
+  const nextRelance = o.relances && (o.relances.r1||o.relances.r2||o.relances.r3);
+  const today = new Date().toISOString().split('T')[0];
+  let relDate = '—', relColor = 'var(--muted)';
+  if(o.status==='won'||o.status==='lost') { relDate = '—'; }
+  else if(nextRelance) {
+    const d = nextRelance;
+    if(d < today) { relDate = 'En retard'; relColor = 'var(--red)'; }
+    else if(d === today) { relDate = 'Aujourd\'hui'; relColor = 'var(--gold)'; }
+    else {
+      const days = Math.round((new Date(d)-new Date(today))/(1000*60*60*24));
+      relDate = 'J+'+days+' ('+d.slice(5).replace('-','/')+')';
+      relColor = days<=2?'var(--orange)':'var(--text)';
+    }
+  }
+  // Ouvertures
+  const opens = o.opens||0;
+  const openTxt = opens===0 ? '<span style="color:var(--muted);font-size:12px;">—</span>'
+    : opens===1 ? '<span style="color:var(--blue);font-size:12px;">👁 1×</span>'
+    : `<span style="color:var(--green);font-size:12px;font-weight:600;">👁 ${opens}×</span>`;
   return `<div class="tbl-r tbl-cols" onclick="openModal('${o.id}')">
     <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
     <div class="ref">${o.ref}</div>
     <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
     <div><span class="pill ${SC[o.status]}">${SL[o.status]}</span></div>
-    <div style="font-size:12px;${nr.includes("hui")?'color:var(--gold);font-weight:600;':nr==='—'?'color:var(--muted)':''}">${nr}</div>
+    <div style="font-size:12px;color:${relColor};font-weight:${relDate==='Aujourd\'hui'||relDate==='En retard'?'600':'400'};">${relDate}</div>
+    <div>${openTxt}</div>
     <div class="acts">
-      <button class="bic" onclick="event.stopPropagation();actR('${o.id}')" title="Relance">📧</button>
+      <button class="bic" onclick="event.stopPropagation();confirmRelance('${o.id}')" title="Relancer">📧</button>
       <button class="bic" onclick="event.stopPropagation();actW('${o.id}')" title="Gagné">✓</button>
       <button class="bic" onclick="event.stopPropagation();actL('${o.id}')" title="Perdu">✕</button>
     </div>
@@ -1231,7 +1251,7 @@ function renderUrgent(){
   const u=OFFERS.filter(o=>['relance1','relance2'].includes(o.status));
   const el=document.getElementById('dash-urgent');
   if(!u.length){el.innerHTML=`<div style="text-align:center;padding:40px;color:var(--muted);">✅ Aucune relance urgente</div>`;return;}
-  el.innerHTML=`<div class="tbl"><div class="tbl-h tbl-cols"><div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Action</div><div class="tbl-hc">Actions</div></div>${u.map(o=>row(o)).join('')}</div>`;
+  el.innerHTML=`<div class="tbl"><div class="tbl-h tbl-cols"><div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Date relance</div><div class="tbl-hc">Vues</div><div class="tbl-hc">Actions</div></div>${u.map(o=>row(o)).join('')}</div>`;
 }
 
 // ══ DETECTION ══
@@ -2019,16 +2039,50 @@ async function saveEdit(id) {
   o.montant = parseFloat(document.getElementById('edit-montant').value)||0;
   o.objet = document.getElementById('edit-objet').value;
   o.notes = document.getElementById('edit-notes').value;
+  const d1 = parseInt(document.getElementById('edit-d1')?.value)||3;
+  const d2 = parseInt(document.getElementById('edit-d2')?.value)||7;
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({reference:o.ref,montant:o.montant,objet:o.objet,notes:o.notes}), headers:{'Prefer':'return=minimal'}});
     if(o.client_id) {
       await sbFetch('clients?id=eq.'+o.client_id, {method:'PATCH', body:JSON.stringify({prenom:o.prenom,nom:o.nom,email:o.email}), headers:{'Prefer':'return=minimal'}});
     }
-    toast('✅','Offre mise à jour');
+    // Mettre à jour les dates de relance pending
+    const today = new Date();
+    const sentDate = o.created_at ? new Date(o.created_at) : today;
+    const addFromSent = (days) => { const d = new Date(sentDate); d.setDate(d.getDate()+days); return d.toISOString().split('T')[0]; };
+    const relancesExist = await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending&select=id,numero&order=numero.asc');
+    for(const r of relancesExist) {
+      const newDate = r.numero===1 ? addFromSent(d1) : r.numero===2 ? addFromSent(d2) : addFromSent(14);
+      await sbFetch('relances?id=eq.'+r.id, {method:'PATCH', body:JSON.stringify({date_prevue:newDate}), headers:{'Prefer':'return=minimal'}});
+    }
+    toast('✅','Offre et relances mises à jour');
     closeModal();
-    renderOffres();
-    renderUrgent();
+    await loadApp();
   } catch(e) { toast('❌','Erreur: '+e.message.slice(0,50)); }
+}
+
+// ══ CONFIRMATION RELANCE ══
+function confirmRelance(id) {
+  const o = OFFERS.find(x=>x.id===id);
+  if(!o) return;
+  const rNum = o.statut==='envoyee'?1:o.statut==='relance1'?2:o.statut==='relance2'?3:1;
+  document.getElementById('m-t').textContent = '📧 Confirmer la relance';
+  document.getElementById('m-s').textContent = o.ref + ' — ' + (o.prenom||'') + ' ' + (o.nom||'');
+  document.getElementById('m-body').innerHTML = `
+    <div style="padding:8px 0;color:var(--muted);font-size:13px;line-height:1.6;">
+      Vous allez envoyer la <strong style="color:var(--gold)">Relance ${rNum}</strong> à<br>
+      <strong>${o.prenom} ${o.nom}</strong> — ${o.email}<br><br>
+      Offre : <strong>${o.ref}</strong> — ${o.objet}<br>
+      Montant : <strong>${(o.montant||0).toLocaleString('fr-CH')} CHF</strong>
+    </div>
+    <div style="background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:8px;padding:10px 12px;margin:8px 0;font-size:12px;color:var(--muted);">
+      ⚠️ Un email sera envoyé immédiatement à votre client. Cette action ne peut pas être annulée.
+    </div>
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <button class="btn btn-ghost" style="flex:1;" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-gold" style="flex:1;" onclick="closeModal();actR('${id}')">📧 Confirmer l\'envoi</button>
+    </div>`;
+  document.getElementById('modal-overlay').style.display='flex';
 }
 
 // ══ RELANCE PREVIEW ══
