@@ -1555,16 +1555,16 @@ async function actR(id){
 
     // Generate relance email via AI then send
     const tones = [
-      'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max. Formule de clôture chaleureuse ex: "Au plaisir d'échanger avec vous,"',
+      'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max. Formule de clôture chaleureuse ex: "Au plaisir d\'échanger avec vous,"',
       'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes. Formule de clôture professionnelle ex: "Bien cordialement,"',
       'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes percutantes. Formule de clôture sincère ex: "Sincères salutations,"'
     ];
     let emailBody = '';
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (Relance ${rNum}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[rNum-1]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps du message (2-4 lignes selon le ton)\n3. Termine par une formule de salutation adaptée au ton (ex: "Au plaisir d'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nNE PAS inclure le nom/signature — juste la formule finale.`}]})});
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (Relance ${rNum}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[rNum-1]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps du message (2-4 lignes selon le ton)\n3. Termine par une formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nNE PAS inclure le nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
       emailBody = data.content?.[0]?.text||'';
-    } catch(e) { emailBody = `Bonjour ${o.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${o.ref} — ${o.objet} (${o.montant.toLocaleString('fr-CH')} CHF).\n\nAu plaisir d'échanger avec vous,`; }
+    } catch(e) { emailBody = `Bonjour ${o.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${o.ref} — ${o.objet} (${o.montant.toLocaleString('fr-CH')} CHF).\n\nAu plaisir d\'échanger avec vous,`; }
 
     // NE PAS ajouter la signature ici — sendBrevoEmail la gère
 
@@ -1908,7 +1908,7 @@ async function sendOffer(){
       const rawBody = document.getElementById('prev-body')?.innerText?.trim();
       const emailBody = rawBody && rawBody !== '—'
         ? rawBody
-        : `Bonjour ${prenom},\n\nVeuillez trouver ci-joint notre offre ${ref} — ${objet} pour un montant de ${montant.toLocaleString('fr-CH')} CHF.\n\nN'hésitez pas à me contacter pour toute question.\n\nAu plaisir d'échanger avec vous,${buildSignature()}`;
+        : `Bonjour ${prenom},\n\nVeuillez trouver ci-joint notre offre ${ref} — ${objet} pour un montant de ${montant.toLocaleString('fr-CH')} CHF.\n\nN\'hésitez pas à me contacter pour toute question.\n\nAu plaisir d\'échanger avec vous,${buildSignature()}`;
       emailSent = await sendBrevoEmail({to:email, toName:`${prenom} ${nom}`, subject:`Offre ${ref} — ${objet}`, body:emailBody, pdfUrl, pdfName:uploadedFile?.name||`${ref}.pdf`, offerId});
     } else if(email && !CFG.senderEmail) {
       toast('⚠️', 'Renseignez votre email expéditeur dans Configuration pour envoyer');
@@ -2045,7 +2045,7 @@ async function previewRelance(id) {
 
   // Generate all 3 relances via AI
   const tones = [
-    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes. Terminer par formule chaleureuse ex: "Au plaisir d'échanger avec vous,"',
+    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes. Terminer par formule chaleureuse ex: "Au plaisir d\'échanger avec vous,"',
     'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes. Terminer par "Bien cordialement,"',
     'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes. Terminer par "Sincères salutations,"'
   ];
@@ -2053,7 +2053,7 @@ async function previewRelance(id) {
   
   for(let i=0;i<3;i++) {
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps (2-4 lignes)\n3. Formule de salutation adaptée au ton (ex: "Au plaisir d'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nPas de nom/signature — juste la formule finale.`}]})});
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps (2-4 lignes)\n3. Formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nPas de nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
       rpDrafts[i] = data.content?.[0]?.text||'';
       msgs[i] = rpDrafts[i];
@@ -2136,14 +2136,14 @@ async function previewRelance_obj(o) {
   const msgs = ['⏳ Génération...','⏳ Génération...','⏳ Génération...'];
   showRPContent(o, msgs, 0);
   const tones = [
-    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes. Terminer par formule chaleureuse ex: "Au plaisir d'échanger avec vous,"',
+    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes. Terminer par formule chaleureuse ex: "Au plaisir d\'échanger avec vous,"',
     'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes. Terminer par "Bien cordialement,"',
     'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes. Terminer par "Sincères salutations,"'
   ];
   const delays = ['J+3','J+7','J+14'];
   for(let i=0;i<3;i++) {
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps (2-4 lignes)\n3. Formule de salutation adaptée au ton (ex: "Au plaisir d'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nPas de nom/signature — juste la formule finale.`}]})});
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps (2-4 lignes)\n3. Formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nPas de nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
       rpDrafts[i] = data.content?.[0]?.text||'';
       msgs[i] = rpDrafts[i];
