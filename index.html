@@ -1555,9 +1555,9 @@ async function actR(id){
 
     // Generate relance email via AI then send
     const tones = [
-      'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max. Formule de clôture chaleureuse ex: "Au plaisir d\'échanger avec vous,"',
-      'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes. Formule de clôture professionnelle ex: "Bien cordialement,"',
-      'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes percutantes. Formule de clôture sincère ex: "Sincères salutations,"'
+      'Relance amicale. 2-3 lignes. OBLIGATOIRE : terminer par "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Au plaisir d\'en discuter," sur sa propre ligne.',
+      'Relance pro directe. 3-4 lignes. OBLIGATOIRE : terminer par "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Meilleures salutations," sur sa propre ligne.',
+      'Dernière relance urgente. 2-3 lignes percutantes. OBLIGATOIRE : terminer par "Sincères salutations," sur sa propre ligne.',
     ];
     let emailBody = '';
     try {
@@ -1768,14 +1768,20 @@ RÈGLES ABSOLUES :
 1. Sonne 100% humain — jamais robotique ni "template"
 2. Intègre le contexte naturellement si pertinent
 3. Mentionne l'objet concret de l'offre (pas juste "votre offre")
-4. Évite : "N'hésitez pas", "Je reste à votre disposition", "Cordialement, je vous prie"
-5. Maximum 5-6 lignes corpo — percutant et naturel
-6. Termine avec une ouverture concrète (une vraie question ou prochaine étape)
-7. Commence directement par "Bonjour ${prenom},"
-8. INTERDIT : N'écris JAMAIS de placeholders comme [Prénom], [Nom], [Votre nom], [Signature]. Utilise uniquement les données fournies ci-dessus.
-9. Ne mets PAS de signature — elle sera ajoutée automatiquement.
+4. Maximum 3-4 lignes de corps — percutant et naturel
+5. Commence DIRECTEMENT par "Bonjour ${prenom}," — RIEN avant
+6. INTERDIT : N'écris JAMAIS "Objet :", "**Objet", ou tout en-tête
+7. INTERDIT : N'écris JAMAIS de placeholders [Prénom], [Nom], [Signature]
+8. Ne mets PAS de signature — elle sera ajoutée automatiquement
+9. STRUCTURE OBLIGATOIRE en 3 blocs séparés par une ligne vide :
+   - Bloc 1 : "Bonjour ${prenom},"
+   - Bloc 2 : Corps du message (2-3 lignes max)
+   - Bloc 3 : Formule de salutation adaptée au ton :
+     * Ton chaleureux → "Au plaisir d\'en discuter avec toi,"
+     * Ton pro → "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Meilleures salutations,"
+     * Ton direct → "Bien cordialement,"
 
-Réponds UNIQUEMENT avec le corps de l'email.`;
+Réponds UNIQUEMENT avec le corps de l'email, rien d'autre.`;
 
   try{
     const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:prompt}]})});
@@ -2045,9 +2051,9 @@ async function previewRelance(id) {
 
   // Generate all 3 relances via AI
   const tones = [
-    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes. Terminer par formule chaleureuse ex: "Au plaisir d\'échanger avec vous,"',
-    'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes. Terminer par "Bien cordialement,"',
-    'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes. Terminer par "Sincères salutations,"'
+      'Relance amicale. 2-3 lignes. OBLIGATOIRE : terminer par "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Au plaisir d\'en discuter," sur sa propre ligne.',
+      'Relance pro directe. 3-4 lignes. OBLIGATOIRE : terminer par "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Meilleures salutations," sur sa propre ligne.',
+      'Dernière relance urgente. 2-3 lignes percutantes. OBLIGATOIRE : terminer par "Sincères salutations," sur sa propre ligne.',
   ];
   const delays = ['J+3','J+7','J+14'];
   
@@ -2136,9 +2142,9 @@ async function previewRelance_obj(o) {
   const msgs = ['⏳ Génération...','⏳ Génération...','⏳ Génération...'];
   showRPContent(o, msgs, 0);
   const tones = [
-    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes. Terminer par formule chaleureuse ex: "Au plaisir d\'échanger avec vous,"',
-    'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes. Terminer par "Bien cordialement,"',
-    'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes. Terminer par "Sincères salutations,"'
+      'Relance amicale. 2-3 lignes. OBLIGATOIRE : terminer par "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Au plaisir d\'en discuter," sur sa propre ligne.',
+      'Relance pro directe. 3-4 lignes. OBLIGATOIRE : terminer par "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Meilleures salutations," sur sa propre ligne.',
+      'Dernière relance urgente. 2-3 lignes percutantes. OBLIGATOIRE : terminer par "Sincères salutations," sur sa propre ligne.',
   ];
   const delays = ['J+3','J+7','J+14'];
   for(let i=0;i<3;i++) {
