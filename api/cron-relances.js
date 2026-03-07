@@ -57,7 +57,7 @@ async function generateEmailBody(offre, rNum) {
     const data = await res.json();
     return data.content?.[0]?.text || '';
   } catch(e) {
-    return `Bonjour ${offre.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${offre.reference} — ${offre.objet} (${offre.montant} CHF).\n\nN'hésitez pas à me contacter pour toute question.`;
+    return `Bonjour ${offre.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${offre.reference} — ${offre.objet} (${offre.montant} CHF).\n\nAu plaisir d'échanger avec vous,`;
   }
 }
 
