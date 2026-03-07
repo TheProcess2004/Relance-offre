@@ -1566,7 +1566,7 @@ async function actR(id){
       emailBody = data.content?.[0]?.text||'';
     } catch(e) { emailBody = `Bonjour ${o.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${o.ref} — ${o.objet} (${o.montant.toLocaleString('fr-CH')} CHF).\n\nN'hésitez pas à me contacter pour toute question.`; }
 
-    emailBody += buildSignature();
+    // NE PAS ajouter la signature ici — sendBrevoEmail la gère
 
     // Envoyer via Brevo (toujours, pas besoin d'OAuth)
     if(!CFG.name || !CFG.senderEmail) {
@@ -2829,7 +2829,8 @@ async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName, offer
   if(!to) { toast('⚠️','Email destinataire manquant'); return false; }
   const sig = buildSignature();
   const pixel = offerId ? buildTrackingPixel(offerId) : '';
-  const htmlBody = `<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#333;">${(body + sig).replace(/\n/g,'<br>')}</div>${pixel}`;
+  const bodyFinal = body.includes('\\n--\\n') ? body : body + sig;
+  const htmlBody = `<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#333;">${bodyFinal.replace(/\n/g,'<br>')}</div>${pixel}`;
   try {
     const res = await fetch('/api/send-email', {
       method: 'POST',
@@ -2839,7 +2840,7 @@ async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName, offer
         from: fromEmail,
         fromName,
         to, toName, subject,
-        body: body + sig,
+        body: bodyFinal,
         htmlBody,
         pdfUrl, pdfName
       })
