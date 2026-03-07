@@ -1555,16 +1555,16 @@ async function actR(id){
 
     // Generate relance email via AI then send
     const tones = [
-      'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max.',
-      'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes.',
-      'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes percutantes.'
+      'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max. Formule de clôture chaleureuse ex: "Au plaisir d'échanger avec vous,"',
+      'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes. Formule de clôture professionnelle ex: "Bien cordialement,"',
+      'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes percutantes. Formule de clôture sincère ex: "Sincères salutations,"'
     ];
     let emailBody = '';
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:`Rédige une relance commerciale (Relance ${rNum}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[rNum-1]}\nCommence par "Bonjour ${o.prenom}," — corps de l'email uniquement, pas de signature.`}]})});
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (Relance ${rNum}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[rNum-1]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps du message (2-4 lignes selon le ton)\n3. Termine par une formule de salutation adaptée au ton (ex: "Au plaisir d'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nNE PAS inclure le nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
       emailBody = data.content?.[0]?.text||'';
-    } catch(e) { emailBody = `Bonjour ${o.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${o.ref} — ${o.objet} (${o.montant.toLocaleString('fr-CH')} CHF).\n\nN'hésitez pas à me contacter pour toute question.`; }
+    } catch(e) { emailBody = `Bonjour ${o.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${o.ref} — ${o.objet} (${o.montant.toLocaleString('fr-CH')} CHF).\n\nAu plaisir d'échanger avec vous,`; }
 
     // NE PAS ajouter la signature ici — sendBrevoEmail la gère
 
@@ -1908,7 +1908,7 @@ async function sendOffer(){
       const rawBody = document.getElementById('prev-body')?.innerText?.trim();
       const emailBody = rawBody && rawBody !== '—'
         ? rawBody
-        : `Bonjour ${prenom},\n\nVeuillez trouver ci-joint notre offre ${ref} — ${objet} pour un montant de ${montant.toLocaleString('fr-CH')} CHF.\n\nN'hésitez pas à me contacter pour toute question.${buildSignature()}`;
+        : `Bonjour ${prenom},\n\nVeuillez trouver ci-joint notre offre ${ref} — ${objet} pour un montant de ${montant.toLocaleString('fr-CH')} CHF.\n\nAu plaisir d'échanger avec vous,${buildSignature()}`;
       emailSent = await sendBrevoEmail({to:email, toName:`${prenom} ${nom}`, subject:`Offre ${ref} — ${objet}`, body:emailBody, pdfUrl, pdfName:uploadedFile?.name||`${ref}.pdf`, offerId});
     } else if(email && !CFG.senderEmail) {
       toast('⚠️', 'Renseignez votre email expéditeur dans Configuration pour envoyer');
@@ -2045,9 +2045,9 @@ async function previewRelance(id) {
 
   // Generate all 3 relances via AI
   const tones = [
-    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max.',
-    'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes.',
-    'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes percutantes.'
+    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes. Terminer par formule chaleureuse ex: "Au plaisir d'échanger avec vous,"',
+    'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes. Terminer par "Bien cordialement,"',
+    'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes. Terminer par "Sincères salutations,"'
   ];
   const delays = ['J+3','J+7','J+14'];
   
@@ -2136,9 +2136,9 @@ async function previewRelance_obj(o) {
   const msgs = ['⏳ Génération...','⏳ Génération...','⏳ Génération...'];
   showRPContent(o, msgs, 0);
   const tones = [
-    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max.',
-    'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes.',
-    'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes percutantes.'
+    'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes. Terminer par formule chaleureuse ex: "Au plaisir d'échanger avec vous,"',
+    'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes. Terminer par "Bien cordialement,"',
+    'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes. Terminer par "Sincères salutations,"'
   ];
   const delays = ['J+3','J+7','J+14'];
   for(let i=0;i<3;i++) {
@@ -2698,7 +2698,7 @@ function showAuthScreen() {
             <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Email</label><input id="reg-email" type="email" placeholder="jean@entreprise.ch" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;"></div>
             <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Mot de passe</label>
               <div style="position:relative;">
-                <input id="reg-pass" type="password" placeholder="8 caractères minimum" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 40px 10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;">
+                <input id="reg-pass" type="password" placeholder="8 car., 1 majuscule, 1 chiffre" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 40px 10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;">
                 <button type="button" onclick="togglePass('reg-pass','eye1')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;" id="eye1">👁</button>
               </div>
             </div>
@@ -2766,6 +2766,8 @@ async function doRegister() {
   errEl.style.display = 'none';
   if(!name || !email || !pass || !pass2) { errEl.textContent = 'Tous les champs sont requis'; errEl.style.display='block'; return; }
   if(pass.length < 8) { errEl.textContent = 'Mot de passe trop court (8 caractères min)'; errEl.style.display='block'; return; }
+  if(!/[A-Z]/.test(pass)) { errEl.textContent = 'Mot de passe : au moins 1 majuscule requise'; errEl.style.display='block'; return; }
+  if(!/[0-9]/.test(pass)) { errEl.textContent = 'Mot de passe : au moins 1 chiffre requis'; errEl.style.display='block'; return; }
   if(pass !== pass2) { errEl.textContent = 'Les mots de passe ne correspondent pas'; errEl.style.display='block'; return; }
   try {
     await signUp(email, pass, name);
