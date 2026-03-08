@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -836,7 +835,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="rev-split">
         <div class="rev-card won">
           <div class="rev-glow"></div>
-          <div class="rev-tag">💚 Revenus gagnés</div>
+          <div class="rev-tag">💰 Revenus gagnés</div>
           <div class="rev-big" id="rev-won">0 CHF</div>
           <div class="rev-count" id="rev-won-c">0 offre convertie</div>
           <div id="rev-won-list"></div>
@@ -2604,6 +2603,135 @@ async function sbAuthFetch(path, options={}) {
   return res.json();
 }
 
+// ══ MOT DE PASSE OUBLIÉ ══
+function showForgotPassword() {
+  const authBox = document.querySelector('.auth-box');
+  if(!authBox) return;
+  authBox.innerHTML = `
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-family:'Instrument Serif',serif;font-size:28px;color:var(--gold);">🔑</div>
+      <div style="font-family:'Instrument Serif',serif;font-size:20px;margin-top:8px;">Réinitialiser le mot de passe</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;">Entrez votre email — vous recevrez un lien de réinitialisation</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Email</label>
+      <input id="forgot-email" type="email" placeholder="votre@email.com"
+        style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;"
+        onkeydown="if(event.key==='Enter')doForgotPassword()">
+    </div>
+    <div id="forgot-msg" style="display:none;padding:10px;border-radius:8px;font-size:13px;margin-bottom:12px;"></div>
+    <button onclick="doForgotPassword()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:12px;">
+      Envoyer le lien
+    </button>
+    <div style="text-align:center;">
+      <button onclick="location.reload()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;">← Retour à la connexion</button>
+    </div>`;
+}
+
+async function doForgotPassword() {
+  const email = document.getElementById('forgot-email')?.value?.trim();
+  const msgEl = document.getElementById('forgot-msg');
+  if(!email) { 
+    msgEl.textContent = 'Entrez votre adresse email';
+    msgEl.style.background = 'rgba(239,68,68,0.1)';
+    msgEl.style.color = 'var(--red)';
+    msgEl.style.display = 'block';
+    return; 
+  }
+  msgEl.textContent = 'Envoi en cours...';
+  msgEl.style.background = 'rgba(255,193,7,0.1)';
+  msgEl.style.color = 'var(--gold)';
+  msgEl.style.display = 'block';
+  try {
+    const res = await fetch(SB_URL + '/auth/v1/recover', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, redirect_to: window.location.origin + '/?reset=1' })
+    });
+    if(res.ok || res.status === 200) {
+      msgEl.textContent = '✅ Email envoyé ! Vérifiez votre boîte mail (et vos spams).';
+      msgEl.style.background = 'rgba(34,197,94,0.1)';
+      msgEl.style.color = 'var(--green)';
+    } else {
+      const d = await res.json().catch(()=>({}));
+      msgEl.textContent = '❌ ' + (d.msg || d.error_description || 'Erreur — vérifiez votre email');
+      msgEl.style.background = 'rgba(239,68,68,0.1)';
+      msgEl.style.color = 'var(--red)';
+    }
+  } catch(e) {
+    msgEl.textContent = '❌ Erreur réseau';
+    msgEl.style.background = 'rgba(239,68,68,0.1)';
+    msgEl.style.color = 'var(--red)';
+  }
+}
+
+// Détecter si on revient d'un lien de reset
+function checkResetMode() {
+  const hash = window.location.hash;
+  const params = new URLSearchParams(hash.replace('#','?'));
+  const type = params.get('type');
+  const accessToken = params.get('access_token');
+  if(type === 'recovery' && accessToken) {
+    showResetPasswordForm(accessToken);
+  }
+}
+
+function showResetPasswordForm(token) {
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('app-shell').style.display = 'none';
+  const authBox = document.querySelector('.auth-box');
+  if(!authBox) return;
+  authBox.innerHTML = `
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-family:'Instrument Serif',serif;font-size:28px;color:var(--gold);">🔒</div>
+      <div style="font-family:'Instrument Serif',serif;font-size:20px;margin-top:8px;">Nouveau mot de passe</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Nouveau mot de passe</label>
+      <input id="new-pass" type="password" placeholder="8 car., 1 majuscule, 1 chiffre"
+        style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;">
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Confirmer</label>
+      <input id="new-pass2" type="password" placeholder="Répétez le mot de passe"
+        style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;">
+    </div>
+    <div id="reset-msg" style="display:none;padding:10px;border-radius:8px;font-size:13px;margin-bottom:12px;"></div>
+    <button onclick="doResetPassword('${token}')" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;">
+      Enregistrer le nouveau mot de passe
+    </button>`;
+}
+
+async function doResetPassword(token) {
+  const pass = document.getElementById('new-pass')?.value;
+  const pass2 = document.getElementById('new-pass2')?.value;
+  const msgEl = document.getElementById('reset-msg');
+  if(pass.length < 8) { msgEl.textContent='8 caractères minimum'; msgEl.style.color='var(--red)'; msgEl.style.background='rgba(239,68,68,0.1)'; msgEl.style.display='block'; return; }
+  if(!/[A-Z]/.test(pass)) { msgEl.textContent='1 majuscule requise'; msgEl.style.color='var(--red)'; msgEl.style.background='rgba(239,68,68,0.1)'; msgEl.style.display='block'; return; }
+  if(!/[0-9]/.test(pass)) { msgEl.textContent='1 chiffre requis'; msgEl.style.color='var(--red)'; msgEl.style.background='rgba(239,68,68,0.1)'; msgEl.style.display='block'; return; }
+  if(pass !== pass2) { msgEl.textContent='Les mots de passe ne correspondent pas'; msgEl.style.color='var(--red)'; msgEl.style.background='rgba(239,68,68,0.1)'; msgEl.style.display='block'; return; }
+  try {
+    const res = await fetch(SB_URL + '/auth/v1/user', {
+      method: 'PUT',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass })
+    });
+    if(res.ok) {
+      msgEl.textContent = '✅ Mot de passe mis à jour ! Connexion en cours...';
+      msgEl.style.color = 'var(--green)';
+      msgEl.style.background = 'rgba(34,197,94,0.1)';
+      msgEl.style.display = 'block';
+      setTimeout(() => { window.location.href = window.location.origin; }, 2000);
+    } else {
+      const d = await res.json().catch(()=>({}));
+      msgEl.textContent = '❌ ' + (d.msg || 'Erreur — lien expiré, recommencez');
+      msgEl.style.color = 'var(--red)';
+      msgEl.style.background = 'rgba(239,68,68,0.1)';
+      msgEl.style.display = 'block';
+    }
+  } catch(e) { msgEl.textContent='❌ Erreur réseau'; msgEl.style.display='block'; }
+}
+
 async function signUp(email, password, name) {
   const data = await sbAuthFetch('signup', {
     method: 'POST',
@@ -2758,6 +2886,9 @@ function showAuthScreen() {
             </div>
             <div id="auth-error" style="display:none;background:var(--red-d);border:1px solid rgba(244,63,94,0.2);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;"></div>
             <button onclick="doLogin()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;">Se connecter</button>
+            <div style="text-align:center;margin-top:12px;">
+              <button onclick="showForgotPassword()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;">Mot de passe oublié ?</button>
+            </div>
           </div>
           <div id="auth-register" style="display:none;">
             <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Nom complet</label><input id="reg-name" type="text" placeholder="Jean Dupont" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;"></div>
@@ -3213,7 +3344,8 @@ function updateMobBadge() {
   badge.style.display = urgent.length > 0 ? 'block' : 'none';
 }
 
-init();
+checkResetMode();
+init();;
 </script>
 </body>
 </html>
