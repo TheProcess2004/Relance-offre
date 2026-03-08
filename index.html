@@ -810,7 +810,13 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <div class="od-events" id="od-events-list"></div>
       </div>
 
-      <div class="sh"><div class="sh-t">Toutes les offres — statut ouverture</div></div>
+      <div class="sh" style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="sh-t">Toutes les offres — statut ouverture</div>
+        <button onclick="refreshOuvertures().then(renderDetection);toast('🔄','Ouvertures rechargées')" 
+          style="background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;color:var(--text);font-size:12px;cursor:pointer;">
+          🔄 Rafraîchir
+        </button>
+      </div>
       <div class="tbl">
         <div class="tbl-h" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;">
           <div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">1er ouverture</div><div class="tbl-hc">Nb vues</div><div class="tbl-hc">Score</div>
@@ -1140,7 +1146,7 @@ function go(name) {
   });
   if(name==='offres') renderOffres();
   if(name==='relances') renderRelances();
-  if(name==='detection') renderDetection();
+  if(name==='detection') { refreshOuvertures().then(renderDetection); }
   if(name==='calendrier') renderCalendar();
   if(name==='revenus') renderRevenues();
   if(name==='clients') renderClients();
@@ -1255,6 +1261,22 @@ function renderUrgent(){
 }
 
 // ══ DETECTION ══
+async function refreshOuvertures() {
+  try {
+    const ouvertures = await sbFetch('ouvertures?select=*&order=opened_at.desc');
+    // Reset opens
+    OFFERS.forEach(o => { o.opens = 0; o.lastOpen = null; });
+    ouvertures.forEach(v => {
+      const o = OFFERS.find(x => x.id === v.offre_id);
+      if(o) {
+        o.opens++;
+        if(!o.lastOpen) o.lastOpen = v.opened_at?.slice(0,10);
+      }
+    });
+    updateBadges();
+  } catch(e) { console.warn('refreshOuvertures:', e.message); }
+}
+
 function renderDetection(){
   // KPIs dynamiques
   const total = OFFERS.length;
