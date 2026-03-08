@@ -877,77 +877,169 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <!-- ══ CONFIG ══ -->
     <div class="panel" id="panel-config">
 
-      <!-- BREVO EMAIL -->
-      <div class="fcard" style="margin-bottom:18px;border-color:rgba(34,197,94,0.2);">
-        <div class="fcard-t" style="color:var(--green);">📨 Envoi des emails — Configuration expéditeur</div>
-        <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.7;">Les emails (offre initiale + 3 relances avec PDF) seront envoyés <strong style="color:var(--text);">depuis votre adresse</strong>. Les réponses de vos clients arriveront directement dans votre boîte.</p>
-        <div class="f2" style="margin-bottom:12px;">
-          <div class="fg"><label class="fl">Votre adresse email</label><input class="fi" id="cfg-sender-email" type="email" placeholder="votre@email.ch"></div>
-          <div class="fg"><label class="fl">Nom affiché</label><input class="fi" id="cfg-name-email" placeholder="Jean Dupont"></div>
-        </div>
-        <div id="brevo-status" style="font-size:12px;"></div>
+      <!-- ONGLETS CONFIG -->
+      <div style="display:flex;gap:4px;margin-bottom:24px;background:var(--s2);border-radius:12px;padding:4px;" id="cfg-tabs">
+        <button id="ctab-profil" onclick="showCfgTab('profil')" style="flex:1;padding:8px 4px;border:none;border-radius:9px;background:var(--gold);color:#000;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;">👤 Profil</button>
+        <button id="ctab-email" onclick="showCfgTab('email')" style="flex:1;padding:8px 4px;border:none;border-radius:9px;background:transparent;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;">📨 Email</button>
+        <button id="ctab-relances" onclick="showCfgTab('relances')" style="flex:1;padding:8px 4px;border:none;border-radius:9px;background:transparent;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;">🔔 Relances</button>
+        <button id="ctab-abo" onclick="showCfgTab('abo')" style="flex:1;padding:8px 4px;border:none;border-radius:9px;background:transparent;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;">💳 Abonnement</button>
       </div>
 
-      <!-- EMAIL OAUTH (futur) -->
-      <div class="fcard" style="margin-bottom:18px;opacity:0.6;">
-        <div class="fcard-t">📧 Gmail / Outlook OAuth — <span style="color:var(--muted);font-weight:400;font-size:11px;">En attente validation Google (3-5 jours)</span></div>
-        <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Une fois validé, les emails partiront directement depuis votre boîte Gmail ou Outlook sans passer par Brevo.</p>
-        <div id="email-connection-status" style="margin-bottom:16px;"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div style="background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;">
-            <div style="font-size:28px;margin-bottom:8px;">📬</div>
-            <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Gmail / Google Workspace</div>
-            <div id="gmail-status" style="margin-bottom:10px;"></div>
-            <button class="btn btn-gold" style="width:100%;opacity:0.5;" disabled>Connecter Gmail — bientôt</button>
+      <!-- ONGLET PROFIL -->
+      <div id="cfg-tab-profil">
+        <div class="fcard" style="margin-bottom:18px;">
+          <div class="fcard-t">👤 Données personnelles</div>
+          <div class="f2" style="margin-bottom:12px;">
+            <div class="fg"><label class="fl">Prénom & Nom</label><input class="fi" id="cfg-name" placeholder="Jean Dupont" oninput="updateSigPreview()"></div>
+            <div class="fg"><label class="fl">Titre / Fonction</label><input class="fi" id="cfg-role" placeholder="Commercial, Responsable..." oninput="updateSigPreview()"></div>
           </div>
-          <div style="background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;">
-            <div style="font-size:28px;margin-bottom:8px;">💼</div>
-            <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Outlook / Microsoft 365</div>
-            <div id="outlook-status" style="margin-bottom:10px;"></div>
-            <button class="btn btn-blue" style="width:100%;opacity:0.5;" disabled>Connecter Outlook — bientôt</button>
+          <div class="f2" style="margin-bottom:12px;">
+            <div class="fg"><label class="fl">Entreprise</label><input class="fi" id="cfg-company" placeholder="Mon Entreprise SA" oninput="updateSigPreview()"></div>
+            <div class="fg"><label class="fl">Téléphone</label><input class="fi" id="cfg-phone" placeholder="+41 79 000 00 00" oninput="updateSigPreview()"></div>
           </div>
         </div>
+        <div class="fcard" style="margin-bottom:18px;">
+          <div class="fcard-t">✍️ Aperçu signature email</div>
+          <div style="background:var(--s2);border-radius:8px;padding:14px 16px;font-size:12px;line-height:1.8;border-left:3px solid var(--gold);" id="sig-preview">
+            <em style="color:var(--muted);">Remplissez les champs ci-dessus pour voir votre signature</em>
+          </div>
+        </div>
+        <div class="fcard" style="margin-bottom:18px;">
+          <div class="fcard-t">🔒 Sécurité du compte</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);">
+            <div>
+              <div style="font-size:13px;font-weight:600;">Email du compte</div>
+              <div style="font-size:12px;color:var(--muted);" id="cfg-account-email">—</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;">
+            <div>
+              <div style="font-size:13px;font-weight:600;">Mot de passe</div>
+              <div style="font-size:12px;color:var(--muted);">Modifiez votre mot de passe</div>
+            </div>
+            <button onclick="showChangePassword()" class="btn btn-ghost btn-sm">Changer</button>
+          </div>
+          <div id="change-pass-form" style="display:none;margin-top:12px;padding:12px;background:var(--s2);border-radius:8px;">
+            <input class="fi" id="new-password" type="password" placeholder="Nouveau mot de passe (8 car., 1 maj., 1 chiffre)" style="margin-bottom:8px;">
+            <input class="fi" id="new-password2" type="password" placeholder="Confirmer le mot de passe" style="margin-bottom:8px;">
+            <div id="change-pass-msg" style="display:none;font-size:12px;padding:8px;border-radius:6px;margin-bottom:8px;"></div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="doChangePassword()" class="btn btn-gold btn-sm">Enregistrer</button>
+              <button onclick="document.getElementById('change-pass-form').style.display='none'" class="btn btn-ghost btn-sm">Annuler</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:4px;">
+          <button class="btn btn-gold" onclick="saveConfig()">💾 Sauvegarder</button>
+        </div>
       </div>
 
-      <!-- PROFIL COMMERCIAL -->
-      <div class="fcard" style="margin-bottom:18px;">
-        <div class="fcard-t">👤 Profil commercial — Signature des emails</div>
-        <div class="f2" style="margin-bottom:12px;">
-          <div class="fg"><label class="fl">Prénom & Nom</label><input class="fi" id="cfg-name" placeholder="Jean Dupont"></div>
-          <div class="fg"><label class="fl">Titre / Fonction</label><input class="fi" id="cfg-role" placeholder="Commercial, Responsable..."></div>
+      <!-- ONGLET EMAIL -->
+      <div id="cfg-tab-email" style="display:none;">
+        <div class="fcard" style="margin-bottom:18px;border-color:rgba(34,197,94,0.2);">
+          <div class="fcard-t" style="color:var(--green);">📨 Expéditeur des emails</div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.7;">Les emails sont envoyés <strong style="color:var(--text);">en votre nom</strong>. Les réponses arrivent dans votre boîte.</p>
+          <div class="f2" style="margin-bottom:12px;">
+            <div class="fg"><label class="fl">Votre adresse email</label><input class="fi" id="cfg-sender-email" type="email" placeholder="votre@email.ch"></div>
+            <div class="fg"><label class="fl">Nom affiché</label><input class="fi" id="cfg-name-email" placeholder="Jean Dupont"></div>
+          </div>
+          <div id="brevo-status" style="font-size:12px;"></div>
         </div>
-        <div class="f2" style="margin-bottom:12px;">
-          <div class="fg"><label class="fl">Entreprise</label><input class="fi" id="cfg-company" placeholder="Mon Entreprise SA"></div>
-          <div class="fg"><label class="fl">Téléphone</label><input class="fi" id="cfg-phone" placeholder="+41 79 000 00 00"></div>
+        <div class="fcard" style="margin-bottom:18px;opacity:0.7;">
+          <div class="fcard-t">📧 Gmail / Outlook OAuth <span style="font-size:10px;color:var(--muted);font-weight:400;">— bientôt disponible</span></div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Envoyez directement depuis votre boîte sans passer par Brevo.</p>
+          <div id="email-connection-status" style="margin-bottom:12px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+              <div style="font-size:24px;margin-bottom:6px;">📬</div>
+              <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Gmail / Workspace</div>
+              <div id="gmail-status"></div>
+              <button class="btn btn-gold btn-sm" style="width:100%;opacity:0.5;" disabled>Bientôt</button>
+            </div>
+            <div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+              <div style="font-size:24px;margin-bottom:6px;">💼</div>
+              <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Outlook / M365</div>
+              <div id="outlook-status"></div>
+              <button class="btn btn-blue btn-sm" style="width:100%;opacity:0.5;" disabled>Bientôt</button>
+            </div>
+          </div>
         </div>
-        <div style="background:var(--s2);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted);border-left:3px solid var(--border2);" id="sig-preview">
-          <em>Aperçu signature — remplissez les champs ci-dessus</em>
+        <div style="display:flex;justify-content:flex-end;margin-top:4px;">
+          <button class="btn btn-gold" onclick="saveConfig()">💾 Sauvegarder</button>
         </div>
       </div>
 
-      <div class="fcard" style="margin-bottom:18px;">
-        <div class="fcard-t">Calendrier des relances automatiques</div>
-        <div class="rtl" style="margin-top:0;background:var(--s2);border:none;">
-          <div class="rtl-title">Délai en jours après envoi initial</div>
-          <div class="rtl-steps">
-            <div class="rtl-step"><div class="rtl-dot d0">📤</div><div class="rtl-lbl">Envoi</div><div class="rtl-day">Jour 0</div></div>
-            <div class="rtl-step"><div class="rtl-dot d1">1</div><div class="rtl-lbl">Relance 1</div><div>J+<input class="day-in" id="cfg-d1" value="3" type="number"> j</div></div>
-            <div class="rtl-step"><div class="rtl-dot d2">2</div><div class="rtl-lbl">Relance 2</div><div>J+<input class="day-in" id="cfg-d2" value="7" type="number"> j</div></div>
-            <div class="rtl-step"><div class="rtl-dot d3">3</div><div class="rtl-lbl">Relance 3</div><div>J+<input class="day-in" id="cfg-d3" value="14" type="number"> j</div></div>
+      <!-- ONGLET RELANCES -->
+      <div id="cfg-tab-relances" style="display:none;">
+        <div class="fcard" style="margin-bottom:18px;">
+          <div class="fcard-t">⏱ Calendrier automatique</div>
+          <div class="rtl" style="margin-top:0;background:var(--s2);border:none;">
+            <div class="rtl-title">Délai après envoi initial</div>
+            <div class="rtl-steps">
+              <div class="rtl-step"><div class="rtl-dot d0">📤</div><div class="rtl-lbl">Envoi</div><div class="rtl-day">Jour 0</div></div>
+              <div class="rtl-step"><div class="rtl-dot d1">1</div><div class="rtl-lbl">Relance 1</div><div>J+<input class="day-in" id="cfg-d1" value="3" type="number"> j</div></div>
+              <div class="rtl-step"><div class="rtl-dot d2">2</div><div class="rtl-lbl">Relance 2</div><div>J+<input class="day-in" id="cfg-d2" value="7" type="number"> j</div></div>
+              <div class="rtl-step"><div class="rtl-dot d3">3</div><div class="rtl-lbl">Relance 3</div><div>J+<input class="day-in" id="cfg-d3" value="14" type="number"> j</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="cfg-grid">
+          <div class="cfg-card"><div class="cfg-t"><span style="color:var(--gold)">R1</span> Message — Ton doux</div><textarea class="fta" id="tpl-r1" style="min-height:90px;font-size:12px;">Bonjour {prénom}, je reviens vers vous concernant notre offre {ref} du {date}. Avez-vous eu le temps d'y jeter un œil ? Je suis disponible pour toute question. Cordialement.</textarea></div>
+          <div class="cfg-card"><div class="cfg-t"><span style="color:var(--purple)">R2</span> Message — Ton engagé</div><textarea class="fta" id="tpl-r2" style="min-height:90px;font-size:12px;">Bonjour {prénom}, suite à mon précédent message concernant l'offre {ref} ({montant} CHF), je voulais m'assurer qu'elle correspond à votre projet. Pouvez-vous me confirmer votre intérêt ? Cordialement.</textarea></div>
+          <div class="cfg-card" style="grid-column:1/-1;"><div class="cfg-t"><span style="color:var(--orange)">R3</span> Message — Dernier contact</div><textarea class="fta" id="tpl-r3" style="min-height:80px;font-size:12px;">Bonjour {prénom}, c'est mon dernier message concernant l'offre {ref}. Si le projet n'est plus d'actualité, pas de problème — je clos le dossier. Bonne continuation.</textarea></div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+          <button class="btn btn-gold" onclick="saveConfig()">💾 Sauvegarder</button>
+        </div>
+      </div>
+
+      <!-- ONGLET ABONNEMENT -->
+      <div id="cfg-tab-abo" style="display:none;">
+        <div class="fcard" style="margin-bottom:18px;border-color:rgba(233,184,74,0.3);">
+          <div class="fcard-t" style="color:var(--gold);">💳 Votre abonnement</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--s2);border-radius:10px;margin-bottom:16px;">
+            <div>
+              <div style="font-size:13px;font-weight:700;">Plan Gratuit <span style="font-size:11px;background:rgba(34,197,94,0.15);color:var(--green);padding:2px 8px;border-radius:20px;margin-left:6px;">Actif</span></div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px;">Jusqu'à 10 offres · 1 utilisateur · Relances manuelles</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:var(--gold);">0 CHF</div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Passez à Pro pour débloquer toutes les fonctionnalités :</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+            <div style="background:var(--s2);border:1px solid rgba(233,184,74,0.2);border-radius:10px;padding:14px;">
+              <div style="font-size:15px;font-weight:800;color:var(--gold);margin-bottom:4px;">Pro <span style="font-size:11px;color:var(--muted);font-weight:400;">/ mois</span></div>
+              <div style="font-size:22px;font-weight:800;margin-bottom:10px;">49 CHF</div>
+              <div style="font-size:11px;color:var(--muted);line-height:2;">✅ Offres illimitées<br>✅ Relances automatiques<br>✅ Tracking ouvertures<br>✅ Rapport hebdo IA<br>✅ Support prioritaire</div>
+              <button onclick="toast('🚀','Paiement Stripe bientôt disponible !')" class="btn btn-gold btn-sm" style="width:100%;margin-top:12px;">Passer à Pro</button>
+            </div>
+            <div style="background:var(--s2);border:1px solid rgba(139,92,246,0.2);border-radius:10px;padding:14px;">
+              <div style="font-size:15px;font-weight:800;color:var(--purple);margin-bottom:4px;">Business <span style="font-size:11px;color:var(--muted);font-weight:400;">/ mois</span></div>
+              <div style="font-size:22px;font-weight:800;margin-bottom:10px;">149 CHF</div>
+              <div style="font-size:11px;color:var(--muted);line-height:2;">✅ Tout Pro inclus<br>✅ Multi-utilisateurs<br>✅ CRM avancé<br>✅ Intégration Gmail/Outlook<br>✅ API accès</div>
+              <button onclick="toast('🚀','Paiement Stripe bientôt disponible !')" class="btn btn-sm" style="width:100%;margin-top:12px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);color:var(--purple);">Choisir Business</button>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);text-align:center;">Paiement sécurisé par Stripe · Annulation à tout moment · Facturation mensuelle</div>
+        </div>
+        <div class="fcard">
+          <div class="fcard-t">📊 Usage actuel</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;" id="usage-stats">
+            <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
+              <div style="font-size:22px;font-weight:800;color:var(--gold);" id="usage-offres">—</div>
+              <div style="font-size:11px;color:var(--muted);">offres / 10</div>
+            </div>
+            <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
+              <div style="font-size:22px;font-weight:800;color:var(--blue);" id="usage-clients">—</div>
+              <div style="font-size:11px;color:var(--muted);">clients</div>
+            </div>
+            <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
+              <div style="font-size:22px;font-weight:800;color:var(--green);" id="usage-relances">—</div>
+              <div style="font-size:11px;color:var(--muted);">relances envoyées</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="cfg-grid">
-        <div class="cfg-card"><div class="cfg-t"><span style="color:var(--gold)">R1</span> Message — Ton doux</div><textarea class="fta" id="tpl-r1" style="min-height:90px;font-size:12px;">Bonjour {prénom}, je reviens vers vous concernant notre offre {ref} du {date}. Avez-vous eu le temps d'y jeter un œil ? Je suis disponible pour toute question. Cordialement.</textarea></div>
-        <div class="cfg-card"><div class="cfg-t"><span style="color:var(--purple)">R2</span> Message — Ton engagé</div><textarea class="fta" id="tpl-r2" style="min-height:90px;font-size:12px;">Bonjour {prénom}, suite à mon précédent message concernant l'offre {ref} ({montant} CHF), je voulais m'assurer qu'elle correspond à votre projet. Notre agenda se remplit — pouvez-vous me confirmer votre intérêt ? Cordialement.</textarea></div>
-        <div class="cfg-card" style="grid-column:1/-1;"><div class="cfg-t"><span style="color:var(--orange)">R3</span> Message — Dernier contact</div><textarea class="fta" id="tpl-r3" style="min-height:80px;font-size:12px;">Bonjour {prénom}, c'est mon dernier message concernant l'offre {ref}. Si le projet n'est plus d'actualité, pas de problème — je clos le dossier. Si vous souhaitez qu'on en reparle, je reste disponible jusqu'au {date_limite}. Bonne continuation.</textarea></div>
-      </div>
-
-      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px;">
-        <button class="btn btn-ghost btn-sm" onclick="go('rapport')">Aperçu rapport</button>
-        <button class="btn btn-gold" onclick="saveConfig()">💾 Sauvegarder la configuration</button>
-      </div>
     </div>
 
   </div>
@@ -2631,6 +2723,77 @@ async function sbAuthFetch(path, options={}) {
   return data;
 }
 
+// ══ ONGLETS CONFIG ══
+function showCfgTab(tab) {
+  ['profil','email','relances','abo'].forEach(t => {
+    const el = document.getElementById('cfg-tab-'+t);
+    const btn = document.getElementById('ctab-'+t);
+    if(el) el.style.display = t === tab ? '' : 'none';
+    if(btn) {
+      if(t === tab) {
+        btn.style.background = 'var(--gold)';
+        btn.style.color = '#000';
+      } else {
+        btn.style.background = 'transparent';
+        btn.style.color = 'var(--muted)';
+      }
+    }
+  });
+  // Remplir usage stats si onglet abo
+  if(tab === 'abo') {
+    const won = OFFERS.filter(o=>o.status==='won').length;
+    const relSent = OFFERS.filter(o=>['relance1','relance2','relance3'].includes(o.status)).length;
+    const uO = document.getElementById('usage-offres');
+    const uC = document.getElementById('usage-clients');
+    const uR = document.getElementById('usage-relances');
+    if(uO) uO.textContent = OFFERS.length;
+    if(uC) uC.textContent = CLIENTS.length || '—';
+    if(uR) uR.textContent = relSent;
+  }
+  // Afficher email compte si onglet profil
+  if(tab === 'profil') {
+    const el = document.getElementById('cfg-account-email');
+    if(el && CURRENT_USER) el.textContent = CURRENT_USER.email || '—';
+  }
+}
+
+function showChangePassword() {
+  const f = document.getElementById('change-pass-form');
+  if(f) f.style.display = f.style.display === 'none' ? '' : 'none';
+}
+
+async function doChangePassword() {
+  const p1 = document.getElementById('new-password')?.value || '';
+  const p2 = document.getElementById('new-password2')?.value || '';
+  const msgEl = document.getElementById('change-pass-msg');
+  const showMsg = (txt, ok) => {
+    msgEl.textContent = txt;
+    msgEl.style.color = ok ? 'var(--green)' : 'var(--red)';
+    msgEl.style.background = ok ? 'rgba(34,197,94,0.08)' : 'rgba(239,68,68,0.08)';
+    msgEl.style.display = 'block';
+  };
+  if(p1.length < 8) return showMsg('8 caractères minimum', false);
+  if(!/[A-Z]/.test(p1)) return showMsg('1 majuscule requise', false);
+  if(!/[0-9]/.test(p1)) return showMsg('1 chiffre requis', false);
+  if(p1 !== p2) return showMsg('Les mots de passe ne correspondent pas', false);
+  try {
+    const res = await fetch(SB_URL + '/auth/v1/user', {
+      method: 'PUT',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + USER_TOKEN, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: p1 })
+    });
+    if(res.ok) {
+      showMsg('✅ Mot de passe modifié avec succès !', true);
+      document.getElementById('new-password').value = '';
+      document.getElementById('new-password2').value = '';
+      setTimeout(() => { document.getElementById('change-pass-form').style.display = 'none'; msgEl.style.display = 'none'; }, 2500);
+    } else {
+      const d = await res.json().catch(()=>({}));
+      showMsg('❌ ' + (d.msg || d.error_description || 'Erreur'), false);
+    }
+  } catch(e) { showMsg('❌ Erreur réseau', false); }
+}
+
 // ══ MOT DE PASSE OUBLIÉ ══
 function showForgotPassword() {
   const authBox = document.querySelector('.auth-box');
@@ -2659,37 +2822,32 @@ function showForgotPassword() {
 async function doForgotPassword() {
   const email = document.getElementById('forgot-email')?.value?.trim();
   const msgEl = document.getElementById('forgot-msg');
-  if(!email) { 
-    msgEl.textContent = 'Entrez votre adresse email';
-    msgEl.style.background = 'rgba(239,68,68,0.1)';
-    msgEl.style.color = 'var(--red)';
+  const showMsg = (txt, color, bg) => {
+    msgEl.textContent = txt;
+    msgEl.style.color = color;
+    msgEl.style.background = bg;
     msgEl.style.display = 'block';
-    return; 
+  };
+  if(!email || !/\S+@\S+\.\S+/.test(email)) {
+    showMsg('Entrez une adresse email valide', 'var(--red)', 'rgba(239,68,68,0.1)');
+    return;
   }
-  msgEl.textContent = 'Envoi en cours...';
-  msgEl.style.background = 'rgba(255,193,7,0.1)';
-  msgEl.style.color = 'var(--gold)';
-  msgEl.style.display = 'block';
+  showMsg('⏳ Envoi en cours...', 'var(--gold)', 'rgba(255,193,7,0.08)');
   try {
+    // Utiliser le SDK Supabase via REST — redirect_to = URL actuelle
+    const redirectTo = window.location.origin + window.location.pathname;
     const res = await fetch(SB_URL + '/auth/v1/recover', {
       method: 'POST',
-      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, redirect_to: window.location.origin + '/?reset=1' })
+      headers: {
+        'apikey': SB_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, redirect_to: redirectTo })
     });
-    if(res.ok || res.status === 200) {
-      msgEl.textContent = '✅ Email envoyé ! Vérifiez votre boîte mail (et vos spams).';
-      msgEl.style.background = 'rgba(34,197,94,0.1)';
-      msgEl.style.color = 'var(--green)';
-    } else {
-      const d = await res.json().catch(()=>({}));
-      msgEl.textContent = '❌ ' + (d.msg || d.error_description || 'Erreur — vérifiez votre email');
-      msgEl.style.background = 'rgba(239,68,68,0.1)';
-      msgEl.style.color = 'var(--red)';
-    }
+    // Supabase retourne 200 même si l'email n'existe pas (sécurité anti-énumération)
+    showMsg('✅ Si ce compte existe, un email de réinitialisation a été envoyé. Vérifiez vos spams.', 'var(--green)', 'rgba(34,197,94,0.08)');
   } catch(e) {
-    msgEl.textContent = '❌ Erreur réseau';
-    msgEl.style.background = 'rgba(239,68,68,0.1)';
-    msgEl.style.color = 'var(--red)';
+    showMsg('❌ Erreur réseau — réessayez', 'var(--red)', 'rgba(239,68,68,0.1)');
   }
 }
 
@@ -3063,8 +3221,13 @@ async function loadApp() {
 // ══ BREVO EMAIL ══
 function buildTrackingPixel(offerId) {
   if(!offerId) return '';
-  const base = window.location.origin;
-  return `<img src="${base}/api/track-open?id=${offerId}" width="1" height="1" style="width:1px;height:1px;border:0;opacity:0;position:absolute;" alt="" loading="eager" />`;
+  const base = 'https://followoffer.com'; // URL fixe, pas window.location
+  // Pixel 2x2 sans display:none — meilleure compatibilité Gmail/Outlook mobile
+  return `<div style="max-height:0;overflow:hidden;mso-hide:all;">
+<img src="${base}/api/track-open?id=${offerId}" width="2" height="2" 
+  style="width:2px;height:2px;border:0;display:block;min-height:0;" 
+  alt="" loading="eager" decoding="async" />
+</div>`;
 }
 
 async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName, offerId}) {
