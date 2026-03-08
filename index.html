@@ -2600,7 +2600,13 @@ async function sbAuthFetch(path, options={}) {
       ...(options.headers||{})
     }
   });
-  return res.json();
+  const data = await res.json();
+  // Propager explicitement les erreurs HTTP
+  if(!res.ok) {
+    const msg = data?.error_description || data?.msg || data?.error || `Erreur ${res.status}`;
+    throw new Error(msg);
+  }
+  return data;
 }
 
 // ══ MOT DE PASSE OUBLIÉ ══
@@ -2742,12 +2748,24 @@ async function signUp(email, password, name) {
 }
 
 async function signIn(email, password) {
-  const data = await sbAuthFetch('token?grant_type=password', {
-    method: 'POST',
-    body: JSON.stringify({ email, password })
-  });
-  if(data.error || data.error_description) throw new Error(data.error_description || data.error || 'Email ou mot de passe incorrect');
-  return data;
+  try {
+    const data = await sbAuthFetch('token?grant_type=password', {
+      method: 'POST',
+      body: JSON.stringify({ email, password })
+    });
+    if(!data.access_token) throw new Error('Réponse invalide du serveur');
+    return data;
+  } catch(e) {
+    // Normaliser les messages d'erreur Supabase
+    const msg = e.message || '';
+    if(msg.includes('Invalid login') || msg.includes('invalid_grant') || msg.includes('credentials'))
+      throw new Error('Email ou mot de passe incorrect');
+    if(msg.includes('Email not confirmed'))
+      throw new Error('Confirmez votre email avant de vous connecter');
+    if(msg.includes('Too many'))
+      throw new Error('Trop de tentatives — attendez quelques minutes');
+    throw new Error(msg || 'Erreur de connexion');
+  }
 }
 
 async function signOut() {
@@ -3018,7 +3036,7 @@ async function loadApp() {
 function buildTrackingPixel(offerId) {
   if(!offerId) return '';
   const base = window.location.origin;
-  return `<img src="${base}/api/track-open?id=${offerId}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="" />`;
+  return `<img src="${base}/api/track-open?id=${offerId}" width="1" height="1" style="width:1px;height:1px;border:0;opacity:0;position:absolute;" alt="" loading="eager" />`;
 }
 
 async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName, offerId}) {
