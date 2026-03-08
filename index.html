@@ -2791,10 +2791,16 @@ async function signIn(email, password) {
 }
 
 async function signOut() {
-  await sbAuthFetch('logout', { method: 'POST' });
-  CURRENT_USER = null; USER_TOKEN = null;
-  localStorage.removeItem('of_token');
-  localStorage.removeItem('of_user');
+  try { await sbAuthFetch('logout', { method: 'POST' }); } catch(e) {}
+  // Reset complet — crucial pour l'isolation multi-comptes
+  CURRENT_USER = null;
+  USER_TOKEN = null;
+  OFFERS = [];
+  CLIENTS = [];
+  CFG = { name:'', email:'', emailName:'', signature:'', tone:'pro' };
+  // Vider tout le localStorage lié à l'app
+  ['of_token','of_user','of_refresh','of_cfg','of_onboarding_done'].forEach(k => localStorage.removeItem(k));
+  document.getElementById('app-shell').style.display = 'none';
   showAuthScreen();
 }
 
