@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -2017,9 +2018,13 @@ function editOffer(id) {
     </div>
     <div class="fg"><label class="fl">Objet</label><input class="fi" id="edit-objet" value="${o.objet}"></div>
     <div class="fg"><label class="fl">Notes</label><textarea class="notes-field" id="edit-notes">${o.notes||''}</textarea></div>
-    <div class="f2" style="margin-top:8px;">
-      <div class="fg"><label class="fl">Relance 1 (jours)</label><input class="fi" id="edit-d1" type="number" value="3" style="text-align:center;"></div>
-      <div class="fg"><label class="fl">Relance 2 (jours)</label><input class="fi" id="edit-d2" type="number" value="7" style="text-align:center;"></div>
+    <div style="margin-top:8px;">
+      <label class="fl" style="margin-bottom:6px;display:block;">Délais des relances (jours depuis envoi)</label>
+      <div class="f2">
+        <div class="fg"><label class="fl" style="font-size:10px;color:var(--gold);">R1 — Relance 1</label><input class="fi" id="edit-d1" type="number" min="1" max="30" value="${o.relances?.r1 ? Math.round((new Date(o.relances.r1)-new Date(o.created_at||Date.now()))/(1000*60*60*24)) : 3}" style="text-align:center;font-family:'JetBrains Mono',monospace;"></div>
+        <div class="fg"><label class="fl" style="font-size:10px;color:var(--purple);">R2 — Relance 2</label><input class="fi" id="edit-d2" type="number" min="1" max="60" value="${o.relances?.r2 ? Math.round((new Date(o.relances.r2)-new Date(o.created_at||Date.now()))/(1000*60*60*24)) : 7}" style="text-align:center;font-family:'JetBrains Mono',monospace;"></div>
+        <div class="fg"><label class="fl" style="font-size:10px;color:var(--orange);">R3 — Relance 3</label><input class="fi" id="edit-d3" type="number" min="1" max="90" value="${o.relances?.r3 ? Math.round((new Date(o.relances.r3)-new Date(o.created_at||Date.now()))/(1000*60*60*24)) : 14}" style="text-align:center;font-family:'JetBrains Mono',monospace;"></div>
+      </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:14px;">
       <button class="btn btn-ghost" style="flex:1;" onclick="openModal('${id}')">Annuler</button>
@@ -2041,6 +2046,7 @@ async function saveEdit(id) {
   o.notes = document.getElementById('edit-notes').value;
   const d1 = parseInt(document.getElementById('edit-d1')?.value)||3;
   const d2 = parseInt(document.getElementById('edit-d2')?.value)||7;
+  const d3edit = parseInt(document.getElementById('edit-d3')?.value)||14;
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({reference:o.ref,montant:o.montant,objet:o.objet,notes:o.notes}), headers:{'Prefer':'return=minimal'}});
     if(o.client_id) {
@@ -2052,7 +2058,7 @@ async function saveEdit(id) {
     const addFromSent = (days) => { const d = new Date(sentDate); d.setDate(d.getDate()+days); return d.toISOString().split('T')[0]; };
     const relancesExist = await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending&select=id,numero&order=numero.asc');
     for(const r of relancesExist) {
-      const newDate = r.numero===1 ? addFromSent(d1) : r.numero===2 ? addFromSent(d2) : addFromSent(14);
+      const newDate = r.numero===1 ? addFromSent(d1) : r.numero===2 ? addFromSent(d2) : addFromSent(d3edit);
       await sbFetch('relances?id=eq.'+r.id, {method:'PATCH', body:JSON.stringify({date_prevue:newDate}), headers:{'Prefer':'return=minimal'}});
     }
     toast('✅','Offre et relances mises à jour');
@@ -2065,7 +2071,7 @@ async function saveEdit(id) {
 function confirmRelance(id) {
   const o = OFFERS.find(x=>x.id===id);
   if(!o) return;
-  const rNum = o.statut==='envoyee'?1:o.statut==='relance1'?2:o.statut==='relance2'?3:1;
+  const rNum = (o.status||o.statut)==='envoyee'?1:(o.status||o.statut)==='relance1'?2:(o.status||o.statut)==='relance2'?3:1;
   document.getElementById('m-t').textContent = '📧 Confirmer la relance';
   document.getElementById('m-s').textContent = o.ref + ' — ' + (o.prenom||'') + ' ' + (o.nom||'');
   document.getElementById('m-body').innerHTML = `
@@ -2082,7 +2088,7 @@ function confirmRelance(id) {
       <button class="btn btn-ghost" style="flex:1;" onclick="closeModal()">Annuler</button>
       <button class="btn btn-gold" style="flex:1;" onclick="closeModal();actR('${id}')">📧 Confirmer l\'envoi</button>
     </div>`;
-  document.getElementById('modal-overlay').style.display='flex';
+  document.getElementById('overlay').classList.add('open');
 }
 
 // ══ RELANCE PREVIEW ══
