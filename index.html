@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FollowOffer — Suite commerciale</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23080B10'/%3E%3Ctext x='4' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='16' fill='%23FFFFFF'%3EF%3C/text%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='16' fill='%231A6FA8'%3EO%3C/text%3E%3C/svg%3E">
+<title>FollowOffer · Suite Commerciale Suisse</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23080B10'/%3E%3Ctext x='3' y='23' font-family='Outfit,Arial,sans-serif' font-size='18' font-weight='800' fill='white'%3EF%3C/text%3E%3Ctext x='15' y='23' font-family='Outfit,Arial,sans-serif' font-size='18' font-weight='800' fill='%234B89DC'%3EO%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
@@ -18,39 +18,46 @@
   --blue:#2E7EC4;--blue-d:rgba(46,126,196,0.12);
   --purple:#5B5FA0;--purple-d:rgba(91,95,160,0.12);
   --orange:#A0622A;--orange-d:rgba(160,98,42,0.11);
-  --text:#DDE4EE;--muted:rgba(160,180,210,0.60);--muted2:rgba(160,180,210,0.28);
+  --text:#F0F4FA;--muted:rgba(200,215,235,0.65);--muted2:rgba(160,180,210,0.32);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+html{-webkit-font-smoothing:antialiased;}
+input:focus,select:focus,textarea:focus{outline:none!important;border-color:rgba(75,137,220,0.5)!important;box-shadow:0 0 0 3px rgba(75,137,220,0.1)!important;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(160,180,210,0.2);border-radius:10px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(160,180,210,0.35);}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;;-webkit-font-smoothing:antialiased;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
 
 /* LAYOUT */
 .app{display:flex;min-height:100vh;}
+.sb-glow{pointer-events:none!important;}
+.sb-glow::after{pointer-events:none!important;}
 
 /* SIDEBAR */
 .sb{width:230px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;}
 .sb-glow{position:absolute;top:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(233,184,74,0.06),transparent 70%);pointer-events:none;}
 .sb-brand{padding:18px 20px 16px;border-bottom:1px solid var(--border);}
-.sb-logo{font-family:'Outfit',sans-serif;font-weight:700;font-size:14.5px;letter-spacing:-0.2px;color:var(--text);display:flex;align-items:center;gap:8px;}
-.sb-version{font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);margin-top:4px;font-family:'Outfit',sans-serif;padding-left:1px;}
+.sb-logo{font-family:'Instrument Serif',serif;font-size:20px;color:var(--gold);display:flex;align-items:center;gap:9px;}
+.sb-version{font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(160,180,210,0.35);margin-top:3px;font-family:'Outfit',sans-serif;}
 .sb-nav{padding:14px 10px;flex:1;overflow-y:auto;}
 .sb-section{margin-bottom:18px;}
-.sb-sec-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);padding:0 10px;margin-bottom:4px;}
-.nb{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.15s;text-align:left;}
-.nb:hover{background:rgba(255,255,255,0.04);color:var(--text);}
-.nb.active{background:rgba(26,111,168,0.14);color:#1A6FA8;border-left:2px solid #1A6FA8;margin-left:-1px;}
-.nb .ic{font-size:13px;width:18px;text-align:center;display:inline-flex;align-items:center;justify-content:center;line-height:1;}
+.sb-sec-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(160,180,210,0.4);padding:0 10px;margin-bottom:4px;}
+.nb{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border-radius:7px;border:none;background:none;color:rgba(200,215,235,0.72);font-size:13px;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif;text-align:left;}
+.nb:hover{background:var(--s2);color:#F0F4FA;}
+.nb.active{background:rgba(26,111,168,0.14);color:#4B89DC;border-left:2px solid #4B89DC;margin-left:-1px;}
+.nb .ic{font-size:14px;width:18px;text-align:center;}
 .nc{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;}
 .nc-gold{background:var(--gold);color:var(--bg);}
 .nc-red{background:var(--red);color:white;}
 .nc-blue{background:var(--blue);color:var(--bg);}
 .nc-green{background:var(--green);color:var(--bg);}
-.sb-foot{padding:12px 16px;border-top:1px solid var(--border);background:var(--bg);}
-.sb-foot .sb-user{padding-top:4px;}
+.sb-foot{padding:14px 18px;border-top:1px solid var(--border);}
 .sb-user{display:flex;align-items:center;gap:10px;}
 .sb-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--purple));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
-.sb-nm{font-size:12px;font-weight:600;}
-.sb-rl{font-size:10px;color:var(--muted);}
+.sb-nm{font-size:12px;font-weight:600;color:#F0F4FA;}
+.sb-rl{font-size:10px;color:rgba(200,215,235,0.55);}
 
 /* MAIN */
 .main{margin-left:230px;flex:1;display:flex;flex-direction:column;}
@@ -60,7 +67,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;font-family:'Outfit',sans-serif;white-space:nowrap;}
-.btn-gold{background:var(--gold);color:#FFFFFF;letter-spacing:0.1px;}
+.btn-gold{background:var(--gold);color:#FFFFFF;font-weight:700;}
 .btn-gold:hover{filter:brightness(1.1);}
 .btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text);}
 .btn-ghost:hover{background:rgba(255,255,255,0.05);}
@@ -89,8 +96,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .kcard.bl::before{background:var(--blue);}
 .kcard.pu::before{background:var(--purple);}
 .kcard.or::before{background:var(--orange);}
-.k-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
-.k-val{font-family:'Instrument Serif',serif;font-size:32px;line-height:1;margin-bottom:5px;}
+.k-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,215,235,0.65);margin-bottom:8px;}
+.k-val{font-size:28px;font-weight:800;color:#F0F4FA;font-family:'JetBrains Mono',monospace;line-height:1;}
 .kcard.g .k-val{color:var(--gold);}
 .kcard.gr .k-val{color:var(--green);}
 .kcard.rd .k-val{color:var(--red);}
@@ -108,15 +115,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* TABLE */
 .tbl{background:var(--s1);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:22px;}
 .tbl-h{display:grid;padding:11px 20px;border-bottom:1px solid var(--border);background:var(--s2);}
-.tbl-hc{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.tbl-hc{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(160,180,210,0.55);font-weight:600;}
 .tbl-r{display:grid;padding:13px 20px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background 0.1s;}
 .tbl-r:last-child{border-bottom:none;}
 .tbl-r:hover{background:rgba(255,255,255,0.025);}
 .tbl-cols{grid-template-columns:2fr 1fr 1fr 1fr 1.2fr 0.7fr 90px;}
-.cn{font-weight:600;font-size:13px;}
+.cn{font-size:14px;font-weight:600;color:#F0F4FA;}
 .ce{font-size:11px;color:var(--muted);margin-top:1px;}
-.ref{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
-.amt{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--gold);}
+.ref{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(200,215,235,0.72);}
+.amt{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#F0F4FA;}
 .acts{display:flex;gap:4px;}
 
 /* PILLS */
@@ -308,7 +315,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .day-in:focus{border-color:var(--gold);}
 
 /* MODAL */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(7px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(7px);z-index:400;display:none;align-items:center;justify-content:center;padding:20px;}
 .overlay.open{display:flex;}
 .modal{background:var(--s1);border:1px solid var(--border2);border-radius:18px;padding:30px;width:580px;max-width:100%;max-height:88vh;overflow-y:auto;animation:mIn 0.2s ease;}
 @keyframes mIn{from{opacity:0;transform:translateY(14px) scale(0.97);}to{opacity:1;transform:none;}}
@@ -446,12 +453,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 }
 .search-in{background:var(--s1);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;min-width:220px;}
 .search-in:focus{border-color:var(--gold);}
-.filter-btn{padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--s1);color:var(--muted);font-family:'Outfit',sans-serif;transition:all 0.15s;}
-.filter-btn.active{background:rgba(26,111,168,0.16);border-color:rgba(26,111,168,0.5);color:var(--gold);}
-.f-won.active{background:rgba(30,140,94,0.14);border-color:rgba(30,140,94,0.45);color:var(--green);}
-.f-lost.active{background:rgba(184,50,50,0.12);border-color:rgba(184,50,50,0.4);color:var(--red);}
-.f-relance.active{background:rgba(184,150,90,0.12);border-color:rgba(184,150,90,0.4);color:var(--accent);}
-.f-sent.active{background:rgba(46,126,196,0.14);border-color:rgba(46,126,196,0.4);color:var(--blue);}
+.filter-btn{padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--s1);color:rgba(200,215,235,0.6);font-family:'Outfit',sans-serif;transition:all 0.15s;white-space:nowrap;}
+.filter-btn.active{background:rgba(75,137,220,0.15);border-color:rgba(75,137,220,0.5);color:#4B89DC;}
+.f-won.active{background:rgba(30,140,94,0.14);border-color:rgba(30,140,94,0.45);color:#22a06b;}
+.f-lost.active{background:rgba(184,50,50,0.12);border-color:rgba(184,50,50,0.4);color:#cc4444;}
+.f-relance.active{background:rgba(184,150,90,0.12);border-color:rgba(184,150,90,0.4);color:#c8a060;}
 .filter-btn:hover,.filter-btn.active{background:var(--gold-d);border-color:rgba(233,184,74,0.3);color:var(--gold);}
 .filter-btn.f-all.active{background:var(--gold-d);border-color:rgba(233,184,74,0.3);color:var(--gold);}
 .filter-btn.f-sent.active{background:var(--blue-d);border-color:rgba(56,189,248,0.3);color:var(--blue);}
@@ -543,30 +549,29 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 <!-- SIDEBAR -->
 <aside class="sb">
-  <div class="sb-glow"></div>
+  <div class="sb-glow" style="pointer-events:none;"></div>
   <div class="sb-brand">
     <div class="sb-logo">
-      <!-- Icône barres croissantes -->
-      <svg width="26" height="22" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="20" width="3.5" height="4" rx="1" fill="rgba(26,111,168,0.3)"/>
-        <rect x="6" y="16" width="3.5" height="8" rx="1" fill="rgba(26,111,168,0.52)"/>
-        <rect x="11" y="11" width="3.5" height="13" rx="1" fill="rgba(26,111,168,0.74)"/>
-        <rect x="16" y="7" width="3.5" height="17" rx="1" fill="rgba(26,111,168,0.9)"/>
-        <rect x="21" y="3" width="3.5" height="21" rx="1" fill="#1A6FA8"/>
-        <line x1="0" y1="24.5" x2="30" y2="24.5" stroke="rgba(26,111,168,0.15)" stroke-width="1"/>
-        <path d="M2,19 Q8,12 15,8 Q20,5 26,1" stroke="#B8965A" stroke-width="1.6" stroke-linecap="round" fill="none"/>
-        <polygon points="26,1 22,3 24.5,5" fill="#B8965A"/>
+      <svg width="30" height="26" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Chart bars from logo SVG -->
+        <g transform="scale(0.225) translate(14,18)">
+          <rect x="8" y="58" width="12" height="32" rx="2.5" fill="#335B95" opacity="0.3"/>
+          <rect x="30" y="44" width="12" height="46" rx="2.5" fill="#335B95" opacity="0.4"/>
+          <rect x="52" y="28" width="12" height="62" rx="2.5" fill="#335B95" opacity="0.5"/>
+          <rect x="74" y="14" width="12" height="76" rx="2.5" fill="#335B95" opacity="0.6"/>
+          <path d="M6 74 L36 52 L58 61 L82 34 L108 6" stroke="url(#lg-sb)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M95 9 L108 6 L104 19" stroke="url(#lg-sb)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <defs><linearGradient id="lg-sb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4B89DC"/><stop offset="100%" stop-color="#2D6FCA"/></linearGradient></defs>
       </svg>
-      <!-- Nom marque -->
-      <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;letter-spacing:-0.3px;color:var(--text);">Follow<span style="color:#1A6FA8;">Offer</span></span>
-      <!-- Drapeau suisse vectoriel propre -->
-      <svg width="13" height="13" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="opacity:0.78;flex-shrink:0;border-radius:2px;" title="Switzerland">
+      <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;letter-spacing:-0.3px;color:#F0F4FA;">Follow<span style="color:#4B89DC;">Offer</span></span>
+      <svg width="13" height="13" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="opacity:0.78;flex-shrink:0;border-radius:2px;">
         <rect width="32" height="32" fill="#D52B1E"/>
         <rect x="13" y="6" width="6" height="20" fill="white"/>
         <rect x="6" y="13" width="20" height="6" fill="white"/>
       </svg>
     </div>
-    <div class="sb-version" style="font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);margin-top:3px;font-family:'Outfit',sans-serif;">Suite commerciale · CH</div>
+    <div class="sb-version">Suite commerciale · CH</div>
   </div>
   <nav class="sb-nav">
     <div class="sb-section">
@@ -597,24 +602,22 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
   </nav>
   <div class="sb-foot">
-    <!-- Bouton Abonnement — accélérateur conversion -->
-    <button onclick="go('config');setTimeout(()=>switchTab('abo'),80);" id="sb-abo-btn" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:9px;border:1px solid rgba(26,111,168,0.35);background:rgba(26,111,168,0.08);cursor:pointer;margin-bottom:10px;transition:all 0.15s;" onmouseover="this.style.background='rgba(26,111,168,0.16)'" onmouseout="this.style.background='rgba(26,111,168,0.08)'">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-size:13px;">💳</span>
+    <button onclick="go('config');setTimeout(()=>switchTab&&switchTab('abo'),80);" id="sb-abo-btn" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 11px;border-radius:8px;border:1px solid rgba(26,111,168,0.3);background:rgba(26,111,168,0.07);cursor:pointer;margin-bottom:9px;transition:all 0.15s;" onmouseover="this.style.background='rgba(26,111,168,0.14)'" onmouseout="this.style.background='rgba(26,111,168,0.07)'">
+      <div style="display:flex;align-items:center;gap:7px;">
+        <span>💳</span>
         <div style="text-align:left;">
-          <div style="font-size:11px;font-weight:700;color:var(--text);line-height:1.2;" id="sb-plan-label">Plan Gratuit</div>
-          <div style="font-size:9.5px;color:var(--muted);letter-spacing:0.5px;" id="sb-plan-sub">5 offres / mois</div>
+          <div style="font-size:11px;font-weight:700;color:#F0F4FA;line-height:1.2;" id="sb-plan-label">Plan Gratuit</div>
+          <div style="font-size:9px;color:rgba(200,215,235,0.55);letter-spacing:0.4px;" id="sb-plan-sub">5 offres / mois</div>
         </div>
       </div>
       <span style="font-size:9px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;">Upgrader →</span>
     </button>
-    <!-- User -->
     <div class="sb-user">
       <div class="sb-av" id="user-avatar">—</div>
       <div style="flex:1;min-width:0;">
-        <div class="sb-nm" id="user-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
+        <div class="sb-nm" id="user-name" style="color:#F0F4FA;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
         <div class="sb-rl" id="user-role" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
-        <button onclick="if(confirm('Se déconnecter ?')) signOut();" style="font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-family:'Outfit',sans-serif;">⎋ Déconnexion</button>
+        <button onclick="if(confirm('Se déconnecter ?')) signOut();" style="font-size:10px;color:rgba(200,215,235,0.5);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-family:'Outfit',sans-serif;">⎋ Déconnexion</button>
       </div>
     </div>
   </div>
@@ -625,8 +628,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="topbar">
     <div class="tb-title" id="page-title">Dashboard</div>
     <div class="tb-right">
-      <button class="btn btn-ghost btn-sm" onclick="go('config')">⚙️ Config</button>
-      <button class="btn btn-ghost btn-sm" onclick="go('rapport')">📈 Rapport</button>
+      <button class="btn btn-ghost btn-sm" onclick="go('config')">⚙ Config</button>
+      <button class="btn btn-ghost btn-sm" onclick="go('rapport')">📊 Rapport semaine</button>
       <button class="btn btn-gold" onclick="go('nouvelle')">+ Envoyer une offre</button>
     </div>
   </div>
@@ -807,7 +810,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <!-- ══ RELANCES ══ -->
     <div class="panel" id="panel-relances">
       <div class="kgrid kgrid-3">
-        <div class="kcard g"><div class="k-lbl">Aujourd'hui</div><div class="k-val" id="kpi-relances-today">—</div><div class="k-sub">Relances à traiter · <span style="color:var(--green);font-size:9px;">⚡ Envoi auto 9h</span></div></div>
+        <div class="kcard g"><div class="k-lbl">Aujourd'hui</div><div class="k-val" id="kpi-relances-today">—</div><div class="k-sub">Relances à traiter</div></div>
         <div class="kcard bl"><div class="k-lbl">Cette semaine</div><div class="k-val" id="kpi-relances-week">—</div><div class="k-sub">Relances programmées</div></div>
         <div class="kcard gr"><div class="k-lbl">Taux réponse R1</div><div class="k-val" id="kpi-relances-taux">—</div><div class="k-sub" id="kpi-relances-taux-sub">Calculé sur vos offres</div></div>
       </div>
@@ -899,110 +902,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="report-card" id="rapport-content"></div>
     </div>
 
-
-    <!-- ══ GUIDE D'UTILISATION ══ -->
-    <div class="panel" id="panel-guide" style="padding:32px 40px;background:var(--bg);">
-      <div style="max-width:720px;margin:0 auto;color:var(--text);">
-        <div style="margin-bottom:28px;">
-          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Documentation</div>
-          <div style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:8px;">Guide d'utilisation FollowOffer</div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.6;">Maîtrisez votre suite commerciale en 5 étapes.</div>
-        </div>
-
-        <!-- Étape 1 -->
-        <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-            <div style="width:32px;height:32px;border-radius:50%;background:rgba(26,111,168,0.2);border:1px solid rgba(26,111,168,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">1</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);">Configuration du compte</div>
-              <div style="font-size:11px;color:var(--muted);">⚙️ Menu Système → Configuration</div>
-            </div>
-          </div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:44px;">
-            • Onglet <strong style="color:var(--text);">Profil</strong> : renseignez votre nom, rôle, entreprise, téléphone<br>
-            • Onglet <strong style="color:var(--text);">Email</strong> : entrez votre adresse expéditeur → les emails partiront en votre nom<br>
-            • Onglet <strong style="color:var(--text);">Relances</strong> : définissez les délais J+3, J+7, J+14 (modifiables par offre)<br>
-            • Sauvegardez — vos données sont synchronisées sur tous vos appareils
-          </div>
-        </div>
-
-        <!-- Étape 2 -->
-        <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-            <div style="width:32px;height:32px;border-radius:50%;background:rgba(26,111,168,0.2);border:1px solid rgba(26,111,168,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">2</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);">Envoyer une offre</div>
-              <div style="font-size:11px;color:var(--muted);">📋 Menu Offres → Envoyer une offre</div>
-            </div>
-          </div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:44px;">
-            • Déposez votre PDF devis/offre dans la zone d'upload<br>
-            • Les données sont extraites automatiquement (client, montant, référence)<br>
-            • Décrivez le <strong style="color:var(--text);">contexte</strong> de l'échange — l'IA génère un email personnalisé<br>
-            • Relisez, modifiez si besoin, puis cliquez <strong style="color:var(--text);">Envoyer l'offre</strong><br>
-            • Les 3 relances sont programmées automatiquement à J+3, J+7, J+14
-          </div>
-        </div>
-
-        <!-- Étape 3 -->
-        <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-            <div style="width:32px;height:32px;border-radius:50%;background:rgba(30,140,94,0.2);border:1px solid rgba(30,140,94,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">3</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);">Suivi des relances</div>
-              <div style="font-size:11px;color:var(--muted);">🔔 Menu Suivi → Relances</div>
-            </div>
-          </div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:44px;">
-            • Les relances s'envoient <strong style="color:var(--text);">automatiquement</strong> aux dates prévues (cron 9h UTC)<br>
-            • Vous pouvez envoyer manuellement en cliquant 📧 dans la liste des offres<br>
-            • Icône ✓ = marquer comme <strong style="color:var(--green);">Gagnée</strong> · Icône ✗ = marquer comme <strong style="color:var(--red);">Perdue</strong><br>
-            • Perdue = toutes relances annulées automatiquement
-          </div>
-        </div>
-
-        <!-- Étape 4 -->
-        <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-            <div style="width:32px;height:32px;border-radius:50%;background:rgba(184,150,90,0.2);border:1px solid rgba(184,150,90,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">4</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);">Détection d'ouverture</div>
-              <div style="font-size:11px;color:var(--muted);">👁 Menu Suivi → Détection ouverture</div>
-            </div>
-          </div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:44px;">
-            • Un pixel de tracking est intégré à chaque email envoyé<br>
-            • Quand le client ouvre l'email → notification en temps réel<br>
-            • Score <strong style="color:var(--green);">Chaud</strong> = ouvert dans les 24h → priorité d'appel<br>
-            • Badge <strong style="color:var(--red);">Perdue</strong> = visible même si l'offre a été consultée
-          </div>
-        </div>
-
-        <!-- Étape 5 -->
-        <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-            <div style="width:32px;height:32px;border-radius:50%;background:rgba(91,95,160,0.2);border:1px solid rgba(91,95,160,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">5</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);">Rapport & Revenus</div>
-              <div style="font-size:11px;color:var(--muted);">📈 Rapport semaine + 💰 Revenus</div>
-            </div>
-          </div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:44px;">
-            • Rapport hebdo : synthèse offres envoyées, gagnées, taux de conversion<br>
-            • Export Excel pour votre comptabilité ou votre manager<br>
-            • Revenus : pipeline par statut, analyse des pertes par raison<br>
-            • Fiches clients : historique complet, modification des données
-          </div>
-        </div>
-
-        <!-- Support -->
-        <div style="background:rgba(26,111,168,0.06);border:1px solid rgba(26,111,168,0.2);border-radius:12px;padding:16px;text-align:center;">
-          <div style="font-size:13px;color:var(--text);margin-bottom:4px;">🇨🇭 Support FollowOffer</div>
-          <div style="font-size:12px;color:var(--muted);">Une question ? Écrivez à <strong style="color:var(--gold);">contact@followoffer.com</strong></div>
-        </div>
-      </div>
-    </div>
-
     <!-- ══ CONFIG ══ -->
     <div class="panel" id="panel-config">
 
@@ -1074,19 +973,17 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           </div>
           <div id="brevo-status" style="font-size:12px;"></div>
         </div>
-        <div class="fcard" style="margin-bottom:18px;">
+        <div class="fcard" style="margin-bottom:18px;opacity:0.7;">
           <div class="fcard-t">📤 Envoi d'emails</div>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Les emails sont envoyés via <strong style="color:var(--text);">Brevo</strong> — service d'envoi transactionnel fiable. Configurez votre adresse expéditeur ci-dessus.</p>
-          <div id="email-connection-status" style="margin-bottom:0;"></div>
-          <div style="background:var(--s2);border-radius:10px;padding:14px;display:flex;align-items:flex-start;gap:12px;">
-            <div style="font-size:22px;line-height:1;flex-shrink:0;">✉️</div>
-            <div>
-              <div style="font-size:12px;font-weight:600;margin-bottom:4px;color:var(--text);">Brevo — Email transactionnel</div>
-              <div style="font-size:11px;color:var(--muted);line-height:1.7;">Vos emails partent depuis l'adresse expéditeur configurée ci-dessus.<br>Taux de délivrabilité optimisé · Tracking inclus · Pièces jointes PDF supportées.</div>
-            </div>
-          </div>
+          <p style="font-size:12px;color:rgba(200,215,235,0.65);margin-bottom:16px;line-height:1.6;">Les emails sont envoyés via <strong style="color:#F0F4FA;">Brevo</strong> — service transactionnel fiable et sécurisé.</p>
+          <div id="email-connection-status"></div>
           <div id="gmail-status" style="display:none;"></div>
           <div id="outlook-status" style="display:none;"></div>
+          <div style="background:var(--s2);border-radius:10px;padding:14px;display:flex;align-items:flex-start;gap:12px;margin-top:8px;">
+            <div style="font-size:22px;flex-shrink:0;">✉️</div>
+            <div><div style="font-size:12px;font-weight:600;margin-bottom:4px;color:#F0F4FA;">Brevo — Transactionnel</div>
+            <div style="font-size:11px;color:rgba(200,215,235,0.55);line-height:1.7;">Délivrabilité optimisée · Tracking inclus · Pièces jointes PDF</div></div>
+          </div>
         </div>
         <div style="display:flex;justify-content:flex-end;margin-top:4px;">
           <button class="btn btn-gold" onclick="saveConfig()">💾 Sauvegarder</button>
@@ -1124,39 +1021,33 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--s2);border-radius:10px;margin-bottom:16px;">
             <div>
               <div style="font-size:13px;font-weight:700;">Plan Gratuit <span style="font-size:11px;background:rgba(34,197,94,0.15);color:var(--green);padding:2px 8px;border-radius:20px;margin-left:6px;">Actif</span></div>
-              <div style="font-size:12px;color:var(--muted);margin-top:3px;">Jusqu'à 5 offres · 1 utilisateur · Relances manuelles</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px;">Jusqu'à 10 offres · 1 utilisateur · Relances manuelles</div>
             </div>
             <div style="font-size:20px;font-weight:800;color:var(--gold);">0 CHF</div>
           </div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Débloquez toutes les fonctionnalités avec FollowOffer Pro :</div>
-          <div style="margin-bottom:20px;">
-            <div style="background:linear-gradient(135deg,rgba(26,111,168,0.12),rgba(26,111,168,0.04));border:1px solid rgba(26,111,168,0.4);border-radius:16px;padding:24px;position:relative;overflow:hidden;">
-              <div style="position:absolute;top:12px;right:12px;background:var(--gold);color:#fff;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;">Meilleure offre</div>
-              <div style="font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">FollowOffer Pro</div>
-              <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px;">
-                <span style="font-size:36px;font-weight:800;color:var(--text);font-family:'Outfit',sans-serif;line-height:1;">490</span>
-                <span style="font-size:16px;color:var(--muted);font-weight:500;">CHF / an</span>
-              </div>
-              <div style="font-size:11px;color:var(--muted);margin-bottom:18px;">≈ 40.83 CHF/mois · Annulation à tout moment</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:20px;font-size:12px;">
-                <div>✓ Offres illimitées</div>
-                <div>✓ Relances automatiques</div>
-                <div>✓ Tracking ouvertures</div>
-                <div>✓ Rapport hebdo IA</div>
-                <div>✓ PDF depuis le SaaS</div>
-                <div>✓ Support prioritaire</div>
-              </div>
-              <button class="btn btn-gold" style="width:100%;padding:12px;font-size:13px;font-weight:700;" onclick="startCheckout('pro')">🚀 Passer à Pro — 490 CHF/an</button>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Passez à Pro pour débloquer toutes les fonctionnalités :</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+            <div style="background:var(--s2);border:1px solid rgba(233,184,74,0.2);border-radius:10px;padding:14px;">
+              <div style="font-size:15px;font-weight:800;color:var(--gold);margin-bottom:4px;">Pro <span style="font-size:11px;color:var(--muted);font-weight:400;">/ mois</span></div>
+              <div style="font-size:22px;font-weight:800;margin-bottom:10px;">49 CHF</div>
+              <div style="font-size:11px;color:var(--muted);line-height:2;">✅ Offres illimitées<br>✅ Relances automatiques<br>✅ Tracking ouvertures<br>✅ Rapport hebdo IA<br>✅ Support prioritaire</div>
+              <button onclick="startCheckout('pro')" class="btn btn-gold btn-sm" style="width:100%;margin-top:12px;">🚀 Passer à Pro</button>
+            </div>
+            <div style="background:var(--s2);border:1px solid rgba(139,92,246,0.2);border-radius:10px;padding:14px;">
+              <div style="font-size:15px;font-weight:800;color:var(--purple);margin-bottom:4px;">Business <span style="font-size:11px;color:var(--muted);font-weight:400;">/ mois</span></div>
+              <div style="font-size:22px;font-weight:800;margin-bottom:10px;">149 CHF</div>
+              <div style="font-size:11px;color:var(--muted);line-height:2;">✅ Tout Pro inclus<br>✅ Multi-utilisateurs<br>✅ CRM avancé<br>✅ Intégration Gmail/Outlook<br>✅ API accès</div>
+              <button onclick="startCheckout('business')" class="btn btn-sm" style="width:100%;margin-top:12px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);color:var(--purple);">🚀 Choisir Business</button>
             </div>
           </div>
-          <div style="font-size:11px;color:var(--muted);text-align:center;">🔒 Paiement sécurisé par Stripe · TVA CH incluse</div>
+          <div style="font-size:11px;color:var(--muted);text-align:center;">Paiement sécurisé par Stripe · Annulation à tout moment · Facturation mensuelle</div>
         </div>
         <div class="fcard">
           <div class="fcard-t">📊 Usage actuel</div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;" id="usage-stats">
             <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
               <div style="font-size:22px;font-weight:800;color:var(--gold);" id="usage-offres">—</div>
-              <div style="font-size:11px;color:var(--muted);">offres / 5</div>
+              <div style="font-size:11px;color:var(--muted);">offres / 10</div>
             </div>
             <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
               <div style="font-size:22px;font-weight:800;color:var(--blue);" id="usage-clients">—</div>
@@ -1382,8 +1273,7 @@ function row(o) {
   const nextRelance = o.relances && (o.relances.r1||o.relances.r2||o.relances.r3);
   const today = new Date().toISOString().split('T')[0];
   let relDate = '—', relColor = 'var(--muted)';
-  if(o.status==='won') { relDate = '✓ Gagnée'; relColor = 'var(--green)'; }
-  else if(o.status==='lost') { relDate = '✗ Perdue'; relColor = 'var(--red)'; }
+  if(o.status==='won'||o.status==='lost') { relDate = '—'; }
   else if(nextRelance) {
     const d = nextRelance;
     if(d < today) { relDate = 'En retard'; relColor = 'var(--red)'; }
@@ -1399,7 +1289,7 @@ function row(o) {
   const openTxt = opens===0 ? '<span style="color:var(--muted);font-size:12px;">—</span>'
     : opens===1 ? '<span style="color:var(--blue);font-size:12px;">👁 1×</span>'
     : `<span style="color:var(--green);font-size:12px;font-weight:600;">👁 ${opens}×</span>`;
-  return `<div class="tbl-r tbl-cols ${o.status==='lost'?'row-lost':o.status==='won'?'row-won':''}" onclick="openModal('${o.id}')">
+  return `<div class="tbl-r tbl-cols" onclick="openModal('${o.id}')">
     <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
     <div class="ref">${o.ref}</div>
     <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
@@ -1434,7 +1324,7 @@ function renderOffres(){
       o.email.toLowerCase().includes(search) ||
       (o.objet||'').toLowerCase().includes(search);
     const matchFilter = currentFilter === 'all' ? true :
-      currentFilter === 'sent' ? ['sent','relance1','relance2','relance3'].includes(o.status) :
+      currentFilter === 'sent' ? o.status === 'sent' :
       currentFilter === 'relance' ? ['relance1','relance2','relance3'].includes(o.status) :
       currentFilter === 'won' ? o.status === 'won' :
       currentFilter === 'lost' ? o.status === 'lost' : true;
@@ -1525,11 +1415,10 @@ function renderDetection(){
       const daysAgo = Math.floor((now - new Date(o.lastOpen)) / 86400000);
       const timeStr = daysAgo === 0 ? 'Aujourd\'hui' : daysAgo === 1 ? 'Hier' : `Il y a ${daysAgo}j`;
       const isHot = daysAgo === 0;
-      const isLost = o.status === 'lost';
       return `<div class="od-event ${isHot?'hot':''}">
-        <div class="od-event-ico">${isLost?'❌':isHot?'🔥':'👁'}</div>
+        <div class="od-event-ico">${isHot?'🔥':'👁'}</div>
         <div class="od-event-info">
-          <div class="od-event-main">${o.prenom} ${o.nom} a ouvert votre email${isLost?' <span style="color:var(--red);font-size:10px;font-weight:600;margin-left:6px;background:var(--red-d);padding:1px 6px;border-radius:4px;">PERDUE</span>':''}</div>
+          <div class="od-event-main">${o.prenom} ${o.nom} a ouvert votre email</div>
           <div class="od-event-sub">${o.ref} · ${o.montant.toLocaleString('fr-CH')} CHF · ${o.opens}ème ouverture</div>
         </div>
         <div class="od-event-time">${timeStr}</div>
@@ -1553,12 +1442,12 @@ function renderDetection(){
   document.getElementById('tbody-detection').innerHTML = OFFERS.length > 0
     ? OFFERS.map(o=>`
       <div class="tbl-r" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;" onclick="openModal('${o.id}')">
-        <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
+        <div><div class="cn">${o.prenom} ${o.nom}${o.status==='lost'?' <span style="background:rgba(184,50,50,0.15);color:#cc4444;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;">✕ Perdue</span>':o.status==='won'?' <span style="background:rgba(30,140,94,0.15);color:#22a06b;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;">✓ Gagnée</span>':''}</div><div class="ce">${o.email}</div></div>
         <div class="ref">${o.ref}</div>
         <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
         <div style="font-size:12px;color:${o.opens>0?'var(--green)':'var(--muted)'};">${o.lastOpen||'—'}</div>
         <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${o.opens>1?'var(--gold)':'var(--muted)'};">${o.opens}×</div>
-        <div style="font-size:12px;">${o.status==='lost'?'<span style=\"color:var(--red);\">❌ Perdue</span>':scores(o)}</div>
+        <div style="font-size:12px;">${scores(o)}</div>
       </div>`).join('')
     : '<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;">Aucune offre envoyée pour l\'instant.</div>';
 }
@@ -1583,9 +1472,12 @@ function renderCalendar(){
     };
     const s = (o.prenom[0]||'?')+'.'+o.nom.slice(0,5);
     add(o.sendDate, s+' Envoi', 'ev-send');
-    add(o.relances.r1, s+' R1', 'ev-r1');
-    add(o.relances.r2, s+' R2', 'ev-r2');
-    add(o.relances.r3, s+' R3', 'ev-r3');
+    // N'afficher les relances que si l'offre est encore active
+    if(!['won','lost'].includes(o.status)) {
+      add(o.relances.r1, s+' R1', 'ev-r1');
+      add(o.relances.r2, s+' R2', 'ev-r2');
+      add(o.relances.r3, s+' R3', 'ev-r3');
+    }
   });
   const prevM = MONTHS_SHORT[calMonth === 0 ? 11 : calMonth - 1];
   const nextM = MONTHS_SHORT[calMonth === 11 ? 0 : calMonth + 1];
@@ -1658,7 +1550,7 @@ function renderRapport() {
   const chauds = OFFERS.filter(o=>o.opens>=2 && ['sent','relance1','relance2','relance3'].includes(o.status));
   const urgents = pending.filter(o=>o.status==='relance2'||o.status==='relance3');
 
-  // Résumé dynamique
+  // Insights dynamiques
   const insights = [];
   if(total === 0) {
     insights.push(`<div class="insight blue"><strong>🚀 Commencez :</strong> <span>Envoyez votre première offre pour voir apparaître vos statistiques ici.</span></div>`);
@@ -1687,9 +1579,8 @@ function renderRapport() {
     </div>
     <div class="report-body">
       <div class="report-section">
-        <div class="rs-title">Analyse IA de la semaine</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">Conseils personnalisés basés sur votre activité.</div>
-        ${insights.length ? insights.join('') : '<div class=\"insight blue\"><strong>📊 Activité :</strong> <span>Envoyez des offres cette semaine pour voir votre analyse personnalisée ici.</span></div>'}
+        <div class="rs-title">Insights de la semaine</div>
+        ${insights.join('')}
       </div>
       ${won.length > 0 ? `
       <div class="report-section">
@@ -1709,7 +1600,7 @@ function renderRapport() {
       </div>` : ''}
     </div>
     <div class="report-actions">
-      <button class="btn btn-gold" onclick="exportCSV()">📊 Exporter Excel</button>
+      <button class="btn btn-ghost" onclick="exportCSV()">📊 Exporter Excel</button>
     </div>`;
 }
 
@@ -1743,98 +1634,20 @@ function renderClients(){
   }).join('');
 }
 
-
-
-// ══ PDF VIEWER MODAL ══
-function viewPdfModal(url, ref) {
-  if(!url) { toast('⚠️','Aucun PDF disponible pour cette offre'); return; }
-  const overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
-  overlay.innerHTML = `
-    <div style="width:100%;max-width:900px;height:85vh;background:var(--s1);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-shrink:0;">
-        <div style="font-size:14px;font-weight:600;color:var(--text);">📄 ${ref}</div>
-        <div style="display:flex;gap:8px;">
-          <a href="${url}" target="_blank" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--text);font-size:12px;text-decoration:none;cursor:pointer;">⬇️ Télécharger</a>
-          <button onclick="this.closest('[data-pdfmodal]').remove();" style="background:var(--red-d);border:1px solid rgba(184,50,50,0.3);border-radius:8px;padding:6px 12px;color:var(--red);font-size:12px;cursor:pointer;">✕ Fermer</button>
-        </div>
-      </div>
-      <iframe src="${url}" style="flex:1;width:100%;border:none;" allow="fullscreen"></iframe>
-    </div>`;
-  const modal = overlay.querySelector('div');
-  modal.setAttribute('data-pdfmodal', '');
-  overlay.addEventListener('click', (ev) => { if(ev.target === overlay) overlay.remove(); });
-  document.body.appendChild(overlay);
-}
-
-// ══ MODIFIER FICHE CLIENT ══
-function editClientModal(email) {
-  const c = OFFERS.filter(o => o.email === email);
-  if(!c.length) return;
-  const first = c[0];
-  const overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;';
-  overlay.innerHTML = `<div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:400px;width:90%;font-family:'Outfit',sans-serif;">
-    <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;">✏️ Modifier le client</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:20px;">${email}</div>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
-      <div>
-        <label style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;">Prénom</label>
-        <input id="ec-prenom" value="${first.prenom||''}" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;">
-      </div>
-      <div>
-        <label style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;">Nom</label>
-        <input id="ec-nom" value="${first.nom||''}" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;">
-      </div>
-      <div>
-        <label style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;">Email</label>
-        <input id="ec-email" value="${email}" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;">
-      </div>
-      <div>
-        <label style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;">Entreprise</label>
-        <input id="ec-entreprise" value="${first.entreprise||''}" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;">
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;">
-      <button onclick="this.closest('[data-ecmodal]').remove();" style="flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif;">Annuler</button>
-      <button id="ec-save-btn" style="flex:2;background:var(--gold);border:none;border-radius:8px;padding:10px;color:#fff;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;">Enregistrer</button>
-    </div>
-  </div>`;
-  const modal = overlay.querySelector('div');
-  modal.setAttribute('data-ecmodal', '');
-  modal.querySelector('#ec-save-btn').onclick = async () => {
-    const newPrenom = modal.querySelector('#ec-prenom').value.trim();
-    const newNom = modal.querySelector('#ec-nom').value.trim();
-    const newEmail = modal.querySelector('#ec-email').value.trim();
-    const newEntreprise = modal.querySelector('#ec-entreprise').value.trim();
-    try {
-      // Mettre à jour toutes les offres de ce client
-      const offresIds = c.map(o => o.id);
-      for(const id of offresIds) {
-        await sbFetch('offres?id=eq.'+id, {method:'PATCH', headers:{'Prefer':'return=minimal'},
-          body: JSON.stringify({prenom:newPrenom,nom:newNom,email:newEmail,entreprise:newEntreprise})});
-        const o = OFFERS.find(x=>x.id===id);
-        if(o) { o.prenom=newPrenom; o.nom=newNom; o.email=newEmail; o.entreprise=newEntreprise; }
-      }
-      toast('✅','Client mis à jour');
-      overlay.remove();
-      renderOffres(); renderClients();
-    } catch(ex) { toast('❌','Erreur: '+ex.message.slice(0,60)); }
-  };
-  document.body.appendChild(overlay);
-}
-
 function openClientModal(email){
   const c=OFFERS.filter(o=>o.email===email);
   if(!c.length)return;
   const first=c[0];
-  const totalWon=c.filter(o=>o.status==='won').reduce((s,o)=>s+o.montant,0);
+  const totalWon = c.filter(o=>o.status==='won').reduce((s,o)=>s+(parseFloat(o.montant)||0), 0);
+  const totalPending = c.filter(o=>!['won','lost'].includes(o.status)).reduce((s,o)=>s+(parseFloat(o.montant)||0), 0);
   document.getElementById('m-t').textContent=`${first.prenom} ${first.nom}`;
   document.getElementById('m-s').textContent=email+' · '+c.length+' offre(s)';
   document.getElementById('m-body').innerHTML=`
     <div class="m-2grid">
       <div class="m-info"><div class="m-info-l">Offres totales</div><div class="m-info-v" style="color:var(--gold)">${c.length}</div></div>
-      <div class="m-info"><div class="m-info-l">CA généré</div><div class="m-info-v" style="color:var(--green);font-family:'JetBrains Mono',monospace;">${totalWon.toLocaleString('fr-CH')} CHF</div></div>
+      <div class="m-info"><div class="m-info-l">CA gagné</div><div class="m-info-v" style="color:var(--green);font-family:'JetBrains Mono',monospace;">${totalWon > 0 ? totalWon.toLocaleString('fr-CH')+' CHF' : '—'}</div></div>
+      <div class="m-info"><div class="m-info-l">En cours</div><div class="m-info-v" style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:13px;">${totalPending > 0 ? totalPending.toLocaleString('fr-CH')+' CHF' : '—'}</div></div>
+      <div class="m-info"><div class="m-info-l">Tx de succès</div><div class="m-info-v" style="color:var(--muted);font-size:13px;">${c.length > 0 ? Math.round(c.filter(o=>o.status==='won').length/c.length*100)+'%' : '—'}</div></div>
     </div>
     <div class="m-tl"><div class="m-tl-t">Historique des offres</div>
     ${c.map(o=>`<div class="m-tl-item">
@@ -1846,16 +1659,15 @@ function openClientModal(email){
     </div>
     <div class="m-acts">
       <button class="btn btn-gold btn-sm" onclick="go('nouvelle');closeModal();toast('📄','Préparez la nouvelle offre')">+ Nouvelle offre</button>
-      <button class="btn btn-ghost btn-sm" onclick="editClientModal('${email}')">✏️ Modifier client</button>
-      ${c.some(o=>o.pdfUrl)?`<button class="btn btn-ghost btn-sm" onclick="viewPdfModal('${c.find(o=>o.pdfUrl)?.pdfUrl||''}','${c.find(o=>o.pdfUrl)?.ref||''}')">📄 Voir PDF</button>`:''}
+      <button class="btn btn-ghost btn-sm" onclick="editClientModal('${first.email}')">✏️ Modifier</button>
     </div>`;
-  // PDF viewer inline
+  // Ajouter le viewer PDF inline si disponible
   if(o.pdfUrl) {
-    document.getElementById('m-body').innerHTML += `<div style="margin-top:18px;border:1px solid var(--border);border-radius:10px;overflow:hidden;">`
-      + `<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--border);background:var(--s3);">`
-      + `<span style="font-size:12px;font-weight:600;color:var(--text);">📄 ${o.fichier||o.ref+'.pdf'}</span>`
-      + `<a href="${o.pdfUrl}" target="_blank" style="font-size:11px;color:var(--gold);text-decoration:none;padding:4px 10px;background:var(--gold-d);border-radius:5px;">⬇ Télécharger</a>`
-      + `</div><iframe src="${o.pdfUrl}" style="width:100%;height:440px;border:none;display:block;" loading="lazy"></iframe></div>`;
+    document.getElementById('m-body').innerHTML += '<div style="margin-top:18px;border:1px solid rgba(160,180,210,0.09);border-radius:10px;overflow:hidden;">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid rgba(160,180,210,0.09);background:#171E29;">'
+      + '<span style="font-size:12px;font-weight:600;color:#F0F4FA;">📄 '+(o.fichier||o.ref+'.pdf')+'</span>'
+      + '<a href="'+o.pdfUrl+'" target="_blank" style="font-size:11px;color:#4B89DC;text-decoration:none;padding:4px 10px;background:rgba(75,137,220,0.13);border-radius:5px;">⬇ Télécharger</a>'
+      + '</div><iframe src="'+o.pdfUrl+'" style="width:100%;height:420px;border:none;display:block;" loading="lazy"></iframe></div>';
   }
   document.getElementById('overlay').classList.add('open');
 }
@@ -1885,7 +1697,6 @@ function openModal(id){
       <textarea class="notes-field" id="modal-notes" placeholder="Ajouter une note... (hésitations, budget, timing...)" onblur="saveNote('${o.id}',this.value)">${o.notes||''}</textarea>
     </div>
     <div class="m-acts">
-      ${o.pdfUrl?`<button class="btn btn-ghost btn-sm" onclick="viewPdfModal('${o.pdfUrl}','${o.ref}')">📄 Voir PDF</button>`:''}
       <button class="btn btn-ghost btn-sm" onclick="previewRelance('${o.id}')">👁 Voir relances</button>
       <button class="btn btn-ghost btn-sm" onclick="actR('${o.id}');closeModal()">📧 Relancer</button>
       ${o.pdfUrl?`<button class="btn btn-blue btn-sm" onclick="viewPDF('${o.pdfUrl}','${o.fichier||o.ref}')">📄 Voir PDF</button>`:''}
@@ -1903,28 +1714,21 @@ function closeModal(){document.getElementById('overlay').classList.remove('open'
 async function actR(id){
   const o=OFFERS.find(x=>x.id===id);
   if(!o)return;
-  const next = o.status==='sent'?'relance1':o.status==='relance1'?'relance2':o.status==='relance2'?'relance3':o.status;
+  const next = o.status==='sent'?'relance1':o.status==='relance1'?'relance2':o.status==='relance2'?'relance3':'relance3';
   const rNum = {relance1:1,relance2:2,relance3:3}[next]||1;
+  if(o.status==='relance3'){ toast('ℹ️','3 relances déjà envoyées pour cette offre'); return; }
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:next}), prefer:'return=minimal', headers:{'Prefer':'return=minimal'}});
     o.status=next;
 
-    // Utiliser le brouillon sauvegardé si le commercial l'a modifié
-  const savedRpDrafts = JSON.parse(localStorage.getItem('rp_drafts_'+id)||'["","",""]');
-  const savedBody = savedRpDrafts[rNum-1];
-  // Generate relance email via AI then send
+    // Generate relance email via AI then send
     const tones = [
       'Relance amicale. 2-3 lignes. OBLIGATOIRE : terminer par "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Au plaisir d\'en discuter," sur sa propre ligne.',
       'Relance pro directe. 3-4 lignes. OBLIGATOIRE : terminer par "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Meilleures salutations," sur sa propre ligne.',
       'Dernière relance urgente. 2-3 lignes percutantes. OBLIGATOIRE : terminer par "Sincères salutations," sur sa propre ligne.',
     ];
-    let emailBody = savedBody || '';
-    if(emailBody) {
-      // Utiliser le brouillon modifié par le commercial
-      await sendBrevoEmail({to:o.email, toName:o.prenom+' '+o.nom, subject:'Re: Offre '+o.ref+' — '+o.objet, body:emailBody, offerId:o.id});
-      toast('📧',`Relance ${rNum} envoyée à ${o.prenom} ${o.nom} (modèle personnalisé)`);
-    }
-    if(!emailBody) try {
+    let emailBody = '';
+    try {
       const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (Relance ${rNum}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[rNum-1]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps du message (2-4 lignes selon le ton)\n3. Termine par une formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nNE PAS inclure le nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
       emailBody = data.content?.[0]?.text||'';
@@ -1953,9 +1757,13 @@ async function actW(id){
   if(!o)return;
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:'won'}), headers:{'Prefer':'return=minimal'}});
+    // Annuler toutes les relances pending en DB
+    try { await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending', {method:'PATCH', body:JSON.stringify({statut:'cancelled'}), headers:{'Prefer':'return=minimal'}}); } catch(_){}
+    // Effacer les dates de relance localement (pour le calendrier)
     o.status='won';
+    o.relances = { r1:'', r2:'', r3:'' };
     toast('🎉',`${o.prenom} ${o.nom} — Gagnée ! +${o.montant.toLocaleString('fr-CH')} CHF`);
-    renderOffres(); renderRelances(); renderUrgent();
+    renderOffres(); renderRelances(); renderUrgent(); renderCalendar();
   } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
 }
 async function actL(id){
@@ -1986,13 +1794,14 @@ async function actL(id){
   if(!raison || raison === 'cancel') return;
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:'lost', notes: (o.notes||'') + (o.notes?'\n':'') + `Perdu — ${raison}`}), headers:{'Prefer':'return=minimal'}});
+    // Annuler toutes les relances pending en DB
     try { await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending', {method:'PATCH', body:JSON.stringify({statut:'cancelled'}), headers:{'Prefer':'return=minimal'}}); } catch(_){}
-    // Annuler TOUTES les relances pending en DB
-    try { await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending', {method:'DELETE', headers:{'Prefer':'return=minimal'}}); } catch(ex) {}
+    // Effacer les dates de relance localement (pour le calendrier)
     o.status='lost';
+    o.relances = { r1:'', r2:'', r3:'' };
     o.notes = (o.notes||'') + (o.notes?'\n':'') + `Perdu — ${raison}`;
     toast('📊',`Dossier archivé — relances annulées pour ${o.prenom} ${o.nom}`);
-    renderOffres(); renderRelances(); renderUrgent(); updateBadges();
+    renderOffres(); renderRelances(); renderUrgent(); renderCalendar(); updateBadges();
     updateAnalysePertes();
   } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
 }
@@ -2419,8 +2228,7 @@ async function saveEdit(id) {
 function confirmRelance(id) {
   const o = OFFERS.find(x=>x.id===id);
   if(!o) return;
-  const currentStatus = o.status || o.statut || 'sent';
-  const rNum = currentStatus==='sent'?1:currentStatus==='relance1'?2:currentStatus==='relance2'?3:1;
+  const rNum = (o.status||o.statut)==='envoyee'?1:(o.status||o.statut)==='relance1'?2:(o.status||o.statut)==='relance2'?3:1;
   document.getElementById('m-t').textContent = '📧 Confirmer la relance';
   document.getElementById('m-s').textContent = o.ref + ' — ' + (o.prenom||'') + ' ' + (o.nom||'');
   document.getElementById('m-body').innerHTML = `
@@ -2442,9 +2250,7 @@ function confirmRelance(id) {
 
 // ══ RELANCE PREVIEW ══
 let rpDrafts = ['','',''];
-let rpEdited = [false,false,false];
 let rpActive = 0;
-let rpCurrentOfferId = null;
 
 async function previewRelance(id) {
   const o = OFFERS.find(x=>x.id===id);
@@ -2457,11 +2263,7 @@ async function previewRelance(id) {
     {lbl:'Relance 3',col:'var(--orange)',day:o.relances.r3},
   ].map((t,i)=>`<button class="rp-tab ${i===0?'active':''}" onclick="switchRPTab(${i})" style="${i===0?`border-color:${t.col};color:${t.col};background:${t.col}22;`:''}">${t.lbl}<br><span style="font-weight:400;font-size:9px;opacity:0.7;">${t.day||'—'}</span></button>`).join('');
 
-  rpEdited = [false,false,false];
-  rpCurrentOfferId = o.id;
-  // Charger les brouillons sauvegardés si existants
-  const savedDrafts = JSON.parse(localStorage.getItem('rp_drafts_'+o.id)||'["","",""]');
-  const msgs = savedDrafts.map((d,i)=>d||'Chargement...');
+  const msgs = ['Chargement...','Chargement...','Chargement...'];
   showRPContent(o, msgs, 0);
 
   // Generate all 3 relances via AI
@@ -2473,10 +2275,6 @@ async function previewRelance(id) {
   const delays = ['J+3','J+7','J+14'];
   
   for(let i=0;i<3;i++) {
-    // Ne pas régénérer si le commercial a déjà modifié/sauvegardé
-    if(rpDrafts[i] && rpEdited[i]) { msgs[i]=rpDrafts[i]; continue; }
-    const savedD = JSON.parse(localStorage.getItem('rp_drafts_'+o.id)||'["","",""]');
-    if(savedD[i]) { rpDrafts[i]=savedD[i]; msgs[i]=savedD[i]; if(i===rpActive)showRPContent(o,msgs,rpActive); continue; }
     try {
       const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps (2-4 lignes)\n3. Formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nPas de nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
@@ -2488,46 +2286,18 @@ async function previewRelance(id) {
   showRPContent(o, msgs, rpActive);
 }
 
-function saveRpDraft(idx) {
-  if(!rpCurrentOfferId) return;
-  const ta = document.getElementById('rp-body-text');
-  if(ta) rpDrafts[idx] = ta.value;
-  rpEdited[idx] = true;
-  const saved = JSON.parse(localStorage.getItem('rp_drafts_'+rpCurrentOfferId)||'["","",""]');
-  saved[idx] = rpDrafts[idx];
-  localStorage.setItem('rp_drafts_'+rpCurrentOfferId, JSON.stringify(saved));
-  // Sauvegarder aussi dans contexte de l'offre en DB (notes)
-  sbFetch('offres?id=eq.'+rpCurrentOfferId, {method:'PATCH', body:JSON.stringify({contexte:(window._rpCtx||{})[idx]||rpDrafts[idx]}), headers:{'Prefer':'return=minimal'}}).catch(()=>{});
-  toast('💾','Relance '+(idx+1)+' enregistrée — ne sera pas régénérée');
-}
-function regenRpDraft(idx) {
-  rpEdited[idx] = false;
-  const o = OFFERS.find(x=>x.id===rpCurrentOfferId);
-  if(o) previewRelance(o.id);
-}
 function showRPContent(o, msgs, idx) {
   const labels = ['Relance 1','Relance 2','Relance 3'];
   const days = [o.relances.r1,o.relances.r2,o.relances.r3];
-  const isLoading = msgs[idx] === 'Chargement...';
-  const escaped = (isLoading ? '' : (msgs[idx]||'')).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const bodyHtml = isLoading
-    ? '<div style="color:var(--muted);font-style:italic;padding:16px;">⏳ Génération en cours...</div>'
-    : '<textarea id="rp-body-text" style="width:100%;min-height:150px;resize:vertical;background:transparent;border:none;outline:none;font-family:inherit;font-size:13px;color:var(--text);line-height:1.7;padding:12px 0;" oninput="rpDrafts['+idx+']=this.value;rpEdited['+idx+']=true;">'+escaped+'</textarea>';
-  const btnHtml = isLoading ? '' : '<div style="display:flex;gap:8px;padding:8px 0 2px;">'
-    + '<button onclick="saveRpDraft('+idx+')" style="padding:6px 14px;background:var(--gold);border:none;border-radius:7px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">💾 Enregistrer</button>'
-    + '<button onclick="regenRpDraft('+idx+')" style="padding:6px 12px;background:var(--s2);border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:12px;cursor:pointer;">🔄 Régénérer</button>'
-    + (rpEdited[idx] ? '<span style="font-size:10px;color:var(--green);align-self:center;">✓ Modifié</span>' : '')
-    + '</div>';
-  document.getElementById('rp-content').innerHTML = 
-    '<div class="rp-email">'
-    + '<div class="rp-email-head">'
-    + '<div class="rp-email-row"><span>À :</span><span>'+o.prenom+' '+o.nom+' &lt;'+o.email+'&gt;</span></div>'
-    + '<div class="rp-email-row"><span>Objet :</span><span>Re: Offre '+o.ref+' — '+o.objet+'</span></div>'
-    + '<div class="rp-email-row"><span>Date :</span><span>'+(days[idx]||'Programmée')+' — '+labels[idx]+'</span></div>'
-    + '</div>'
-    + '<div class="rp-email-body" style="padding:0;">'+bodyHtml+'</div>'
-    + '</div>'
-    + btnHtml;
+  document.getElementById('rp-content').innerHTML = `
+    <div class="rp-email">
+      <div class="rp-email-head">
+        <div class="rp-email-row"><span>À :</span><span>${o.prenom} ${o.nom} &lt;${o.email}&gt;</span></div>
+        <div class="rp-email-row"><span>Objet :</span><span>Re: Offre ${o.ref} — ${o.objet}</span></div>
+        <div class="rp-email-row"><span>Date :</span><span>${days[idx]||'Programmée'} — ${labels[idx]}</span></div>
+      </div>
+      <div class="rp-email-body" id="rp-body-text">${msgs[idx]==='Chargement...'?'<div style="color:var(--muted);font-style:italic;">⏳ Génération en cours...</div>':msgs[idx]}</div>
+    </div>`;
 }
 
 function switchRPTab(idx) {
@@ -2757,6 +2527,7 @@ async function loadConfig() {
     const rows = await sbFetch('settings?select=key,value');
     if(Array.isArray(rows) && rows.length > 0) {
       rows.forEach(r => { if(r.key && r.key in CFG) CFG[r.key] = r.value || ''; });
+      localStorage.setItem('of_cfg', JSON.stringify(CFG));
       // Sauvegarder en cache local
       localStorage.setItem('of_cfg', JSON.stringify(CFG));
     }
@@ -2780,18 +2551,18 @@ async function loadConfig() {
   updateUserUI();
 }
 
-async async function saveConfig() {
+async function saveConfig() {
   CFG.name = document.getElementById('cfg-name')?.value || document.getElementById('cfg-name-email')?.value || '';
   CFG.role = document.getElementById('cfg-role')?.value||'';
   CFG.company = document.getElementById('cfg-company')?.value||'';
   CFG.phone = document.getElementById('cfg-phone')?.value||'';
   CFG.senderEmail = document.getElementById('cfg-sender-email')?.value||'';
   CFG.brevoKey = document.getElementById('cfg-brevo-key')?.value||'';
-  CFG.website = document.getElementById('cfg-website')?.value||'';
   // Sauvegarder en localStorage immédiatement
   localStorage.setItem('of_cfg', JSON.stringify(CFG));
+  localStorage.setItem('of_cfg', JSON.stringify(CFG));
   try {
-    for(const k of ['name','role','company','phone','senderEmail','brevoKey','website']) {
+    for(const k of ['name','role','company','phone','senderEmail','brevoKey']) {
       await saveSetting(k, CFG[k]);
     }
     updateSigPreview();
@@ -3005,8 +2776,9 @@ async function sbAuthFetch(path, options={}) {
 
 // Plans et leurs limites
 const PLANS_CONFIG = {
-  free: { name: 'Gratuit',  maxOffres: 5,     relancesAuto: false, tracking: false, rapportIA: false },
-  pro:  { name: 'Pro',      maxOffres: 99999,  relancesAuto: true,  tracking: true,  rapportIA: true  },
+  free:     { name: 'Gratuit',  maxOffres: 10,  relancesAuto: false, tracking: false, rapportIA: false },
+  pro:      { name: 'Pro',      maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  },
+  business: { name: 'Business', maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  }
 };
 
 // Plan actuel de l'utilisateur (chargé depuis settings)
@@ -3202,7 +2974,7 @@ function showForgotPassword() {
     </div>`;
 }
 
-async async function doForgotPassword() {
+async function doForgotPassword() {
   const email = document.getElementById('forgot-email')?.value?.trim();
   const msgEl = document.getElementById('forgot-msg');
   const showMsg = (txt, color, bg) => {
@@ -3321,15 +3093,13 @@ async function signIn(email, password) {
   } catch(e) {
     // Normaliser les messages d'erreur Supabase
     const msg = e.message || '';
-    if(msg.includes('Invalid login') || msg.includes('invalid_grant') || msg.includes('credentials') || msg.includes('user_not_found') || msg.includes('User not found') || msg.includes('invalid credentials'))
+    if(msg.includes('Invalid login') || msg.includes('invalid_grant') || msg.includes('credentials') || msg.includes('user_not_found') || msg.includes('User not found'))
       throw new Error('Email ou mot de passe incorrect');
     if(msg.includes('Email not confirmed'))
-      throw new Error('Confirmez votre email avant de vous connecter (vérifiez vos spams)');
-    if(msg.includes('Too many') || msg.includes('rate limit'))
+      throw new Error('Confirmez votre email avant de vous connecter');
+    if(msg.includes('Too many'))
       throw new Error('Trop de tentatives — attendez quelques minutes');
-    if(msg.includes('network') || msg.includes('Failed to fetch'))
-      throw new Error('Erreur réseau — vérifiez votre connexion');
-    throw new Error(msg || 'Erreur de connexion — réessayez');
+    throw new Error(msg || 'Erreur de connexion');
   }
 }
 
@@ -3431,34 +3201,28 @@ function showAuthScreen() {
       <div style="width:100%;max-width:420px;">
         <div style="text-align:center;margin-bottom:32px;">
           <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:6px;">
-            <!-- Logo centré grand format -->
-            <svg width="72" height="60" viewBox="0 0 72 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Barres montantes -->
-              <rect x="2" y="46" width="8" height="10" rx="2" fill="rgba(233,184,74,0.3)"/>
-              <rect x="13" y="38" width="8" height="18" rx="2" fill="rgba(233,184,74,0.45)"/>
-              <rect x="24" y="28" width="8" height="28" rx="2" fill="rgba(233,184,74,0.6)"/>
-              <rect x="35" y="18" width="8" height="38" rx="2" fill="rgba(233,184,74,0.78)"/>
-              <rect x="46" y="8" width="8" height="48" rx="2" fill="#E9B84A"/>
-              <!-- Reflets sur les barres -->
-              <rect x="2" y="46" width="2" height="10" rx="1" fill="rgba(255,255,255,0.15)"/>
-              <rect x="13" y="38" width="2" height="18" rx="1" fill="rgba(255,255,255,0.15)"/>
-              <rect x="24" y="28" width="2" height="28" rx="1" fill="rgba(255,255,255,0.15)"/>
-              <rect x="35" y="18" width="2" height="38" rx="1" fill="rgba(255,255,255,0.15)"/>
-              <rect x="46" y="8" width="2" height="48" rx="1" fill="rgba(255,255,255,0.2)"/>
-              <!-- Ligne de base -->
-              <line x1="0" y1="57" x2="72" y2="57" stroke="rgba(233,184,74,0.18)" stroke-width="1.5"/>
-              <!-- Flèche courbe de croissance -->
-              <path d="M4,44 Q14,34 26,24 Q36,16 50,6" stroke="#E9B84A" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-              <path d="M4,44 Q14,34 26,24 Q36,16 50,6" stroke="rgba(233,184,74,0.12)" stroke-width="8" stroke-linecap="round" fill="none"/>
-              <!-- Pointe de flèche -->
-              <polygon points="50,6 43,10 46,14" fill="#E9B84A"/>
-              <!-- Point lumineux au sommet -->
-              <circle cx="50" cy="6" r="3.5" fill="#E9B84A"/>
-              <circle cx="50" cy="6" r="6" fill="rgba(233,184,74,0.2)"/>
+            <!-- Logo FollowOffer — style SVG fourni -->
+            <svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="lg-auth" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4B89DC"/><stop offset="100%" stop-color="#2D6FCA"/></linearGradient></defs>
+              <g transform="translate(2,4) scale(0.44)">
+                <rect x="8" y="58" width="12" height="32" rx="2.5" fill="#335B95" opacity="0.25"/>
+                <rect x="30" y="44" width="12" height="46" rx="2.5" fill="#335B95" opacity="0.32"/>
+                <rect x="52" y="28" width="12" height="62" rx="2.5" fill="#335B95" opacity="0.4"/>
+                <rect x="74" y="14" width="12" height="76" rx="2.5" fill="#335B95" opacity="0.5"/>
+                <path d="M6 74 L36 52 L58 61 L82 34 L108 6" stroke="url(#lg-auth)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M95 9 L108 6 L104 19" stroke="url(#lg-auth)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
             </svg>
-            <div style="font-family:'Instrument Serif',serif;font-size:30px;color:var(--gold);letter-spacing:-0.5px;">FollowOffer</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+              <span style="font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;color:#F0F4FA;">Follow<span style="color:#4B89DC;">Offer</span></span>
+              <svg width="18" height="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:3px;margin-bottom:2px;">
+                <rect width="32" height="32" fill="#D52B1E"/>
+                <rect x="13" y="6" width="6" height="20" fill="white"/>
+                <rect x="6" y="13" width="20" height="6" fill="white"/>
+              </svg>
+            </div>
           </div>
-          <div style="font-size:11px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;">Suite commerciale suisse</div>
+          <div style="font-size:10px;color:rgba(200,215,235,0.55);letter-spacing:3px;text-transform:uppercase;margin-top:4px;">Suite commerciale · CH</div>
         </div>
         <div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;">
           <div style="display:flex;background:var(--s2);border-radius:8px;padding:3px;margin-bottom:24px;">
@@ -3585,37 +3349,28 @@ async function doRegister() {
 
 function updateUserUI() {
   if(!CURRENT_USER) return;
-  // Mettre à jour le bouton plan dans la sidebar
+  // Plan label sidebar
   const planLbl = document.getElementById('sb-plan-label');
   const planSub = document.getElementById('sb-plan-sub');
-  const sbAboBtn = document.getElementById('sb-abo-btn');
   if(planLbl) {
     if(USER_PLAN === 'pro' || USER_PLAN === 'business') {
-      planLbl.textContent = 'FollowOffer Pro';
-      planLbl.style.color = 'var(--gold)';
+      planLbl.textContent = 'FollowOffer Pro'; planLbl.style.color = '#4B89DC';
       if(planSub) planSub.textContent = 'Offres illimitées';
-      if(sbAboBtn) { sbAboBtn.style.borderColor = 'rgba(26,111,168,0.4)'; sbAboBtn.querySelector('span:last-child').style.display = 'none'; }
+      const aboBt = document.getElementById('sb-abo-btn');
+      if(aboBt) { const upEl = aboBt.querySelector('span:last-child'); if(upEl) upEl.style.display='none'; }
     } else {
       planLbl.textContent = 'Plan Gratuit';
-      planLbl.style.color = 'var(--text)';
       if(planSub) planSub.textContent = '5 offres / mois';
     }
   }
-  // Sync nom/rôle dans la sidebar
-  if(!CFG.name && !CFG.role) {
-    try { const c=localStorage.getItem('of_cfg'); if(c) Object.assign(CFG,JSON.parse(c)); } catch(_){}
-  }
-  const _email = CURRENT_USER.email || '';
-  const _name = CFG.name || CURRENT_USER.user_metadata?.full_name || _email.split('@')[0] || '—';
-  const _initials = _name.split(' ').map(x=>x[0]||'').join('').toUpperCase().slice(0,2) || _email[0]?.toUpperCase() || '?';
-  const _av = document.getElementById('user-avatar'); if(_av) _av.textContent = _initials;
-  const _nm = document.getElementById('user-name');   if(_nm) _nm.textContent = _name;
-  const _rl = document.getElementById('user-role');   if(_rl) _rl.textContent = CFG.role ? (CFG.role+(CFG.company?' · '+CFG.company:'')) : (CFG.company||_email);
-  // Sync champs Config si déjà ouverts
-  const _sv=(id,v)=>{const el=document.getElementById(id);if(el&&v&&!el.value)el.value=v;};
-  _sv('cfg-name',CFG.name||''); _sv('cfg-name-email',CFG.name||'');
-  _sv('cfg-role',CFG.role||''); _sv('cfg-company',CFG.company||'');
-  _sv('cfg-phone',CFG.phone||''); _sv('cfg-website',CFG.website||'');
+  // Recharger CFG si vide
+  if(!CFG.name) { try { const c=localStorage.getItem('of_cfg'); if(c) Object.assign(CFG,JSON.parse(c)); } catch(_){} }
+  const _e = CURRENT_USER.email || '';
+  const _n = CFG.name || CURRENT_USER.user_metadata?.full_name || _e.split('@')[0] || '—';
+  const _i = _n.split(' ').map(x=>x[0]||'').join('').toUpperCase().slice(0,2) || _e[0]?.toUpperCase() || '?';
+  const av=document.getElementById('user-avatar'); if(av) av.textContent=_i;
+  const nm=document.getElementById('user-name');   if(nm) nm.textContent=_n;
+  const rl=document.getElementById('user-role');   if(rl) rl.textContent=CFG.role?(CFG.role+(CFG.company?' · '+CFG.company:'')):(CFG.company||_e);
   const name = CFG.name || CURRENT_USER.user_metadata?.full_name || CURRENT_USER.email.split('@')[0];
   const role = CFG.role || CFG.senderEmail || CURRENT_USER.email;
   const initials = name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
@@ -3649,9 +3404,10 @@ function buildTrackingPixel(offerId) {
 }
 
 async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName, offerId}) {
+  if(!CFG.senderEmail) { try { const c=localStorage.getItem('of_cfg'); if(c) Object.assign(CFG,JSON.parse(c)); } catch(_){} }
   const fromEmail = CFG.senderEmail || CURRENT_USER?.email;
   const fromName = CFG.name || fromEmail;
-  if(!fromEmail) { toast('⚠️','Configurez votre email expéditeur dans Configuration'); return false; }
+  if(!fromEmail) { toast('⚠️','Configurez votre email expéditeur dans Configuration → Email'); return false; }
   if(!to) { toast('⚠️','Email destinataire manquant'); return false; }
   const sig = buildSignature();
   const pixel = offerId ? buildTrackingPixel(offerId) : '';
