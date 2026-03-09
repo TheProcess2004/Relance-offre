@@ -1,189 +1,103 @@
-// api/stripe-webhook.js — FollowOffer
-const crypto = require('crypto');
+// api/stripe-webhook.js — Vercel Serverless Function
+// Variables d'environnement nécessaires :
+// STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_URL, SUPABASE_SERVICE_KEY
 
-function getRawBody(req) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    req.on('data', chunk => chunks.push(chunk));
-    req.on('end', () => resolve(Buffer.concat(chunks)));
-    req.on('error', reject);
-  });
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+// Désactiver le bodyParser pour Stripe (nécessaire pour la vérification de signature)
+export const config = { api: { bodyParser: false } };
+
+async function buffer(readable) {
+  const chunks = [];
+  for await (const chunk of readable) chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  return Buffer.concat(chunks);
 }
 
-function verifyStripeSignature(payload, header, secret) {
-  if (!header) return false;
-  const parts = header.split(',');
-  let timestamp = '';
-  const sigs = [];
-  for (const part of parts) {
-    const [k, v] = part.trim().split('=');
-    if (k === 't') timestamp = v;
-    if (k === 'v1') sigs.push(v);
-  }
-  if (!timestamp || sigs.length === 0) return false;
-  if (Math.abs(Date.now() / 1000 - parseInt(timestamp)) > 300) return false;
-  const signed = `${timestamp}.${payload}`;
-  const expected = crypto.createHmac('sha256', secret).update(signed).digest('hex');
-  return sigs.some(sig => {
-    try { return crypto.timingSafeEqual(Buffer.from(sig, 'hex'), Buffer.from(expected, 'hex')); }
-    catch { return false; }
-  });
-}
+async function updateSupabasePlan(userId, plan, status, customerId, subscriptionId) {
+  const SB_URL = process.env.SUPABASE_URL;
+  const SB_KEY = process.env.SUPABASE_SERVICE_KEY;
 
-// Met à jour plan + plan_status sur TOUTES les lignes de l'user dans settings
-// (table clé/valeur avec plusieurs lignes par user_id)
-async function setPlanInSupabase(userId, plan, planStatus, extraData = {}) {
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!supabaseUrl || !serviceKey) { console.error('Supabase env vars manquantes'); return false; }
+  const fields = [
+    { key: 'plan', value: plan },
+    { key: 'plan_status', value: status },
+    { key: 'stripe_customer_id', value: customerId || '' },
+    { key: 'stripe_subscription_id', value: subscriptionId || '' },
+  ];
 
-  const headers = {
-    'apikey': serviceKey,
-    'Authorization': `Bearer ${serviceKey}`,
-    'Content-Type': 'application/json',
-    'Prefer': 'resolution=merge-duplicates'
-  };
-
-  // 1. Mettre à jour plan + plan_status sur toutes les lignes existantes de cet user
-  const updateRes = await fetch(
-    `${supabaseUrl}/rest/v1/settings?user_id=eq.${userId}`,
-    {
-      method: 'PATCH',
-      headers,
-      body: JSON.stringify({ plan, plan_status: planStatus, ...extraData })
-    }
-  );
-  if (!updateRes.ok) {
-    console.error('Supabase PATCH error:', await updateRes.text());
-    return false;
-  }
-
-  // 2. Si aucune ligne n'existe encore (nouveau user), en créer une
-  const checkRes = await fetch(
-    `${supabaseUrl}/rest/v1/settings?user_id=eq.${userId}&limit=1`,
-    { headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` } }
-  );
-  const rows = await checkRes.json();
-  if (!rows || rows.length === 0) {
-    await fetch(`${supabaseUrl}/rest/v1/settings`, {
+  for (const { key, value } of fields) {
+    await fetch(`${SB_URL}/rest/v1/settings`, {
       method: 'POST',
-      headers,
-      body: JSON.stringify({ user_id: userId, key: 'plan', value: plan, plan, plan_status: planStatus })
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({ user_id: userId, key, value })
     });
   }
-
-  console.log(`✅ Supabase updated: user ${userId} → plan=${plan}, status=${planStatus}`);
-  return true;
 }
 
-async function getUserIdByEmail(email) {
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!supabaseUrl || !serviceKey) return null;
-  try {
-    const res = await fetch(
-      `${supabaseUrl}/auth/v1/admin/users?email=${encodeURIComponent(email)}&per_page=1`,
-      { headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` } }
-    );
-    if (!res.ok) { console.error('getUserIdByEmail error:', await res.text()); return null; }
-    const data = await res.json();
-    return data.users?.[0]?.id || null;
-  } catch(e) { console.error('getUserIdByEmail exception:', e.message); return null; }
-}
-
-async function getCustomerEmail(customerId) {
-  const res = await fetch(
-    `https://api.stripe.com/v1/customers/${customerId}`,
-    { headers: { 'Authorization': `Bearer ${process.env.STRIPE_SECRET_KEY}` } }
-  );
-  if (!res.ok) return null;
-  const cust = await res.json();
-  return cust.email || null;
-}
-
-async function handler(req, res) {
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!webhookSecret) return res.status(500).json({ error: 'STRIPE_WEBHOOK_SECRET manquant' });
-
-  let rawBody;
-  try { rawBody = await getRawBody(req); }
-  catch(e) { return res.status(400).json({ error: 'Impossible de lire le body' }); }
+module.exports = async (req, res) => {
+  if (req.method !== 'POST') return res.status(405).end();
 
   const sig = req.headers['stripe-signature'];
-  if (!verifyStripeSignature(rawBody.toString(), sig, webhookSecret)) {
-    console.error('Signature invalide');
-    return res.status(400).json({ error: 'Signature invalide' });
-  }
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   let event;
-  try { event = JSON.parse(rawBody.toString()); }
-  catch(e) { return res.status(400).json({ error: 'JSON invalide' }); }
+  try {
+    const buf = await buffer(req);
+    event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
+  } catch (err) {
+    console.error('Webhook signature error:', err.message);
+    return res.status(400).json({ error: `Webhook Error: ${err.message}` });
+  }
 
-  console.log('Webhook:', event.type);
+  const obj = event.data.object;
 
   try {
     switch (event.type) {
 
+      // Paiement réussi → activer Pro
       case 'checkout.session.completed': {
-        const session = event.data.object;
-        const email = session.customer_email || session.customer_details?.email;
-        if (!email) { console.error('Pas d\'email dans session'); break; }
-        const userId = await getUserIdByEmail(email);
-        if (!userId) { console.error('User non trouvé:', email); break; }
-        await setPlanInSupabase(userId, 'pro', 'active', {
-          stripe_customer_id: session.customer,
-          stripe_subscription_id: session.subscription,
-          stripe_price_id: process.env.STRIPE_PRICE_PRO
-        });
-        break;
-      }
-
-      case 'customer.subscription.updated': {
-        const sub = event.data.object;
-        const active = sub.status === 'active' || sub.status === 'trialing';
-        const isPro = sub.items?.data?.[0]?.price?.id === process.env.STRIPE_PRICE_PRO;
-        const email = await getCustomerEmail(sub.customer);
-        if (!email) break;
-        const userId = await getUserIdByEmail(email);
+        const userId = obj.metadata?.user_id;
         if (!userId) break;
-        await setPlanInSupabase(userId, (isPro && active) ? 'pro' : 'free', sub.status);
+        await updateSupabasePlan(userId, 'pro', 'active', obj.customer, obj.subscription);
+        console.log(`✅ Pro activé pour user ${userId}`);
         break;
       }
 
-      case 'customer.subscription.deleted': {
-        const sub = event.data.object;
-        const email = await getCustomerEmail(sub.customer);
-        if (!email) break;
-        const userId = await getUserIdByEmail(email);
+      // Renouvellement réussi → maintenir Pro
+      case 'invoice.payment_succeeded': {
+        const sub = await stripe.subscriptions.retrieve(obj.subscription);
+        const userId = sub.metadata?.user_id;
         if (!userId) break;
-        await setPlanInSupabase(userId, 'free', 'cancelled');
+        await updateSupabasePlan(userId, 'pro', 'active', obj.customer, obj.subscription);
         break;
       }
 
+      // Paiement échoué → passer en past_due
       case 'invoice.payment_failed': {
-        const invoice = event.data.object;
-        const email = await getCustomerEmail(invoice.customer);
-        if (!email) break;
-        const userId = await getUserIdByEmail(email);
+        const sub = await stripe.subscriptions.retrieve(obj.subscription);
+        const userId = sub.metadata?.user_id;
         if (!userId) break;
-        await setPlanInSupabase(userId, 'pro', 'payment_failed');
+        await updateSupabasePlan(userId, 'pro', 'past_due', obj.customer, obj.subscription);
+        console.log(`⚠️ Paiement échoué pour user ${userId}`);
         break;
       }
 
-      default:
-        console.log('Événement ignoré:', event.type);
+      // Abonnement annulé → repasser en gratuit
+      case 'customer.subscription.deleted': {
+        const userId = obj.metadata?.user_id;
+        if (!userId) break;
+        await updateSupabasePlan(userId, 'free', 'active', obj.customer, '');
+        console.log(`🔻 Abonnement annulé pour user ${userId}`);
+        break;
+      }
     }
-  } catch(err) {
-    console.error('Webhook handler error:', err.message);
-    return res.status(500).json({ error: err.message });
+  } catch (err) {
+    console.error('Webhook handler error:', err);
   }
 
   return res.status(200).json({ received: true });
 };
-
-// Exports Vercel — config DOIT être sur le même objet que le handler
-module.exports = handler;
-module.exports.config = { api: { bodyParser: false } };
