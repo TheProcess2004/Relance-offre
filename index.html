@@ -466,7 +466,13 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <aside class="sb">
   <div class="sb-glow"></div>
   <div class="sb-brand">
-    <div class="sb-logo">OfferFlow</div>
+    <div class="sb-logo" style="display:flex;align-items:center;gap:8px;">
+      <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="1,14 6,8 10,11 15,4 21,7" stroke="#E9B84A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="21" cy="7" r="2" fill="#E9B84A"/>
+      </svg>
+      FollowOffer
+    </div>
     <div class="sb-version">V2 · Suite complète</div>
   </div>
   <nav class="sb-nav">
@@ -483,7 +489,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="sb-section">
       <div class="sb-sec-label">Suivi</div>
       <button class="nb" onclick="go('relances')"><span class="ic">◎</span>Relances <span class="nc nc-red" id="nc-relances">4</span></button>
-      <button class="nb" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-blue" id="nc-detection" style="display:none"></span></button>
+      <button class="nb" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-blue">3</span></button>
       <button class="nb" onclick="go('calendrier')"><span class="ic">▦</span>Calendrier</button>
       <button class="nb" onclick="go('revenus')"><span class="ic">◉</span>Revenus</button>
     </div>
@@ -497,17 +503,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
   </nav>
   <div class="sb-foot">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-      <span id="plan-badge" onclick="USER_PLAN==='pro'?stripePortal():showUpgradeModal()" title="Plan actuel" style="background:rgba(255,255,255,0.07);color:var(--muted);padding:3px 9px;border-radius:20px;font-size:9px;font-weight:600;letter-spacing:1.5px;cursor:pointer;transition:all 0.2s;">FREE</span>
-      <button id="stripe-upgrade-btn" onclick="showUpgradeModal()" style="background:var(--gold-d);border:1px solid rgba(233,184,74,0.25);border-radius:6px;color:var(--gold);font-size:10px;font-weight:700;cursor:pointer;padding:3px 8px;font-family:'Outfit',sans-serif;">✦ Pro</button>
-      <button id="stripe-portal-btn" onclick="stripePortal()" style="display:none;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:10px;cursor:pointer;padding:3px 8px;font-family:'Outfit',sans-serif;">⚙ Gérer</button>
-    </div>
     <div class="sb-user">
-      <div class="sb-av" id="user-avatar">—</div>
-      <div>
-        <div class="sb-nm" id="user-name">—</div>
-        <div class="sb-rl" id="user-role">—</div>
-      </div>
+      <div class="sb-av">JD</div>
+      <div><div class="sb-nm">Jean Dupont</div><div class="sb-rl">Commercial Senior</div></div>
     </div>
   </div>
 </aside>
@@ -752,14 +750,14 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="rev-split">
         <div class="rev-card won">
           <div class="rev-glow"></div>
-          <div class="rev-tag">💚 Revenus gagnés</div>
+          <div class="rev-tag">$ Revenus gagnés</div>
           <div class="rev-big" id="rev-won">57 100 CHF</div>
           <div class="rev-count" id="rev-won-c">4 offres converties</div>
           <div id="rev-won-list"></div>
         </div>
         <div class="rev-card lost">
           <div class="rev-glow"></div>
-          <div class="rev-tag">❌ Revenus perdus</div>
+          <div class="rev-tag">$ Revenus perdus</div>
           <div class="rev-big" id="rev-lost">31 400 CHF</div>
           <div class="rev-count" id="rev-lost-c">2 offres non converties</div>
           <div id="rev-lost-list"></div>
@@ -1089,14 +1087,6 @@ function updateBadges() {
   const pending = OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
   document.getElementById('nc-relances').textContent = pending.length;
   document.getElementById('nc-clients').textContent = [...new Set(OFFERS.map(o=>o.email))].length;
-  // Pastille détection = offres ouvertes dans les 7 derniers jours
-  const sevenDaysAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString().slice(0,10);
-  const recentlyOpened = OFFERS.filter(o => o.opens > 0 && o.lastOpen && o.lastOpen >= sevenDaysAgo);
-  const ncDet = document.getElementById('nc-detection');
-  if(ncDet) {
-    if(recentlyOpened.length > 0) { ncDet.textContent = recentlyOpened.length; ncDet.style.display = ''; }
-    else { ncDet.style.display = 'none'; }
-  }
   updateDashboardKPIs();
 }
 
@@ -2327,6 +2317,9 @@ function showAuthScreen() {
             </div>
             <div id="auth-error" style="display:none;background:var(--red-d);border:1px solid rgba(244,63,94,0.2);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;"></div>
             <button onclick="doLogin()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;">Se connecter</button>
+            <div style="text-align:center;margin-top:12px;">
+              <button onclick="authTab('forgot')" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;">Mot de passe oublié ?</button>
+            </div>
           </div>
           <div id="auth-register" style="display:none;">
             <div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Nom complet</label><input id="reg-name" type="text" placeholder="Jean Dupont" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;"></div>
@@ -2346,6 +2339,17 @@ function showAuthScreen() {
             <div id="reg-error" style="display:none;background:var(--red-d);border:1px solid rgba(244,63,94,0.2);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;"></div>
             <button onclick="doRegister()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;">Créer mon compte</button>
           </div>
+          <div id="auth-forgot" style="display:none;">
+            <div style="text-align:center;margin-bottom:18px;">
+              <div style="font-size:28px;margin-bottom:8px;">🔑</div>
+              <div style="font-size:14px;color:var(--text);font-weight:600;margin-bottom:4px;">Réinitialiser le mot de passe</div>
+              <div style="font-size:12px;color:var(--muted);">Un lien vous sera envoyé par email</div>
+            </div>
+            <div style="margin-bottom:16px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Email</label><input id="forgot-email" type="email" placeholder="jean@entreprise.ch" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box;"></div>
+            <div id="forgot-msg" style="display:none;border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:14px;"></div>
+            <button onclick="doForgotPassword()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;">Envoyer le lien</button>
+            <button onclick="authTab('login')" style="width:100%;padding:10px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:13px;cursor:pointer;">← Retour à la connexion</button>
+          </div>
         </div>
         <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--muted);">🔒 Vos données sont privées et sécurisées</div>
       </div>
@@ -2355,6 +2359,8 @@ function showAuthScreen() {
 function authTab(tab) {
   document.getElementById('auth-login').style.display = tab==='login'?'block':'none';
   document.getElementById('auth-register').style.display = tab==='register'?'block':'none';
+  const forgotEl = document.getElementById('auth-forgot');
+  if(forgotEl) forgotEl.style.display = tab==='forgot'?'block':'none';
   document.getElementById('tab-login').style.background = tab==='login'?'var(--gold)':'transparent';
   document.getElementById('tab-login').style.color = tab==='login'?'#000':'var(--muted)';
   document.getElementById('tab-register').style.background = tab==='register'?'var(--gold)':'transparent';
@@ -2373,10 +2379,69 @@ async function doLogin() {
     document.getElementById('app-shell').style.display = '';
     updateUserUI();
     await loadApp();
+    showOnboarding();
   } catch(e) {
     errEl.textContent = e.message;
     errEl.style.display = 'block';
   }
+}
+
+async function doForgotPassword() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const msgEl = document.getElementById('forgot-msg');
+  if(!email) { 
+    msgEl.textContent = 'Entrez votre adresse email'; 
+    msgEl.style.cssText = 'display:block;background:var(--red-d);border:1px solid rgba(244,63,94,0.2);color:var(--red);border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:14px;';
+    return; 
+  }
+  try {
+    const res = await fetch(`${SUPA_URL}/auth/v1/recover`, {
+      method: 'POST',
+      headers: { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, redirectTo: window.location.origin })
+    });
+    msgEl.textContent = '✓ Email envoyé ! Vérifiez votre boîte mail.';
+    msgEl.style.cssText = 'display:block;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:var(--green);border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:14px;';
+  } catch(e) {
+    msgEl.textContent = 'Erreur : ' + e.message;
+    msgEl.style.cssText = 'display:block;background:var(--red-d);border:1px solid rgba(244,63,94,0.2);color:var(--red);border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:14px;';
+  }
+}
+
+function showOnboarding() {
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(7,8,12,0.92);backdrop-filter:blur(10px);padding:20px;';
+  modal.innerHTML = `
+    <div style="background:var(--s1);border:1px solid rgba(233,184,74,0.3);border-radius:20px;padding:36px;max-width:480px;width:100%;text-align:center;">
+      <div style="font-size:36px;margin-bottom:12px;">🎉</div>
+      <div style="font-family:'Instrument Serif',serif;font-size:26px;color:var(--gold);margin-bottom:6px;">Bienvenue sur FollowOffer !</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:28px;">Votre suite commerciale Suisse est prête.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;text-align:left;">
+        <div style="background:var(--s2);border-radius:12px;padding:16px;border:1px solid var(--border);">
+          <div style="font-size:20px;margin-bottom:6px;">📤</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Envoyer une offre</div>
+          <div style="font-size:11px;color:var(--muted);">Créez et envoyez vos offres en 2 minutes</div>
+        </div>
+        <div style="background:var(--s2);border-radius:12px;padding:16px;border:1px solid var(--border);">
+          <div style="font-size:20px;margin-bottom:6px;">🔔</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Relances auto</div>
+          <div style="font-size:11px;color:var(--muted);">Ne laissez plus aucune offre sans réponse</div>
+        </div>
+        <div style="background:var(--s2);border-radius:12px;padding:16px;border:1px solid var(--border);">
+          <div style="font-size:20px;margin-bottom:6px;">👁</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Tracking ouvertures</div>
+          <div style="font-size:11px;color:var(--muted);">Sachez qui a lu votre email</div>
+        </div>
+        <div style="background:var(--s2);border-radius:12px;padding:16px;border:1px solid var(--border);">
+          <div style="font-size:20px;margin-bottom:6px;">📊</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Rapport hebdo IA</div>
+          <div style="font-size:11px;color:var(--muted);">Analysez vos performances chaque semaine</div>
+        </div>
+      </div>
+      <button onclick="this.closest('[style]').remove(); go('nouvelle');" style="width:100%;padding:14px;background:var(--gold);border:none;border-radius:10px;color:#000;font-size:15px;font-weight:700;cursor:pointer;">Envoyer ma première offre →</button>
+      <button onclick="this.closest('[style]').remove();" style="width:100%;padding:10px;background:transparent;border:none;color:var(--muted);font-size:12px;cursor:pointer;margin-top:8px;">Explorer d'abord l'application</button>
+    </div>`;
+  document.body.appendChild(modal);
 }
 
 function togglePass(inputId, eyeId) {
@@ -2442,13 +2507,31 @@ function updateUserUI() {
 async function loadApp() {
   await loadOffers();
   await loadConfig();
-  await checkStripeStatus();
 }
 
-// ══════════════════════════════════════════
-// ══ STRIPE PAYWALL                        ══
-// ══════════════════════════════════════════
+// ══ BREVO EMAIL ══
+async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName}) {
+  const fromEmail = CFG.senderEmail || CURRENT_USER?.email;
+  const fromName = CFG.name || fromEmail;
+  if(!fromEmail) { toast('⚠️','Configurez votre email dans Configuration'); return false; }
+  try {
+    const res = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        provider: 'brevo',
+        from: fromEmail,
+        fromName,
+        to, toName, subject,
+        body: body + buildSignature(),
+        pdfUrl, pdfName
+      })
+    });
+    return res.ok;
+  } catch(e) { console.warn('Brevo error:', e); return false; }
+}
 
+// ══ STRIPE PAYWALL ══
 const STRIPE_PRICE_PRO = 'price_1T8zjmRyIs2PnCFKyHAWuQey';
 let USER_PLAN = 'free';
 let USER_PLAN_STATUS = 'none';
@@ -2457,22 +2540,14 @@ async function checkStripeStatus() {
   if (!CURRENT_USER?.email) return;
   try {
     const res = await fetch('/api/stripe-status?email=' + encodeURIComponent(CURRENT_USER.email));
-    // Vérifier que c'est bien du JSON avant de parser
     const ct = res.headers.get('content-type') || '';
-    if (!res.ok || !ct.includes('application/json')) {
-      // API pas encore déployée ou erreur serveur — silencieux, plan reste free
-      console.warn('Stripe status API non disponible (' + res.status + ')');
-      return;
-    }
+    if (!res.ok || !ct.includes('application/json')) return;
     const data = await res.json();
     USER_PLAN = data.plan || 'free';
     USER_PLAN_STATUS = data.status || 'none';
     updatePlanBadge();
     handleStripeReturn();
-  } catch(e) {
-    // Silencieux — ne pas afficher d'erreur à l'utilisateur si Stripe n'est pas dispo
-    console.warn('Stripe check:', e.message);
-  }
+  } catch(e) { console.warn('Stripe check silenced:', e.message); }
 }
 
 function updatePlanBadge() {
@@ -2483,10 +2558,15 @@ function updatePlanBadge() {
     badge.style.background = isPro ? 'var(--gold)' : 'rgba(255,255,255,0.07)';
     badge.style.color = isPro ? '#000' : 'var(--muted)';
   }
-  const portalBtn = document.getElementById('stripe-portal-btn');
   const upgradeBtn = document.getElementById('stripe-upgrade-btn');
-  if (portalBtn) portalBtn.style.display = isPro ? 'inline-flex' : 'none';
-  if (upgradeBtn) upgradeBtn.style.display = isPro ? 'none' : 'inline-flex';
+  const portalBtn = document.getElementById('stripe-portal-btn');
+  if (upgradeBtn) upgradeBtn.style.display = isPro ? 'none' : '';
+  if (portalBtn) portalBtn.style.display = isPro ? '' : 'none';
+  const planStatusBadge = document.getElementById('plan-status-badge');
+  if (planStatusBadge) {
+    planStatusBadge.textContent = isPro ? 'Pro — Actif' : 'Gratuit — Actif';
+    planStatusBadge.style.color = isPro ? 'var(--gold)' : 'var(--green)';
+  }
 }
 
 async function stripeCheckout() {
@@ -2522,7 +2602,7 @@ async function stripePortal() {
       body: JSON.stringify({ email: CURRENT_USER.email, returnUrl: window.location.origin })
     });
     const ct = res.headers.get('content-type') || '';
-    if (!ct.includes('application/json')) throw new Error('API stripe-portal non disponible');
+    if (!ct.includes('application/json')) throw new Error('API non disponible');
     const { url, error } = await res.json();
     if (error) throw new Error(error);
     window.open(url, '_blank');
@@ -2535,7 +2615,6 @@ function handleStripeReturn() {
     toast('🎉', 'Abonnement Pro activé — bienvenue !');
     closeUpgradeModal();
     window.history.replaceState({}, '', '/');
-    setTimeout(() => checkStripeStatus(), 2000);
   } else if (params.get('stripe') === 'cancel') {
     toast('ℹ️', 'Paiement annulé');
     window.history.replaceState({}, '', '/');
@@ -2564,8 +2643,8 @@ function showUpgradeModal(featureName) {
   modal.innerHTML = `
     <div style="background:var(--s1);border:1px solid rgba(233,184,74,0.3);border-radius:20px;padding:36px;max-width:440px;width:100%;text-align:center;position:relative;">
       <button onclick="closeUpgradeModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">✕</button>
-      <div style="font-size:28px;background:var(--gold-d);width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;border:1px solid rgba(233,184,74,0.25);">✦</div>
-      <div style="font-family:'Instrument Serif',serif;font-size:26px;color:var(--gold);margin-bottom:4px;">OfferFlow Pro</div>
+      <div style="font-size:32px;margin-bottom:10px;">✦</div>
+      <div style="font-family:'Instrument Serif',serif;font-size:26px;color:var(--gold);margin-bottom:4px;">FollowOffer Pro</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:22px;">Suite commerciale Suisse complète</div>
       ${featureHTML}
       <div style="background:var(--s2);border-radius:12px;padding:16px;margin-bottom:20px;text-align:left;border:1px solid var(--border);">
@@ -2589,27 +2668,6 @@ function closeUpgradeModal() {
   if (modal) modal.style.display = 'none';
 }
 
-// ══ BREVO EMAIL ══
-async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName}) {
-  const fromEmail = CFG.senderEmail || CURRENT_USER?.email;
-  const fromName = CFG.name || fromEmail;
-  if(!fromEmail) { toast('⚠️','Configurez votre email dans Configuration'); return false; }
-  try {
-    const res = await fetch('/api/send-email', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        provider: 'brevo',
-        from: fromEmail,
-        fromName,
-        to, toName, subject,
-        body: body + buildSignature(),
-        pdfUrl, pdfName
-      })
-    });
-    return res.ok;
-  } catch(e) { console.warn('Brevo error:', e); return false; }
-}
 
 async function init() {
   const loader = document.createElement('div');
