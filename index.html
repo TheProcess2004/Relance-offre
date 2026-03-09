@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OfferFlow V2</title>
+<title>FollowOffer V2</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
@@ -710,9 +710,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <!-- ══ DÉTECTION OUVERTURE ══ -->
     <div class="panel" id="panel-detection">
       <div class="kgrid kgrid-3">
-        <div class="kcard bl"><div class="k-lbl">Emails ouverts</div><div class="k-val">7</div><div class="k-sub">Sur 11 envois ce mois</div></div>
-        <div class="kcard g"><div class="k-lbl">Taux ouverture</div><div class="k-val">63%</div><div class="k-sub">vs 22% moyenne secteur</div></div>
-        <div class="kcard or"><div class="k-lbl">Clients "chauds"</div><div class="k-val">3</div><div class="k-sub">Ouverture &lt; 24h</div></div>
+        <div class="kcard bl"><div class="k-lbl">Emails ouverts</div><div class="k-val" id="det-opened">—</div><div class="k-sub" id="det-opened-sub">Chargement...</div></div>
+        <div class="kcard g"><div class="k-lbl">Taux ouverture</div><div class="k-val" id="det-rate">—</div><div class="k-sub">vs 22% moyenne secteur</div></div>
+        <div class="kcard or"><div class="k-lbl">Clients "chauds"</div><div class="k-val" id="det-hot">—</div><div class="k-sub">Ouverture &lt; 24h</div></div>
       </div>
 
       <div class="sh"><div class="sh-t">Activité en temps réel</div><div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--blue);"><div class="od-pulse" style="width:7px;height:7px;border-radius:50%;background:var(--blue);animation:pulse 1.5s ease infinite;"></div>En direct</div></div>
@@ -791,61 +791,31 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div class="report-sub">Généré automatiquement le lundi 4 mars 2026 à 08h00</div>
         </div>
 
-        <div class="report-kpis">
+        <div class="report-kpis" id="rapport-kpis">
           <div class="report-kpi">
-            <div class="rk-val" style="color:var(--gold)">3</div>
+            <div class="rk-val" style="color:var(--gold)" id="rk-envoyes">—</div>
             <div class="rk-lbl">Offres envoyées</div>
-            <div class="rk-delta delta-up">↑ +1 vs semaine préc.</div>
+            <div class="rk-delta" id="rk-envoyes-d"></div>
           </div>
           <div class="report-kpi">
-            <div class="rk-val" style="color:var(--green)">2</div>
+            <div class="rk-val" style="color:var(--green)" id="rk-gagnes">—</div>
             <div class="rk-lbl">Offres gagnées</div>
-            <div class="rk-delta delta-up">↑ +1 vs semaine préc.</div>
+            <div class="rk-delta" id="rk-gagnes-d"></div>
           </div>
           <div class="report-kpi">
-            <div class="rk-val" style="color:var(--blue)">27 600</div>
-            <div class="rk-lbl">CHF generés</div>
-            <div class="rk-delta delta-up">↑ +8 400 CHF</div>
+            <div class="rk-val" style="color:var(--blue)" id="rk-ca">—</div>
+            <div class="rk-lbl">CHF générés</div>
+            <div class="rk-delta" id="rk-ca-d"></div>
           </div>
           <div class="report-kpi">
-            <div class="rk-val" style="color:var(--purple)">67%</div>
+            <div class="rk-val" style="color:var(--purple)" id="rk-conv">—</div>
             <div class="rk-lbl">Taux conversion</div>
-            <div class="rk-delta delta-up">↑ +7%</div>
+            <div class="rk-delta" id="rk-conv-d"></div>
           </div>
         </div>
 
-        <div class="report-body">
-          <div class="report-section">
-            <div class="rs-title">Insights IA de la semaine</div>
-            <div class="insight green"><strong>🎯 Point fort :</strong> <span>Votre taux de conversion atteint 67% cette semaine, le meilleur depuis 3 mois. L'ajout du contexte client dans vos emails semble payer.</span></div>
-            <div class="insight blue"><strong>💡 Opportunité :</strong> <span>Sophie Renard (OFF-2024-028 · 15 200 CHF) a ouvert l'email 3 fois cette semaine sans répondre. Elle est probablement en phase de décision — une relance personnalisée aujourd'hui pourrait faire basculer.</span></div>
-            <div class="insight red"><strong>⚠️ Attention :</strong> <span>2 offres (Claire Fontaine + Pierre Martin) n'ont pas encore reçu leur relance R1 alors qu'elle est due. Risque de perte estimé à 21 200 CHF.</span></div>
-            <div class="insight"><strong>📅 Cette semaine à faire :</strong> <span>7 relances programmées automatiquement. 2 appels recommandés (clients "chauds"). 1 offre en attente de signature.</span></div>
-          </div>
-
-          <div class="report-section">
-            <div class="rs-title">Offres gagnées cette semaine</div>
-            <div class="offer-mention">
-              <div><div class="om-name">Marc Duval — Climatisation bureau</div><div class="om-detail">OFF-2024-026 · Gagné en 4 jours · 0 relances nécessaires</div></div>
-              <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600;">+4 500 CHF</div>
-            </div>
-            <div class="offer-mention">
-              <div><div class="om-name">Antoine Morel — Audit énergétique</div><div class="om-detail">OFF-2024-025 · Gagné après relance R1 · 9 400 CHF</div></div>
-              <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600;">+9 400 CHF</div>
-            </div>
-          </div>
-
-          <div class="report-section">
-            <div class="rs-title">Offres à surveiller</div>
-            <div class="offer-mention">
-              <div><div class="om-name">Sophie Renard — Sécurité</div><div class="om-detail">OFF-2024-028 · Ouverte 3× · Relance R2 due aujourd'hui</div></div>
-              <div><span class="pill p-r2">Relance 2</span></div>
-            </div>
-            <div class="offer-mention">
-              <div><div class="om-name">Claire Fontaine — PAC</div><div class="om-detail">OFF-2024-037 · Relance R1 due · Attend validation budget</div></div>
-              <div><span class="pill p-r1">Relance 1</span></div>
-            </div>
-          </div>
+        <div class="report-body" id="rapport-body">
+          <div id="rapport-content-dynamic"></div>
         </div>
 
         <div class="report-actions">
@@ -1024,6 +994,7 @@ async function sbFetch(path, options={}) {
 
 // ══ DATA (chargé depuis Supabase) ══
 let OFFERS = [];
+let OUVERTURES = [];
 
 async function loadOffers() {
   try {
@@ -1065,6 +1036,7 @@ async function loadOffers() {
 
       // Load ouvertures
       const ouvertures = await sbFetch('ouvertures?select=*&order=opened_at.desc');
+      OUVERTURES = ouvertures;
       ouvertures.forEach(v => {
         const o = OFFERS.find(x => x.id === v.offre_id);
         if(o) {
@@ -1141,6 +1113,7 @@ function go(name) {
   if(name==='offres') renderOffres();
   if(name==='relances') renderRelances();
   if(name==='detection') renderDetection();
+  if(name==='rapport') renderRapport();
   if(name==='calendrier') renderCalendar();
   if(name==='revenus') renderRevenues();
   if(name==='clients') renderClients();
@@ -1207,23 +1180,72 @@ function renderUrgent(){
 
 // ══ DETECTION ══
 function renderDetection(){
-  const evs=[
-    {ico:'🔥',cls:'hot',main:'Sophie Renard a ouvert votre email',sub:'OFF-2024-028 · 15 200 CHF · 3ème ouverture',time:'Il y a 4 min'},
-    {ico:'👁',cls:'',main:'Martine Blanc a ouvert votre email',sub:'OFF-2024-031 · 8 400 CHF · 1ère ouverture',time:'Il y a 2h'},
-    {ico:'📎',cls:'',main:'Claire Fontaine a cliqué sur le PDF',sub:'OFF-2024-037 · 18 000 CHF',time:'Hier 17h32'},
-    {ico:'👁',cls:'',main:'David Keller a ouvert votre email',sub:'OFF-2024-038 · 9 400 CHF · 2ème ouverture',time:'Avant-hier'},
-  ];
-  document.getElementById('od-events-list').innerHTML=evs.map(e=>`<div class="od-event ${e.cls}"><div class="od-event-ico">${e.ico}</div><div class="od-event-info"><div class="od-event-main">${e.main}</div><div class="od-event-sub">${e.sub}</div></div><div class="od-event-time">${e.time}</div>${e.cls==='hot'?`<button class="btn btn-gold btn-sm" onclick="toast('📞','Appel en cours...')">Appeler</button>`:''}</div>`).join('');
+  // Stats dynamiques
+  const totalSent = OFFERS.length;
+  const withOpens = OFFERS.filter(o => o.opens > 0);
+  const hot = OFFERS.filter(o => {
+    if(!o.lastOpenTs) return false;
+    return (Date.now() - new Date(o.lastOpenTs).getTime()) < 24*3600*1000;
+  });
+  const rate = totalSent > 0 ? Math.round(withOpens.length/totalSent*100) : 0;
+  const detOpened = document.getElementById('det-opened');
+  const detRate = document.getElementById('det-rate');
+  const detHot = document.getElementById('det-hot');
+  const detSub = document.getElementById('det-opened-sub');
+  if(detOpened) detOpened.textContent = withOpens.length;
+  if(detRate) detRate.textContent = rate + '%';
+  if(detHot) detHot.textContent = hot.length;
+  if(detSub) detSub.textContent = `Sur ${totalSent} envoi${totalSent>1?'s':''} total`;
 
-  const scores={1:'🔴 Froid',2:'🔴 Froid',3:'🟡 Tiède',4:'⚪ Nouveau',5:'⚪ Archivé',6:'🟢 Chaud',7:'🟡 Tiède',8:'🟡 Tiède'};
+  // Événements depuis OUVERTURES (données réelles Supabase)
+  const eventsEl = document.getElementById('od-events-list');
+  if(eventsEl) {
+    if(!OUVERTURES || OUVERTURES.length === 0) {
+      eventsEl.innerHTML = `<div style="text-align:center;padding:30px;color:var(--muted);font-size:13px;">👁 Aucun email ouvert pour l'instant<br><span style="font-size:11px;opacity:0.6;">Les ouvertures apparaîtront ici en temps réel</span></div>`;
+    } else {
+      const recent = OUVERTURES.slice(0, 10);
+      eventsEl.innerHTML = recent.map(v => {
+        const o = OFFERS.find(x => x.id === v.offer_id) || {};
+        const nom = o.prenom ? `${o.prenom} ${o.nom}` : (v.email || 'Inconnu');
+        const openedAt = new Date(v.opened_at);
+        const diffMin = Math.round((Date.now()-openedAt.getTime())/60000);
+        const timeStr = diffMin < 60 ? `Il y a ${diffMin} min` : diffMin < 1440 ? `Il y a ${Math.round(diffMin/60)}h` : `Il y a ${Math.round(diffMin/1440)}j`;
+        const isHot = diffMin < 1440;
+        const amt = o.montant ? ` · ${o.montant.toLocaleString('fr-CH')} CHF` : '';
+        const ref = o.ref ? ` · ${o.ref}` : '';
+        return `<div class="od-event ${isHot?'hot':''}">
+          <div class="od-event-ico">${isHot?'🔥':'👁'}</div>
+          <div class="od-event-info">
+            <div class="od-event-main">${nom} a ouvert votre email</div>
+            <div class="od-event-sub">${ref}${amt}</div>
+          </div>
+          <div class="od-event-time">${timeStr}</div>
+          ${isHot?`<button class="btn btn-gold btn-sm" onclick="toast('📞','Appelez ${nom} maintenant !')">Appeler</button>`:''}
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // Tableau toutes offres
+  if(!OFFERS.length) {
+    document.getElementById('tbody-detection').innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px;">📤 Aucune offre envoyée<br><span style="font-size:11px;opacity:0.6;">Envoyez votre première offre pour voir le tracking</span></div>`;
+    return;
+  }
+  const scoreLabel = (opens, lastTs) => {
+    if(!opens) return '⚪ Nouveau';
+    const diff = lastTs ? (Date.now()-new Date(lastTs).getTime())/(3600*1000) : 999;
+    if(diff < 24) return '🟢 Chaud';
+    if(diff < 72) return '🟡 Tiède';
+    return '🔴 Froid';
+  };
   document.getElementById('tbody-detection').innerHTML=OFFERS.map(o=>`
     <div class="tbl-r" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;" onclick="openModal('${o.id}')">
       <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
       <div class="ref">${o.ref}</div>
       <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
       <div style="font-size:12px;color:${o.opens>0?'var(--green)':'var(--muted)'};">${o.lastOpen||'Pas encore ouvert'}</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${o.opens>1?'var(--gold)':'var(--muted)'};">${o.opens}×</div>
-      <div style="font-size:12px;">${scores[o.id]||'⚪'}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${o.opens>1?'var(--gold)':'var(--muted)'};">${o.opens||0}×</div>
+      <div style="font-size:12px;">${scoreLabel(o.opens, o.lastOpenTs)}</div>
     </div>`).join('');
 }
 
@@ -2299,7 +2321,7 @@ function showAuthScreen() {
     <div style="min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px;">
       <div style="width:100%;max-width:420px;">
         <div style="text-align:center;margin-bottom:32px;">
-          <div style="font-family:'Instrument Serif',serif;font-size:28px;color:var(--gold);margin-bottom:4px;">OfferFlow</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:28px;color:var(--gold);margin-bottom:4px;">FollowOffer</div>
           <div style="font-size:12px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;">Suite commerciale</div>
         </div>
         <div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;">
@@ -2531,6 +2553,88 @@ async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName}) {
   } catch(e) { console.warn('Brevo error:', e); return false; }
 }
 
+// ══ RAPPORT DYNAMIQUE ══
+function renderRapport() {
+  const now = new Date();
+  const weekAgo = new Date(now - 7*24*3600*1000);
+  
+  // KPIs cette semaine
+  const thisWeek = OFFERS.filter(o => o.sendDate && new Date(o.sendDate) >= weekAgo);
+  const wonThisWeek = OFFERS.filter(o => o.status === 'gagne' && o.sendDate && new Date(o.sendDate) >= weekAgo);
+  const allWon = OFFERS.filter(o => o.status === 'gagne');
+  const caThisWeek = wonThisWeek.reduce((s,o) => s + (o.montant||0), 0);
+  const convRate = OFFERS.length > 0 ? Math.round(allWon.length / OFFERS.length * 100) : 0;
+
+  // Update KPIs
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  set('rk-envoyes', thisWeek.length || OFFERS.length);
+  set('rk-gagnes', wonThisWeek.length || allWon.length);
+  set('rk-ca', caThisWeek > 0 ? caThisWeek.toLocaleString('fr-CH') : (allWon.reduce((s,o)=>s+(o.montant||0),0)).toLocaleString('fr-CH'));
+  set('rk-conv', convRate + '%');
+
+  const setDelta = (id, txt, up) => {
+    const el = document.getElementById(id);
+    if(el) { el.textContent = txt; el.className = 'rk-delta ' + (up ? 'delta-up' : 'delta-neutral'); }
+  };
+  setDelta('rk-envoyes-d', `Total: ${OFFERS.length} offre${OFFERS.length>1?'s':''}`, true);
+  setDelta('rk-gagnes-d', `Total: ${allWon.length} gagnée${allWon.length>1?'s':''}`, allWon.length > 0);
+  setDelta('rk-ca-d', `Pipeline: ${OFFERS.filter(o=>o.status!=='gagne'&&o.status!=='perdu').reduce((s,o)=>s+(o.montant||0),0).toLocaleString('fr-CH')} CHF`, true);
+  setDelta('rk-conv-d', convRate >= 50 ? '↑ Excellent !' : convRate >= 30 ? '↑ Bon' : '→ À améliorer', convRate >= 30);
+
+  // Contenu dynamique
+  const content = document.getElementById('rapport-content-dynamic');
+  if(!content) return;
+
+  if(!OFFERS.length) {
+    content.innerHTML = `
+      <div style="text-align:center;padding:60px 20px;color:var(--muted);">
+        <div style="font-size:48px;margin-bottom:16px;">📊</div>
+        <div style="font-size:18px;font-family:'Instrument Serif',serif;color:var(--text);margin-bottom:8px;">Votre rapport apparaîtra ici</div>
+        <div style="font-size:13px;margin-bottom:24px;">Envoyez votre première offre pour commencer à générer des statistiques</div>
+        <button class="btn btn-gold" onclick="go('nouvelle')">Envoyer une offre →</button>
+      </div>`;
+    return;
+  }
+
+  const pending = OFFERS.filter(o => ['relance1','relance2'].includes(o.status));
+  const hot = OFFERS.filter(o => o.lastOpenTs && (Date.now()-new Date(o.lastOpenTs).getTime()) < 48*3600*1000 && o.status !== 'gagne' && o.status !== 'perdu');
+  const insights = [];
+  if(convRate >= 50) insights.push(`<div class="insight green"><strong>🎯 Point fort :</strong> <span>Votre taux de conversion atteint ${convRate}% — excellent résultat !</span></div>`);
+  else if(convRate > 0) insights.push(`<div class="insight blue"><strong>📈 À améliorer :</strong> <span>Taux de conversion à ${convRate}%. Les relances régulières améliorent souvent ce chiffre.</span></div>`);
+  if(hot.length > 0) insights.push(`<div class="insight blue"><strong>💡 Opportunité :</strong> <span>${hot[0].prenom} ${hot[0].nom} (${hot[0].ref} · ${hot[0].montant?.toLocaleString('fr-CH')} CHF) a ouvert votre email récemment. C'est le bon moment pour relancer !</span></div>`);
+  if(pending.length > 0) {
+    const pendingCA = pending.reduce((s,o)=>s+(o.montant||0),0);
+    insights.push(`<div class="insight red"><strong>⚠️ Attention :</strong> <span>${pending.length} offre${pending.length>1?'s':''} en attente de relance — ${pendingCA.toLocaleString('fr-CH')} CHF à risque.</span></div>`);
+  }
+  if(!insights.length) insights.push(`<div class="insight"><strong>📅 En cours :</strong> <span>${OFFERS.filter(o=>o.status!=='gagne'&&o.status!=='perdu').length} offres actives dans votre pipeline.</span></div>`);
+
+  const wonHtml = allWon.length ? allWon.slice(0,5).map(o => `
+    <div class="offer-mention">
+      <div><div class="om-name">${o.prenom} ${o.nom} — ${o.objet||'Offre'}</div><div class="om-detail">${o.ref}</div></div>
+      <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600;">+${(o.montant||0).toLocaleString('fr-CH')} CHF</div>
+    </div>`).join('') : `<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Aucune offre gagnée pour l'instant</div>`;
+
+  const watchHtml = hot.length ? hot.slice(0,5).map(o => {
+    const pill = o.status==='relance2'?'<span class="pill p-r2">Relance 2</span>':o.status==='relance1'?'<span class="pill p-r1">Relance 1</span>':'<span class="pill p-new">Actif</span>';
+    return `<div class="offer-mention"><div><div class="om-name">${o.prenom} ${o.nom} — ${o.objet||'Offre'}</div><div class="om-detail">${o.ref} · Ouverte récemment</div></div><div>${pill}</div></div>`;
+  }).join('') : `<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Aucun client "chaud" pour l'instant</div>`;
+
+  content.innerHTML = `
+    <div class="report-section">
+      <div class="rs-title">Insights de votre activité</div>
+      ${insights.join('')}
+    </div>
+    <div class="report-section">
+      <div class="rs-title">Offres gagnées</div>
+      ${wonHtml}
+    </div>
+    <div class="report-section">
+      <div class="rs-title">Clients à surveiller</div>
+      ${watchHtml}
+    </div>`;
+}
+
+
 // ══ STRIPE PAYWALL ══
 const STRIPE_PRICE_PRO = 'price_1T8zjmRyIs2PnCFKyHAWuQey';
 let USER_PLAN = 'free';
@@ -2673,7 +2777,7 @@ async function init() {
   const loader = document.createElement('div');
   loader.id = 'global-loader';
   loader.style.cssText = 'position:fixed;inset:0;background:rgba(7,8,12,0.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
-  loader.innerHTML = '<div style="font-family:\'Instrument Serif\',serif;font-size:22px;color:var(--gold);margin-bottom:8px;">OfferFlow</div><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:#E9B84A;border-radius:50%;animation:spin 0.8s linear infinite;"></div><div style="font-size:12px;color:rgba(236,238,242,0.4);font-family:Outfit,sans-serif;letter-spacing:1px;">Chargement...</div>';
+  loader.innerHTML = '<div style="font-family:\'Instrument Serif\',serif;font-size:22px;color:var(--gold);margin-bottom:8px;">FollowOffer</div><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:#E9B84A;border-radius:50%;animation:spin 0.8s linear infinite;"></div><div style="font-size:12px;color:rgba(236,238,242,0.4);font-family:Outfit,sans-serif;letter-spacing:1px;">Chargement...</div>';
   document.body.appendChild(loader);
 
   // Try to restore session
