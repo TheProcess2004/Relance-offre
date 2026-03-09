@@ -8,15 +8,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root{
-  --bg:#07080C;--s1:#0E0F15;--s2:#14151D;--s3:#1A1C26;
-  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
-  --gold:#E9B84A;--gold-d:rgba(233,184,74,0.1);
-  --green:#22C55E;--green-d:rgba(34,197,94,0.1);
-  --red:#F43F5E;--red-d:rgba(244,63,94,0.1);
-  --blue:#38BDF8;--blue-d:rgba(56,189,248,0.1);
-  --purple:#A78BFA;--purple-d:rgba(167,139,250,0.1);
-  --orange:#FB923C;--orange-d:rgba(251,146,60,0.1);
-  --text:#ECEEF2;--muted:rgba(236,238,242,0.42);--muted2:rgba(236,238,242,0.2);
+  --bg:#080B10;--s1:#0C1018;--s2:#111720;--s3:#171E29;
+  --border:rgba(160,180,210,0.09);--border2:rgba(160,180,210,0.16);
+  --gold:#1A6FA8;--gold-d:rgba(26,111,168,0.13);
+  --accent:#B8965A;--accent-d:rgba(184,150,90,0.13);
+  --green:#1E8C5E;--green-d:rgba(30,140,94,0.13);
+  --red:#B83232;--red-d:rgba(184,50,50,0.11);
+  --blue:#2E7EC4;--blue-d:rgba(46,126,196,0.12);
+  --purple:#5B5FA0;--purple-d:rgba(91,95,160,0.12);
+  --orange:#A0622A;--orange-d:rgba(160,98,42,0.11);
+  --text:#DDE4EE;--muted:rgba(160,180,210,0.60);--muted2:rgba(160,180,210,0.28);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
@@ -29,21 +30,22 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .sb{width:230px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;}
 .sb-glow{position:absolute;top:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(233,184,74,0.06),transparent 70%);pointer-events:none;}
 .sb-brand{padding:18px 20px 16px;border-bottom:1px solid var(--border);}
-.sb-logo{font-family:'Instrument Serif',serif;font-size:20px;color:var(--gold);display:flex;align-items:center;gap:9px;}
-.sb-version{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.sb-logo{font-family:'Outfit',sans-serif;font-weight:700;font-size:14.5px;letter-spacing:-0.2px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.sb-version{font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);margin-top:4px;font-family:'Outfit',sans-serif;padding-left:1px;}
 .sb-nav{padding:14px 10px;flex:1;overflow-y:auto;}
 .sb-section{margin-bottom:18px;}
 .sb-sec-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);padding:0 10px;margin-bottom:4px;}
 .nb{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.15s;text-align:left;}
 .nb:hover{background:rgba(255,255,255,0.04);color:var(--text);}
-.nb.active{background:var(--gold-d);color:var(--gold);}
-.nb .ic{font-size:14px;width:18px;text-align:center;}
+.nb.active{background:rgba(26,111,168,0.14);color:#1A6FA8;border-left:2px solid #1A6FA8;margin-left:-1px;}
+.nb .ic{font-size:13px;width:18px;text-align:center;display:inline-flex;align-items:center;justify-content:center;line-height:1;}
 .nc{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;}
 .nc-gold{background:var(--gold);color:var(--bg);}
 .nc-red{background:var(--red);color:white;}
 .nc-blue{background:var(--blue);color:var(--bg);}
 .nc-green{background:var(--green);color:var(--bg);}
-.sb-foot{padding:14px 18px;border-top:1px solid var(--border);}
+.sb-foot{padding:12px 16px;border-top:1px solid var(--border);background:var(--bg);}
+.sb-foot .sb-user{padding-top:4px;}
 .sb-user{display:flex;align-items:center;gap:10px;}
 .sb-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--purple));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
 .sb-nm{font-size:12px;font-weight:600;}
@@ -57,7 +59,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;font-family:'Outfit',sans-serif;white-space:nowrap;}
-.btn-gold{background:var(--gold);color:#07080C;}
+.btn-gold{background:var(--gold);color:#FFFFFF;letter-spacing:0.1px;}
 .btn-gold:hover{filter:brightness(1.1);}
 .btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text);}
 .btn-ghost:hover{background:rgba(255,255,255,0.05);}
@@ -538,58 +540,75 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="sb-glow"></div>
   <div class="sb-brand">
     <div class="sb-logo">
-      <svg width="30" height="26" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Barres montantes -->
-        <rect x="1" y="20" width="3.5" height="4" rx="1" fill="rgba(233,184,74,0.35)"/>
-        <rect x="6" y="16" width="3.5" height="8" rx="1" fill="rgba(233,184,74,0.5)"/>
-        <rect x="11" y="11" width="3.5" height="13" rx="1" fill="rgba(233,184,74,0.7)"/>
-        <rect x="16" y="7" width="3.5" height="17" rx="1" fill="rgba(233,184,74,0.85)"/>
-        <rect x="21" y="3" width="3.5" height="21" rx="1" fill="#E9B84A"/>
-        <!-- Ligne de base -->
-        <line x1="0" y1="24.5" x2="30" y2="24.5" stroke="rgba(233,184,74,0.2)" stroke-width="1"/>
-        <!-- Flèche courbe -->
-        <path d="M2,19 Q8,12 15,8 Q20,5 26,1" stroke="#E9B84A" stroke-width="1.8" stroke-linecap="round" fill="none" stroke-dasharray="0"/>
-        <!-- Pointe de flèche -->
-        <polygon points="26,1 22,3 24.5,5" fill="#E9B84A"/>
+      <!-- Icône barres croissantes -->
+      <svg width="26" height="22" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="20" width="3.5" height="4" rx="1" fill="rgba(26,111,168,0.3)"/>
+        <rect x="6" y="16" width="3.5" height="8" rx="1" fill="rgba(26,111,168,0.52)"/>
+        <rect x="11" y="11" width="3.5" height="13" rx="1" fill="rgba(26,111,168,0.74)"/>
+        <rect x="16" y="7" width="3.5" height="17" rx="1" fill="rgba(26,111,168,0.9)"/>
+        <rect x="21" y="3" width="3.5" height="21" rx="1" fill="#1A6FA8"/>
+        <line x1="0" y1="24.5" x2="30" y2="24.5" stroke="rgba(26,111,168,0.15)" stroke-width="1"/>
+        <path d="M2,19 Q8,12 15,8 Q20,5 26,1" stroke="#B8965A" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+        <polygon points="26,1 22,3 24.5,5" fill="#B8965A"/>
       </svg>
-      FollowOffer
+      <!-- Nom marque -->
+      <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;letter-spacing:-0.3px;color:var(--text);">Follow<span style="color:#1A6FA8;">Offer</span></span>
+      <!-- Drapeau suisse vectoriel propre -->
+      <svg width="13" height="13" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="opacity:0.78;flex-shrink:0;border-radius:2px;" title="Switzerland">
+        <rect width="32" height="32" fill="#D52B1E"/>
+        <rect x="13" y="6" width="6" height="20" fill="white"/>
+        <rect x="6" y="13" width="20" height="6" fill="white"/>
+      </svg>
     </div>
-    <div class="sb-version">Suite commerciale suisse</div>
+    <div class="sb-version" style="font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);margin-top:3px;font-family:'Outfit',sans-serif;">Suite commerciale · CH</div>
   </div>
   <nav class="sb-nav">
     <div class="sb-section">
       <div class="sb-sec-label">Vue d'ensemble</div>
-      <button class="nb active" onclick="go('dashboard')"><span class="ic">◈</span>Dashboard</button>
-      <button class="nb" onclick="go('rapport')"><span class="ic">📊</span>Rapport semaine <span class="nc nc-green" id="nc-rapport">NEW</span></button>
+      <button class="nb active" onclick="go('dashboard')"><span class="ic">⊞</span>Dashboard</button>
+      <button class="nb" onclick="go('rapport')"><span class="ic">📈</span>Rapport semaine <span class="nc nc-green" id="nc-rapport">NEW</span></button>
+      <button class="nb" onclick="go('guide')"><span class="ic">📖</span>Guide d'utilisation</button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Offres</div>
       <button class="nb" onclick="go('nouvelle')"><span class="ic">＋</span>Envoyer une offre</button>
-      <button class="nb" onclick="go('offres')"><span class="ic">▤</span>Toutes les offres <span class="nc nc-gold" id="nc-offres">0</span></button>
+      <button class="nb" onclick="go('offres')"><span class="ic">📋</span>Toutes les offres <span class="nc nc-gold" id="nc-offres">0</span></button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Suivi</div>
-      <button class="nb" onclick="go('relances')"><span class="ic">◎</span>Relances <span class="nc nc-red" id="nc-relances">0</span></button>
+      <button class="nb" onclick="go('relances')"><span class="ic">🔔</span>Relances <span class="nc nc-red" id="nc-relances">0</span></button>
       <button class="nb" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-blue" id="nc-detection">0</span></button>
-      <button class="nb" onclick="go('calendrier')"><span class="ic">▦</span>Calendrier</button>
-      <button class="nb" onclick="go('revenus')"><span class="ic">◉</span>Revenus</button>
+      <button class="nb" onclick="go('calendrier')"><span class="ic">📅</span>Calendrier</button>
+      <button class="nb" onclick="go('revenus')"><span class="ic">💰</span>Revenus</button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Clients</div>
-      <button class="nb" onclick="go('clients')"><span class="ic">◷</span>Fiches clients <span class="nc nc-gold" id="nc-clients">0</span></button>
+      <button class="nb" onclick="go('clients')"><span class="ic">🏢</span>Fiches clients <span class="nc nc-gold" id="nc-clients">0</span></button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Système</div>
-      <button class="nb" onclick="go('config')"><span class="ic">◌</span>Configuration</button>
+      <button class="nb" onclick="go('config')"><span class="ic">⚙️</span>Configuration</button>
     </div>
   </nav>
   <div class="sb-foot">
+    <!-- Bouton Abonnement — accélérateur conversion -->
+    <button onclick="go('config');setTimeout(()=>switchTab('abo'),80);" id="sb-abo-btn" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:9px;border:1px solid rgba(26,111,168,0.35);background:rgba(26,111,168,0.08);cursor:pointer;margin-bottom:10px;transition:all 0.15s;" onmouseover="this.style.background='rgba(26,111,168,0.16)'" onmouseout="this.style.background='rgba(26,111,168,0.08)'">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:13px;">💳</span>
+        <div style="text-align:left;">
+          <div style="font-size:11px;font-weight:700;color:var(--text);line-height:1.2;" id="sb-plan-label">Plan Gratuit</div>
+          <div style="font-size:9.5px;color:var(--muted);letter-spacing:0.5px;" id="sb-plan-sub">5 offres / mois</div>
+        </div>
+      </div>
+      <span style="font-size:9px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;">Upgrader →</span>
+    </button>
+    <!-- User -->
     <div class="sb-user">
       <div class="sb-av" id="user-avatar">—</div>
-      <div>
-        <div class="sb-nm" id="user-name">—</div>
-        <div class="sb-rl" id="user-role">—</div>
-        <button onclick="if(confirm('Se déconnecter ?')) signOut();" style="font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-family:'Outfit',sans-serif;">🚪 Déconnexion</button>
+      <div style="flex:1;min-width:0;">
+        <div class="sb-nm" id="user-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
+        <div class="sb-rl" id="user-role" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
+        <button onclick="if(confirm('Se déconnecter ?')) signOut();" style="font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-family:'Outfit',sans-serif;">⎋ Déconnexion</button>
       </div>
     </div>
   </div>
@@ -600,8 +619,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="topbar">
     <div class="tb-title" id="page-title">Dashboard</div>
     <div class="tb-right">
-      <button class="btn btn-ghost btn-sm" onclick="go('config')">⚙ Config</button>
-      <button class="btn btn-ghost btn-sm" onclick="go('rapport')">📊 Rapport semaine</button>
+      <button class="btn btn-ghost btn-sm" onclick="go('config')">⚙️ Config</button>
+      <button class="btn btn-ghost btn-sm" onclick="go('rapport')">📈 Rapport</button>
       <button class="btn btn-gold" onclick="go('nouvelle')">+ Envoyer une offre</button>
     </div>
   </div>
@@ -945,24 +964,19 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           </div>
           <div id="brevo-status" style="font-size:12px;"></div>
         </div>
-        <div class="fcard" style="margin-bottom:18px;opacity:0.7;">
-          <div class="fcard-t">📧 Gmail / Outlook OAuth <span style="font-size:10px;color:var(--muted);font-weight:400;">— bientôt disponible</span></div>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Envoyez directement depuis votre boîte sans passer par Brevo.</p>
-          <div id="email-connection-status" style="margin-bottom:12px;"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
-              <div style="font-size:24px;margin-bottom:6px;">📬</div>
-              <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Gmail / Workspace</div>
-              <div id="gmail-status"></div>
-              <button class="btn btn-gold btn-sm" style="width:100%;opacity:0.5;" disabled>Bientôt</button>
-            </div>
-            <div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
-              <div style="font-size:24px;margin-bottom:6px;">💼</div>
-              <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Outlook / M365</div>
-              <div id="outlook-status"></div>
-              <button class="btn btn-blue btn-sm" style="width:100%;opacity:0.5;" disabled>Bientôt</button>
+        <div class="fcard" style="margin-bottom:18px;">
+          <div class="fcard-t">📤 Envoi d'emails</div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Les emails sont envoyés via <strong style="color:var(--text);">Brevo</strong> — service d'envoi transactionnel fiable. Configurez votre adresse expéditeur ci-dessus.</p>
+          <div id="email-connection-status" style="margin-bottom:0;"></div>
+          <div style="background:var(--s2);border-radius:10px;padding:14px;display:flex;align-items:flex-start;gap:12px;">
+            <div style="font-size:22px;line-height:1;flex-shrink:0;">✉️</div>
+            <div>
+              <div style="font-size:12px;font-weight:600;margin-bottom:4px;color:var(--text);">Brevo — Email transactionnel</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.7;">Vos emails partent depuis l'adresse expéditeur configurée ci-dessus.<br>Taux de délivrabilité optimisé · Tracking inclus · Pièces jointes PDF supportées.</div>
             </div>
           </div>
+          <div id="gmail-status" style="display:none;"></div>
+          <div id="outlook-status" style="display:none;"></div>
         </div>
         <div style="display:flex;justify-content:flex-end;margin-top:4px;">
           <button class="btn btn-gold" onclick="saveConfig()">💾 Sauvegarder</button>
@@ -1884,7 +1898,7 @@ async function genEmail(){
   const tonDesc={chaleureux:'Chaleureux, naturel, humain. Évite les formules creuses. Tutoie si relation connue/fidèle.',pro:'Professionnel et formel. Vouvoiement. Structuré mais pas froid.',direct:'Très concis. Direct. Maximum 4 lignes. Pas de formules.'};
   const relDesc={nouveau:'Premier contact — sois attentionné, crée confiance',connu:'Client connu — relation établie, ton naturel',fidele:'Client fidèle depuis longtemps — proximité, chaleur'};
 
-  const prompt=`Tu es un commercial expert. Rédige un email d'accompagnement d'offre commerciale professionnel et naturel.
+  const prompt=`Tu es un commercial expert. Rédige un email d'accompagnement d'offre commerciale qui semble écrit à la main.
 
 DONNÉES :
 - Prénom client : ${prenom}
@@ -1900,17 +1914,16 @@ DONNÉES :
 
 RÈGLES ABSOLUES :
 1. Sonne 100% humain — jamais robotique ni "template"
-2. PRIORITÉ ABSOLUE aux instructions du contexte et du détail : si le contexte demande des bullet points → bullet points avec "- ". S'il demande une liste détaillée → développe. S'il demande de décrire l'offre → décris-la. Ces instructions écrasent toute autre contrainte de longueur.
+2. Intègre le contexte naturellement si pertinent
 3. Mentionne l'objet concret de l'offre (pas juste "votre offre")
-4. Longueur adaptée au contexte : si le contexte demande du détail ou une liste → développe. Si pas de contexte → 2-3 lignes max.
+4. Maximum 3-4 lignes de corps — percutant et naturel
 5. Commence DIRECTEMENT par "Bonjour ${prenom}," — RIEN avant
 6. INTERDIT : N'écris JAMAIS "Objet :", "**Objet", ou tout en-tête
 7. INTERDIT : N'écris JAMAIS de placeholders [Prénom], [Nom], [Signature]
 8. Ne mets PAS de signature — elle sera ajoutée automatiquement
 9. STRUCTURE OBLIGATOIRE en 3 blocs séparés par une ligne vide :
    - Bloc 1 : "Bonjour ${prenom},"
-   - Bloc 2 : Corps du message (longueur dictée par le contexte)
-   - Pour les bullet points : utilise "- " comme marqueur, un item par ligne
+   - Bloc 2 : Corps du message (2-3 lignes max)
    - Bloc 3 : Formule de salutation adaptée au ton :
      * Ton chaleureux → "Au plaisir d\'en discuter avec toi,"
      * Ton pro → "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Meilleures salutations,"
@@ -1930,21 +1943,7 @@ Réponds UNIQUEMENT avec le corps de l'email, rien d'autre.`;
     document.getElementById('prev-from').textContent=`${CFG.name||CURRENT_USER?.email||'—'} <${CFG.senderEmail||CURRENT_USER?.email||'—'}>`;
     document.getElementById('prev-sub').textContent=subjects[ton];
     document.getElementById('prev-pj').textContent=`📎 ${fileName}`;
-    // Convertir le texte brut en HTML lisible (bullet points, sauts de ligne)
-    const bodyHtml = body
-      .split('\n')
-      .map(line => {
-        const trimmed = line.trim();
-        if (trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
-          return '<li style="margin-left:18px;margin-bottom:3px;">' + trimmed.slice(2) + '</li>';
-        }
-        if (trimmed === '') return '<br>';
-        return '<span>' + trimmed + '</span><br>';
-      })
-      .join('\n')
-      // Regrouper les <li> consécutifs dans un <ul>
-      .replace(/(<li[^>]*>.*?<\/li>\n)+/g, match => '<ul style="margin:8px 0;padding:0;list-style:disc;">' + match + '</ul>');
-    document.getElementById('prev-body').innerHTML = bodyHtml;
+    document.getElementById('prev-body').textContent=body;
     document.getElementById('prev-name').textContent=client;
 
     const d1=document.getElementById('of-d1')?.value||document.getElementById('cfg-d1')?.value||3;
@@ -3326,6 +3325,22 @@ async function doRegister() {
 
 function updateUserUI() {
   if(!CURRENT_USER) return;
+  // Mettre à jour le bouton plan dans la sidebar
+  const planLbl = document.getElementById('sb-plan-label');
+  const planSub = document.getElementById('sb-plan-sub');
+  const sbAboBtn = document.getElementById('sb-abo-btn');
+  if(planLbl) {
+    if(USER_PLAN === 'pro' || USER_PLAN === 'business') {
+      planLbl.textContent = 'FollowOffer Pro';
+      planLbl.style.color = 'var(--gold)';
+      if(planSub) planSub.textContent = 'Offres illimitées';
+      if(sbAboBtn) { sbAboBtn.style.borderColor = 'rgba(26,111,168,0.4)'; sbAboBtn.querySelector('span:last-child').style.display = 'none'; }
+    } else {
+      planLbl.textContent = 'Plan Gratuit';
+      planLbl.style.color = 'var(--text)';
+      if(planSub) planSub.textContent = '5 offres / mois';
+    }
+  }
   const name = CFG.name || CURRENT_USER.user_metadata?.full_name || CURRENT_USER.email.split('@')[0];
   const role = CFG.role || CFG.senderEmail || CURRENT_USER.email;
   const initials = name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
