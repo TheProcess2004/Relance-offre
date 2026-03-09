@@ -457,9 +457,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   .om-detail { color: #666 !important; font-size: 10px !important; }
   .report-section { margin-bottom: 14px !important; page-break-inside: avoid !important; }
 }
-
-/* ══ STRIPE PAYWALL ══ */
-.plan-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all 0.3s;}
 </style>
 </head>
 <body>
@@ -486,7 +483,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="sb-section">
       <div class="sb-sec-label">Suivi</div>
       <button class="nb" onclick="go('relances')"><span class="ic">◎</span>Relances <span class="nc nc-red" id="nc-relances">4</span></button>
-      <button class="nb" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-blue">3</span></button>
+      <button class="nb" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-blue" id="nc-detection" style="display:none"></span></button>
       <button class="nb" onclick="go('calendrier')"><span class="ic">▦</span>Calendrier</button>
       <button class="nb" onclick="go('revenus')"><span class="ic">◉</span>Revenus</button>
     </div>
@@ -500,9 +497,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
   </nav>
   <div class="sb-foot">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:6px 0;">
-      <span id="plan-badge" onclick="USER_PLAN==='pro'?stripePortal():showUpgradeModal()" style="background:rgba(255,255,255,0.07);color:var(--muted);padding:3px 9px;border-radius:20px;font-size:9px;font-weight:600;letter-spacing:1.5px;cursor:pointer;transition:all 0.2s;" title="Plan actuel">FREE</span>
-      <button id="stripe-upgrade-btn" onclick="showUpgradeModal()" style="background:var(--gold-d);border:1px solid rgba(233,184,74,0.25);border-radius:6px;color:var(--gold);font-size:10px;font-weight:700;cursor:pointer;padding:3px 8px;font-family:'Outfit',sans-serif;">✦ Passer Pro</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span id="plan-badge" onclick="USER_PLAN==='pro'?stripePortal():showUpgradeModal()" title="Plan actuel" style="background:rgba(255,255,255,0.07);color:var(--muted);padding:3px 9px;border-radius:20px;font-size:9px;font-weight:600;letter-spacing:1.5px;cursor:pointer;transition:all 0.2s;">FREE</span>
+      <button id="stripe-upgrade-btn" onclick="showUpgradeModal()" style="background:var(--gold-d);border:1px solid rgba(233,184,74,0.25);border-radius:6px;color:var(--gold);font-size:10px;font-weight:700;cursor:pointer;padding:3px 8px;font-family:'Outfit',sans-serif;">✦ Pro</button>
       <button id="stripe-portal-btn" onclick="stripePortal()" style="display:none;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:10px;cursor:pointer;padding:3px 8px;font-family:'Outfit',sans-serif;">⚙ Gérer</button>
     </div>
     <div class="sb-user">
@@ -510,7 +507,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div>
         <div class="sb-nm" id="user-name">—</div>
         <div class="sb-rl" id="user-role">—</div>
-        <button onclick="if(confirm('Se déconnecter ?')) signOut();" style="font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-family:'Outfit',sans-serif;">🚪 Déconnexion</button>
       </div>
     </div>
   </div>
@@ -790,8 +786,75 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
     <!-- ══ RAPPORT HEBDO ══ -->
     <div class="panel" id="panel-rapport">
-      <div class="report-card" id="rapport-content">
-        <!-- Contenu généré dynamiquement par renderRapport() -->
+      <div class="report-card">
+        <div class="report-header">
+          <div class="report-date">Rapport automatique · Semaine du 25 fév au 4 mars 2026</div>
+          <div class="report-title">Synthèse commerciale hebdomadaire</div>
+          <div class="report-sub">Généré automatiquement le lundi 4 mars 2026 à 08h00</div>
+        </div>
+
+        <div class="report-kpis">
+          <div class="report-kpi">
+            <div class="rk-val" style="color:var(--gold)">3</div>
+            <div class="rk-lbl">Offres envoyées</div>
+            <div class="rk-delta delta-up">↑ +1 vs semaine préc.</div>
+          </div>
+          <div class="report-kpi">
+            <div class="rk-val" style="color:var(--green)">2</div>
+            <div class="rk-lbl">Offres gagnées</div>
+            <div class="rk-delta delta-up">↑ +1 vs semaine préc.</div>
+          </div>
+          <div class="report-kpi">
+            <div class="rk-val" style="color:var(--blue)">27 600</div>
+            <div class="rk-lbl">CHF generés</div>
+            <div class="rk-delta delta-up">↑ +8 400 CHF</div>
+          </div>
+          <div class="report-kpi">
+            <div class="rk-val" style="color:var(--purple)">67%</div>
+            <div class="rk-lbl">Taux conversion</div>
+            <div class="rk-delta delta-up">↑ +7%</div>
+          </div>
+        </div>
+
+        <div class="report-body">
+          <div class="report-section">
+            <div class="rs-title">Insights IA de la semaine</div>
+            <div class="insight green"><strong>🎯 Point fort :</strong> <span>Votre taux de conversion atteint 67% cette semaine, le meilleur depuis 3 mois. L'ajout du contexte client dans vos emails semble payer.</span></div>
+            <div class="insight blue"><strong>💡 Opportunité :</strong> <span>Sophie Renard (OFF-2024-028 · 15 200 CHF) a ouvert l'email 3 fois cette semaine sans répondre. Elle est probablement en phase de décision — une relance personnalisée aujourd'hui pourrait faire basculer.</span></div>
+            <div class="insight red"><strong>⚠️ Attention :</strong> <span>2 offres (Claire Fontaine + Pierre Martin) n'ont pas encore reçu leur relance R1 alors qu'elle est due. Risque de perte estimé à 21 200 CHF.</span></div>
+            <div class="insight"><strong>📅 Cette semaine à faire :</strong> <span>7 relances programmées automatiquement. 2 appels recommandés (clients "chauds"). 1 offre en attente de signature.</span></div>
+          </div>
+
+          <div class="report-section">
+            <div class="rs-title">Offres gagnées cette semaine</div>
+            <div class="offer-mention">
+              <div><div class="om-name">Marc Duval — Climatisation bureau</div><div class="om-detail">OFF-2024-026 · Gagné en 4 jours · 0 relances nécessaires</div></div>
+              <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600;">+4 500 CHF</div>
+            </div>
+            <div class="offer-mention">
+              <div><div class="om-name">Antoine Morel — Audit énergétique</div><div class="om-detail">OFF-2024-025 · Gagné après relance R1 · 9 400 CHF</div></div>
+              <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600;">+9 400 CHF</div>
+            </div>
+          </div>
+
+          <div class="report-section">
+            <div class="rs-title">Offres à surveiller</div>
+            <div class="offer-mention">
+              <div><div class="om-name">Sophie Renard — Sécurité</div><div class="om-detail">OFF-2024-028 · Ouverte 3× · Relance R2 due aujourd'hui</div></div>
+              <div><span class="pill p-r2">Relance 2</span></div>
+            </div>
+            <div class="offer-mention">
+              <div><div class="om-name">Claire Fontaine — PAC</div><div class="om-detail">OFF-2024-037 · Relance R1 due · Attend validation budget</div></div>
+              <div><span class="pill p-r1">Relance 1</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-actions">
+          <button class="btn btn-gold" onclick="toast('📧','Rapport envoyé par email')">📧 Envoyer par email</button>
+          <button class="btn btn-ghost" onclick="exportPDF()">📄 Exporter PDF</button>
+          <button class="btn btn-ghost" onclick="exportCSV()">📊 Export Excel</button>
+        </div>
       </div>
     </div>
 
@@ -868,59 +931,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px;">
         <button class="btn btn-ghost btn-sm" onclick="go('rapport')">Aperçu rapport</button>
         <button class="btn btn-gold" onclick="saveConfig()">💾 Sauvegarder la configuration</button>
-      </div>
-
-      <!-- ══ ABONNEMENT STRIPE ══ -->
-      <div class="fcard" style="margin-top:20px;border-color:rgba(233,184,74,0.25);" id="abo-card">
-        <div class="fcard-t" style="color:var(--gold);">💳 Abonnement</div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--s2);border-radius:10px;margin-bottom:16px;border:1px solid var(--border);">
-          <div>
-            <div style="font-size:13px;font-weight:700;" id="abo-plan-name">Plan Gratuit</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:3px;" id="abo-plan-desc">Jusqu'à 10 offres · relances manuelles</div>
-          </div>
-          <div>
-            <span id="plan-status-text" style="font-size:12px;font-weight:700;color:var(--green);">Actif</span>
-          </div>
-        </div>
-        <!-- Bloc Free -->
-        <div id="abo-free-block">
-          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Passez à Pro pour débloquer toutes les fonctionnalités :</div>
-          <div style="background:var(--s2);border:1px solid rgba(233,184,74,0.2);border-radius:12px;padding:20px;margin-bottom:16px;">
-            <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:8px;">
-              <span style="font-family:'Instrument Serif',serif;font-size:36px;color:var(--gold);">490</span>
-              <span style="font-size:13px;color:var(--muted);">CHF / an <span style="font-size:11px;">(40.83/mois)</span></span>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px;font-size:12px;">
-              <div style="color:var(--text);">✓ Offres illimitées</div>
-              <div style="color:var(--text);">✓ Relances automatiques</div>
-              <div style="color:var(--text);">✓ Tracking ouvertures</div>
-              <div style="color:var(--text);">✓ Rapport hebdo IA</div>
-              <div style="color:var(--text);">✓ PDF storage</div>
-              <div style="color:var(--text);">✓ Export Excel</div>
-            </div>
-            <button onclick="stripeCheckout()" class="btn btn-gold" style="width:100%;justify-content:center;font-size:14px;padding:12px;">✦ Passer à Pro — 490 CHF/an →</button>
-            <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px;">Paiement sécurisé Stripe · Annulation libre · Facture TVA suisse</div>
-          </div>
-        </div>
-        <!-- Bloc Pro (caché par défaut) -->
-        <div id="abo-pro-block" style="display:none;">
-          <div style="background:var(--green-d);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;">
-            <div style="font-size:13px;color:var(--green);font-weight:600;">✅ Plan Pro actif</div>
-            <button onclick="stripePortal()" class="btn btn-ghost btn-sm">⚙ Gérer l'abonnement</button>
-          </div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.8;">
-            Toutes les fonctionnalités sont débloquées. Gérez votre facturation, annulez ou mettez à jour votre moyen de paiement via le portail Stripe.
-          </div>
-        </div>
-        <!-- Usage stats -->
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
-          <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Usage actuel</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-            <div style="background:var(--s2);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:20px;font-weight:800;color:var(--gold);" id="usage-offres">—</div><div style="font-size:10px;color:var(--muted);">offres</div></div>
-            <div style="background:var(--s2);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:20px;font-weight:800;color:var(--blue);" id="usage-clients">—</div><div style="font-size:10px;color:var(--muted);">clients</div></div>
-            <div style="background:var(--s2);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:20px;font-weight:800;color:var(--green);" id="usage-relances">—</div><div style="font-size:10px;color:var(--muted);">relances</div></div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -1079,6 +1089,14 @@ function updateBadges() {
   const pending = OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
   document.getElementById('nc-relances').textContent = pending.length;
   document.getElementById('nc-clients').textContent = [...new Set(OFFERS.map(o=>o.email))].length;
+  // Pastille détection = offres ouvertes dans les 7 derniers jours
+  const sevenDaysAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString().slice(0,10);
+  const recentlyOpened = OFFERS.filter(o => o.opens > 0 && o.lastOpen && o.lastOpen >= sevenDaysAgo);
+  const ncDet = document.getElementById('nc-detection');
+  if(ncDet) {
+    if(recentlyOpened.length > 0) { ncDet.textContent = recentlyOpened.length; ncDet.style.display = ''; }
+    else { ncDet.style.display = 'none'; }
+  }
   updateDashboardKPIs();
 }
 
@@ -1198,85 +1216,25 @@ function renderUrgent(){
 }
 
 // ══ DETECTION ══
-async function refreshOuvertures() {
-  try {
-    const ouvertures = await sbFetch('ouvertures?select=*&order=opened_at.desc');
-    OFFERS.forEach(o => { o.opens = 0; o.lastOpen = null; });
-    ouvertures.forEach(v => {
-      const o = OFFERS.find(x => x.id === v.offre_id);
-      if(o) { o.opens++; if(!o.lastOpen) o.lastOpen = v.opened_at?.slice(0,10); }
-    });
-    updateBadges();
-  } catch(e) { console.warn('refreshOuvertures:', e.message); }
-}
-
 function renderDetection(){
-  const total = OFFERS.length;
-  const now = new Date();
-  const opened = OFFERS.filter(o => o.opens > 0);
-  const taux = total > 0 ? Math.round(opened.length / total * 100) : 0;
-  const hot = OFFERS.filter(o => {
-    if(!o.lastOpen) return false;
-    return (now - new Date(o.lastOpen)) < 86400000;
-  });
+  const evs=[
+    {ico:'🔥',cls:'hot',main:'Sophie Renard a ouvert votre email',sub:'OFF-2024-028 · 15 200 CHF · 3ème ouverture',time:'Il y a 4 min'},
+    {ico:'👁',cls:'',main:'Martine Blanc a ouvert votre email',sub:'OFF-2024-031 · 8 400 CHF · 1ère ouverture',time:'Il y a 2h'},
+    {ico:'📎',cls:'',main:'Claire Fontaine a cliqué sur le PDF',sub:'OFF-2024-037 · 18 000 CHF',time:'Hier 17h32'},
+    {ico:'👁',cls:'',main:'David Keller a ouvert votre email',sub:'OFF-2024-038 · 9 400 CHF · 2ème ouverture',time:'Avant-hier'},
+  ];
+  document.getElementById('od-events-list').innerHTML=evs.map(e=>`<div class="od-event ${e.cls}"><div class="od-event-ico">${e.ico}</div><div class="od-event-info"><div class="od-event-main">${e.main}</div><div class="od-event-sub">${e.sub}</div></div><div class="od-event-time">${e.time}</div>${e.cls==='hot'?`<button class="btn btn-gold btn-sm" onclick="toast('📞','Appel en cours...')">Appeler</button>`:''}</div>`).join('');
 
-  // KPIs
-  const kO=document.getElementById('kpi-det-opens');
-  const kT=document.getElementById('kpi-det-taux');
-  const kH=document.getElementById('kpi-det-hot');
-  const kS=document.getElementById('kpi-det-opens-sub');
-  if(kO) kO.textContent = opened.length;
-  if(kT) kT.textContent = total > 0 ? taux + '%' : '—';
-  if(kH) kH.textContent = hot.length;
-  if(kS) kS.textContent = `Sur ${total} offre${total>1?'s':''} envoyée${total>1?'s':''}`;
-
-  // Événements réels triés par date
-  const events = OFFERS
-    .filter(o => o.opens > 0 && o.lastOpen)
-    .sort((a,b) => new Date(b.lastOpen) - new Date(a.lastOpen))
-    .slice(0, 6)
-    .map(o => {
-      const daysAgo = Math.floor((now - new Date(o.lastOpen)) / 86400000);
-      const timeStr = daysAgo === 0 ? "Aujourd'hui" : daysAgo === 1 ? 'Hier' : `Il y a ${daysAgo}j`;
-      const isHot = daysAgo === 0;
-      return `<div class="od-event ${isHot?'hot':''}">
-        <div class="od-event-ico">${isHot?'🔥':'👁'}</div>
-        <div class="od-event-info">
-          <div class="od-event-main">${o.prenom} ${o.nom} a ouvert votre email</div>
-          <div class="od-event-sub">${o.ref} · ${o.montant.toLocaleString('fr-CH')} CHF · ${o.opens}ème ouverture</div>
-        </div>
-        <div class="od-event-time">${timeStr}</div>
-        ${isHot?`<button class="btn btn-gold btn-sm" onclick="toast('📞','Appelez ${o.prenom} ${o.nom} — ${o.email}')">Appeler</button>`:''}
-      </div>`;
-    });
-
-  const evList = document.getElementById('od-events-list');
-  if(evList) evList.innerHTML = events.length > 0
-    ? events.join('')
-    : '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Aucune ouverture détectée pour l\'instant.<br><span style="font-size:11px;opacity:0.6;">Les ouvertures apparaissent ici dès qu\'un client ouvre votre email.</span></div>';
-
-  // Score dynamique basé sur ouvertures réelles
-  const score = o => {
-    if(o.opens === 0) return '⚪ Pas ouvert';
-    if(o.opens >= 3) return '🔥 Très chaud';
-    const d = o.lastOpen ? Math.floor((now - new Date(o.lastOpen)) / 86400000) : 99;
-    if(d < 1) return '🟢 Chaud';
-    if(d < 3) return '🟡 Tiède';
-    return '🔵 Lu';
-  };
-
-  const tbody = document.getElementById('tbody-detection');
-  if(tbody) tbody.innerHTML = OFFERS.length > 0
-    ? OFFERS.map(o=>`
-      <div class="tbl-r" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;" onclick="openModal('${o.id}')">
-        <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
-        <div class="ref">${o.ref}</div>
-        <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
-        <div style="font-size:12px;color:${o.opens>0?'var(--green)':'var(--muted)'};">${o.lastOpen||'—'}</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${o.opens>1?'var(--gold)':'var(--muted)'};">${o.opens}×</div>
-        <div style="font-size:12px;">${score(o)}</div>
-      </div>`).join('')
-    : '<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;">Aucune offre envoyée pour l\'instant.</div>';
+  const scores={1:'🔴 Froid',2:'🔴 Froid',3:'🟡 Tiède',4:'⚪ Nouveau',5:'⚪ Archivé',6:'🟢 Chaud',7:'🟡 Tiède',8:'🟡 Tiède'};
+  document.getElementById('tbody-detection').innerHTML=OFFERS.map(o=>`
+    <div class="tbl-r" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;" onclick="openModal('${o.id}')">
+      <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
+      <div class="ref">${o.ref}</div>
+      <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
+      <div style="font-size:12px;color:${o.opens>0?'var(--green)':'var(--muted)'};">${o.lastOpen||'Pas encore ouvert'}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${o.opens>1?'var(--gold)':'var(--muted)'};">${o.opens}×</div>
+      <div style="font-size:12px;">${scores[o.id]||'⚪'}</div>
+    </div>`).join('');
 }
 
 // ══ CALENDAR ══
@@ -1982,7 +1940,6 @@ function confirmSendOffer() {
 
 // ══ EXPORTS ══
 function exportCSV() {
-  if (!requirePro('Export Excel')) return;
   const rows = [['Client','Email','Référence','Montant CHF','Objet','Statut','Date envoi','Relance 1','Relance 2','Relance 3','Ouvertures']];
   OFFERS.forEach(o => {
     rows.push([
@@ -2488,6 +2445,146 @@ async function loadApp() {
   await checkStripeStatus();
 }
 
+// ══════════════════════════════════════════
+// ══ STRIPE PAYWALL                        ══
+// ══════════════════════════════════════════
+
+const STRIPE_PRICE_PRO = 'price_1T8zjmRyIs2PnCFKyHAWuQey';
+let USER_PLAN = 'free';
+let USER_PLAN_STATUS = 'none';
+
+async function checkStripeStatus() {
+  if (!CURRENT_USER?.email) return;
+  try {
+    const res = await fetch('/api/stripe-status?email=' + encodeURIComponent(CURRENT_USER.email));
+    // Vérifier que c'est bien du JSON avant de parser
+    const ct = res.headers.get('content-type') || '';
+    if (!res.ok || !ct.includes('application/json')) {
+      // API pas encore déployée ou erreur serveur — silencieux, plan reste free
+      console.warn('Stripe status API non disponible (' + res.status + ')');
+      return;
+    }
+    const data = await res.json();
+    USER_PLAN = data.plan || 'free';
+    USER_PLAN_STATUS = data.status || 'none';
+    updatePlanBadge();
+    handleStripeReturn();
+  } catch(e) {
+    // Silencieux — ne pas afficher d'erreur à l'utilisateur si Stripe n'est pas dispo
+    console.warn('Stripe check:', e.message);
+  }
+}
+
+function updatePlanBadge() {
+  const isPro = USER_PLAN === 'pro';
+  const badge = document.getElementById('plan-badge');
+  if (badge) {
+    badge.textContent = isPro ? '✦ PRO' : 'FREE';
+    badge.style.background = isPro ? 'var(--gold)' : 'rgba(255,255,255,0.07)';
+    badge.style.color = isPro ? '#000' : 'var(--muted)';
+  }
+  const portalBtn = document.getElementById('stripe-portal-btn');
+  const upgradeBtn = document.getElementById('stripe-upgrade-btn');
+  if (portalBtn) portalBtn.style.display = isPro ? 'inline-flex' : 'none';
+  if (upgradeBtn) upgradeBtn.style.display = isPro ? 'none' : 'inline-flex';
+}
+
+async function stripeCheckout() {
+  if (!CURRENT_USER) { toast('⚠️', "Connectez-vous d'abord"); return; }
+  toast('⏳', 'Redirection vers Stripe…');
+  try {
+    const res = await fetch('/api/stripe-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: CURRENT_USER.id,
+        email: CURRENT_USER.email,
+        priceId: STRIPE_PRICE_PRO,
+        successUrl: window.location.origin + '/?stripe=success&session_id={CHECKOUT_SESSION_ID}',
+        cancelUrl: window.location.origin + '/?stripe=cancel'
+      })
+    });
+    const ct = res.headers.get('content-type') || '';
+    if (!ct.includes('application/json')) throw new Error('API stripe-checkout non disponible');
+    const { url, error } = await res.json();
+    if (error) throw new Error(error);
+    window.location.href = url;
+  } catch(e) { toast('❌', 'Erreur Stripe : ' + e.message); }
+}
+
+async function stripePortal() {
+  if (!CURRENT_USER) return;
+  toast('⏳', 'Ouverture du portail…');
+  try {
+    const res = await fetch('/api/stripe-portal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: CURRENT_USER.email, returnUrl: window.location.origin })
+    });
+    const ct = res.headers.get('content-type') || '';
+    if (!ct.includes('application/json')) throw new Error('API stripe-portal non disponible');
+    const { url, error } = await res.json();
+    if (error) throw new Error(error);
+    window.open(url, '_blank');
+  } catch(e) { toast('❌', 'Erreur portail : ' + e.message); }
+}
+
+function handleStripeReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('stripe') === 'success') {
+    toast('🎉', 'Abonnement Pro activé — bienvenue !');
+    closeUpgradeModal();
+    window.history.replaceState({}, '', '/');
+    setTimeout(() => checkStripeStatus(), 2000);
+  } else if (params.get('stripe') === 'cancel') {
+    toast('ℹ️', 'Paiement annulé');
+    window.history.replaceState({}, '', '/');
+  }
+}
+
+function requirePro(featureName) {
+  if (USER_PLAN === 'pro') return true;
+  showUpgradeModal(featureName);
+  return false;
+}
+
+function showUpgradeModal(featureName) {
+  let modal = document.getElementById('upgrade-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'upgrade-modal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;background:rgba(7,8,12,0.9);backdrop-filter:blur(10px);padding:20px;';
+    modal.onclick = (e) => { if(e.target === modal) closeUpgradeModal(); };
+    document.body.appendChild(modal);
+  }
+  const featureHTML = featureName
+    ? '<div style="background:rgba(233,184,74,0.08);border:1px solid rgba(233,184,74,0.2);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--gold);margin-bottom:20px;">🔒 <strong>' + featureName + '</strong> est réservé au plan Pro</div>'
+    : '';
+  const features = ['Offres illimitées','Relances automatiques','Tracking ouvertures emails','Rapport hebdo IA','Export Excel avancé','PDF storage & viewer'];
+  modal.innerHTML = '<div style="background:var(--s1);border:1px solid rgba(233,184,74,0.3);border-radius:20px;padding:36px;max-width:440px;width:100%;text-align:center;position:relative;">'
+    + '<button onclick="closeUpgradeModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">✕</button>'
+    + '<div style="font-size:28px;background:var(--gold-d);width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;border:1px solid rgba(233,184,74,0.25);">✦</div>'
+    + '<div style="font-family:'Instrument Serif',serif;font-size:26px;color:var(--gold);margin-bottom:4px;">OfferFlow Pro</div>'
+    + '<div style="font-size:12px;color:var(--muted);margin-bottom:22px;">Suite commerciale Suisse complète</div>'
+    + featureHTML
+    + '<div style="background:var(--s2);border-radius:12px;padding:16px;margin-bottom:20px;text-align:left;border:1px solid var(--border);">'
+    + features.map(f => '<div style="font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;"><span style="color:var(--green);font-weight:700;">✓</span><span style="color:var(--text);">' + f + '</span></div>').join('')
+    + '</div>'
+    + '<div style="margin-bottom:20px;"><div style="display:flex;align-items:baseline;justify-content:center;gap:6px;">'
+    + '<span style="font-family:'Instrument Serif',serif;font-size:44px;color:var(--gold);line-height:1;">490</span>'
+    + '<span style="font-size:14px;color:var(--muted);">CHF / an</span></div>'
+    + '<div style="font-size:11px;color:var(--muted);margin-top:4px;">soit 40.83 CHF/mois · annulation libre</div></div>'
+    + '<button onclick="stripeCheckout()" style="width:100%;padding:15px;background:var(--gold);color:#000;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">Passer à Pro maintenant →</button>'
+    + '<div style="font-size:11px;color:var(--muted);margin-top:12px;">Paiement sécurisé · Stripe · Facture automatique · TVA suisse</div>'
+    + '</div>';
+  modal.style.display = 'flex';
+}
+
+function closeUpgradeModal() {
+  const modal = document.getElementById('upgrade-modal');
+  if (modal) modal.style.display = 'none';
+}
+
 // ══ BREVO EMAIL ══
 async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName}) {
   const fromEmail = CFG.senderEmail || CURRENT_USER?.email;
@@ -2541,173 +2638,6 @@ async function init() {
   document.getElementById('app-shell').style.display = 'none';
   showAuthScreen();
 }
-
-// ══════════════════════════════════════════
-// ══ STRIPE PAYWALL                        ══
-// ══════════════════════════════════════════
-
-const STRIPE_PRICE_PRO = 'price_1T8zjmRyIs2PnCFKyHAWuQey';
-let USER_PLAN = 'free';
-let USER_PLAN_STATUS = 'none';
-
-async function checkStripeStatus() {
-  if (!CURRENT_USER?.email) return;
-  try {
-    const res = await fetch(`/api/stripe-status?email=${encodeURIComponent(CURRENT_USER.email)}`);
-    // Vérifier que c'est bien du JSON avant de parser
-    const ct = res.headers.get('content-type') || '';
-    if (!ct.includes('application/json')) {
-      console.warn('Stripe status: réponse non-JSON', res.status, await res.text().then(t=>t.slice(0,100)));
-      return; // Rester sur free silencieusement
-    }
-    if (!res.ok) {
-      console.warn('Stripe status: HTTP', res.status);
-      return;
-    }
-    const data = await res.json();
-    USER_PLAN = data.plan || 'free';
-    USER_PLAN_STATUS = data.status || 'none';
-    updatePlanBadge();
-    handleStripeReturn();
-    updateAboBlock();
-  } catch(e) { 
-    // Silencieux — ne pas afficher d'erreur à l'utilisateur pour Stripe
-    console.warn('Stripe check:', e.message); 
-  }
-}
-
-function updatePlanBadge() {
-  const isPro = USER_PLAN === 'pro';
-  const badge = document.getElementById('plan-badge');
-  if (badge) {
-    badge.textContent = isPro ? '✦ PRO' : 'FREE';
-    badge.style.background = isPro ? 'var(--gold)' : 'rgba(255,255,255,0.07)';
-    badge.style.color = isPro ? '#000' : 'var(--muted)';
-    badge.title = isPro ? 'Plan Pro actif — cliquez pour gérer' : 'Plan gratuit — cliquez pour passer à Pro';
-  }
-  const portalBtn = document.getElementById('stripe-portal-btn');
-  const upgradeBtn = document.getElementById('stripe-upgrade-btn');
-  if (portalBtn) portalBtn.style.display = isPro ? 'inline-flex' : 'none';
-  if (upgradeBtn) upgradeBtn.style.display = isPro ? 'none' : 'inline-flex';
-}
-
-function updateAboBlock() {
-  const isPro = USER_PLAN === 'pro';
-  const freeBlock = document.getElementById('abo-free-block');
-  const proBlock = document.getElementById('abo-pro-block');
-  const planName = document.getElementById('abo-plan-name');
-  const planDesc = document.getElementById('abo-plan-desc');
-  const planStatus = document.getElementById('plan-status-text');
-  const usageOffres = document.getElementById('usage-offres');
-  const usageClients = document.getElementById('usage-clients');
-  const usageRelances = document.getElementById('usage-relances');
-  if (freeBlock) freeBlock.style.display = isPro ? 'none' : '';
-  if (proBlock) proBlock.style.display = isPro ? '' : 'none';
-  if (planName) planName.textContent = isPro ? 'Plan Pro ✦' : 'Plan Gratuit';
-  if (planDesc) planDesc.textContent = isPro ? 'Toutes les fonctionnalités débloquées' : "Jusqu'à 10 offres · relances manuelles";
-  if (planStatus) { planStatus.textContent = isPro ? 'Actif ✓' : 'Actif'; planStatus.style.color = isPro ? 'var(--gold)' : 'var(--green)'; }
-  if (usageOffres) usageOffres.textContent = OFFERS.length;
-  if (usageClients) usageClients.textContent = [...new Set(OFFERS.map(o=>o.email))].length;
-  if (usageRelances) usageRelances.textContent = OFFERS.filter(o=>['relance1','relance2','relance3'].includes(o.status)).length;
-}
-
-async function stripeCheckout() {
-  if (!CURRENT_USER) { toast('⚠️', "Connectez-vous d'abord"); return; }
-  toast('⏳', 'Redirection vers Stripe…');
-  try {
-    const res = await fetch('/api/stripe-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: CURRENT_USER.id,
-        email: CURRENT_USER.email,
-        priceId: STRIPE_PRICE_PRO,
-        successUrl: window.location.origin + '/?stripe=success&session_id={CHECKOUT_SESSION_ID}',
-        cancelUrl: window.location.origin + '/?stripe=cancel'
-      })
-    });
-    const { url, error } = await res.json();
-    if (error) throw new Error(error);
-    window.location.href = url;
-  } catch(e) { toast('❌', 'Erreur Stripe : ' + e.message); }
-}
-
-async function stripePortal() {
-  if (!CURRENT_USER) return;
-  toast('⏳', 'Ouverture du portail…');
-  try {
-    const res = await fetch('/api/stripe-portal', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: CURRENT_USER.email, returnUrl: window.location.origin })
-    });
-    const { url, error } = await res.json();
-    if (error) throw new Error(error);
-    window.open(url, '_blank');
-  } catch(e) { toast('❌', 'Erreur portail : ' + e.message); }
-}
-
-function handleStripeReturn() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('stripe') === 'success') {
-    toast('🎉', 'Abonnement Pro activé — bienvenue !');
-    closeUpgradeModal();
-    window.history.replaceState({}, '', '/');
-    setTimeout(() => checkStripeStatus(), 1500);
-  } else if (params.get('stripe') === 'cancel') {
-    toast('ℹ️', 'Paiement annulé');
-    window.history.replaceState({}, '', '/');
-  }
-}
-
-function requirePro(featureName) {
-  if (USER_PLAN === 'pro') return true;
-  showUpgradeModal(featureName);
-  return false;
-}
-
-function showUpgradeModal(featureName) {
-  let modal = document.getElementById('upgrade-modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'upgrade-modal';
-    modal.style.cssText = 'position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;background:rgba(7,8,12,0.9);backdrop-filter:blur(10px);padding:20px;';
-    modal.onclick = (e) => { if(e.target === modal) closeUpgradeModal(); };
-    document.body.appendChild(modal);
-  }
-  const featureHTML = featureName
-    ? `<div style="background:rgba(233,184,74,0.08);border:1px solid rgba(233,184,74,0.2);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--gold);margin-bottom:20px;"><span>🔒 </span><strong>${featureName}</strong> est réservé au plan Pro</div>`
-    : '';
-  modal.innerHTML = `
-    <div style="background:var(--s1);border:1px solid rgba(233,184,74,0.3);border-radius:20px;padding:36px;max-width:440px;width:100%;text-align:center;position:relative;animation:mIn 0.2s ease;">
-      <button onclick="closeUpgradeModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;padding:4px;">✕</button>
-      <div style="font-size:28px;background:var(--gold-d);width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;border:1px solid rgba(233,184,74,0.25);">✦</div>
-      <div style="font-family:'Instrument Serif',serif;font-size:26px;color:var(--gold);margin-bottom:4px;">FollowOffer Pro</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:22px;">Suite commerciale Suisse complète</div>
-      ${featureHTML}
-      <div style="background:var(--s2);border-radius:12px;padding:16px;margin-bottom:20px;text-align:left;border:1px solid var(--border);">
-        ${['Offres illimitées','Relances automatiques illimitées','Tracking ouvertures emails','Rapport hebdo IA','PDF storage & viewer','Export Excel avancé'].map(f=>`<div style="font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;"><span style="color:var(--green);font-weight:700;">✓</span><span style="color:var(--text);">${f}</span></div>`).join('')}
-      </div>
-      <div style="margin-bottom:20px;">
-        <div style="display:flex;align-items:baseline;justify-content:center;gap:6px;">
-          <span style="font-family:'Instrument Serif',serif;font-size:44px;color:var(--gold);line-height:1;">490</span>
-          <span style="font-size:14px;color:var(--muted);">CHF / an</span>
-        </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:4px;">soit 40.83 CHF/mois · annulation libre à tout moment</div>
-      </div>
-      <button onclick="stripeCheckout()" style="width:100%;padding:15px;background:var(--gold);color:#000;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
-        Passer à Pro maintenant →
-      </button>
-      <div style="font-size:11px;color:var(--muted);margin-top:12px;">Paiement sécurisé · Stripe · Facture automatique · TVA suisse</div>
-    </div>`;
-  modal.style.display = 'flex';
-}
-
-function closeUpgradeModal() {
-  const modal = document.getElementById('upgrade-modal');
-  if (modal) modal.style.display = 'none';
-}
-
 
 init();
 </script>
