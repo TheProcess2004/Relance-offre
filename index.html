@@ -3063,7 +3063,7 @@ async function doForgotPassword() {
   }
   showMsg('⏳ Envoi en cours...', 'var(--gold)', 'rgba(255,193,7,0.08)');
   try {
-    const redirectTo = 'https://followoffer.com';
+    const redirectTo = window.location.origin + (window.location.pathname.replace(/\/+$/,'') || '');
     const res = await fetch(SB_URL + '/auth/v1/recover', {
       method: 'POST',
       headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
