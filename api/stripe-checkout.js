@@ -1,50 +1,57 @@
-import Stripe from 'stripe';
+// api/stripe-checkout.js — FollowOffer
+// Crée une session Stripe Checkout (fetch natif, sans SDK)
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
+  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  if (!stripeKey) return res.status(500).json({ error: 'Stripe non configuré' });
 
   const { userId, email, priceId, successUrl, cancelUrl } = req.body;
 
-  if (!userId || !email || !priceId) {
+  if (!email || !priceId || !successUrl || !cancelUrl) {
     return res.status(400).json({ error: 'Paramètres manquants' });
   }
 
   try {
-    // Cherche ou crée le customer Stripe
-    let customer;
-    const existing = await stripe.customers.list({ email, limit: 1 });
-    if (existing.data.length > 0) {
-      customer = existing.data[0];
-    } else {
-      customer = await stripe.customers.create({
-        email,
-        metadata: { supabase_user_id: userId }
-      });
-    }
+    // Construire les params en URLSearchParams (format Stripe API)
+    const params = new URLSearchParams();
+    params.append('mode', 'subscription');
+    params.append('line_items[0][price]', priceId);
+    params.append('line_items[0][quantity]', '1');
+    params.append('success_url', successUrl);
+    params.append('cancel_url', cancelUrl);
+    params.append('customer_email', email);
+    params.append('allow_promotion_codes', 'true');
+    params.append('billing_address_collection', 'required');
+    if (userId) params.append('metadata[userId]', userId);
+    // Locale FR
+    params.append('locale', 'fr');
 
-    const session = await stripe.checkout.sessions.create({
-      customer: customer.id,
-      mode: 'subscription',
-      payment_method_types: ['card'],
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: successUrl || `${process.env.APP_URL}?stripe=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: cancelUrl || `${process.env.APP_URL}?stripe=cancel`,
-      metadata: { supabase_user_id: userId },
-      subscription_data: {
-        metadata: { supabase_user_id: userId }
+    const checkoutRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${stripeKey}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
-      // Options Suisse
-      currency: 'chf',
-      locale: 'fr',
-      billing_address_collection: 'auto',
-      tax_id_collection: { enabled: true }, // Pour TVA entreprises
+      body: params.toString()
     });
 
-    res.json({ url: session.url, sessionId: session.id });
+    if (!checkoutRes.ok) {
+      const errData = await checkoutRes.json();
+      console.error('Stripe checkout error:', errData);
+      return res.status(400).json({ error: errData.error?.message || 'Erreur Stripe' });
+    }
+
+    const session = await checkoutRes.json();
+    return res.status(200).json({ url: session.url, sessionId: session.id });
+
   } catch (err) {
-    console.error('Stripe checkout error:', err);
-    res.status(500).json({ error: err.message });
+    console.error('stripe-checkout exception:', err.message);
+    return res.status(500).json({ error: err.message });
   }
 }
