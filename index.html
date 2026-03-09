@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FollowOffer — Suite commerciale</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23080B10'/%3E%3Ctext x='4' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='16' fill='%23FFFFFF'%3EF%3C/text%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='16' fill='%231A6FA8'%3EO%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
@@ -446,6 +447,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .search-in{background:var(--s1);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;min-width:220px;}
 .search-in:focus{border-color:var(--gold);}
 .filter-btn{padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--s1);color:var(--muted);font-family:'Outfit',sans-serif;transition:all 0.15s;}
+.filter-btn.active{background:rgba(26,111,168,0.16);border-color:rgba(26,111,168,0.5);color:var(--gold);}
+.f-won.active{background:rgba(30,140,94,0.14);border-color:rgba(30,140,94,0.45);color:var(--green);}
+.f-lost.active{background:rgba(184,50,50,0.12);border-color:rgba(184,50,50,0.4);color:var(--red);}
+.f-relance.active{background:rgba(184,150,90,0.12);border-color:rgba(184,150,90,0.4);color:var(--accent);}
+.f-sent.active{background:rgba(46,126,196,0.14);border-color:rgba(46,126,196,0.4);color:var(--blue);}
 .filter-btn:hover,.filter-btn.active{background:var(--gold-d);border-color:rgba(233,184,74,0.3);color:var(--gold);}
 .filter-btn.f-all.active{background:var(--gold-d);border-color:rgba(233,184,74,0.3);color:var(--gold);}
 .filter-btn.f-sent.active{background:var(--blue-d);border-color:rgba(56,189,248,0.3);color:var(--blue);}
@@ -785,7 +791,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <input type="text" class="search-in" id="search-offres" placeholder="🔍 Rechercher par client, référence..." oninput="renderOffres()">
         <button class="filter-btn f-all active" id="f-all" onclick="setFilter('all')">Toutes</button>
         <button class="filter-btn f-sent" id="f-sent" onclick="setFilter('sent')">Envoyées</button>
-        <button class="filter-btn" id="f-relance" onclick="setFilter('relance')">En relance</button>
+        <button class="filter-btn f-relance" id="f-relance" onclick="setFilter('relance')">En relance</button>
         <button class="filter-btn f-won" id="f-won" onclick="setFilter('won')">Gagnées</button>
         <button class="filter-btn f-lost" id="f-lost" onclick="setFilter('lost')">Perdues</button>
         <button class="btn btn-ghost btn-sm" style="margin-left:auto;" onclick="exportCSV()">📊 Export Excel</button>
@@ -801,7 +807,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <!-- ══ RELANCES ══ -->
     <div class="panel" id="panel-relances">
       <div class="kgrid kgrid-3">
-        <div class="kcard g"><div class="k-lbl">Aujourd'hui</div><div class="k-val" id="kpi-relances-today">—</div><div class="k-sub">Relances à traiter</div></div>
+        <div class="kcard g"><div class="k-lbl">Aujourd'hui</div><div class="k-val" id="kpi-relances-today">—</div><div class="k-sub">Relances à traiter · <span style="color:var(--green);font-size:9px;">⚡ Envoi auto 9h</span></div></div>
         <div class="kcard bl"><div class="k-lbl">Cette semaine</div><div class="k-val" id="kpi-relances-week">—</div><div class="k-sub">Relances programmées</div></div>
         <div class="kcard gr"><div class="k-lbl">Taux réponse R1</div><div class="k-val" id="kpi-relances-taux">—</div><div class="k-sub" id="kpi-relances-taux-sub">Calculé sur vos offres</div></div>
       </div>
@@ -891,6 +897,110 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <!-- ══ RAPPORT HEBDO ══ -->
     <div class="panel" id="panel-rapport">
       <div class="report-card" id="rapport-content"></div>
+    </div>
+
+
+    <!-- ══ GUIDE D'UTILISATION ══ -->
+    <div class="panel" id="panel-guide" style="padding:32px 40px;background:var(--bg);">
+      <div style="max-width:720px;margin:0 auto;color:var(--text);">
+        <div style="margin-bottom:28px;">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Documentation</div>
+          <div style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:8px;">Guide d'utilisation FollowOffer</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">Maîtrisez votre suite commerciale en 5 étapes.</div>
+        </div>
+
+        <!-- Étape 1 -->
+        <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:rgba(26,111,168,0.2);border:1px solid rgba(26,111,168,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">1</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);">Configuration du compte</div>
+              <div style="font-size:11px;color:var(--muted);">⚙️ Menu Système → Configuration</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:44px;">
+            • Onglet <strong style="color:var(--text);">Profil</strong> : renseignez votre nom, rôle, entreprise, téléphone<br>
+            • Onglet <strong style="color:var(--text);">Email</strong> : entrez votre adresse expéditeur → les emails partiront en votre nom<br>
+            • Onglet <strong style="color:var(--text);">Relances</strong> : définissez les délais J+3, J+7, J+14 (modifiables par offre)<br>
+            • Sauvegardez — vos données sont synchronisées sur tous vos appareils
+          </div>
+        </div>
+
+        <!-- Étape 2 -->
+        <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:rgba(26,111,168,0.2);border:1px solid rgba(26,111,168,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">2</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);">Envoyer une offre</div>
+              <div style="font-size:11px;color:var(--muted);">📋 Menu Offres → Envoyer une offre</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:44px;">
+            • Déposez votre PDF devis/offre dans la zone d'upload<br>
+            • Les données sont extraites automatiquement (client, montant, référence)<br>
+            • Décrivez le <strong style="color:var(--text);">contexte</strong> de l'échange — l'IA génère un email personnalisé<br>
+            • Relisez, modifiez si besoin, puis cliquez <strong style="color:var(--text);">Envoyer l'offre</strong><br>
+            • Les 3 relances sont programmées automatiquement à J+3, J+7, J+14
+          </div>
+        </div>
+
+        <!-- Étape 3 -->
+        <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:rgba(30,140,94,0.2);border:1px solid rgba(30,140,94,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">3</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);">Suivi des relances</div>
+              <div style="font-size:11px;color:var(--muted);">🔔 Menu Suivi → Relances</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:44px;">
+            • Les relances s'envoient <strong style="color:var(--text);">automatiquement</strong> aux dates prévues (cron 9h UTC)<br>
+            • Vous pouvez envoyer manuellement en cliquant 📧 dans la liste des offres<br>
+            • Icône ✓ = marquer comme <strong style="color:var(--green);">Gagnée</strong> · Icône ✗ = marquer comme <strong style="color:var(--red);">Perdue</strong><br>
+            • Perdue = toutes relances annulées automatiquement
+          </div>
+        </div>
+
+        <!-- Étape 4 -->
+        <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:rgba(184,150,90,0.2);border:1px solid rgba(184,150,90,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">4</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);">Détection d'ouverture</div>
+              <div style="font-size:11px;color:var(--muted);">👁 Menu Suivi → Détection ouverture</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:44px;">
+            • Un pixel de tracking est intégré à chaque email envoyé<br>
+            • Quand le client ouvre l'email → notification en temps réel<br>
+            • Score <strong style="color:var(--green);">Chaud</strong> = ouvert dans les 24h → priorité d'appel<br>
+            • Badge <strong style="color:var(--red);">Perdue</strong> = visible même si l'offre a été consultée
+          </div>
+        </div>
+
+        <!-- Étape 5 -->
+        <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:rgba(91,95,160,0.2);border:1px solid rgba(91,95,160,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">5</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);">Rapport & Revenus</div>
+              <div style="font-size:11px;color:var(--muted);">📈 Rapport semaine + 💰 Revenus</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8;padding-left:44px;">
+            • Rapport hebdo : synthèse offres envoyées, gagnées, taux de conversion<br>
+            • Export Excel pour votre comptabilité ou votre manager<br>
+            • Revenus : pipeline par statut, analyse des pertes par raison<br>
+            • Fiches clients : historique complet, modification des données
+          </div>
+        </div>
+
+        <!-- Support -->
+        <div style="background:rgba(26,111,168,0.06);border:1px solid rgba(26,111,168,0.2);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:13px;color:var(--text);margin-bottom:4px;">🇨🇭 Support FollowOffer</div>
+          <div style="font-size:12px;color:var(--muted);">Une question ? Écrivez à <strong style="color:var(--gold);">contact@followoffer.com</strong></div>
+        </div>
+      </div>
     </div>
 
     <!-- ══ CONFIG ══ -->
@@ -1014,33 +1124,39 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--s2);border-radius:10px;margin-bottom:16px;">
             <div>
               <div style="font-size:13px;font-weight:700;">Plan Gratuit <span style="font-size:11px;background:rgba(34,197,94,0.15);color:var(--green);padding:2px 8px;border-radius:20px;margin-left:6px;">Actif</span></div>
-              <div style="font-size:12px;color:var(--muted);margin-top:3px;">Jusqu'à 10 offres · 1 utilisateur · Relances manuelles</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px;">Jusqu'à 5 offres · 1 utilisateur · Relances manuelles</div>
             </div>
             <div style="font-size:20px;font-weight:800;color:var(--gold);">0 CHF</div>
           </div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Passez à Pro pour débloquer toutes les fonctionnalités :</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
-            <div style="background:var(--s2);border:1px solid rgba(233,184,74,0.2);border-radius:10px;padding:14px;">
-              <div style="font-size:15px;font-weight:800;color:var(--gold);margin-bottom:4px;">Pro <span style="font-size:11px;color:var(--muted);font-weight:400;">/ mois</span></div>
-              <div style="font-size:22px;font-weight:800;margin-bottom:10px;">49 CHF</div>
-              <div style="font-size:11px;color:var(--muted);line-height:2;">✅ Offres illimitées<br>✅ Relances automatiques<br>✅ Tracking ouvertures<br>✅ Rapport hebdo IA<br>✅ Support prioritaire</div>
-              <button onclick="startCheckout('pro')" class="btn btn-gold btn-sm" style="width:100%;margin-top:12px;">🚀 Passer à Pro</button>
-            </div>
-            <div style="background:var(--s2);border:1px solid rgba(139,92,246,0.2);border-radius:10px;padding:14px;">
-              <div style="font-size:15px;font-weight:800;color:var(--purple);margin-bottom:4px;">Business <span style="font-size:11px;color:var(--muted);font-weight:400;">/ mois</span></div>
-              <div style="font-size:22px;font-weight:800;margin-bottom:10px;">149 CHF</div>
-              <div style="font-size:11px;color:var(--muted);line-height:2;">✅ Tout Pro inclus<br>✅ Multi-utilisateurs<br>✅ CRM avancé<br>✅ Intégration Gmail/Outlook<br>✅ API accès</div>
-              <button onclick="startCheckout('business')" class="btn btn-sm" style="width:100%;margin-top:12px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);color:var(--purple);">🚀 Choisir Business</button>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Débloquez toutes les fonctionnalités avec FollowOffer Pro :</div>
+          <div style="margin-bottom:20px;">
+            <div style="background:linear-gradient(135deg,rgba(26,111,168,0.12),rgba(26,111,168,0.04));border:1px solid rgba(26,111,168,0.4);border-radius:16px;padding:24px;position:relative;overflow:hidden;">
+              <div style="position:absolute;top:12px;right:12px;background:var(--gold);color:#fff;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;">Meilleure offre</div>
+              <div style="font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">FollowOffer Pro</div>
+              <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px;">
+                <span style="font-size:36px;font-weight:800;color:var(--text);font-family:'Outfit',sans-serif;line-height:1;">490</span>
+                <span style="font-size:16px;color:var(--muted);font-weight:500;">CHF / an</span>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:18px;">≈ 40.83 CHF/mois · Annulation à tout moment</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:20px;font-size:12px;">
+                <div>✓ Offres illimitées</div>
+                <div>✓ Relances automatiques</div>
+                <div>✓ Tracking ouvertures</div>
+                <div>✓ Rapport hebdo IA</div>
+                <div>✓ PDF depuis le SaaS</div>
+                <div>✓ Support prioritaire</div>
+              </div>
+              <button class="btn btn-gold" style="width:100%;padding:12px;font-size:13px;font-weight:700;" onclick="startCheckout('pro')">🚀 Passer à Pro — 490 CHF/an</button>
             </div>
           </div>
-          <div style="font-size:11px;color:var(--muted);text-align:center;">Paiement sécurisé par Stripe · Annulation à tout moment · Facturation mensuelle</div>
+          <div style="font-size:11px;color:var(--muted);text-align:center;">🔒 Paiement sécurisé par Stripe · TVA CH incluse</div>
         </div>
         <div class="fcard">
           <div class="fcard-t">📊 Usage actuel</div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;" id="usage-stats">
             <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
               <div style="font-size:22px;font-weight:800;color:var(--gold);" id="usage-offres">—</div>
-              <div style="font-size:11px;color:var(--muted);">offres / 10</div>
+              <div style="font-size:11px;color:var(--muted);">offres / 5</div>
             </div>
             <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
               <div style="font-size:22px;font-weight:800;color:var(--blue);" id="usage-clients">—</div>
@@ -1266,7 +1382,8 @@ function row(o) {
   const nextRelance = o.relances && (o.relances.r1||o.relances.r2||o.relances.r3);
   const today = new Date().toISOString().split('T')[0];
   let relDate = '—', relColor = 'var(--muted)';
-  if(o.status==='won'||o.status==='lost') { relDate = '—'; }
+  if(o.status==='won') { relDate = '✓ Gagnée'; relColor = 'var(--green)'; }
+  else if(o.status==='lost') { relDate = '✗ Perdue'; relColor = 'var(--red)'; }
   else if(nextRelance) {
     const d = nextRelance;
     if(d < today) { relDate = 'En retard'; relColor = 'var(--red)'; }
@@ -1282,7 +1399,7 @@ function row(o) {
   const openTxt = opens===0 ? '<span style="color:var(--muted);font-size:12px;">—</span>'
     : opens===1 ? '<span style="color:var(--blue);font-size:12px;">👁 1×</span>'
     : `<span style="color:var(--green);font-size:12px;font-weight:600;">👁 ${opens}×</span>`;
-  return `<div class="tbl-r tbl-cols" onclick="openModal('${o.id}')">
+  return `<div class="tbl-r tbl-cols ${o.status==='lost'?'row-lost':o.status==='won'?'row-won':''}" onclick="openModal('${o.id}')">
     <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
     <div class="ref">${o.ref}</div>
     <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
@@ -1317,7 +1434,7 @@ function renderOffres(){
       o.email.toLowerCase().includes(search) ||
       (o.objet||'').toLowerCase().includes(search);
     const matchFilter = currentFilter === 'all' ? true :
-      currentFilter === 'sent' ? o.status === 'sent' :
+      currentFilter === 'sent' ? ['sent','relance1','relance2','relance3'].includes(o.status) :
       currentFilter === 'relance' ? ['relance1','relance2','relance3'].includes(o.status) :
       currentFilter === 'won' ? o.status === 'won' :
       currentFilter === 'lost' ? o.status === 'lost' : true;
@@ -1408,10 +1525,11 @@ function renderDetection(){
       const daysAgo = Math.floor((now - new Date(o.lastOpen)) / 86400000);
       const timeStr = daysAgo === 0 ? 'Aujourd\'hui' : daysAgo === 1 ? 'Hier' : `Il y a ${daysAgo}j`;
       const isHot = daysAgo === 0;
+      const isLost = o.status === 'lost';
       return `<div class="od-event ${isHot?'hot':''}">
-        <div class="od-event-ico">${isHot?'🔥':'👁'}</div>
+        <div class="od-event-ico">${isLost?'❌':isHot?'🔥':'👁'}</div>
         <div class="od-event-info">
-          <div class="od-event-main">${o.prenom} ${o.nom} a ouvert votre email</div>
+          <div class="od-event-main">${o.prenom} ${o.nom} a ouvert votre email${isLost?' <span style="color:var(--red);font-size:10px;font-weight:600;margin-left:6px;background:var(--red-d);padding:1px 6px;border-radius:4px;">PERDUE</span>':''}</div>
           <div class="od-event-sub">${o.ref} · ${o.montant.toLocaleString('fr-CH')} CHF · ${o.opens}ème ouverture</div>
         </div>
         <div class="od-event-time">${timeStr}</div>
@@ -1440,7 +1558,7 @@ function renderDetection(){
         <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
         <div style="font-size:12px;color:${o.opens>0?'var(--green)':'var(--muted)'};">${o.lastOpen||'—'}</div>
         <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${o.opens>1?'var(--gold)':'var(--muted)'};">${o.opens}×</div>
-        <div style="font-size:12px;">${scores(o)}</div>
+        <div style="font-size:12px;">${o.status==='lost'?'<span style=\"color:var(--red);\">❌ Perdue</span>':scores(o)}</div>
       </div>`).join('')
     : '<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;">Aucune offre envoyée pour l\'instant.</div>';
 }
@@ -1540,7 +1658,7 @@ function renderRapport() {
   const chauds = OFFERS.filter(o=>o.opens>=2 && ['sent','relance1','relance2','relance3'].includes(o.status));
   const urgents = pending.filter(o=>o.status==='relance2'||o.status==='relance3');
 
-  // Insights dynamiques
+  // Résumé dynamique
   const insights = [];
   if(total === 0) {
     insights.push(`<div class="insight blue"><strong>🚀 Commencez :</strong> <span>Envoyez votre première offre pour voir apparaître vos statistiques ici.</span></div>`);
@@ -1569,8 +1687,9 @@ function renderRapport() {
     </div>
     <div class="report-body">
       <div class="report-section">
-        <div class="rs-title">Insights de la semaine</div>
-        ${insights.join('')}
+        <div class="rs-title">Analyse IA de la semaine</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">Conseils personnalisés basés sur votre activité.</div>
+        ${insights.length ? insights.join('') : '<div class=\"insight blue\"><strong>📊 Activité :</strong> <span>Envoyez des offres cette semaine pour voir votre analyse personnalisée ici.</span></div>'}
       </div>
       ${won.length > 0 ? `
       <div class="report-section">
@@ -1590,9 +1709,7 @@ function renderRapport() {
       </div>` : ''}
     </div>
     <div class="report-actions">
-      <button class="btn btn-gold" onclick="toast('📧','Rapport envoyé par email !')">📧 Envoyer par email</button>
-      <button class="btn btn-ghost" onclick="exportPDF()">📄 Exporter PDF</button>
-      <button class="btn btn-ghost" onclick="exportCSV()">📊 Export Excel</button>
+      <button class="btn btn-gold" onclick="exportCSV()">📊 Exporter Excel</button>
     </div>`;
 }
 
@@ -1626,6 +1743,87 @@ function renderClients(){
   }).join('');
 }
 
+
+
+// ══ PDF VIEWER MODAL ══
+function viewPdfModal(url, ref) {
+  if(!url) { toast('⚠️','Aucun PDF disponible pour cette offre'); return; }
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+  overlay.innerHTML = `
+    <div style="width:100%;max-width:900px;height:85vh;background:var(--s1);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <div style="font-size:14px;font-weight:600;color:var(--text);">📄 ${ref}</div>
+        <div style="display:flex;gap:8px;">
+          <a href="${url}" target="_blank" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--text);font-size:12px;text-decoration:none;cursor:pointer;">⬇️ Télécharger</a>
+          <button onclick="this.closest('[data-pdfmodal]').remove();" style="background:var(--red-d);border:1px solid rgba(184,50,50,0.3);border-radius:8px;padding:6px 12px;color:var(--red);font-size:12px;cursor:pointer;">✕ Fermer</button>
+        </div>
+      </div>
+      <iframe src="${url}" style="flex:1;width:100%;border:none;" allow="fullscreen"></iframe>
+    </div>`;
+  const modal = overlay.querySelector('div');
+  modal.setAttribute('data-pdfmodal', '');
+  overlay.addEventListener('click', (ev) => { if(ev.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+// ══ MODIFIER FICHE CLIENT ══
+function editClientModal(email) {
+  const c = OFFERS.filter(o => o.email === email);
+  if(!c.length) return;
+  const first = c[0];
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;';
+  overlay.innerHTML = `<div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:400px;width:90%;font-family:'Outfit',sans-serif;">
+    <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;">✏️ Modifier le client</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:20px;">${email}</div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+      <div>
+        <label style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;">Prénom</label>
+        <input id="ec-prenom" value="${first.prenom||''}" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;">
+      </div>
+      <div>
+        <label style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;">Nom</label>
+        <input id="ec-nom" value="${first.nom||''}" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;">
+      </div>
+      <div>
+        <label style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;">Email</label>
+        <input id="ec-email" value="${email}" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;">
+      </div>
+      <div>
+        <label style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;">Entreprise</label>
+        <input id="ec-entreprise" value="${first.entreprise||''}" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="this.closest('[data-ecmodal]').remove();" style="flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif;">Annuler</button>
+      <button id="ec-save-btn" style="flex:2;background:var(--gold);border:none;border-radius:8px;padding:10px;color:#fff;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;">Enregistrer</button>
+    </div>
+  </div>`;
+  const modal = overlay.querySelector('div');
+  modal.setAttribute('data-ecmodal', '');
+  modal.querySelector('#ec-save-btn').onclick = async () => {
+    const newPrenom = modal.querySelector('#ec-prenom').value.trim();
+    const newNom = modal.querySelector('#ec-nom').value.trim();
+    const newEmail = modal.querySelector('#ec-email').value.trim();
+    const newEntreprise = modal.querySelector('#ec-entreprise').value.trim();
+    try {
+      // Mettre à jour toutes les offres de ce client
+      const offresIds = c.map(o => o.id);
+      for(const id of offresIds) {
+        await sbFetch('offres?id=eq.'+id, {method:'PATCH', headers:{'Prefer':'return=minimal'},
+          body: JSON.stringify({prenom:newPrenom,nom:newNom,email:newEmail,entreprise:newEntreprise})});
+        const o = OFFERS.find(x=>x.id===id);
+        if(o) { o.prenom=newPrenom; o.nom=newNom; o.email=newEmail; o.entreprise=newEntreprise; }
+      }
+      toast('✅','Client mis à jour');
+      overlay.remove();
+      renderOffres(); renderClients();
+    } catch(ex) { toast('❌','Erreur: '+ex.message.slice(0,60)); }
+  };
+  document.body.appendChild(overlay);
+}
+
 function openClientModal(email){
   const c=OFFERS.filter(o=>o.email===email);
   if(!c.length)return;
@@ -1648,8 +1846,17 @@ function openClientModal(email){
     </div>
     <div class="m-acts">
       <button class="btn btn-gold btn-sm" onclick="go('nouvelle');closeModal();toast('📄','Préparez la nouvelle offre')">+ Nouvelle offre</button>
-      <button class="btn btn-ghost btn-sm" onclick="toast('📧','Email direct...')">📧 Email direct</button>
+      <button class="btn btn-ghost btn-sm" onclick="editClientModal('${email}')">✏️ Modifier client</button>
+      ${c.some(o=>o.pdfUrl)?`<button class="btn btn-ghost btn-sm" onclick="viewPdfModal('${c.find(o=>o.pdfUrl)?.pdfUrl||''}','${c.find(o=>o.pdfUrl)?.ref||''}')">📄 Voir PDF</button>`:''}
     </div>`;
+  // PDF viewer inline
+  if(o.pdfUrl) {
+    document.getElementById('m-body').innerHTML += `<div style="margin-top:18px;border:1px solid var(--border);border-radius:10px;overflow:hidden;">`
+      + `<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--border);background:var(--s3);">`
+      + `<span style="font-size:12px;font-weight:600;color:var(--text);">📄 ${o.fichier||o.ref+'.pdf'}</span>`
+      + `<a href="${o.pdfUrl}" target="_blank" style="font-size:11px;color:var(--gold);text-decoration:none;padding:4px 10px;background:var(--gold-d);border-radius:5px;">⬇ Télécharger</a>`
+      + `</div><iframe src="${o.pdfUrl}" style="width:100%;height:440px;border:none;display:block;" loading="lazy"></iframe></div>`;
+  }
   document.getElementById('overlay').classList.add('open');
 }
 
@@ -1678,9 +1885,10 @@ function openModal(id){
       <textarea class="notes-field" id="modal-notes" placeholder="Ajouter une note... (hésitations, budget, timing...)" onblur="saveNote('${o.id}',this.value)">${o.notes||''}</textarea>
     </div>
     <div class="m-acts">
+      ${o.pdfUrl?`<button class="btn btn-ghost btn-sm" onclick="viewPdfModal('${o.pdfUrl}','${o.ref}')">📄 Voir PDF</button>`:''}
       <button class="btn btn-ghost btn-sm" onclick="previewRelance('${o.id}')">👁 Voir relances</button>
       <button class="btn btn-ghost btn-sm" onclick="actR('${o.id}');closeModal()">📧 Relancer</button>
-      ${o.pdfUrl?`<button class="btn btn-blue btn-sm" onclick="viewPDF('${o.pdfUrl}','${o.fichier}')">📄 Voir PDF</button>`:''}
+      ${o.pdfUrl?`<button class="btn btn-blue btn-sm" onclick="viewPDF('${o.pdfUrl}','${o.fichier||o.ref}')">📄 Voir PDF</button>`:''}
       <button class="btn btn-green btn-sm" onclick="askConfirm('won','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✓ Gagnée</button>
       <button class="btn btn-red btn-sm" onclick="askConfirm('lost','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✕ Perdue</button>
       <button class="btn btn-ghost btn-sm" onclick="editOffer('${o.id}')">✎ Modifier</button>
@@ -1701,14 +1909,22 @@ async function actR(id){
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:next}), prefer:'return=minimal', headers:{'Prefer':'return=minimal'}});
     o.status=next;
 
-    // Generate relance email via AI then send
+    // Utiliser le brouillon sauvegardé si le commercial l'a modifié
+  const savedRpDrafts = JSON.parse(localStorage.getItem('rp_drafts_'+id)||'["","",""]');
+  const savedBody = savedRpDrafts[rNum-1];
+  // Generate relance email via AI then send
     const tones = [
       'Relance amicale. 2-3 lignes. OBLIGATOIRE : terminer par "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Au plaisir d\'en discuter," sur sa propre ligne.',
       'Relance pro directe. 3-4 lignes. OBLIGATOIRE : terminer par "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Meilleures salutations," sur sa propre ligne.',
       'Dernière relance urgente. 2-3 lignes percutantes. OBLIGATOIRE : terminer par "Sincères salutations," sur sa propre ligne.',
     ];
-    let emailBody = '';
-    try {
+    let emailBody = savedBody || '';
+    if(emailBody) {
+      // Utiliser le brouillon modifié par le commercial
+      await sendBrevoEmail({to:o.email, toName:o.prenom+' '+o.nom, subject:'Re: Offre '+o.ref+' — '+o.objet, body:emailBody, offerId:o.id});
+      toast('📧',`Relance ${rNum} envoyée à ${o.prenom} ${o.nom} (modèle personnalisé)`);
+    }
+    if(!emailBody) try {
       const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (Relance ${rNum}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[rNum-1]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps du message (2-4 lignes selon le ton)\n3. Termine par une formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nNE PAS inclure le nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
       emailBody = data.content?.[0]?.text||'';
@@ -1770,6 +1986,9 @@ async function actL(id){
   if(!raison || raison === 'cancel') return;
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:'lost', notes: (o.notes||'') + (o.notes?'\n':'') + `Perdu — ${raison}`}), headers:{'Prefer':'return=minimal'}});
+    try { await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending', {method:'PATCH', body:JSON.stringify({statut:'cancelled'}), headers:{'Prefer':'return=minimal'}}); } catch(_){}
+    // Annuler TOUTES les relances pending en DB
+    try { await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending', {method:'DELETE', headers:{'Prefer':'return=minimal'}}); } catch(ex) {}
     o.status='lost';
     o.notes = (o.notes||'') + (o.notes?'\n':'') + `Perdu — ${raison}`;
     toast('📊',`Dossier archivé — relances annulées pour ${o.prenom} ${o.nom}`);
@@ -2200,7 +2419,8 @@ async function saveEdit(id) {
 function confirmRelance(id) {
   const o = OFFERS.find(x=>x.id===id);
   if(!o) return;
-  const rNum = (o.status||o.statut)==='envoyee'?1:(o.status||o.statut)==='relance1'?2:(o.status||o.statut)==='relance2'?3:1;
+  const currentStatus = o.status || o.statut || 'sent';
+  const rNum = currentStatus==='sent'?1:currentStatus==='relance1'?2:currentStatus==='relance2'?3:1;
   document.getElementById('m-t').textContent = '📧 Confirmer la relance';
   document.getElementById('m-s').textContent = o.ref + ' — ' + (o.prenom||'') + ' ' + (o.nom||'');
   document.getElementById('m-body').innerHTML = `
@@ -2222,7 +2442,9 @@ function confirmRelance(id) {
 
 // ══ RELANCE PREVIEW ══
 let rpDrafts = ['','',''];
+let rpEdited = [false,false,false];
 let rpActive = 0;
+let rpCurrentOfferId = null;
 
 async function previewRelance(id) {
   const o = OFFERS.find(x=>x.id===id);
@@ -2235,7 +2457,11 @@ async function previewRelance(id) {
     {lbl:'Relance 3',col:'var(--orange)',day:o.relances.r3},
   ].map((t,i)=>`<button class="rp-tab ${i===0?'active':''}" onclick="switchRPTab(${i})" style="${i===0?`border-color:${t.col};color:${t.col};background:${t.col}22;`:''}">${t.lbl}<br><span style="font-weight:400;font-size:9px;opacity:0.7;">${t.day||'—'}</span></button>`).join('');
 
-  const msgs = ['Chargement...','Chargement...','Chargement...'];
+  rpEdited = [false,false,false];
+  rpCurrentOfferId = o.id;
+  // Charger les brouillons sauvegardés si existants
+  const savedDrafts = JSON.parse(localStorage.getItem('rp_drafts_'+o.id)||'["","",""]');
+  const msgs = savedDrafts.map((d,i)=>d||'Chargement...');
   showRPContent(o, msgs, 0);
 
   // Generate all 3 relances via AI
@@ -2247,6 +2473,10 @@ async function previewRelance(id) {
   const delays = ['J+3','J+7','J+14'];
   
   for(let i=0;i<3;i++) {
+    // Ne pas régénérer si le commercial a déjà modifié/sauvegardé
+    if(rpDrafts[i] && rpEdited[i]) { msgs[i]=rpDrafts[i]; continue; }
+    const savedD = JSON.parse(localStorage.getItem('rp_drafts_'+o.id)||'["","",""]');
+    if(savedD[i]) { rpDrafts[i]=savedD[i]; msgs[i]=savedD[i]; if(i===rpActive)showRPContent(o,msgs,rpActive); continue; }
     try {
       const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps (2-4 lignes)\n3. Formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nPas de nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
@@ -2258,18 +2488,46 @@ async function previewRelance(id) {
   showRPContent(o, msgs, rpActive);
 }
 
+function saveRpDraft(idx) {
+  if(!rpCurrentOfferId) return;
+  const ta = document.getElementById('rp-body-text');
+  if(ta) rpDrafts[idx] = ta.value;
+  rpEdited[idx] = true;
+  const saved = JSON.parse(localStorage.getItem('rp_drafts_'+rpCurrentOfferId)||'["","",""]');
+  saved[idx] = rpDrafts[idx];
+  localStorage.setItem('rp_drafts_'+rpCurrentOfferId, JSON.stringify(saved));
+  // Sauvegarder aussi dans contexte de l'offre en DB (notes)
+  sbFetch('offres?id=eq.'+rpCurrentOfferId, {method:'PATCH', body:JSON.stringify({contexte:(window._rpCtx||{})[idx]||rpDrafts[idx]}), headers:{'Prefer':'return=minimal'}}).catch(()=>{});
+  toast('💾','Relance '+(idx+1)+' enregistrée — ne sera pas régénérée');
+}
+function regenRpDraft(idx) {
+  rpEdited[idx] = false;
+  const o = OFFERS.find(x=>x.id===rpCurrentOfferId);
+  if(o) previewRelance(o.id);
+}
 function showRPContent(o, msgs, idx) {
   const labels = ['Relance 1','Relance 2','Relance 3'];
   const days = [o.relances.r1,o.relances.r2,o.relances.r3];
-  document.getElementById('rp-content').innerHTML = `
-    <div class="rp-email">
-      <div class="rp-email-head">
-        <div class="rp-email-row"><span>À :</span><span>${o.prenom} ${o.nom} &lt;${o.email}&gt;</span></div>
-        <div class="rp-email-row"><span>Objet :</span><span>Re: Offre ${o.ref} — ${o.objet}</span></div>
-        <div class="rp-email-row"><span>Date :</span><span>${days[idx]||'Programmée'} — ${labels[idx]}</span></div>
-      </div>
-      <div class="rp-email-body" id="rp-body-text">${msgs[idx]==='Chargement...'?'<div style="color:var(--muted);font-style:italic;">⏳ Génération en cours...</div>':msgs[idx]}</div>
-    </div>`;
+  const isLoading = msgs[idx] === 'Chargement...';
+  const escaped = (isLoading ? '' : (msgs[idx]||'')).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const bodyHtml = isLoading
+    ? '<div style="color:var(--muted);font-style:italic;padding:16px;">⏳ Génération en cours...</div>'
+    : '<textarea id="rp-body-text" style="width:100%;min-height:150px;resize:vertical;background:transparent;border:none;outline:none;font-family:inherit;font-size:13px;color:var(--text);line-height:1.7;padding:12px 0;" oninput="rpDrafts['+idx+']=this.value;rpEdited['+idx+']=true;">'+escaped+'</textarea>';
+  const btnHtml = isLoading ? '' : '<div style="display:flex;gap:8px;padding:8px 0 2px;">'
+    + '<button onclick="saveRpDraft('+idx+')" style="padding:6px 14px;background:var(--gold);border:none;border-radius:7px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">💾 Enregistrer</button>'
+    + '<button onclick="regenRpDraft('+idx+')" style="padding:6px 12px;background:var(--s2);border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:12px;cursor:pointer;">🔄 Régénérer</button>'
+    + (rpEdited[idx] ? '<span style="font-size:10px;color:var(--green);align-self:center;">✓ Modifié</span>' : '')
+    + '</div>';
+  document.getElementById('rp-content').innerHTML = 
+    '<div class="rp-email">'
+    + '<div class="rp-email-head">'
+    + '<div class="rp-email-row"><span>À :</span><span>'+o.prenom+' '+o.nom+' &lt;'+o.email+'&gt;</span></div>'
+    + '<div class="rp-email-row"><span>Objet :</span><span>Re: Offre '+o.ref+' — '+o.objet+'</span></div>'
+    + '<div class="rp-email-row"><span>Date :</span><span>'+(days[idx]||'Programmée')+' — '+labels[idx]+'</span></div>'
+    + '</div>'
+    + '<div class="rp-email-body" style="padding:0;">'+bodyHtml+'</div>'
+    + '</div>'
+    + btnHtml;
 }
 
 function switchRPTab(idx) {
@@ -2522,17 +2780,18 @@ async function loadConfig() {
   updateUserUI();
 }
 
-async function saveConfig() {
+async async function saveConfig() {
   CFG.name = document.getElementById('cfg-name')?.value || document.getElementById('cfg-name-email')?.value || '';
   CFG.role = document.getElementById('cfg-role')?.value||'';
   CFG.company = document.getElementById('cfg-company')?.value||'';
   CFG.phone = document.getElementById('cfg-phone')?.value||'';
   CFG.senderEmail = document.getElementById('cfg-sender-email')?.value||'';
   CFG.brevoKey = document.getElementById('cfg-brevo-key')?.value||'';
+  CFG.website = document.getElementById('cfg-website')?.value||'';
   // Sauvegarder en localStorage immédiatement
   localStorage.setItem('of_cfg', JSON.stringify(CFG));
   try {
-    for(const k of ['name','role','company','phone','senderEmail','brevoKey']) {
+    for(const k of ['name','role','company','phone','senderEmail','brevoKey','website']) {
       await saveSetting(k, CFG[k]);
     }
     updateSigPreview();
@@ -2746,9 +3005,8 @@ async function sbAuthFetch(path, options={}) {
 
 // Plans et leurs limites
 const PLANS_CONFIG = {
-  free:     { name: 'Gratuit',  maxOffres: 10,  relancesAuto: false, tracking: false, rapportIA: false },
-  pro:      { name: 'Pro',      maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  },
-  business: { name: 'Business', maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  }
+  free: { name: 'Gratuit',  maxOffres: 5,     relancesAuto: false, tracking: false, rapportIA: false },
+  pro:  { name: 'Pro',      maxOffres: 99999,  relancesAuto: true,  tracking: true,  rapportIA: true  },
 };
 
 // Plan actuel de l'utilisateur (chargé depuis settings)
@@ -2944,7 +3202,7 @@ function showForgotPassword() {
     </div>`;
 }
 
-async function doForgotPassword() {
+async async function doForgotPassword() {
   const email = document.getElementById('forgot-email')?.value?.trim();
   const msgEl = document.getElementById('forgot-msg');
   const showMsg = (txt, color, bg) => {
@@ -3063,13 +3321,15 @@ async function signIn(email, password) {
   } catch(e) {
     // Normaliser les messages d'erreur Supabase
     const msg = e.message || '';
-    if(msg.includes('Invalid login') || msg.includes('invalid_grant') || msg.includes('credentials'))
+    if(msg.includes('Invalid login') || msg.includes('invalid_grant') || msg.includes('credentials') || msg.includes('user_not_found') || msg.includes('User not found') || msg.includes('invalid credentials'))
       throw new Error('Email ou mot de passe incorrect');
     if(msg.includes('Email not confirmed'))
-      throw new Error('Confirmez votre email avant de vous connecter');
-    if(msg.includes('Too many'))
+      throw new Error('Confirmez votre email avant de vous connecter (vérifiez vos spams)');
+    if(msg.includes('Too many') || msg.includes('rate limit'))
       throw new Error('Trop de tentatives — attendez quelques minutes');
-    throw new Error(msg || 'Erreur de connexion');
+    if(msg.includes('network') || msg.includes('Failed to fetch'))
+      throw new Error('Erreur réseau — vérifiez votre connexion');
+    throw new Error(msg || 'Erreur de connexion — réessayez');
   }
 }
 
@@ -3341,6 +3601,21 @@ function updateUserUI() {
       if(planSub) planSub.textContent = '5 offres / mois';
     }
   }
+  // Sync nom/rôle dans la sidebar
+  if(!CFG.name && !CFG.role) {
+    try { const c=localStorage.getItem('of_cfg'); if(c) Object.assign(CFG,JSON.parse(c)); } catch(_){}
+  }
+  const _email = CURRENT_USER.email || '';
+  const _name = CFG.name || CURRENT_USER.user_metadata?.full_name || _email.split('@')[0] || '—';
+  const _initials = _name.split(' ').map(x=>x[0]||'').join('').toUpperCase().slice(0,2) || _email[0]?.toUpperCase() || '?';
+  const _av = document.getElementById('user-avatar'); if(_av) _av.textContent = _initials;
+  const _nm = document.getElementById('user-name');   if(_nm) _nm.textContent = _name;
+  const _rl = document.getElementById('user-role');   if(_rl) _rl.textContent = CFG.role ? (CFG.role+(CFG.company?' · '+CFG.company:'')) : (CFG.company||_email);
+  // Sync champs Config si déjà ouverts
+  const _sv=(id,v)=>{const el=document.getElementById(id);if(el&&v&&!el.value)el.value=v;};
+  _sv('cfg-name',CFG.name||''); _sv('cfg-name-email',CFG.name||'');
+  _sv('cfg-role',CFG.role||''); _sv('cfg-company',CFG.company||'');
+  _sv('cfg-phone',CFG.phone||''); _sv('cfg-website',CFG.website||'');
   const name = CFG.name || CURRENT_USER.user_metadata?.full_name || CURRENT_USER.email.split('@')[0];
   const role = CFG.role || CFG.senderEmail || CURRENT_USER.email;
   const initials = name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
