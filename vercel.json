@@ -1,8 +1,7 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron-relances",
-      "schedule": "0 9 * * *"
-    }
+  "rewrites": [
+    { "source": "/app", "destination": "/index.html" },
+    { "source": "/app/(.*)", "destination": "/index.html" },
+    { "source": "/", "destination": "/landing.html" }
   ]
 }
