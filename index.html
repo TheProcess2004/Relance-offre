@@ -3069,17 +3069,8 @@ async function doForgotPassword() {
       headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, redirect_to: redirectTo })
     });
-    if(!res.ok) {
-      const err = await res.json().catch(()=>({}));
-      const msg = err.error_description || err.msg || '';
-      if(msg.toLowerCase().includes('smtp') || msg.toLowerCase().includes('sending')) {
-        showMsg('⚙️ SMTP non configuré dans Supabase. Configurez-le dans le dashboard Supabase → Authentication → Settings → SMTP (smtp-relay.brevo.com)', 'var(--accent)', 'rgba(196,160,85,0.1)');
-      } else {
-        showMsg('❌ ' + (msg || 'Erreur — réessayez'), 'var(--red)', 'rgba(192,53,53,0.10)');
-      }
-      return;
-    }
-    showMsg('✅ Email envoyé ! Vérifiez votre boîte mail et vos spams.', 'var(--green)', 'rgba(30,148,100,0.08)');
+    // Toujours afficher succès (sécurité : ne pas révéler si l'email existe)
+    showMsg('✅ Si ce compte existe, un email de réinitialisation vient d\'être envoyé. Vérifiez vos spams.', 'var(--green)', 'rgba(30,148,100,0.08)');
   } catch(e) {
     showMsg('❌ Erreur réseau — vérifiez votre connexion', 'var(--red)', 'rgba(192,53,53,0.10)');
   }
@@ -3356,7 +3347,7 @@ function showAuthScreen() {
             <button onclick="doRegister()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">Créer mon compte</button>
           </div>
         </div>
-        <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--muted);">🔒 Vos données sont privées et sécurisées</div>
+        <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--muted);">🔒 Vos données sont privées et sécurisées</div><div style="text-align:center;margin-top:14px;"><a href="/" style="font-size:11px;color:var(--muted2);text-decoration:none;" onmouseover="this.style.color='var(--muted)'" onmouseout="this.style.color='var(--muted2)'">← Retour à l'accueil</a></div>
       </div>
     </div>`;
 }
@@ -3823,6 +3814,20 @@ function updateMobBadge() {
 }
 
 checkResetMode();
+// Gérer le retour Stripe
+(function() {
+  const qp = new URLSearchParams(window.location.search);
+  if(qp.get('payment') === 'success') {
+    history.replaceState(null,'',window.location.pathname);
+    // Attendre que l'app charge puis afficher le message
+    window.addEventListener('load', () => setTimeout(() => {
+      toast('🎉','Bienvenue dans FollowOffer Pro ! Votre abonnement est actif.');
+    }, 1500));
+  }
+  if(qp.get('payment') === 'cancel') {
+    history.replaceState(null,'',window.location.pathname);
+  }
+})();
 init();
 // DEBUG : détecte automatiquement tout élément bloquant les clics
 setTimeout(() => {
