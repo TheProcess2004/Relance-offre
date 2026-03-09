@@ -27,7 +27,7 @@ html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
 ::-webkit-scrollbar-thumb{background:rgba(160,185,215,0.18);border-radius:10px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(160,185,215,0.32);}
 input:focus,select:focus,textarea:focus{outline:none!important;border-color:rgba(75,140,220,0.5)!important;box-shadow:0 0 0 3px rgba(75,140,220,0.08)!important;}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;;-webkit-font-smoothing:antialiased;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
 
 /* LAYOUT */
@@ -44,7 +44,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .sb-sec-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(160,185,215,0.36);padding:0 10px;margin-bottom:4px;}
 .nb{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border-radius:7px;border:none;background:none;color:rgba(195,215,240,0.78);font-size:13px;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif;text-align:left;}
 .nb:hover{background:rgba(160,185,215,0.07);color:#ECF0FA;}
-.nb.active{background:rgba(77,144,220,0.15);color:#4D90DC!important;border-left:2.5px solid #4D90DC;padding-left:8px;font-weight:600;}
+.nb.active{background:rgba(77,144,220,0.13);color:#4D90DC!important;box-shadow:inset 2.5px 0 0 #4D90DC;font-weight:600;}
 .nb .ic{font-size:14px;width:18px;text-align:center;opacity:0.88;}
 .nc{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;}
 .nc-gold{background:var(--gold);color:var(--bg);}
@@ -574,7 +574,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         </svg>
       </div>
     </div>
-    <div style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(160,185,215,0.32);padding-left:2px;margin-top:3px;font-family:'Outfit',sans-serif;">Suite commerciale · CH</div>
+    <div style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(160,185,215,0.32);padding-left:2px;margin-top:3px;font-family:'Outfit',sans-serif;">Chaque relance compte</div>
   </div>
   <nav class="sb-nav" id="sb-nav">
     <div class="sb-section">
@@ -3031,7 +3031,13 @@ async function doChangePassword() {
 
 // ══ MOT DE PASSE OUBLIÉ ══
 function showForgotPassword() {
-  const authBox = document.querySelector('.auth-box');
+  // L'auth-box peut ne pas exister encore — on rebuild l'auth screen
+  let authBox = document.querySelector('.auth-box');
+  if(!authBox) {
+    // Recréer le screen et chercher à nouveau
+    showAuthScreen();
+    authBox = document.querySelector('.auth-box');
+  }
   if(!authBox) return;
   authBox.innerHTML = `
     <div style="text-align:center;margin-bottom:24px;">
@@ -3306,9 +3312,9 @@ function showAuthScreen() {
               </div>
             </div>
           </div>
-          <div style="font-size:9.5px;color:rgba(195,210,235,0.42);letter-spacing:3px;text-transform:uppercase;margin-top:3px;">Suite commerciale · CH</div>
+          <div style="font-size:9.5px;color:rgba(195,210,235,0.42);letter-spacing:3px;text-transform:uppercase;margin-top:3px;">Chaque relance compte</div>
         </div>
-        <div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;">
+        <div class="auth-box" style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;">
           <div style="display:flex;background:var(--s2);border-radius:8px;padding:3px;margin-bottom:24px;">
             <button id="tab-login" onclick="authTab('login')" style="flex:1;padding:8px;border-radius:6px;border:none;background:var(--gold);color:#000;font-size:13px;font-weight:600;cursor:pointer;">Connexion</button>
             <button id="tab-register" onclick="authTab('register')" style="flex:1;padding:8px;border-radius:6px;border:none;background:transparent;color:var(--muted);font-size:13px;cursor:pointer;">Créer un compte</button>
@@ -3813,7 +3819,7 @@ function updateMobBadge() {
 }
 
 checkResetMode();
-init();;
+init();
 </script>
 </body>
 </html>
