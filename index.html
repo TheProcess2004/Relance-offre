@@ -28,7 +28,7 @@ html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(160,185,215,0.32);}
 input:focus,select:focus,textarea:focus{outline:none!important;border-color:rgba(75,140,220,0.5)!important;box-shadow:0 0 0 3px rgba(75,140,220,0.08)!important;}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:-1;opacity:0.5;}
 
 /* LAYOUT */
 .app{display:flex;min-height:100vh;}
@@ -1877,8 +1877,7 @@ async function actL(id){
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:'lost', notes: (o.notes||'') + (o.notes?'\n':'') + `Perdu — ${raison}`}), headers:{'Prefer':'return=minimal'}});
     try{await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending',{method:'PATCH',body:JSON.stringify({statut:'cancelled'}),headers:{'Prefer':'return=minimal'}});}catch(_){}
-    o.status='lost'; o.relances={r1:'',r2:'',r3:''}; o.notes=(o.notes||'')+(o.notes?'
-':'')+`Perdu — ${raison}`;
+    o.status='lost'; o.relances={r1:'',r2:'',r3:''}; o.notes=(o.notes||'')+(o.notes?'\n':'')+`Perdu — ${raison}`;
     toast('📊',`Dossier archivé — relances annulées pour ${o.prenom} ${o.nom}`);
     renderOffres(); renderRelances(); renderUrgent();
     if(document.getElementById('panel-calendrier')?.classList.contains('active')) renderCalendar(); updateBadges();
@@ -3565,7 +3564,7 @@ function showOpenNotification(offre) {
 async function init() {
   const loader = document.createElement('div');
   loader.id = 'global-loader';
-  loader.style.cssText = 'position:fixed;inset:0;background:rgba(7,8,12,0.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+  loader.style.cssText = 'position:fixed;inset:0;background:rgba(7,8,12,0.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;pointer-events:all;';
   loader.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:16px;"><svg width="52" height="44" viewBox="0 0 52 44" fill="none"><rect x="1" y="34" width="6" height="8" rx="1.5" fill="rgba(233,184,74,0.3)"/><rect x="9" y="27" width="6" height="15" rx="1.5" fill="rgba(233,184,74,0.5)"/><rect x="17" y="19" width="6" height="23" rx="1.5" fill="rgba(233,184,74,0.65)"/><rect x="25" y="12" width="6" height="30" rx="1.5" fill="rgba(233,184,74,0.82)"/><rect x="33" y="5" width="6" height="37" rx="1.5" fill="#E9B84A"/><line x1="0" y1="42" x2="52" y2="42" stroke="rgba(233,184,74,0.15)" stroke-width="1"/><path d=\'M3,32 Q11,23 20,16 Q27,11 37,4\' stroke="#E9B84A" stroke-width="2" stroke-linecap="round" fill="none"/><polygon points=\'37,4 31,8 33.5,12\' fill="#E9B84A"/><circle cx="37" cy="4" r="3" fill="#E9B84A"/></svg><div style=\'font-family:Instrument Serif,serif;font-size:22px;color:var(--gold);\'>FollowOffer</div></div><div style=\'width:36px;height:36px;border:2.5px solid rgba(255,255,255,0.1);border-top-color:#E9B84A;border-radius:50%;animation:spin 0.8s linear infinite;\'></div><div style=\'font-size:11px;color:rgba(236,238,242,0.35);font-family:Outfit,sans-serif;letter-spacing:1.5px;margin-top:10px;\'>Chargement...</div>';
   document.body.appendChild(loader);
 
@@ -3574,7 +3573,7 @@ async function init() {
     const l = document.getElementById('global-loader');
     if(l) l.remove();
     if(!CURRENT_USER) { document.getElementById('app-shell').style.display='none'; showAuthScreen(); }
-  }, 8000);
+  }, 4000);
 
   try {
     const hasSession = loadSession();
@@ -3626,7 +3625,7 @@ async function init() {
 
 // ══ ONBOARDING ══
 function shouldShowOnboarding() {
-  return !localStorage.getItem('of_onboarding_done') && OFFERS.length === 0;
+  return false; // Onboarding désactivé — guide disponible dans la sidebar
 }
 
 function startOnboarding() {
@@ -3820,6 +3819,37 @@ function updateMobBadge() {
 
 checkResetMode();
 init();
+// DEBUG : détecte automatiquement tout élément bloquant les clics
+setTimeout(() => {
+  const blocking = [];
+  document.querySelectorAll('*').forEach(el => {
+    const s = window.getComputedStyle(el);
+    if(s.position === 'fixed' && s.display !== 'none' && s.visibility !== 'hidden' && s.opacity !== '0') {
+      const r = el.getBoundingClientRect();
+      if(r.width > 200 && r.height > 200 && s.pointerEvents !== 'none') {
+        blocking.push(el.id || el.className || el.tagName);
+      }
+    }
+  });
+  if(blocking.length > 0) {
+    console.warn('⚠️ ÉLÉMENTS BLOQUANTS DÉTECTÉS:', blocking);
+    // Auto-corriger : retirer tout élément bloquant inconnu
+    document.querySelectorAll('*').forEach(el => {
+      const s = window.getComputedStyle(el);
+      if(s.position === 'fixed' && s.display !== 'none' && s.pointerEvents !== 'none') {
+        const r = el.getBoundingClientRect();
+        if(r.width > window.innerWidth * 0.8 && r.height > window.innerHeight * 0.8) {
+          const safeIds = ['global-loader','ob-overlay','overlay','rp-overlay','confirm-overlay'];
+          const id = el.id || '';
+          if(!safeIds.some(s => id.includes(s))) {
+            console.warn('AUTO-FIX: removing blocker', el.id || el.className);
+            el.style.pointerEvents = 'none';
+          }
+        }
+      }
+    });
+  }
+}, 3000);
 </script>
 </body>
 </html>
