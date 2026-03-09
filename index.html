@@ -4,50 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FollowOffer · Suite Commerciale Suisse</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23080B10'/%3E%3Ctext x='3' y='23' font-family='Outfit,Arial,sans-serif' font-size='18' font-weight='800' fill='white'%3EF%3C/text%3E%3Ctext x='15' y='23' font-family='Outfit,Arial,sans-serif' font-size='18' font-weight='800' fill='%234B89DC'%3EO%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2307090E'/%3E%3Ctext x='2' y='23' font-family='Outfit,Arial,sans-serif' font-size='18' font-weight='800' fill='%23ECF0FA'%3EF%3C/text%3E%3Ctext x='15' y='23' font-family='Outfit,Arial,sans-serif' font-size='18' font-weight='800' fill='%234D90DC'%3EO%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root{
-  --bg:#080B10;--s1:#0C1018;--s2:#111720;--s3:#171E29;
-  --border:rgba(160,180,210,0.09);--border2:rgba(160,180,210,0.16);
-  --gold:#1A6FA8;--gold-d:rgba(26,111,168,0.13);
-  --accent:#B8965A;--accent-d:rgba(184,150,90,0.13);
-  --green:#1E8C5E;--green-d:rgba(30,140,94,0.13);
-  --red:#B83232;--red-d:rgba(184,50,50,0.11);
-  --blue:#2E7EC4;--blue-d:rgba(46,126,196,0.12);
-  --purple:#5B5FA0;--purple-d:rgba(91,95,160,0.12);
-  --orange:#A0622A;--orange-d:rgba(160,98,42,0.11);
-  --text:#F0F4FA;--muted:rgba(200,215,235,0.65);--muted2:rgba(160,180,210,0.32);
+  --bg:#07090E;--s1:#0C1018;--s2:#111820;--s3:#161E28;
+  --border:rgba(160,185,220,0.10);--border2:rgba(160,185,220,0.20);
+  --gold:#1A73B0;--gold-d:rgba(26,115,176,0.14);
+  --accent:#C4A055;--accent-d:rgba(196,160,85,0.13);
+  --green:#1E9464;--green-d:rgba(30,148,100,0.14);
+  --red:#C03535;--red-d:rgba(192,53,53,0.12);
+  --blue:#3080CC;--blue-d:rgba(48,128,204,0.12);
+  --purple:#6068A8;--purple-d:rgba(96,104,168,0.12);
+  --orange:#A86828;--orange-d:rgba(168,104,40,0.11);
+  --text:#ECF0FA;--muted:rgba(195,210,235,0.70);--muted2:rgba(160,185,215,0.38);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html{-webkit-font-smoothing:antialiased;}
-input:focus,select:focus,textarea:focus{outline:none!important;border-color:rgba(75,137,220,0.5)!important;box-shadow:0 0 0 3px rgba(75,137,220,0.1)!important;}
-::-webkit-scrollbar{width:5px;height:5px;}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:rgba(160,180,210,0.2);border-radius:10px;}
-::-webkit-scrollbar-thumb:hover{background:rgba(160,180,210,0.35);}
+::-webkit-scrollbar-thumb{background:rgba(160,185,215,0.18);border-radius:10px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(160,185,215,0.32);}
+input:focus,select:focus,textarea:focus{outline:none!important;border-color:rgba(75,140,220,0.5)!important;box-shadow:0 0 0 3px rgba(75,140,220,0.08)!important;}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;;-webkit-font-smoothing:antialiased;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
 
 /* LAYOUT */
 .app{display:flex;min-height:100vh;}
-.sb-glow{pointer-events:none!important;}
-.sb-glow::after{pointer-events:none!important;}
 
 /* SIDEBAR */
 .sb{width:230px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;}
 .sb-glow{position:absolute;top:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(233,184,74,0.06),transparent 70%);pointer-events:none;}
 .sb-brand{padding:18px 20px 16px;border-bottom:1px solid var(--border);}
 .sb-logo{font-family:'Instrument Serif',serif;font-size:20px;color:var(--gold);display:flex;align-items:center;gap:9px;}
-.sb-version{font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(160,180,210,0.35);margin-top:3px;font-family:'Outfit',sans-serif;}
+.sb-version{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:3px;}
 .sb-nav{padding:14px 10px;flex:1;overflow-y:auto;}
 .sb-section{margin-bottom:18px;}
-.sb-sec-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(160,180,210,0.4);padding:0 10px;margin-bottom:4px;}
-.nb{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border-radius:7px;border:none;background:none;color:rgba(200,215,235,0.72);font-size:13px;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif;text-align:left;}
-.nb:hover{background:var(--s2);color:#F0F4FA;}
-.nb.active{background:rgba(26,111,168,0.14);color:#4B89DC;border-left:2px solid #4B89DC;margin-left:-1px;}
-.nb .ic{font-size:14px;width:18px;text-align:center;}
+.sb-sec-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(160,185,215,0.36);padding:0 10px;margin-bottom:4px;}
+.nb{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border-radius:7px;border:none;background:none;color:rgba(195,215,240,0.78);font-size:13px;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif;text-align:left;}
+.nb:hover{background:rgba(160,185,215,0.07);color:#ECF0FA;}
+.nb.active{background:rgba(77,144,220,0.15);color:#4D90DC!important;border-left:2.5px solid #4D90DC;padding-left:8px;font-weight:600;}
+.nb .ic{font-size:14px;width:18px;text-align:center;opacity:0.88;}
 .nc{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;}
 .nc-gold{background:var(--gold);color:var(--bg);}
 .nc-red{background:var(--red);color:white;}
@@ -56,8 +54,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .sb-foot{padding:14px 18px;border-top:1px solid var(--border);}
 .sb-user{display:flex;align-items:center;gap:10px;}
 .sb-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--purple));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
-.sb-nm{font-size:12px;font-weight:600;color:#F0F4FA;}
-.sb-rl{font-size:10px;color:rgba(200,215,235,0.55);}
+.sb-nm{font-size:12px;font-weight:600;color:#ECF0FA;}
+.sb-rl{font-size:10px;color:rgba(195,210,235,0.52);}
 
 /* MAIN */
 .main{margin-left:230px;flex:1;display:flex;flex-direction:column;}
@@ -96,8 +94,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .kcard.bl::before{background:var(--blue);}
 .kcard.pu::before{background:var(--purple);}
 .kcard.or::before{background:var(--orange);}
-.k-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,215,235,0.65);margin-bottom:8px;}
-.k-val{font-size:28px;font-weight:800;color:#F0F4FA;font-family:'JetBrains Mono',monospace;line-height:1;}
+.k-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(195,210,235,0.60);margin-bottom:8px;}
+.k-val{font-size:28px;font-weight:800;color:#ECF0FA;font-family:'JetBrains Mono',monospace;line-height:1;}
 .kcard.g .k-val{color:var(--gold);}
 .kcard.gr .k-val{color:var(--green);}
 .kcard.rd .k-val{color:var(--red);}
@@ -115,15 +113,17 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* TABLE */
 .tbl{background:var(--s1);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:22px;}
 .tbl-h{display:grid;padding:11px 20px;border-bottom:1px solid var(--border);background:var(--s2);}
-.tbl-hc{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(160,180,210,0.55);font-weight:600;}
+.tbl-hc{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(160,185,215,0.48);font-weight:600;}
 .tbl-r{display:grid;padding:13px 20px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background 0.1s;}
+.row-lost{opacity:0.58;border-left:2px solid rgba(192,53,53,0.7);padding-left:13px;}
+.row-won{border-left:2px solid rgba(30,148,100,0.7);padding-left:13px;}
 .tbl-r:last-child{border-bottom:none;}
 .tbl-r:hover{background:rgba(255,255,255,0.025);}
 .tbl-cols{grid-template-columns:2fr 1fr 1fr 1fr 1.2fr 0.7fr 90px;}
-.cn{font-size:14px;font-weight:600;color:#F0F4FA;}
+.cn{font-size:14px;font-weight:600;color:#ECF0FA;}
 .ce{font-size:11px;color:var(--muted);margin-top:1px;}
-.ref{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(200,215,235,0.72);}
-.amt{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#F0F4FA;}
+.ref{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(195,210,235,0.70);}
+.amt{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#ECF0FA;}
 .acts{display:flex;gap:4px;}
 
 /* PILLS */
@@ -226,8 +226,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 /* CLIENT CARD */
 .client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px;}
-.client-card{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:18px;cursor:pointer;transition:all 0.15s;}
-.client-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.client-card{background:var(--s1);border:1px solid var(--border);border-radius:13px;padding:18px;cursor:pointer;transition:all 0.18s;position:relative;z-index:1;}
+.client-card:hover{border-color:rgba(77,144,220,0.40);background:rgba(77,144,220,0.05);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.25);}
 .cc-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
 .cc-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;}
 .cc-name{font-size:14px;font-weight:600;}
@@ -315,7 +315,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .day-in:focus{border-color:var(--gold);}
 
 /* MODAL */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(7px);z-index:400;display:none;align-items:center;justify-content:center;padding:20px;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(7px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
 .overlay.open{display:flex;}
 .modal{background:var(--s1);border:1px solid var(--border2);border-radius:18px;padding:30px;width:580px;max-width:100%;max-height:88vh;overflow-y:auto;animation:mIn 0.2s ease;}
 @keyframes mIn{from{opacity:0;transform:translateY(14px) scale(0.97);}to{opacity:1;transform:none;}}
@@ -453,11 +453,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 }
 .search-in{background:var(--s1);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;min-width:220px;}
 .search-in:focus{border-color:var(--gold);}
-.filter-btn{padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--s1);color:rgba(200,215,235,0.6);font-family:'Outfit',sans-serif;transition:all 0.15s;white-space:nowrap;}
-.filter-btn.active{background:rgba(75,137,220,0.15);border-color:rgba(75,137,220,0.5);color:#4B89DC;}
-.f-won.active{background:rgba(30,140,94,0.14);border-color:rgba(30,140,94,0.45);color:#22a06b;}
-.f-lost.active{background:rgba(184,50,50,0.12);border-color:rgba(184,50,50,0.4);color:#cc4444;}
-.f-relance.active{background:rgba(184,150,90,0.12);border-color:rgba(184,150,90,0.4);color:#c8a060;}
+.filter-btn{padding:6px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--s1);color:rgba(195,210,235,0.62);font-family:'Outfit',sans-serif;transition:all .15s;white-space:nowrap;}
+.filter-btn.active{background:rgba(77,144,220,0.15);border-color:rgba(77,144,220,0.5);color:#4D90DC;}
+.f-won.active{background:rgba(30,148,100,0.14);border-color:rgba(30,148,100,0.45);color:#24b07a;}
+.f-lost.active{background:rgba(192,53,53,0.12);border-color:rgba(192,53,53,0.4);color:#cc5555;}
+.f-relance.active{background:rgba(196,160,85,0.12);border-color:rgba(196,160,85,0.4);color:#c8a45a;}
 .filter-btn:hover,.filter-btn.active{background:var(--gold-d);border-color:rgba(233,184,74,0.3);color:var(--gold);}
 .filter-btn.f-all.active{background:var(--gold-d);border-color:rgba(233,184,74,0.3);color:var(--gold);}
 .filter-btn.f-sent.active{background:var(--blue-d);border-color:rgba(56,189,248,0.3);color:var(--blue);}
@@ -551,73 +551,78 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <aside class="sb">
   <div class="sb-glow" style="pointer-events:none;"></div>
   <div class="sb-brand">
-    <div class="sb-logo">
-      <svg width="30" height="26" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Chart bars from logo SVG -->
-        <g transform="scale(0.225) translate(14,18)">
-          <rect x="8" y="58" width="12" height="32" rx="2.5" fill="#335B95" opacity="0.3"/>
-          <rect x="30" y="44" width="12" height="46" rx="2.5" fill="#335B95" opacity="0.4"/>
-          <rect x="52" y="28" width="12" height="62" rx="2.5" fill="#335B95" opacity="0.5"/>
-          <rect x="74" y="14" width="12" height="76" rx="2.5" fill="#335B95" opacity="0.6"/>
-          <path d="M6 74 L36 52 L58 61 L82 34 L108 6" stroke="url(#lg-sb)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M95 9 L108 6 L104 19" stroke="url(#lg-sb)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-        </g>
-        <defs><linearGradient id="lg-sb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4B89DC"/><stop offset="100%" stop-color="#2D6FCA"/></linearGradient></defs>
-      </svg>
-      <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;letter-spacing:-0.3px;color:#F0F4FA;">Follow<span style="color:#4B89DC;">Offer</span></span>
-      <svg width="13" height="13" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="opacity:0.78;flex-shrink:0;border-radius:2px;">
-        <rect width="32" height="32" fill="#D52B1E"/>
-        <rect x="13" y="6" width="6" height="20" fill="white"/>
-        <rect x="6" y="13" width="20" height="6" fill="white"/>
-      </svg>
+    <div class="sb-logo" style="display:flex;flex-direction:column;align-items:flex-start;padding:2px 0 0;">
+      <!-- Wordmark avec graphe centré entre Follow et Offer -->
+      <div style="display:flex;align-items:center;gap:0;line-height:1;">
+        <span style="font-family:'Outfit',sans-serif;font-size:14px;font-weight:800;letter-spacing:-0.2px;color:#ECF0FA;">Follow</span>
+        <div style="display:flex;flex-direction:column;align-items:center;padding:0 3px;margin-top:-6px;">
+          <svg width="22" height="16" viewBox="0 0 110 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g-sb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4D90DC"/><stop offset="100%" stop-color="#2B6DBF"/></linearGradient></defs>
+            <rect x="6" y="48" width="13" height="28" rx="3" fill="#28477A" opacity="0.38"/>
+            <rect x="28" y="34" width="13" height="42" rx="3" fill="#28477A" opacity="0.50"/>
+            <rect x="50" y="20" width="13" height="56" rx="3" fill="#28477A" opacity="0.62"/>
+            <rect x="72" y="8"  width="13" height="68" rx="3" fill="#28477A" opacity="0.74"/>
+            <path d="M2 64 L30 44 L54 54 L78 26 L108 4" stroke="url(#g-sb)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M92 6 L108 4 L104 18" stroke="url(#g-sb)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span style="font-family:'Outfit',sans-serif;font-size:14px;font-weight:800;letter-spacing:-0.2px;color:#4D90DC;">Offer</span>
+        <svg width="12" height="12" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;margin-left:5px;margin-top:1px;flex-shrink:0;">
+          <rect width="32" height="32" fill="#D42B1E"/>
+          <rect x="13" y="6" width="6" height="20" fill="white"/>
+          <rect x="6" y="13" width="20" height="6" fill="white"/>
+        </svg>
+      </div>
     </div>
-    <div class="sb-version">Suite commerciale · CH</div>
+    <div style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(160,185,215,0.32);padding-left:2px;margin-top:3px;font-family:'Outfit',sans-serif;">Suite commerciale · CH</div>
   </div>
-  <nav class="sb-nav">
+  <nav class="sb-nav" id="sb-nav">
     <div class="sb-section">
       <div class="sb-sec-label">Vue d'ensemble</div>
-      <button class="nb active" onclick="go('dashboard')"><span class="ic">⊞</span>Dashboard</button>
-      <button class="nb" onclick="go('rapport')"><span class="ic">📈</span>Rapport semaine <span class="nc nc-green" id="nc-rapport">NEW</span></button>
-      <button class="nb" onclick="go('guide')"><span class="ic">📖</span>Guide d'utilisation</button>
+      <button class="nb" id="nb-dashboard" onclick="go('dashboard')"><span class="ic">⊞</span>Dashboard</button>
+      <button class="nb" id="nb-rapport"   onclick="go('rapport')"><span class="ic">📈</span>Rapport semaine <span class="nc nc-green" id="nc-rapport">NEW</span></button>
+      <button class="nb" id="nb-guide"     onclick="go('guide')"><span class="ic">📖</span>Guide d'utilisation</button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Offres</div>
-      <button class="nb" onclick="go('nouvelle')"><span class="ic">＋</span>Envoyer une offre</button>
-      <button class="nb" onclick="go('offres')"><span class="ic">📋</span>Toutes les offres <span class="nc nc-gold" id="nc-offres">0</span></button>
+      <button class="nb" id="nb-nouvelle"  onclick="go('nouvelle')"><span class="ic">＋</span>Envoyer une offre</button>
+      <button class="nb" id="nb-offres"    onclick="go('offres')"><span class="ic">📋</span>Toutes les offres <span class="nc nc-gold" id="nc-offres">0</span></button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Suivi</div>
-      <button class="nb" onclick="go('relances')"><span class="ic">🔔</span>Relances <span class="nc nc-red" id="nc-relances">0</span></button>
-      <button class="nb" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-blue" id="nc-detection">0</span></button>
-      <button class="nb" onclick="go('calendrier')"><span class="ic">📅</span>Calendrier</button>
-      <button class="nb" onclick="go('revenus')"><span class="ic">💰</span>Revenus</button>
+      <button class="nb" id="nb-relances"  onclick="go('relances')"><span class="ic">🔔</span>Relances <span class="nc nc-red" id="nc-relances">0</span></button>
+      <button class="nb" id="nb-detection" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-blue" id="nc-detection">0</span></button>
+      <button class="nb" id="nb-calendrier" onclick="go('calendrier')"><span class="ic">📅</span>Calendrier</button>
+      <button class="nb" id="nb-revenus"   onclick="go('revenus')"><span class="ic">💰</span>Revenus</button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Clients</div>
-      <button class="nb" onclick="go('clients')"><span class="ic">🏢</span>Fiches clients <span class="nc nc-gold" id="nc-clients">0</span></button>
+      <button class="nb" id="nb-clients"   onclick="go('clients')"><span class="ic">🏢</span>Fiches clients <span class="nc nc-gold" id="nc-clients">0</span></button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Système</div>
-      <button class="nb" onclick="go('config')"><span class="ic">⚙️</span>Configuration</button>
+      <button class="nb" id="nb-config"    onclick="go('config')"><span class="ic">⚙️</span>Configuration</button>
     </div>
   </nav>
   <div class="sb-foot">
-    <button onclick="go('config');setTimeout(()=>switchTab&&switchTab('abo'),80);" id="sb-abo-btn" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 11px;border-radius:8px;border:1px solid rgba(26,111,168,0.3);background:rgba(26,111,168,0.07);cursor:pointer;margin-bottom:9px;transition:all 0.15s;" onmouseover="this.style.background='rgba(26,111,168,0.14)'" onmouseout="this.style.background='rgba(26,111,168,0.07)'">
+    <button onclick="go('config');setTimeout(()=>{const t=document.getElementById('ctab-abo');if(t)t.click();},80);" id="sb-abo-btn"
+      style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;border:1px solid rgba(26,115,176,0.22);background:rgba(26,115,176,0.06);cursor:pointer;margin-bottom:8px;transition:background .15s;"
+      onmouseover="this.style.background='rgba(26,115,176,0.13)'" onmouseout="this.style.background='rgba(26,115,176,0.06)'">
       <div style="display:flex;align-items:center;gap:7px;">
-        <span>💳</span>
+        <span style="font-size:13px;">💳</span>
         <div style="text-align:left;">
-          <div style="font-size:11px;font-weight:700;color:#F0F4FA;line-height:1.2;" id="sb-plan-label">Plan Gratuit</div>
-          <div style="font-size:9px;color:rgba(200,215,235,0.55);letter-spacing:0.4px;" id="sb-plan-sub">5 offres / mois</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text);line-height:1.25;" id="sb-plan-label">Plan Gratuit</div>
+          <div style="font-size:9px;color:var(--muted2);letter-spacing:0.3px;" id="sb-plan-sub">5 offres / mois</div>
         </div>
       </div>
-      <span style="font-size:9px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;">Upgrader →</span>
+      <span style="font-size:9px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;" id="sb-upgrade-lbl">Upgrader →</span>
     </button>
     <div class="sb-user">
       <div class="sb-av" id="user-avatar">—</div>
       <div style="flex:1;min-width:0;">
-        <div class="sb-nm" id="user-name" style="color:#F0F4FA;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
-        <div class="sb-rl" id="user-role" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
-        <button onclick="if(confirm('Se déconnecter ?')) signOut();" style="font-size:10px;color:rgba(200,215,235,0.5);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-family:'Outfit',sans-serif;">⎋ Déconnexion</button>
+        <div class="sb-nm" id="user-name">—</div>
+        <div class="sb-rl" id="user-role">—</div>
+        <button onclick="if(confirm('Se déconnecter ?')) signOut();" style="font-size:10px;color:rgba(195,210,235,0.42);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-family:'Outfit',sans-serif;">⎋ Déconnexion</button>
       </div>
     </div>
   </div>
@@ -902,6 +907,79 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="report-card" id="rapport-content"></div>
     </div>
 
+    <!-- ══ GUIDE ══ -->
+    <div class="panel" id="panel-guide">
+      <div style="max-width:680px;margin:0 auto;padding:4px 0 40px;">
+        <div style="margin-bottom:28px;">
+          <div style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);margin-bottom:8px;">Documentation</div>
+          <div style="font-size:24px;font-weight:800;color:var(--text);letter-spacing:-0.5px;margin-bottom:6px;">Guide d'utilisation</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">Maîtrisez FollowOffer en 5 minutes.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:20px;border-left:3px solid var(--gold);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+              <div style="width:26px;height:26px;border-radius:7px;background:var(--gold-d);border:1px solid rgba(26,115,176,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--gold);flex-shrink:0;">1</div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);">Configuration du compte</div>
+            </div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.85;padding-left:36px;">
+              → <strong style="color:var(--text);">Configuration → Profil</strong> : renseignez votre nom, rôle, entreprise<br>
+              → <strong style="color:var(--text);">Configuration → Email</strong> : saisissez votre adresse email expéditeur<br>
+              → Cliquez <strong style="color:var(--text);">Sauvegarder</strong> — vos emails partent en votre nom via Brevo
+            </div>
+          </div>
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:20px;border-left:3px solid var(--blue);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+              <div style="width:26px;height:26px;border-radius:7px;background:var(--blue-d);border:1px solid rgba(48,128,204,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--blue);flex-shrink:0;">2</div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);">Envoyer une offre</div>
+            </div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.85;padding-left:36px;">
+              → Cliquez <strong style="color:var(--text);">+ Envoyer une offre</strong> dans la sidebar<br>
+              → Remplissez : client, montant, objet, PDF (optionnel), contexte commercial<br>
+              → L'email part en votre nom — 3 relances programmées automatiquement (J+3, J+7, J+14)
+            </div>
+          </div>
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:20px;border-left:3px solid var(--green);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+              <div style="width:26px;height:26px;border-radius:7px;background:var(--green-d);border:1px solid rgba(30,148,100,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--green);flex-shrink:0;">3</div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);">Suivre les relances</div>
+            </div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.85;padding-left:36px;">
+              → <strong style="color:var(--text);">Relances</strong> : offres en attente avec dates J+3 / J+7 / J+14<br>
+              → <strong style="color:var(--text);">Calendrier</strong> : vue mensuelle de toutes les échéances<br>
+              → Cliquez 📧 <strong style="color:var(--text);">Relancer</strong> manuellement ou laissez le cron agir à 9h<br>
+              → Marquez ✓ <strong style="color:var(--text);">Gagnée</strong> ou ✕ <strong style="color:var(--text);">Perdue</strong> — les relances s'annulent automatiquement
+            </div>
+          </div>
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:20px;border-left:3px solid var(--purple);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+              <div style="width:26px;height:26px;border-radius:7px;background:var(--purple-d);border:1px solid rgba(96,104,168,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--purple);flex-shrink:0;">4</div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);">Tracker les ouvertures</div>
+            </div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.85;padding-left:36px;">
+              → <strong style="color:var(--text);">Détection ouverture</strong> : voyez qui a ouvert, combien de fois, quand<br>
+              → Score 🔥 <em>Très chaud</em> = ouvert 3×+ · 🟢 <em>Chaud</em> = ouvert aujourd'hui<br>
+              → Appelez immédiatement un prospect chaud — il vient de lire votre offre
+            </div>
+          </div>
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:20px;border-left:3px solid var(--accent);">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+              <div style="width:26px;height:26px;border-radius:7px;background:var(--accent-d);border:1px solid rgba(196,160,85,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--accent);flex-shrink:0;">5</div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);">Analyser les performances</div>
+            </div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.85;padding-left:36px;">
+              → <strong style="color:var(--text);">Revenus</strong> : CA gagné, taux de conversion, analyse des pertes<br>
+              → <strong style="color:var(--text);">Rapport semaine</strong> : synthèse IA hebdomadaire exportable Excel<br>
+              → <strong style="color:var(--text);">Fiches clients</strong> : historique complet, CA total généré par client
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:20px;background:rgba(26,115,176,0.07);border:1px solid rgba(26,115,176,0.2);border-radius:10px;padding:14px 18px;">
+          <div style="font-size:12px;color:var(--text);font-weight:600;margin-bottom:5px;">💡 Conseil</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.75;">Ajoutez toujours un <strong style="color:var(--text);">contexte commercial</strong> lors de l'envoi (hésitations client, budget, timing). L'IA l'utilisera pour personnaliser chaque relance automatique.</div>
+        </div>
+      </div>
+    </div>
+
     <!-- ══ CONFIG ══ -->
     <div class="panel" id="panel-config">
 
@@ -974,15 +1052,22 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div id="brevo-status" style="font-size:12px;"></div>
         </div>
         <div class="fcard" style="margin-bottom:18px;opacity:0.7;">
-          <div class="fcard-t">📤 Envoi d'emails</div>
-          <p style="font-size:12px;color:rgba(200,215,235,0.65);margin-bottom:16px;line-height:1.6;">Les emails sont envoyés via <strong style="color:#F0F4FA;">Brevo</strong> — service transactionnel fiable et sécurisé.</p>
-          <div id="email-connection-status"></div>
-          <div id="gmail-status" style="display:none;"></div>
-          <div id="outlook-status" style="display:none;"></div>
-          <div style="background:var(--s2);border-radius:10px;padding:14px;display:flex;align-items:flex-start;gap:12px;margin-top:8px;">
-            <div style="font-size:22px;flex-shrink:0;">✉️</div>
-            <div><div style="font-size:12px;font-weight:600;margin-bottom:4px;color:#F0F4FA;">Brevo — Transactionnel</div>
-            <div style="font-size:11px;color:rgba(200,215,235,0.55);line-height:1.7;">Délivrabilité optimisée · Tracking inclus · Pièces jointes PDF</div></div>
+          <div class="fcard-t">📧 Gmail / Outlook OAuth <span style="font-size:10px;color:var(--muted);font-weight:400;">— bientôt disponible</span></div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Envoyez directement depuis votre boîte sans passer par Brevo.</p>
+          <div id="email-connection-status" style="margin-bottom:12px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+              <div style="font-size:24px;margin-bottom:6px;">📬</div>
+              <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Gmail / Workspace</div>
+              <div id="gmail-status"></div>
+              <button class="btn btn-gold btn-sm" style="width:100%;opacity:0.5;" disabled>Bientôt</button>
+            </div>
+            <div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+              <div style="font-size:24px;margin-bottom:6px;">💼</div>
+              <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Outlook / M365</div>
+              <div id="outlook-status"></div>
+              <button class="btn btn-blue btn-sm" style="width:100%;opacity:0.5;" disabled>Bientôt</button>
+            </div>
           </div>
         </div>
         <div style="display:flex;justify-content:flex-end;margin-top:4px;">
@@ -1021,33 +1106,43 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--s2);border-radius:10px;margin-bottom:16px;">
             <div>
               <div style="font-size:13px;font-weight:700;">Plan Gratuit <span style="font-size:11px;background:rgba(34,197,94,0.15);color:var(--green);padding:2px 8px;border-radius:20px;margin-left:6px;">Actif</span></div>
-              <div style="font-size:12px;color:var(--muted);margin-top:3px;">Jusqu'à 10 offres · 1 utilisateur · Relances manuelles</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px;">Jusqu'à 5 offres · Relances manuelles</div>
             </div>
             <div style="font-size:20px;font-weight:800;color:var(--gold);">0 CHF</div>
           </div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Passez à Pro pour débloquer toutes les fonctionnalités :</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
-            <div style="background:var(--s2);border:1px solid rgba(233,184,74,0.2);border-radius:10px;padding:14px;">
-              <div style="font-size:15px;font-weight:800;color:var(--gold);margin-bottom:4px;">Pro <span style="font-size:11px;color:var(--muted);font-weight:400;">/ mois</span></div>
-              <div style="font-size:22px;font-weight:800;margin-bottom:10px;">49 CHF</div>
-              <div style="font-size:11px;color:var(--muted);line-height:2;">✅ Offres illimitées<br>✅ Relances automatiques<br>✅ Tracking ouvertures<br>✅ Rapport hebdo IA<br>✅ Support prioritaire</div>
-              <button onclick="startCheckout('pro')" class="btn btn-gold btn-sm" style="width:100%;margin-top:12px;">🚀 Passer à Pro</button>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Un seul plan. Tout inclus. Aucune surprise.</div>
+          <div style="background:var(--s2);border:1.5px solid rgba(77,144,220,0.30);border-radius:13px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#4D90DC,rgba(77,144,220,0.05));"></div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
+              <div>
+                <div style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:8px;">FollowOffer Pro</div>
+                <div style="display:flex;align-items:baseline;gap:5px;">
+                  <span style="font-size:38px;font-weight:800;color:#ECF0FA;font-family:'JetBrains Mono',monospace;line-height:1;">490</span>
+                  <span style="font-size:13px;color:var(--muted);">CHF <span style="font-weight:600;">/ an</span></span>
+                </div>
+                <div style="font-size:10.5px;color:rgba(195,210,235,0.42);margin-top:5px;">≈ 40.83 CHF / mois · Facturé annuellement</div>
+              </div>
+              <div style="background:rgba(77,144,220,0.10);border:1px solid rgba(77,144,220,0.28);border-radius:20px;padding:4px 12px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);align-self:flex-start;margin-top:4px;">Accès complet</div>
             </div>
-            <div style="background:var(--s2);border:1px solid rgba(139,92,246,0.2);border-radius:10px;padding:14px;">
-              <div style="font-size:15px;font-weight:800;color:var(--purple);margin-bottom:4px;">Business <span style="font-size:11px;color:var(--muted);font-weight:400;">/ mois</span></div>
-              <div style="font-size:22px;font-weight:800;margin-bottom:10px;">149 CHF</div>
-              <div style="font-size:11px;color:var(--muted);line-height:2;">✅ Tout Pro inclus<br>✅ Multi-utilisateurs<br>✅ CRM avancé<br>✅ Intégration Gmail/Outlook<br>✅ API accès</div>
-              <button onclick="startCheckout('business')" class="btn btn-sm" style="width:100%;margin-top:12px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);color:var(--purple);">🚀 Choisir Business</button>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:20px;">
+              <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);"><span style="color:var(--green);font-size:11px;font-weight:700;">✓</span>Offres illimitées</div>
+              <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);"><span style="color:var(--green);font-size:11px;font-weight:700;">✓</span>Relances automatiques</div>
+              <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);"><span style="color:var(--green);font-size:11px;font-weight:700;">✓</span>Tracking ouvertures</div>
+              <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);"><span style="color:var(--green);font-size:11px;font-weight:700;">✓</span>Rapport hebdo IA</div>
+              <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);"><span style="color:var(--green);font-size:11px;font-weight:700;">✓</span>Fiches clients CRM</div>
+              <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);"><span style="color:var(--green);font-size:11px;font-weight:700;">✓</span>Support prioritaire</div>
             </div>
+            <button onclick="startCheckout('pro')" class="btn btn-gold" style="width:100%;justify-content:center;padding:12px;font-size:13px;font-weight:700;border-radius:10px;">Passer à Pro — 490 CHF / an</button>
           </div>
-          <div style="font-size:11px;color:var(--muted);text-align:center;">Paiement sécurisé par Stripe · Annulation à tout moment · Facturation mensuelle</div>
+          <div style="display:none;"><button onclick="startCheckout('business')"></button></div>
+          <div style="font-size:11px;color:var(--muted);text-align:center;">Paiement sécurisé par Stripe · Annulation annuelle · Facturation unique</div>
         </div>
         <div class="fcard">
           <div class="fcard-t">📊 Usage actuel</div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;" id="usage-stats">
             <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
               <div style="font-size:22px;font-weight:800;color:var(--gold);" id="usage-offres">—</div>
-              <div style="font-size:11px;color:var(--muted);">offres / 10</div>
+              <div style="font-size:11px;color:var(--muted);">offres / 5</div>
             </div>
             <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
               <div style="font-size:22px;font-weight:800;color:var(--blue);" id="usage-clients">—</div>
@@ -1246,17 +1341,18 @@ const NR = {sent:'Dans 3 jours',relance1:"Aujourd'hui",relance2:"Aujourd'hui",re
 const AVATARS = ['#E9B84A','#22C55E','#38BDF8','#A78BFA','#F43F5E','#FB923C'];
 
 // ══ NAV ══
-const TITLES = {dashboard:'Dashboard',nouvelle:'Envoyer une offre',offres:'Toutes les offres',relances:'Relances',detection:"Détection d'ouverture",calendrier:'Calendrier',revenus:'Revenus & Analyse',clients:'Fiches clients',rapport:'Rapport hebdomadaire',config:'Configuration'};
+const TITLES = {dashboard:'Dashboard',nouvelle:'Envoyer une offre',offres:'Toutes les offres',relances:'Relances',detection:"Détection d'ouverture",calendrier:'Calendrier',revenus:'Revenus & Analyse',clients:'Fiches clients',rapport:'Rapport hebdomadaire',config:'Configuration',guide:'Guide d\'utilisation'};
 
 function go(name) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
-  document.getElementById('panel-'+name).classList.add('active');
-  document.getElementById('page-title').textContent = TITLES[name];
-  document.querySelectorAll('.nb').forEach(b=>{
-    const t = b.textContent.trim().toLowerCase();
-    if(t.startsWith(TITLES[name].toLowerCase().slice(0,5))) b.classList.add('active');
-  });
+  const panel = document.getElementById('panel-'+name);
+  if(!panel) { console.warn('Panel not found:', name); return; }
+  panel.classList.add('active');
+  document.getElementById('page-title').textContent = TITLES[name]||name;
+  // Active le bouton nav via son ID — fiable, sans matching de texte
+  const btn = document.getElementById('nb-'+name);
+  if(btn) btn.classList.add('active');
   if(name==='offres') renderOffres();
   if(name==='relances') renderRelances();
   if(name==='detection') { refreshOuvertures().then(renderDetection); }
@@ -1289,7 +1385,7 @@ function row(o) {
   const openTxt = opens===0 ? '<span style="color:var(--muted);font-size:12px;">—</span>'
     : opens===1 ? '<span style="color:var(--blue);font-size:12px;">👁 1×</span>'
     : `<span style="color:var(--green);font-size:12px;font-weight:600;">👁 ${opens}×</span>`;
-  return `<div class="tbl-r tbl-cols" onclick="openModal('${o.id}')">
+  return `<div class="tbl-r tbl-cols ${o.status==='lost'?'row-lost':o.status==='won'?'row-won':''}" onclick="openModal('${o.id}')">
     <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
     <div class="ref">${o.ref}</div>
     <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
@@ -1442,7 +1538,7 @@ function renderDetection(){
   document.getElementById('tbody-detection').innerHTML = OFFERS.length > 0
     ? OFFERS.map(o=>`
       <div class="tbl-r" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;" onclick="openModal('${o.id}')">
-        <div><div class="cn">${o.prenom} ${o.nom}${o.status==='lost'?' <span style="background:rgba(184,50,50,0.15);color:#cc4444;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;">✕ Perdue</span>':o.status==='won'?' <span style="background:rgba(30,140,94,0.15);color:#22a06b;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;">✓ Gagnée</span>':''}</div><div class="ce">${o.email}</div></div>
+        <div><div class="cn">${o.prenom} ${o.nom}${o.status==='lost'?' <span style="background:rgba(192,53,53,0.14);color:#cc5555;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">✕ Perdue</span>':o.status==='won'?' <span style="background:rgba(30,148,100,0.14);color:#22aa70;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">✓ Gagnée</span>':''}</div><div class="ce">${o.email}</div></div>
         <div class="ref">${o.ref}</div>
         <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
         <div style="font-size:12px;color:${o.opens>0?'var(--green)':'var(--muted)'};">${o.lastOpen||'—'}</div>
@@ -1472,8 +1568,7 @@ function renderCalendar(){
     };
     const s = (o.prenom[0]||'?')+'.'+o.nom.slice(0,5);
     add(o.sendDate, s+' Envoi', 'ev-send');
-    // N'afficher les relances que si l'offre est encore active
-    if(!['won','lost'].includes(o.status)) {
+    if(!['won','lost'].includes(o.status)){
       add(o.relances.r1, s+' R1', 'ev-r1');
       add(o.relances.r2, s+' R2', 'ev-r2');
       add(o.relances.r3, s+' R3', 'ev-r3');
@@ -1627,7 +1722,7 @@ function renderClients(){
       <div class="cc-stats">
         <div class="cc-stat"><div class="cc-stat-val" style="color:var(--gold)">${c.offers.length}</div><div class="cc-stat-lbl">Offres</div></div>
         <div class="cc-stat"><div class="cc-stat-val" style="color:var(--green)">${c.won}</div><div class="cc-stat-lbl">Gagnées</div></div>
-        <div class="cc-stat"><div class="cc-stat-val" style="color:var(--gold);">${c.total>0?Math.round(c.total/1000)+'K':'—'}</div><div class="cc-stat-lbl">CHF total</div></div>
+        <div class="cc-stat"><div class="cc-stat-val" style="color:var(--gold);">${c.total>0?(c.total>=1000?Math.round(c.total/1000)+'K':c.total.toLocaleString('fr-CH')):'—'}</div><div class="cc-stat-lbl">CHF total</div></div>
       </div>
       <div class="cc-last">Dernière offre : ${last.objet} · ${SL[last.status]}</div>
     </div>`;
@@ -1638,16 +1733,13 @@ function openClientModal(email){
   const c=OFFERS.filter(o=>o.email===email);
   if(!c.length)return;
   const first=c[0];
-  const totalWon = c.filter(o=>o.status==='won').reduce((s,o)=>s+(parseFloat(o.montant)||0), 0);
-  const totalPending = c.filter(o=>!['won','lost'].includes(o.status)).reduce((s,o)=>s+(parseFloat(o.montant)||0), 0);
+  const totalWon=c.filter(o=>o.status==='won').reduce((s,o)=>s+o.montant,0);
   document.getElementById('m-t').textContent=`${first.prenom} ${first.nom}`;
   document.getElementById('m-s').textContent=email+' · '+c.length+' offre(s)';
   document.getElementById('m-body').innerHTML=`
     <div class="m-2grid">
       <div class="m-info"><div class="m-info-l">Offres totales</div><div class="m-info-v" style="color:var(--gold)">${c.length}</div></div>
-      <div class="m-info"><div class="m-info-l">CA gagné</div><div class="m-info-v" style="color:var(--green);font-family:'JetBrains Mono',monospace;">${totalWon > 0 ? totalWon.toLocaleString('fr-CH')+' CHF' : '—'}</div></div>
-      <div class="m-info"><div class="m-info-l">En cours</div><div class="m-info-v" style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:13px;">${totalPending > 0 ? totalPending.toLocaleString('fr-CH')+' CHF' : '—'}</div></div>
-      <div class="m-info"><div class="m-info-l">Tx de succès</div><div class="m-info-v" style="color:var(--muted);font-size:13px;">${c.length > 0 ? Math.round(c.filter(o=>o.status==='won').length/c.length*100)+'%' : '—'}</div></div>
+      <div class="m-info"><div class="m-info-l">CA généré</div><div class="m-info-v" style="color:var(--green);font-family:'JetBrains Mono',monospace;">${totalWon.toLocaleString('fr-CH')} CHF</div></div>
     </div>
     <div class="m-tl"><div class="m-tl-t">Historique des offres</div>
     ${c.map(o=>`<div class="m-tl-item">
@@ -1659,16 +1751,8 @@ function openClientModal(email){
     </div>
     <div class="m-acts">
       <button class="btn btn-gold btn-sm" onclick="go('nouvelle');closeModal();toast('📄','Préparez la nouvelle offre')">+ Nouvelle offre</button>
-      <button class="btn btn-ghost btn-sm" onclick="editClientModal('${first.email}')">✏️ Modifier</button>
+      <button class="btn btn-ghost btn-sm" onclick="toast('📧','Email direct...')">📧 Email direct</button>
     </div>`;
-  // Ajouter le viewer PDF inline si disponible
-  if(o.pdfUrl) {
-    document.getElementById('m-body').innerHTML += '<div style="margin-top:18px;border:1px solid rgba(160,180,210,0.09);border-radius:10px;overflow:hidden;">'
-      + '<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid rgba(160,180,210,0.09);background:#171E29;">'
-      + '<span style="font-size:12px;font-weight:600;color:#F0F4FA;">📄 '+(o.fichier||o.ref+'.pdf')+'</span>'
-      + '<a href="'+o.pdfUrl+'" target="_blank" style="font-size:11px;color:#4B89DC;text-decoration:none;padding:4px 10px;background:rgba(75,137,220,0.13);border-radius:5px;">⬇ Télécharger</a>'
-      + '</div><iframe src="'+o.pdfUrl+'" style="width:100%;height:420px;border:none;display:block;" loading="lazy"></iframe></div>';
-  }
   document.getElementById('overlay').classList.add('open');
 }
 
@@ -1699,7 +1783,7 @@ function openModal(id){
     <div class="m-acts">
       <button class="btn btn-ghost btn-sm" onclick="previewRelance('${o.id}')">👁 Voir relances</button>
       <button class="btn btn-ghost btn-sm" onclick="actR('${o.id}');closeModal()">📧 Relancer</button>
-      ${o.pdfUrl?`<button class="btn btn-blue btn-sm" onclick="viewPDF('${o.pdfUrl}','${o.fichier||o.ref}')">📄 Voir PDF</button>`:''}
+      ${o.pdfUrl?`<button class="btn btn-blue btn-sm" onclick="viewPDF('${o.pdfUrl}','${o.fichier}')">📄 Voir PDF</button>`:''}
       <button class="btn btn-green btn-sm" onclick="askConfirm('won','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✓ Gagnée</button>
       <button class="btn btn-red btn-sm" onclick="askConfirm('lost','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✕ Perdue</button>
       <button class="btn btn-ghost btn-sm" onclick="editOffer('${o.id}')">✎ Modifier</button>
@@ -1714,9 +1798,9 @@ function closeModal(){document.getElementById('overlay').classList.remove('open'
 async function actR(id){
   const o=OFFERS.find(x=>x.id===id);
   if(!o)return;
-  const next = o.status==='sent'?'relance1':o.status==='relance1'?'relance2':o.status==='relance2'?'relance3':'relance3';
+  if(o.status==='relance3'||o.status==='won'||o.status==='lost'){toast('ℹ️','Aucune relance supplémentaire disponible');return;}
+  const next = o.status==='sent'?'relance1':o.status==='relance1'?'relance2':'relance3';
   const rNum = {relance1:1,relance2:2,relance3:3}[next]||1;
-  if(o.status==='relance3'){ toast('ℹ️','3 relances déjà envoyées pour cette offre'); return; }
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:next}), prefer:'return=minimal', headers:{'Prefer':'return=minimal'}});
     o.status=next;
@@ -1757,13 +1841,11 @@ async function actW(id){
   if(!o)return;
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:'won'}), headers:{'Prefer':'return=minimal'}});
-    // Annuler toutes les relances pending en DB
-    try { await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending', {method:'PATCH', body:JSON.stringify({statut:'cancelled'}), headers:{'Prefer':'return=minimal'}}); } catch(_){}
-    // Effacer les dates de relance localement (pour le calendrier)
-    o.status='won';
-    o.relances = { r1:'', r2:'', r3:'' };
+    try{await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending',{method:'PATCH',body:JSON.stringify({statut:'cancelled'}),headers:{'Prefer':'return=minimal'}});}catch(_){}
+    o.status='won'; o.relances={r1:'',r2:'',r3:''};
     toast('🎉',`${o.prenom} ${o.nom} — Gagnée ! +${o.montant.toLocaleString('fr-CH')} CHF`);
-    renderOffres(); renderRelances(); renderUrgent(); renderCalendar();
+    renderOffres(); renderRelances(); renderUrgent();
+    if(document.getElementById('panel-calendrier')?.classList.contains('active')) renderCalendar();
   } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
 }
 async function actL(id){
@@ -1794,14 +1876,12 @@ async function actL(id){
   if(!raison || raison === 'cancel') return;
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:'lost', notes: (o.notes||'') + (o.notes?'\n':'') + `Perdu — ${raison}`}), headers:{'Prefer':'return=minimal'}});
-    // Annuler toutes les relances pending en DB
-    try { await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending', {method:'PATCH', body:JSON.stringify({statut:'cancelled'}), headers:{'Prefer':'return=minimal'}}); } catch(_){}
-    // Effacer les dates de relance localement (pour le calendrier)
-    o.status='lost';
-    o.relances = { r1:'', r2:'', r3:'' };
-    o.notes = (o.notes||'') + (o.notes?'\n':'') + `Perdu — ${raison}`;
+    try{await sbFetch('relances?offre_id=eq.'+id+'&statut=eq.pending',{method:'PATCH',body:JSON.stringify({statut:'cancelled'}),headers:{'Prefer':'return=minimal'}});}catch(_){}
+    o.status='lost'; o.relances={r1:'',r2:'',r3:''}; o.notes=(o.notes||'')+(o.notes?'
+':'')+`Perdu — ${raison}`;
     toast('📊',`Dossier archivé — relances annulées pour ${o.prenom} ${o.nom}`);
-    renderOffres(); renderRelances(); renderUrgent(); renderCalendar(); updateBadges();
+    renderOffres(); renderRelances(); renderUrgent();
+    if(document.getElementById('panel-calendrier')?.classList.contains('active')) renderCalendar(); updateBadges();
     updateAnalysePertes();
   } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
 }
@@ -2650,10 +2730,10 @@ function updateEmailConnectionStatus() {
       <div><strong>Connecté</strong> — Les emails sont envoyés depuis <strong>${CFG.senderEmail}</strong> via ${CFG.provider==='gmail'?'Gmail':'Outlook'}</div>
       <button class="btn btn-ghost btn-sm" style="margin-left:auto;" onclick="disconnectEmail()">Déconnecter</button>
     </div>`;
+  } else if(CFG.senderEmail) {
+    statusEl.innerHTML = `<div style="font-size:12px;color:var(--muted);padding:5px 0;">📤 Emails envoyés depuis <strong style="color:var(--text);">${CFG.senderEmail}</strong> via Brevo.</div>`;
   } else {
-    statusEl.innerHTML = `<div style="background:var(--red-d);border:1px solid rgba(244,63,94,0.15);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red);">
-      ⚠️ Aucune messagerie connectée — les emails ne sont pas encore envoyés réellement.
-    </div>`;
+    statusEl.innerHTML = `<div style="font-size:12px;color:var(--muted2);padding:5px 0;">Renseignez votre adresse email expéditeur pour activer l'envoi.</div>`;
   }
   if(gmailEl) gmailEl.innerHTML = CFG.provider==='gmail' ? `<div style="font-size:11px;color:var(--green);">✅ ${CFG.senderEmail}</div>` : '';
   if(outlookEl) outlookEl.innerHTML = CFG.provider==='outlook' ? `<div style="font-size:11px;color:var(--green);">✅ ${CFG.senderEmail}</div>` : '';
@@ -2999,8 +3079,12 @@ async function doForgotPassword() {
       },
       body: JSON.stringify({ email, redirect_to: redirectTo })
     });
-    // Supabase retourne 200 même si l'email n'existe pas (sécurité anti-énumération)
-    showMsg('✅ Si ce compte existe, un email de réinitialisation a été envoyé. Vérifiez vos spams.', 'var(--green)', 'rgba(34,197,94,0.08)');
+    if(!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      showMsg('❌ ' + (err.error_description || err.msg || 'Erreur — réessayez'), 'var(--red)', 'rgba(192,53,53,0.10)');
+      return;
+    }
+    showMsg('✅ Lien envoyé ! Vérifiez votre boîte mail (et vos spams). Valable 1 heure.', 'var(--green)', 'rgba(30,148,100,0.08)');
   } catch(e) {
     showMsg('❌ Erreur réseau — réessayez', 'var(--red)', 'rgba(239,68,68,0.1)');
   }
@@ -3093,7 +3177,7 @@ async function signIn(email, password) {
   } catch(e) {
     // Normaliser les messages d'erreur Supabase
     const msg = e.message || '';
-    if(msg.includes('Invalid login') || msg.includes('invalid_grant') || msg.includes('credentials') || msg.includes('user_not_found') || msg.includes('User not found'))
+    if(msg.includes('Invalid login')||msg.includes('invalid_grant')||msg.includes('credentials')||msg.includes('user_not_found')||msg.includes('User not found'))
       throw new Error('Email ou mot de passe incorrect');
     if(msg.includes('Email not confirmed'))
       throw new Error('Confirmez votre email avant de vous connecter');
@@ -3201,28 +3285,28 @@ function showAuthScreen() {
       <div style="width:100%;max-width:420px;">
         <div style="text-align:center;margin-bottom:32px;">
           <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:6px;">
-            <!-- Logo FollowOffer — style SVG fourni -->
-            <svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs><linearGradient id="lg-auth" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4B89DC"/><stop offset="100%" stop-color="#2D6FCA"/></linearGradient></defs>
-              <g transform="translate(2,4) scale(0.44)">
-                <rect x="8" y="58" width="12" height="32" rx="2.5" fill="#335B95" opacity="0.25"/>
-                <rect x="30" y="44" width="12" height="46" rx="2.5" fill="#335B95" opacity="0.32"/>
-                <rect x="52" y="28" width="12" height="62" rx="2.5" fill="#335B95" opacity="0.4"/>
-                <rect x="74" y="14" width="12" height="76" rx="2.5" fill="#335B95" opacity="0.5"/>
-                <path d="M6 74 L36 52 L58 61 L82 34 L108 6" stroke="url(#lg-auth)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M95 9 L108 6 L104 19" stroke="url(#lg-auth)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-            </svg>
-            <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
-              <span style="font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;color:#F0F4FA;">Follow<span style="color:#4B89DC;">Offer</span></span>
-              <svg width="18" height="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:3px;margin-bottom:2px;">
-                <rect width="32" height="32" fill="#D52B1E"/>
-                <rect x="13" y="6" width="6" height="20" fill="white"/>
-                <rect x="6" y="13" width="20" height="6" fill="white"/>
+            <!-- Logo auth avec graphe centré -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <svg width="96" height="46" viewBox="0 0 110 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs><linearGradient id="g-auth" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4D90DC"/><stop offset="100%" stop-color="#2B6DBF"/></linearGradient></defs>
+                <rect x="4"  y="36" width="11" height="16" rx="2.5" fill="#28477A" opacity="0.38"/>
+                <rect x="22" y="26" width="11" height="26" rx="2.5" fill="#28477A" opacity="0.50"/>
+                <rect x="40" y="16" width="11" height="36" rx="2.5" fill="#28477A" opacity="0.62"/>
+                <rect x="58" y="6"  width="11" height="46" rx="2.5" fill="#28477A" opacity="0.74"/>
+                <path d="M0 48 L24 32 L44 42 L62 18 L106 2" stroke="url(#g-auth)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M90 4 L106 2 L102 16" stroke="url(#g-auth)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
+              <div style="display:flex;align-items:center;gap:7px;">
+                <span style="font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.8px;color:#ECF0FA;">Follow<span style="color:#4D90DC;">Offer</span></span>
+                <svg width="17" height="17" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:3px;flex-shrink:0;">
+                  <rect width="32" height="32" fill="#D42B1E"/>
+                  <rect x="13" y="6" width="6" height="20" fill="white"/>
+                  <rect x="6" y="13" width="20" height="6" fill="white"/>
+                </svg>
+              </div>
             </div>
           </div>
-          <div style="font-size:10px;color:rgba(200,215,235,0.55);letter-spacing:3px;text-transform:uppercase;margin-top:4px;">Suite commerciale · CH</div>
+          <div style="font-size:9.5px;color:rgba(195,210,235,0.42);letter-spacing:3px;text-transform:uppercase;margin-top:3px;">Suite commerciale · CH</div>
         </div>
         <div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;">
           <div style="display:flex;background:var(--s2);border-radius:8px;padding:3px;margin-bottom:24px;">
@@ -3238,7 +3322,7 @@ function showAuthScreen() {
               </div>
             </div>
             <div id="auth-error" style="display:none;background:var(--red-d);border:1px solid rgba(244,63,94,0.2);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;"></div>
-            <button onclick="doLogin()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;">Se connecter</button>
+            <button onclick="doLogin()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">Se connecter</button>
             <div style="text-align:center;margin-top:12px;">
               <button onclick="showForgotPassword()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;">Mot de passe oublié ?</button>
             </div>
@@ -3259,7 +3343,7 @@ function showAuthScreen() {
               </div>
             </div>
             <div id="reg-error" style="display:none;background:var(--red-d);border:1px solid rgba(244,63,94,0.2);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;"></div>
-            <button onclick="doRegister()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;">Créer mon compte</button>
+            <button onclick="doRegister()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">Créer mon compte</button>
           </div>
         </div>
         <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--muted);">🔒 Vos données sont privées et sécurisées</div>
@@ -3349,25 +3433,26 @@ async function doRegister() {
 
 function updateUserUI() {
   if(!CURRENT_USER) return;
-  // Plan label sidebar
+  // Mise à jour plan sidebar
   const planLbl = document.getElementById('sb-plan-label');
   const planSub = document.getElementById('sb-plan-sub');
+  const upgLbl  = document.getElementById('sb-upgrade-lbl');
   if(planLbl) {
-    if(USER_PLAN === 'pro' || USER_PLAN === 'business') {
-      planLbl.textContent = 'FollowOffer Pro'; planLbl.style.color = '#4B89DC';
-      if(planSub) planSub.textContent = 'Offres illimitées';
-      const aboBt = document.getElementById('sb-abo-btn');
-      if(aboBt) { const upEl = aboBt.querySelector('span:last-child'); if(upEl) upEl.style.display='none'; }
+    if(USER_PLAN==='pro'||USER_PLAN==='business') {
+      planLbl.textContent='FollowOffer Pro'; planLbl.style.color='#4D90DC';
+      if(planSub) planSub.textContent='Offres illimitées';
+      if(upgLbl)  upgLbl.style.display='none';
     } else {
-      planLbl.textContent = 'Plan Gratuit';
-      if(planSub) planSub.textContent = '5 offres / mois';
+      planLbl.textContent='Plan Gratuit'; planLbl.style.color='';
+      if(planSub) planSub.textContent='5 offres / mois';
+      if(upgLbl)  upgLbl.style.display='';
     }
   }
   // Recharger CFG si vide
-  if(!CFG.name) { try { const c=localStorage.getItem('of_cfg'); if(c) Object.assign(CFG,JSON.parse(c)); } catch(_){} }
-  const _e = CURRENT_USER.email || '';
-  const _n = CFG.name || CURRENT_USER.user_metadata?.full_name || _e.split('@')[0] || '—';
-  const _i = _n.split(' ').map(x=>x[0]||'').join('').toUpperCase().slice(0,2) || _e[0]?.toUpperCase() || '?';
+  if(!CFG.name){try{const c=localStorage.getItem('of_cfg');if(c)Object.assign(CFG,JSON.parse(c));}catch(_){}}
+  const _e=CURRENT_USER.email||'';
+  const _n=CFG.name||CURRENT_USER.user_metadata?.full_name||_e.split('@')[0]||'—';
+  const _i=_n.split(' ').map(x=>x[0]||'').join('').toUpperCase().slice(0,2)||_e[0]?.toUpperCase()||'?';
   const av=document.getElementById('user-avatar'); if(av) av.textContent=_i;
   const nm=document.getElementById('user-name');   if(nm) nm.textContent=_n;
   const rl=document.getElementById('user-role');   if(rl) rl.textContent=CFG.role?(CFG.role+(CFG.company?' · '+CFG.company:'')):(CFG.company||_e);
@@ -3404,10 +3489,10 @@ function buildTrackingPixel(offerId) {
 }
 
 async function sendBrevoEmail({to, toName, subject, body, pdfUrl, pdfName, offerId}) {
-  if(!CFG.senderEmail) { try { const c=localStorage.getItem('of_cfg'); if(c) Object.assign(CFG,JSON.parse(c)); } catch(_){} }
+  if(!CFG.senderEmail){try{const c=localStorage.getItem('of_cfg');if(c)Object.assign(CFG,JSON.parse(c));}catch(_){}}
   const fromEmail = CFG.senderEmail || CURRENT_USER?.email;
   const fromName = CFG.name || fromEmail;
-  if(!fromEmail) { toast('⚠️','Configurez votre email expéditeur dans Configuration → Email'); return false; }
+  if(!fromEmail) { toast('⚠️','Configurez votre email expéditeur dans Configuration'); return false; }
   if(!to) { toast('⚠️','Email destinataire manquant'); return false; }
   const sig = buildSignature();
   const pixel = offerId ? buildTrackingPixel(offerId) : '';
