@@ -553,6 +553,13 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <polygon points="26,1 22,3 24.5,5" fill="#E9B84A"/>
       </svg>
       FollowOffer
+      <span style="display:inline-flex;align-items:center;margin-left:6px;opacity:0.85;" title="Suisse">
+        <svg width="14" height="14" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <rect width="20" height="20" rx="2" fill="#FF0000"/>
+          <rect x="8.5" y="3" width="3" height="14" fill="white"/>
+          <rect x="3" y="8.5" width="14" height="3" fill="white"/>
+        </svg>
+      </span>
     </div>
     <div class="sb-version">Suite commerciale suisse</div>
   </div>
@@ -561,6 +568,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="sb-sec-label">Vue d'ensemble</div>
       <button class="nb active" onclick="go('dashboard')"><span class="ic">◈</span>Dashboard</button>
       <button class="nb" onclick="go('rapport')"><span class="ic">📊</span>Rapport semaine <span class="nc nc-green" id="nc-rapport">NEW</span></button>
+      <button class="nb" onclick="go('guide')"><span class="ic">🎯</span>Guide d'utilisation</button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Offres</div>
@@ -638,6 +646,89 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
       <div class="sh"><div class="sh-t">Relances urgentes aujourd'hui</div><button class="btn btn-ghost btn-sm" onclick="go('relances')">Voir tout →</button></div>
       <div id="dash-urgent"></div>
+    </div>
+
+    <!-- ══ GUIDE D'UTILISATION ══ -->
+    <div class="panel" id="panel-guide">
+      <div style="max-width:680px;margin:0 auto;">
+        <div style="text-align:center;margin-bottom:32px;">
+          <div style="font-family:'Instrument Serif',serif;font-size:28px;font-style:italic;margin-bottom:8px;">Guide d'utilisation</div>
+          <div style="font-size:13px;color:var(--muted);">FollowOffer en 5 étapes simples — moins de 2 minutes pour maîtriser l'outil.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:32px;">
+          <!-- Étape 1 -->
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;gap:18px;align-items:flex-start;">
+            <div style="min-width:44px;height:44px;background:var(--gold-d);border:1.5px solid rgba(233,184,74,0.3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;">👤</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:var(--gold-d);padding:2px 8px;border-radius:4px;">ÉTAPE 1</span>
+                <div style="font-size:15px;font-weight:600;">Complétez votre profil entreprise</div>
+              </div>
+              <div style="font-size:13px;color:var(--muted);line-height:1.7;">Renseignez vos coordonnées dans <strong style="color:var(--text);">Configuration → Profil</strong>. Ces infos apparaîtront automatiquement dans tous vos emails et votre signature.</div>
+              <button onclick="go('config')" class="btn btn-ghost btn-sm" style="margin-top:10px;">Ouvrir Configuration →</button>
+            </div>
+          </div>
+          <!-- Étape 2 -->
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;gap:18px;align-items:flex-start;">
+            <div style="min-width:44px;height:44px;background:var(--blue-d);border:1.5px solid rgba(56,189,248,0.3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;">📄</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);background:var(--blue-d);padding:2px 8px;border-radius:4px;">ÉTAPE 2</span>
+                <div style="font-size:15px;font-weight:600;">Importez votre offre en PDF</div>
+              </div>
+              <div style="font-size:13px;color:var(--muted);line-height:1.7;">Cliquez sur <strong style="color:var(--text);">+ Envoyer une offre</strong> et déposez votre document PDF. L'IA lit automatiquement le client, le montant et la référence. Aucune saisie manuelle requise.</div>
+              <button onclick="go('nouvelle')" class="btn btn-ghost btn-sm" style="margin-top:10px;">Envoyer une offre →</button>
+            </div>
+          </div>
+          <!-- Étape 3 -->
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;gap:18px;align-items:flex-start;">
+            <div style="min-width:44px;height:44px;background:var(--purple-d);border:1.5px solid rgba(167,139,250,0.3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;">🔍</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);background:var(--purple-d);padding:2px 8px;border-radius:4px;">ÉTAPE 3</span>
+                <div style="font-size:15px;font-weight:600;">Vérifiez les informations extraites</div>
+              </div>
+              <div style="font-size:13px;color:var(--muted);line-height:1.7;">Relisez les données extraites par l'IA (client, email, montant, objet). Corrigez si besoin. Ajoutez le contexte de l'échange pour personnaliser l'email généré.</div>
+            </div>
+          </div>
+          <!-- Étape 4 -->
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;gap:18px;align-items:flex-start;">
+            <div style="min-width:44px;height:44px;background:var(--green-d);border:1.5px solid rgba(34,197,94,0.3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;">✉️</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);background:var(--green-d);padding:2px 8px;border-radius:4px;">ÉTAPE 4</span>
+                <div style="font-size:15px;font-weight:600;">Validez l'email généré par l'IA</div>
+              </div>
+              <div style="font-size:13px;color:var(--muted);line-height:1.7;">L'IA rédige un email sur mesure en fonction du contexte. Relisez-le, modifiez-le si nécessaire, puis confirmez l'envoi. Votre signature est ajoutée automatiquement.</div>
+            </div>
+          </div>
+          <!-- Étape 5 -->
+          <div style="background:var(--s1);border:1px solid rgba(233,184,74,0.25);border-radius:14px;padding:20px;display:flex;gap:18px;align-items:flex-start;">
+            <div style="min-width:44px;height:44px;background:var(--gold-d);border:1.5px solid rgba(233,184,74,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;">🤖</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:var(--gold-d);padding:2px 8px;border-radius:4px;">ÉTAPE 5</span>
+                <div style="font-size:15px;font-weight:600;">Les relances partent automatiquement</div>
+              </div>
+              <div style="font-size:13px;color:var(--muted);line-height:1.7;">FollowOffer programme automatiquement 3 relances à intervalles définis (J+3, J+7, J+14 par défaut). Vous pouvez ajuster ces délais dans <strong style="color:var(--text);">Configuration → Relances</strong>. Vous pouvez aussi relancer manuellement à tout moment.</div>
+              <button onclick="go('relances')" class="btn btn-ghost btn-sm" style="margin-top:10px;">Voir les relances →</button>
+            </div>
+          </div>
+        </div>
+        <!-- Tips rapides -->
+        <div style="background:var(--s2);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;">
+          <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">💡 Astuces rapides</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:var(--bg);border-radius:9px;padding:12px;font-size:12px;color:var(--muted);line-height:1.6;"><strong style="color:var(--text);display:block;margin-bottom:4px;">👁 Tracking</strong>Vous êtes notifié dès que votre client ouvre l'email.</div>
+            <div style="background:var(--bg);border-radius:9px;padding:12px;font-size:12px;color:var(--muted);line-height:1.6;"><strong style="color:var(--text);display:block;margin-bottom:4px;">✓/✕ Statuts</strong>Marquez une offre "Gagnée" ou "Perdue" pour mettre à jour votre pipeline.</div>
+            <div style="background:var(--bg);border-radius:9px;padding:12px;font-size:12px;color:var(--muted);line-height:1.6;"><strong style="color:var(--text);display:block;margin-bottom:4px;">📊 Rapport</strong>Consultez le rapport hebdomadaire pour analyser votre performance.</div>
+            <div style="background:var(--bg);border-radius:9px;padding:12px;font-size:12px;color:var(--muted);line-height:1.6;"><strong style="color:var(--text);display:block;margin-bottom:4px;">📱 Mobile</strong>L'application est accessible depuis votre smartphone.</div>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <button class="btn btn-gold" onclick="go('nouvelle')" style="padding:12px 28px;font-size:14px;">🚀 Envoyer ma première offre</button>
+        </div>
+      </div>
     </div>
 
     <!-- ══ NOUVELLE OFFRE ══ -->
@@ -896,6 +987,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div class="f2" style="margin-bottom:12px;">
             <div class="fg"><label class="fl">Entreprise</label><input class="fi" id="cfg-company" placeholder="Mon Entreprise SA" oninput="updateSigPreview()"></div>
             <div class="fg"><label class="fl">Téléphone</label><input class="fi" id="cfg-phone" placeholder="+41 79 000 00 00" oninput="updateSigPreview()"></div>
+            <div class="fg"><label class="fl">Site web</label><input class="fi" id="cfg-website" placeholder="www.entreprise.ch" oninput="updateSigPreview()"></div>
           </div>
         </div>
         <div class="fcard" style="margin-bottom:18px;">
@@ -943,11 +1035,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
             <div class="fg"><label class="fl">Votre adresse email</label><input class="fi" id="cfg-sender-email" type="email" placeholder="votre@email.ch"></div>
             <div class="fg"><label class="fl">Nom affiché</label><input class="fi" id="cfg-name-email" placeholder="Jean Dupont"></div>
           </div>
-          <!-- ✅ FIX : champ cfg-brevo-key ajouté -->
+          <!-- ✅ Champ clé Brevo personnelle -->
           <div class="fg" style="margin-top:10px;">
-            <label class="fl">Clé API Brevo personnelle (optionnel)</label>
-            <input class="fi" id="cfg-brevo-key" type="password" placeholder="xkeysib-... (laissez vide pour utiliser la clé serveur)">
-            <div style="font-size:11px;color:var(--muted);margin-top:5px;">💡 Sans clé personnelle, les emails passent par la clé Brevo du serveur FollowOffer. Ajoutez la vôtre pour un volume élevé ou un expéditeur vérifié.</div>
+            <label class="fl">Clé API Brevo personnelle <span style="color:var(--muted);font-weight:400;">(optionnel)</span></label>
+            <input class="fi" id="cfg-brevo-key" type="password" placeholder="xkeysib-... (vide = clé serveur FollowOffer)">
+            <div style="font-size:11px;color:var(--muted);margin-top:5px;">💡 Laissez vide pour utiliser la clé partagée. Ajoutez la vôtre si vous avez un compte Brevo dédié.</div>
           </div>
           <div id="brevo-status" style="font-size:12px;"></div>
         </div>
@@ -1231,7 +1323,7 @@ const NR = {sent:'Dans 3 jours',relance1:"Aujourd'hui",relance2:"Aujourd'hui",re
 const AVATARS = ['#E9B84A','#22C55E','#38BDF8','#A78BFA','#F43F5E','#FB923C'];
 
 // ══ NAV ══
-const TITLES = {dashboard:'Dashboard',nouvelle:'Envoyer une offre',offres:'Toutes les offres',relances:'Relances',detection:"Détection d'ouverture",calendrier:'Calendrier',revenus:'Revenus & Analyse',clients:'Fiches clients',rapport:'Rapport hebdomadaire',config:'Configuration'};
+const TITLES = {dashboard:'Dashboard',guide:'Guide d\'utilisation',nouvelle:'Envoyer une offre',offres:'Toutes les offres',relances:'Relances',detection:"Détection d'ouverture",calendrier:'Calendrier',revenus:'Revenus & Analyse',clients:'Fiches clients',rapport:'Rapport hebdomadaire',config:'Configuration'};
 
 function go(name) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -1968,26 +2060,33 @@ function resetToForm(){
   document.getElementById('step-form').style.display='block';
 }
 
-// ✅ FIX : Modal de confirmation avant envoi initial
+// ✅ FIX 3 — Confirmation modale avant envoi initial
 function confirmSendNewOffer() {
-  const client  = document.getElementById('ex-client')?.value  || 'Client';
-  const email   = document.getElementById('ex-email')?.value   || '—';
-  const rawMnt  = (document.getElementById('ex-montant')?.value || '0').replace(/[\s']/g, '');
-  const montant = parseFloat(rawMnt) || 0;
-  const ref     = document.getElementById('ex-ref')?.value     || '—';
-  const objet   = document.getElementById('ex-objet')?.value   || '—';
+  const client  = (document.getElementById('ex-client')?.value  || 'Client').trim();
+  const email   = (document.getElementById('ex-email')?.value   || '—').trim();
+  const rawM    = (document.getElementById('ex-montant')?.value || '0').replace(/[\s']/g,'');
+  const montant = parseFloat(rawM) || 0;
+  const ref     = (document.getElementById('ex-ref')?.value     || '—').trim();
+  const objet   = (document.getElementById('ex-objet')?.value   || '—').trim();
 
   document.getElementById('conf-ico').textContent = '📤';
   document.getElementById('conf-t').textContent   = 'Envoyer cette offre ?';
   document.getElementById('conf-s').innerHTML =
-    `<strong>${client}</strong> &lt;${email}&gt;<br>` +
-    `${ref} — ${objet}<br>` +
-    `<span style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:14px;">${montant.toLocaleString('fr-CH')} CHF</span><br><br>` +
-    "L'email sera envoyé immédiatement et les relances automatiques activées.";
+    '<div style="background:var(--s2);border-radius:8px;padding:12px;margin-bottom:12px;text-align:left;">' +
+    '<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px;">DESTINATAIRE</div>' +
+    '<div style="font-size:14px;font-weight:600;">' + client + '</div>' +
+    '<div style="font-size:12px;color:var(--muted);">' + email + '</div>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">' +
+    '<div style="background:var(--s2);border-radius:8px;padding:10px;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px;">RÉFÉRENCE</div><div style="font-size:13px;font-weight:600;">' + ref + '</div></div>' +
+    '<div style="background:var(--s2);border-radius:8px;padding:10px;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px;">MONTANT</div><div style="font-size:13px;font-weight:600;color:var(--gold);font-family:JetBrains Mono,monospace;">' + montant.toLocaleString('fr-CH') + ' CHF</div></div>' +
+    '</div>' +
+    '<div style="background:var(--s2);border-radius:8px;padding:10px;margin-bottom:12px;text-align:left;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px;">OBJET</div><div style="font-size:13px;">' + objet + '</div></div>' +
+    '<div style="font-size:11px;color:var(--muted);background:rgba(233,184,74,0.06);border:1px solid rgba(233,184,74,0.15);border-radius:7px;padding:9px 12px;">📧 <strong>Type :</strong> Envoi initial · Relances automatiques activées</div>';
 
   const btn = document.getElementById('conf-btn');
   btn.className  = 'btn btn-gold';
-  btn.textContent = "📤 Confirmer l'envoi";
+  btn.textContent = "📤 Confirmer l\'envoi";
 
   pendingConfirm = { type: 'sendOffer', id: null };
   document.getElementById('confirm-overlay').classList.add('open');
@@ -2128,13 +2227,14 @@ function askConfirm(type, id, name, montant) {
   btn.textContent = type === 'won' ? '✓ Confirmer Gagnée' : '✕ Confirmer Perdue';
   document.getElementById('confirm-overlay').classList.add('open');
 }
-async async function confirmAction() {
+async function confirmAction() {
   if(!pendingConfirm) return;
   closeConfirm();
-  if(pendingConfirm.type === 'won')          await actW(pendingConfirm.id);
-  else if(pendingConfirm.type === 'lost')    await actL(pendingConfirm.id);
-  else if(pendingConfirm.type === 'sendOffer') await sendOffer(); // ✅ FIX
+  const {type, id} = pendingConfirm;
   pendingConfirm = null;
+  if(type === 'won')       await actW(id);
+  else if(type === 'lost') await actL(id);
+  else if(type === 'sendOffer') await sendOffer();
 }
 function closeConfirm() {
   document.getElementById('confirm-overlay').classList.remove('open');
@@ -2534,6 +2634,7 @@ async function loadConfig() {
   setVal('cfg-phone', CFG.phone);
   setVal('cfg-sender-email', CFG.senderEmail);
   setVal('cfg-brevo-key', CFG.brevoKey);
+  setVal('cfg-website', CFG.website);
   updateSigPreview();
   updateEmailConnectionStatus();
   updateBrevoStatus();
@@ -2547,10 +2648,11 @@ async function saveConfig() {
   CFG.phone = document.getElementById('cfg-phone')?.value||'';
   CFG.senderEmail = document.getElementById('cfg-sender-email')?.value||'';
   CFG.brevoKey = document.getElementById('cfg-brevo-key')?.value||'';
+  CFG.website = document.getElementById('cfg-website')?.value||'';
   // Sauvegarder en localStorage immédiatement
   localStorage.setItem('of_cfg', JSON.stringify(CFG));
   try {
-    for(const k of ['name','role','company','phone','senderEmail','brevoKey']) {
+    for(const k of ['name','role','company','phone','senderEmail','brevoKey','website']) {
       await saveSetting(k, CFG[k]);
     }
     updateSigPreview();
@@ -2614,13 +2716,14 @@ function updateSigPreview() {
   const r = document.getElementById('cfg-role')?.value||'';
   const c = document.getElementById('cfg-company')?.value||'';
   const p = document.getElementById('cfg-phone')?.value||'';
+  const w = document.getElementById('cfg-website')?.value||'';
   const el = document.getElementById('sig-preview');
   if(!el) return;
   if(!n) { el.innerHTML='<em style="color:var(--muted)">Aperçu signature — remplissez les champs ci-dessus</em>'; return; }
-  el.innerHTML = `<span style="color:var(--text);font-weight:600;">${n}</span>${r?`<br><span style="color:var(--muted)">${r}</span>`:''}${c?`<br><span style="color:var(--muted)">${c}</span>`:''}${p?`<br><span style="color:var(--blue)">${p}</span>`:''}`;
+  el.innerHTML = `<span style="color:var(--text);font-weight:600;">${n}</span>${r?`<br><span style="color:var(--muted)">${r}</span>`:''}${c?`<br><span style="color:var(--muted)">${c}</span>`:''}${p?`<br><span style="color:var(--blue)">📞 ${p}</span>`:''}${w?`<br><span style="color:var(--muted)">🌐 ${w}</span>`:''}`;
 }
 
-['cfg-name','cfg-role','cfg-company','cfg-phone'].forEach(id => {
+['cfg-name','cfg-role','cfg-company','cfg-phone','cfg-website'].forEach(id => {
   document.addEventListener('DOMContentLoaded',()=>{
     const el=document.getElementById(id);
     if(el) el.addEventListener('input',updateSigPreview);
@@ -2717,8 +2820,9 @@ function buildSignature() {
   const r = CFG.role || '';
   const c = CFG.company || '';
   const p = CFG.phone || '';
+  const w = CFG.website || '';
   if(!n && !c) return '';
-  return `\n\n--\n${n||''}${r?'\n'+r:''}${c?'\n'+c:''}${p?'\n'+p:''}`;
+  return `\n\n--\n${n||''}${r?'\n'+r:''}${c?'\n'+c:''}${p?'\n📞 '+p:''}${w?'\n🌐 '+w:''}`;
 }
 
 // ══ TOAST ══
@@ -3539,15 +3643,21 @@ function renderObStep(step) {
       <div class="ob-check-item"><div class="ob-check-box"></div><div>Connecter votre email</div></div>
       <div class="ob-check-item"><div class="ob-check-box"></div><div>Envoyer votre première offre</div></div>
     </div>`,
-    // Step 1 — Profil (nom déjà connu depuis inscription)
-    `<div class="ob-ico">👤</div>
-    <div class="ob-title">Votre profil commercial</div>
-    <div class="ob-sub">Ces infos apparaîtront dans vos emails et signature. Votre nom et email ont été récupérés automatiquement.</div>
-    <div class="ob-field" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:4px;"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Nom</div><div style="font-size:13px;color:var(--text);">${CFG.name||CURRENT_USER?.email?.split('@')[0]||'—'} <span style="color:var(--green);font-size:11px;">✓ Récupéré</span></div></div>
-    <div class="ob-field" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:12px;"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Email</div><div style="font-size:13px;color:var(--text);">${CFG.senderEmail||CURRENT_USER?.email||'—'} <span style="color:var(--green);font-size:11px;">✓ Récupéré</span></div></div>
+    // Step 1 — Profil complet entreprise
+    `<div class="ob-ico">🏢</div>
+    <div class="ob-title">Profil de votre entreprise</div>
+    <div class="ob-sub">Ces infos apparaîtront dans vos emails et votre signature professionnelle.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div class="ob-field" style="background:var(--s2);border:1px solid var(--green-d);border-radius:8px;padding:8px 12px;"><div style="font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Nom ✓</div><div style="font-size:13px;color:var(--text);">${CFG.name||CURRENT_USER?.email?.split('@')[0]||'—'}</div></div>
+      <div class="ob-field" style="background:var(--s2);border:1px solid var(--green-d);border-radius:8px;padding:8px 12px;"><div style="font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Email ✓</div><div style="font-size:12px;color:var(--text);word-break:break-all;">${CFG.senderEmail||CURRENT_USER?.email||'—'}</div></div>
+    </div>
+    <div class="ob-field"><label>Prénom &amp; Nom complet</label><input id="ob-fullname" type="text" placeholder="Jean Dupont" value="${CFG.name||''}"></div>
     <div class="ob-field"><label>Entreprise</label><input id="ob-company" type="text" placeholder="Dupont SA" value="${CFG.company||''}"></div>
     <div class="ob-field"><label>Rôle / Fonction</label><input id="ob-role" type="text" placeholder="Responsable commercial" value="${CFG.role||''}"></div>
-    <div class="ob-field"><label>Téléphone</label><input id="ob-phone" type="tel" placeholder="+41 79 000 00 00" value="${CFG.phone||''}"></div>`,
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="ob-field"><label>Téléphone</label><input id="ob-phone" type="tel" placeholder="+41 79 000 00 00" value="${CFG.phone||''}"></div>
+      <div class="ob-field"><label>Site web</label><input id="ob-website" type="url" placeholder="www.entreprise.ch" value="${CFG.website||''}"></div>
+    </div>`,
     // Step 2 — Email
     `<div class="ob-ico">📧</div>
     <div class="ob-title">Connecter votre email</div>
@@ -3594,14 +3704,16 @@ async function obNext(currentStep) {
 }
 
 async function obSaveProfile() {
-  const name = document.getElementById('ob-name')?.value.trim();
-  const company = document.getElementById('ob-company')?.value.trim();
-  const role = document.getElementById('ob-role')?.value.trim();
-  const phone = document.getElementById('ob-phone')?.value.trim();
-  if(name) CFG.name = name;
-  if(company) CFG.company = company;
-  if(role) CFG.role = role;
-  if(phone) CFG.phone = phone;
+  const name     = (document.getElementById('ob-fullname')?.value || document.getElementById('ob-name')?.value || '').trim();
+  const company  = document.getElementById('ob-company')?.value.trim();
+  const role     = document.getElementById('ob-role')?.value.trim();
+  const phone    = document.getElementById('ob-phone')?.value.trim();
+  const website  = document.getElementById('ob-website')?.value.trim();
+  if(name)     CFG.name    = name;
+  if(company)  CFG.company = company;
+  if(role)     CFG.role    = role;
+  if(phone)    CFG.phone   = phone;
+  if(website)  CFG.website = website;
   if(name || company) {
     try {
       for(const [k,v] of [['name',name],['company',company],['role',role],['phone',phone]]) {
