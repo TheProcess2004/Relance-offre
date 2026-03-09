@@ -1,8 +1,6 @@
 // api/stripe-webhook.js — FollowOffer
 const crypto = require('crypto');
 
-module.exports.config = { api: { bodyParser: false } };
-
 function getRawBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -103,7 +101,7 @@ async function getCustomerEmail(customerId) {
   return cust.email || null;
 }
 
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
@@ -185,3 +183,7 @@ module.exports = async function handler(req, res) {
 
   return res.status(200).json({ received: true });
 };
+
+// Exports Vercel — config DOIT être sur le même objet que le handler
+module.exports = handler;
+module.exports.config = { api: { bodyParser: false } };
