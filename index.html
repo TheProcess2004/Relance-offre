@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FollowOffer V2</title>
+<title>FollowOffer</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
@@ -473,7 +473,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       </svg>
       FollowOffer
     </div>
-    <div class="sb-version">V2 · Suite complète</div>
+    <div class="sb-version">Suite commerciale</div>
   </div>
   <nav class="sb-nav">
     <div class="sb-section">
@@ -484,18 +484,18 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="sb-section">
       <div class="sb-sec-label">Offres</div>
       <button class="nb" onclick="go('nouvelle')"><span class="ic">＋</span>Envoyer une offre</button>
-      <button class="nb" onclick="go('offres')"><span class="ic">▤</span>Toutes les offres <span class="nc nc-gold" id="nc-offres">8</span></button>
+      <button class="nb" onclick="go('offres')"><span class="ic">▤</span>Toutes les offres <span class="nc nc-gold" id="nc-offres" style="display:none">0</span></button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Suivi</div>
-      <button class="nb" onclick="go('relances')"><span class="ic">◎</span>Relances <span class="nc nc-red" id="nc-relances">4</span></button>
-      <button class="nb" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-blue">3</span></button>
+      <button class="nb" onclick="go('relances')"><span class="ic">◎</span>Relances <span class="nc nc-red" id="nc-relances" style="display:none">0</span></button>
+      <button class="nb" onclick="go('detection')"><span class="ic">👁</span>Détection ouverture <span class="nc nc-gold" id="nc-detection" style="display:none">0</span></button>
       <button class="nb" onclick="go('calendrier')"><span class="ic">▦</span>Calendrier</button>
       <button class="nb" onclick="go('revenus')"><span class="ic">◉</span>Revenus</button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Clients</div>
-      <button class="nb" onclick="go('clients')"><span class="ic">◷</span>Fiches clients <span class="nc nc-gold" id="nc-clients">6</span></button>
+      <button class="nb" onclick="go('clients')"><span class="ic">◷</span>Fiches clients <span class="nc nc-gold" id="nc-clients" style="display:none">0</span></button>
     </div>
     <div class="sb-section">
       <div class="sb-sec-label">Système</div>
@@ -504,8 +504,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   </nav>
   <div class="sb-foot">
     <div class="sb-user">
-      <div class="sb-av">JD</div>
-      <div><div class="sb-nm">Jean Dupont</div><div class="sb-rl">Commercial Senior</div></div>
+      <div class="sb-av" id="user-avatar">?</div>
+      <div><div class="sb-nm" id="user-name">—</div><div class="sb-rl" id="user-role">—</div></div>
     </div>
   </div>
 </aside>
@@ -653,7 +653,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
         <div class="ep-card">
           <div class="ep-top">
-            <div class="ep-f"><span class="ep-fl">De :</span><span class="ep-fv">Jean Dupont &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0dad5d1de9ed4c5c0dfdec4f0d5dec4c2d5c0c2d9c3d59ed3d8">[email&#160;protected]</a>&gt;</span></div>
+            <div class="ep-f"><span class="ep-fl">De :</span><span class="ep-fv" id="prev-from">—</span></div>
             <div class="ep-f"><span class="ep-fl">À :</span><span class="ep-fv" id="prev-to">—</span></div>
             <div class="ep-f"><span class="ep-fl">Sujet :</span><span class="ep-fv" id="prev-sub">—</span></div>
             <div class="ep-f"><span class="ep-fl">Pièce jointe :</span><span class="ep-att" id="prev-pj">—</span></div>
@@ -697,9 +697,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <!-- ══ RELANCES ══ -->
     <div class="panel" id="panel-relances">
       <div class="kgrid kgrid-3">
-        <div class="kcard g"><div class="k-lbl">Aujourd'hui</div><div class="k-val">4</div><div class="k-sub">Relances à traiter</div></div>
-        <div class="kcard bl"><div class="k-lbl">Cette semaine</div><div class="k-val">9</div><div class="k-sub">Relances programmées</div></div>
-        <div class="kcard gr"><div class="k-lbl">Taux réponse R1</div><div class="k-val">44%</div><div class="k-sub">Moyenne 90 derniers jours</div></div>
+        <div class="kcard g"><div class="k-lbl">Aujourd'hui</div><div class="k-val" id="rel-today">—</div><div class="k-sub">Relances à traiter</div></div>
+        <div class="kcard bl"><div class="k-lbl">Cette semaine</div><div class="k-val" id="rel-week">—</div><div class="k-sub">Relances programmées</div></div>
+        <div class="kcard gr"><div class="k-lbl">Taux réponse R1</div><div class="k-val" id="rel-rate">—</div><div class="k-sub">Offres avec réponse</div></div>
       </div>
       <div class="tbl">
         <div class="tbl-h tbl-cols"><div class="tbl-hc">Client</div><div class="tbl-hc">Référence</div><div class="tbl-hc">Montant</div><div class="tbl-hc">Statut</div><div class="tbl-hc">Date prévue</div><div class="tbl-hc">Actions</div></div>
@@ -995,6 +995,7 @@ async function sbFetch(path, options={}) {
 // ══ DATA (chargé depuis Supabase) ══
 let OFFERS = [];
 let OUVERTURES = [];
+let CLIENTS = [];
 
 async function loadOffers() {
   try {
@@ -1166,8 +1167,30 @@ function renderOffres(){
   document.getElementById('tbody-offres').innerHTML = list.length ? list.map(o=>row(o)).join('') : empty;
 }
 function renderRelances(){
-  const p=OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
-  document.getElementById('tbody-relances').innerHTML=p.length?p.map(o=>row(o)).join(''):`<div style="text-align:center;padding:40px;color:var(--muted);">🎉 Aucune relance en attente</div>`;
+  const p = OFFERS.filter(o=>['sent','relance1','relance2','relance3'].includes(o.status));
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0,10);
+  const weekEnd = new Date(now.getTime() + 7*24*3600*1000).toISOString().slice(0,10);
+  // KPI today = offres envoyées depuis > 3j sans réponse
+  const todayDue = p.filter(o => {
+    const sent = new Date(o.sendDate);
+    const diff = (now - sent) / (1000*3600*24);
+    return diff >= 3;
+  }).length;
+  const weekDue = p.length;
+  const total = OFFERS.length;
+  const responded = OFFERS.filter(o => ['won','lost','annule'].includes(o.status)).length;
+  const rate = total > 0 ? Math.round(responded/total*100) : 0;
+  const relToday = document.getElementById('rel-today');
+  const relWeek = document.getElementById('rel-week');
+  const relRate = document.getElementById('rel-rate');
+  if(relToday) relToday.textContent = todayDue;
+  if(relWeek) relWeek.textContent = weekDue;
+  if(relRate) relRate.textContent = rate + '%';
+  // Badge sidebar
+  const ncRelances = document.getElementById('nc-relances');
+  if(ncRelances) { ncRelances.textContent = p.length; ncRelances.style.display = p.length > 0 ? '' : 'none'; }
+  document.getElementById('tbody-relances').innerHTML = p.length ? p.map(o=>row(o)).join('') : `<div style="text-align:center;padding:40px;color:var(--muted);">🎉 Aucune relance en attente</div>`;
 }
 
 // ══ URGENT DASHBOARD ══
@@ -1328,10 +1351,12 @@ function renderClients(){
     if(o.status==='won'){clientMap[k].won++;clientMap[k].total+=o.montant;}
     if(o.status==='lost')clientMap[k].lost++;
   });
-  const clients=Object.values(clientMap);
-  document.getElementById('nc-clients').textContent=clients.length;
-  document.getElementById('clients-count').textContent=clients.length+' clients';
-  document.getElementById('client-grid').innerHTML=clients.map((c,i)=>{
+  CLIENTS = Object.values(clientMap);
+  const ncClients = document.getElementById('nc-clients');
+  if(ncClients) { ncClients.textContent = CLIENTS.length; ncClients.style.display = CLIENTS.length > 0 ? '' : 'none'; }
+  const countEl = document.getElementById('clients-count');
+  if(countEl) countEl.textContent = CLIENTS.length + ' clients';
+  document.getElementById('client-grid').innerHTML=CLIENTS.map((c,i)=>{
     const last=c.offers[c.offers.length-1];
     return `<div class="client-card" onclick="openClientModal('${c.email}')">
       <div class="cc-top">
@@ -1965,7 +1990,7 @@ function exportCSV() {
   const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `OfferFlow_Export_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `FollowOffer_Export_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   toast('📊','Export Excel téléchargé');
 }
@@ -2401,7 +2426,7 @@ async function doLogin() {
     document.getElementById('app-shell').style.display = '';
     updateUserUI();
     await loadApp();
-    showOnboarding();
+    // Onboarding uniquement pour les comptes existants qui se reconnectent — pas ici
   } catch(e) {
     errEl.textContent = e.message;
     errEl.style.display = 'block';
@@ -2431,39 +2456,80 @@ async function doForgotPassword() {
 }
 
 function showOnboarding() {
-  const modal = document.createElement('div');
-  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(7,8,12,0.92);backdrop-filter:blur(10px);padding:20px;';
-  modal.innerHTML = `
-    <div style="background:var(--s1);border:1px solid rgba(233,184,74,0.3);border-radius:20px;padding:36px;max-width:480px;width:100%;text-align:center;">
-      <div style="font-size:36px;margin-bottom:12px;">🎉</div>
-      <div style="font-family:'Instrument Serif',serif;font-size:26px;color:var(--gold);margin-bottom:6px;">Bienvenue sur FollowOffer !</div>
-      <div style="font-size:13px;color:var(--muted);margin-bottom:28px;">Votre suite commerciale Suisse est prête.</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;text-align:left;">
-        <div style="background:var(--s2);border-radius:12px;padding:16px;border:1px solid var(--border);">
-          <div style="font-size:20px;margin-bottom:6px;">📤</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Envoyer une offre</div>
-          <div style="font-size:11px;color:var(--muted);">Créez et envoyez vos offres en 2 minutes</div>
-        </div>
-        <div style="background:var(--s2);border-radius:12px;padding:16px;border:1px solid var(--border);">
-          <div style="font-size:20px;margin-bottom:6px;">🔔</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Relances auto</div>
-          <div style="font-size:11px;color:var(--muted);">Ne laissez plus aucune offre sans réponse</div>
-        </div>
-        <div style="background:var(--s2);border-radius:12px;padding:16px;border:1px solid var(--border);">
-          <div style="font-size:20px;margin-bottom:6px;">👁</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Tracking ouvertures</div>
-          <div style="font-size:11px;color:var(--muted);">Sachez qui a lu votre email</div>
-        </div>
-        <div style="background:var(--s2);border-radius:12px;padding:16px;border:1px solid var(--border);">
-          <div style="font-size:20px;margin-bottom:6px;">📊</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Rapport hebdo IA</div>
-          <div style="font-size:11px;color:var(--muted);">Analysez vos performances chaque semaine</div>
-        </div>
-      </div>
-      <button onclick="this.closest('[style]').remove(); go('nouvelle');" style="width:100%;padding:14px;background:var(--gold);border:none;border-radius:10px;color:#000;font-size:15px;font-weight:700;cursor:pointer;">Envoyer ma première offre →</button>
-      <button onclick="this.closest('[style]').remove();" style="width:100%;padding:10px;background:transparent;border:none;color:var(--muted);font-size:12px;cursor:pointer;margin-top:8px;">Explorer d'abord l'application</button>
-    </div>`;
-  document.body.appendChild(modal);
+  // Ne montrer qu'une fois (flag localStorage)
+  if(localStorage.getItem('fo_onboarded_' + CURRENT_USER?.id)) return;
+  
+  let step = 0;
+  const steps = [
+    {
+      icon: '🎉',
+      title: 'Bienvenue sur FollowOffer !',
+      text: 'Votre suite commerciale suisse est prête. Nous allons vous guider en 3 étapes pour envoyer votre première offre.',
+      cta: 'Commencer →',
+      skip: 'Passer le tutoriel'
+    },
+    {
+      icon: '📤',
+      title: 'Étape 1 — Envoyer une offre',
+      text: 'Remplissez les informations client, rédigez votre email et joignez votre PDF. FollowOffer trackera chaque ouverture automatiquement.',
+      cta: 'Suivant →',
+      skip: 'Passer'
+    },
+    {
+      icon: '🔔',
+      title: 'Étape 2 — Relances automatiques',
+      text: 'Configurez vos délais de relance (J+3, J+7, J+14). FollowOffer envoie les rappels pour vous, sans oublier aucun prospect.',
+      cta: 'Suivant →',
+      skip: 'Passer'
+    },
+    {
+      icon: '👁',
+      title: 'Étape 3 — Tracking ouvertures',
+      text: 'Sachez exactement qui a lu votre email, quand, et combien de fois. Les clients "chauds" (ouverture < 24h) sont mis en avant.',
+      cta: 'Envoyer ma première offre →',
+      skip: 'Accéder au dashboard'
+    }
+  ];
+
+  const overlay = document.createElement('div');
+  overlay.id = 'ob-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(7,8,12,0.95);backdrop-filter:blur(12px);padding:20px;';
+
+  function renderStep() {
+    const s = steps[step];
+    const dots = steps.map((_,i) => `<div style="width:7px;height:7px;border-radius:50%;background:${i===step?'var(--gold)':'var(--border)'};transition:background 0.3s;"></div>`).join('');
+    overlay.innerHTML = `
+      <div style="background:var(--s1);border:1px solid rgba(233,184,74,0.25);border-radius:20px;padding:40px 36px;max-width:460px;width:100%;text-align:center;animation:fadeIn .3s ease;">
+        <div style="font-size:42px;margin-bottom:16px;">${s.icon}</div>
+        <div style="font-family:'Instrument Serif',serif;font-size:24px;color:var(--gold);margin-bottom:12px;line-height:1.3;">${s.title}</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:32px;">${s.text}</div>
+        <div style="display:flex;justify-content:center;gap:6px;margin-bottom:28px;">${dots}</div>
+        <button onclick="obNext()" style="width:100%;padding:14px;background:var(--gold);border:none;border-radius:10px;color:#000;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;">${s.cta}</button>
+        <button onclick="obSkip()" style="width:100%;padding:10px;background:transparent;border:none;color:var(--muted);font-size:12px;cursor:pointer;">${s.skip}</button>
+      </div>`;
+  }
+
+  window.obNext = function() {
+    step++;
+    if(step >= steps.length) {
+      obFinish(true);
+    } else {
+      renderStep();
+    }
+  };
+
+  window.obSkip = function() {
+    obFinish(false);
+  };
+
+  window.obFinish = function(goToNew) {
+    localStorage.setItem('fo_onboarded_' + CURRENT_USER?.id, '1');
+    overlay.remove();
+    if(goToNew) go('nouvelle');
+  };
+
+  document.body.appendChild(overlay);
+  renderStep();
 }
 
 function togglePass(inputId, eyeId) {
@@ -2496,6 +2562,7 @@ async function doRegister() {
     document.getElementById('app-shell').style.display = '';
     updateUserUI();
     await loadApp();
+    showOnboarding(); // Uniquement pour les nouveaux inscrits
   } catch(e) {
     errEl.textContent = e.message;
     errEl.style.display = 'block';
@@ -2504,7 +2571,7 @@ async function doRegister() {
 
 function updateUserUI() {
   if(!CURRENT_USER) return;
-  const name = CURRENT_USER.user_metadata?.full_name || CURRENT_USER.email;
+  const name = CURRENT_USER.user_metadata?.full_name || CURRENT_USER.email.split('@')[0];
   const email = CURRENT_USER.email;
   const initials = name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
   const nameEl = document.getElementById('user-name');
@@ -2513,8 +2580,15 @@ function updateUserUI() {
   if(nameEl) nameEl.textContent = name;
   if(roleEl) roleEl.textContent = email;
   if(avatarEl) avatarEl.textContent = initials;
+  // Update email preview "From" field
+  const prevFrom = document.getElementById('prev-from');
+  if(prevFrom) {
+    const fromName = CFG?.name || name;
+    const fromEmail = CFG?.senderEmail || email;
+    prevFrom.textContent = `${fromName} <${fromEmail}>`;
+  }
   // Add logout button to sidebar
-  const sysSection = document.querySelector('.sb-sect:last-child .sb-items');
+  const sysSection = document.querySelector('.sb-section:last-child .sb-items');
   if(sysSection && !document.getElementById('btn-logout')) {
     const li = document.createElement('div');
     li.className = 'sb-item';
@@ -2529,6 +2603,32 @@ function updateUserUI() {
 async function loadApp() {
   await loadOffers();
   await loadConfig();
+  updateSidebarBadges();
+}
+
+function updateSidebarBadges() {
+  // Offres
+  const totalOffers = OFFERS ? OFFERS.length : 0;
+  const ncOffres = document.getElementById('nc-offres');
+  if(ncOffres) { ncOffres.textContent = totalOffers; ncOffres.style.display = totalOffers > 0 ? '' : 'none'; }
+
+  // Relances en attente (statut pending)
+  const pendingRelances = OFFERS ? OFFERS.filter(o => o.status === 'sent' || o.status === 'pending').length : 0;
+  const ncRelances = document.getElementById('nc-relances');
+  if(ncRelances) { ncRelances.textContent = pendingRelances; ncRelances.style.display = pendingRelances > 0 ? '' : 'none'; }
+
+  // Détection ouvertures récentes (< 48h)
+  const recentOpen = OUVERTURES ? OUVERTURES.filter(o => {
+    const d = new Date(o.opened_at);
+    return (Date.now() - d) < 48*3600*1000;
+  }).length : 0;
+  const ncDet = document.getElementById('nc-detection');
+  if(ncDet) { ncDet.textContent = recentOpen; ncDet.style.display = recentOpen > 0 ? '' : 'none'; }
+
+  // Clients
+  const totalClients = CLIENTS ? CLIENTS.length : 0;
+  const ncClients = document.getElementById('nc-clients');
+  if(ncClients) { ncClients.textContent = totalClients; ncClients.style.display = totalClients > 0 ? '' : 'none'; }
 }
 
 // ══ BREVO EMAIL ══
