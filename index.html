@@ -2383,6 +2383,7 @@ async function previewRelance(id) {
       msgs[i] = rpDrafts[i];
       if(i===rpActive) showRPContent(o, msgs, rpActive);
     } catch(e) { rpDrafts[i] = `Bonjour ${o.prenom},\n\n${isTu ? `Je reviens vers toi concernant l'offre ${o.ref}.` : `Je reviens vers vous concernant l'offre ${o.ref}.`}\n\n${saluts[i]}`; }
+  }
   showRPContent(o, msgs, rpActive);
 }
 
@@ -2480,6 +2481,7 @@ async function previewRelance_obj(o) {
       msgs[i] = rpDrafts[i];
       if(i===rpActive) showRPContent(o, msgs, rpActive);
     } catch(e) { rpDrafts[i] = `Bonjour ${o.prenom},\n\n${isTu ? `Je reviens vers toi concernant l'offre ${o.ref}.` : `Je reviens vers vous concernant l'offre ${o.ref}.`}\n\n${saluts[i]}`; }
+  }
 }
 
 function confirmSendOffer() {
