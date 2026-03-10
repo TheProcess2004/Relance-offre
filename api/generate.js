@@ -1,52 +1,52 @@
-// api/generate.js — FollowOffer · Proxy Claude API
-
-async function handler(req, res) {
+export default async function handler(req, res) {
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const CLAUDE_KEY = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
-  if (!CLAUDE_KEY) return res.status(500).json({ error: 'CLAUDE_API_KEY manquant' });
+  const apiKey = process.env.ANTHROPIC_KEY || process.env.CLAUDE_API_KEY;
+  if (!apiKey) {
+    console.error('CLAUDE_API_KEY not set');
+    return res.status(500).json({ error: 'API key not configured' });
+  }
 
   try {
-    const body = req.body || {};
-    
-    // Log pour debug
-    console.log('[generate] messages count:', body.messages?.length);
-    console.log('[generate] has document:', body.messages?.[0]?.content?.some?.(c => c.type === 'document'));
+    const body = req.body;
 
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+    // Force le bon modèle et max_tokens raisonnable
+    const payload = {
+      model: 'claude-sonnet-4-5',
+      max_tokens: body.max_tokens || 1000,
+      messages: body.messages,
+    };
+
+    // Passer le system prompt si fourni
+    if (body.system) payload.system = body.system;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'x-api-key': CLAUDE_KEY,
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
-        'anthropic-beta': 'pdfs-2024-09-25',
-        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        model: body.model || 'claude-sonnet-4-20250514',
-        max_tokens: body.max_tokens || 1024,
-        messages: body.messages || [],
-        ...(body.system ? { system: body.system } : {})
-      })
+      body: JSON.stringify(payload),
     });
 
-    const data = await r.json();
-    if (!r.ok) {
-      console.error('[generate] Claude error:', data);
-      return res.status(r.status).json({ error: data.error?.message || 'Erreur Claude' });
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Anthropic API error:', data);
+      return res.status(response.status).json({ error: data.error?.message || 'Anthropic API error', details: data });
     }
+
     return res.status(200).json(data);
-  } catch(e) {
-    console.error('[generate] exception:', e.message);
-    return res.status(500).json({ error: e.message });
+
+  } catch (err) {
+    console.error('generate handler error:', err);
+    return res.status(500).json({ error: err.message });
   }
 }
-
-handler.config = {
-  api: { bodyParser: { sizeLimit: '10mb' } }
-};
-
-module.exports = handler;
