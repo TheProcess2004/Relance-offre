@@ -3057,11 +3057,18 @@ function showCfgTab(tab) {
     const uOL = document.getElementById('usage-offres-label');
     if(uOL) uOL.textContent = USER_PLAN === 'pro' ? 'offres (illimitées)' : 'offres / 5';
     if(uR) {
-      fetch(SB_URL+'/rest/v1/relances?select=id&statut=eq.sent', {
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+USER_TOKEN}
-      }).then(r=>r.json()).then(rows=>{
-        uR.textContent = Array.isArray(rows) ? rows.length : relSent;
-      }).catch(()=>{ uR.textContent = relSent; });
+      // Compter via statut offres (fiable, immédiat)
+      const fromStatus = OFFERS.reduce((acc,o)=>{
+        if(o.status==='relance1') return acc+1;
+        if(o.status==='relance2') return acc+2;
+        if(o.status==='relance3') return acc+3;
+        return acc;
+      },0);
+      // Compléter avec table relances (relances confirmées envoyées)
+      sbFetch('relances?select=id&statut=eq.sent').then(rows=>{
+        const fromTable = Array.isArray(rows) ? rows.length : 0;
+        uR.textContent = Math.max(fromTable, fromStatus, relSent);
+      }).catch(()=>{ uR.textContent = Math.max(fromStatus, relSent); });
     }
     // Clients : toujours recharger depuis DB pour avoir le bon chiffre
     if(uC) {
