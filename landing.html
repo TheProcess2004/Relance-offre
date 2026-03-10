@@ -833,9 +833,9 @@ button{font-family:inherit;}
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      <a href="/cdn-cgi/l/email-protection#f4979b9a80959780b4929b98989b839b92929186da979b99" class="de-s-card r">
+      <a href="mailto:contact@followoffer.com" class="de-s-card r">
         <div class="de-s-ico de-s-ico-b">✉️</div>
-        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub"><span class="__cf_email__" data-cfemail="d3b0bcbda7b2b0a793b5bcbfbfbca4bcb5b5b6a1fdb0bcbe">[email&#160;protected]</span></div></div>
+        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub">contact@followoffer.com</div></div>
         <div style="color:rgba(226,232,244,0.25);font-size:14px;margin-left:auto;">→</div>
       </a>
       <div class="de-s-card r d1" style="cursor:default">
@@ -896,7 +896,7 @@ button{font-family:inherit;}
         </div>
         <div class="cf-field"><label class="cf-label" for="cf-message">Message</label><textarea class="cf-textarea" id="cf-message" placeholder="Décrivez votre besoin en quelques lignes..."></textarea></div>
         <button class="cf-btn" id="cf-btn" onclick="submitContact()"><span id="cf-btn-txt">Envoyer le message →</span></button>
-        <div class="cf-note">Réponse garantie sous 24h · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5a3935342e3b392e1a3c353636352d353c3c3f2874393537">[email&#160;protected]</a></div>
+        <div class="cf-note">Réponse garantie sous 24h · <a href="mailto:contact@followoffer.com">contact@followoffer.com</a></div>
       </div>
       <div id="cf-success" style="display:none;text-align:center;padding:24px 0;">
         <div style="font-size:40px;margin-bottom:14px;">✅</div>
@@ -931,7 +931,7 @@ button{font-family:inherit;}
     <a href="#faq">FAQ</a>
     <a href="#contact">Contact</a>
     <a href="/app">Tableau de bord</a>
-    <a href="/cdn-cgi/l/email-protection#5c3f3332283d3f281c3a333030332b333a3a392e723f3331" class="hl"><span class="__cf_email__" data-cfemail="70131f1e0411130430161f1c1c1f071f161615025e131f1d">[email&#160;protected]</span></a>
+    <a href="mailto:contact@followoffer.com" class="hl">contact@followoffer.com</a>
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -1032,4 +1032,63 @@ async function submitContact() {
   const btnTxt  = document.getElementById('cf-btn-txt');
 
   // Highlight required
-  ['
+  ['cf-name','cf-email','cf-message'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.borderColor = '';
+  });
+
+  let valid = true;
+  if(!name)    { const el = document.getElementById('cf-name');    if(el) el.style.borderColor = '#C42B1C'; valid = false; }
+  if(!email || !email.includes('@')) { const el = document.getElementById('cf-email'); if(el) el.style.borderColor = '#C42B1C'; valid = false; }
+  if(!message) { const el = document.getElementById('cf-message'); if(el) el.style.borderColor = '#C42B1C'; valid = false; }
+  if(!valid) return;
+
+  if(btn)    btn.disabled = true;
+  if(btnTxt) btnTxt.textContent = 'Envoi…';
+
+  try {
+    await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': 'xkeysib-placeholder'
+      },
+      body: JSON.stringify({
+        sender: { name: name, email: 'noreply@followoffer.com' },
+        to: [{ email: 'contact@followoffer.com', name: 'FollowOffer' }],
+        replyTo: { email: email, name: name },
+        subject: subject || 'Message depuis followoffer.com',
+        htmlContent: `<p><b>De :</b> ${name}${company ? ' — ' + company : ''}<br><b>Email :</b> ${email}</p><p>${message.replace(/\n/g,'<br>')}</p>`
+      })
+    });
+    if(btnTxt) btnTxt.textContent = '✅ Message envoyé !';
+    ['cf-name','cf-company','cf-email','cf-subject','cf-message'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+    setTimeout(() => {
+      if(btnTxt) btnTxt.textContent = 'Envoyer le message';
+      if(btn)    btn.disabled = false;
+    }, 3000);
+  } catch(e) {
+    if(btnTxt) btnTxt.textContent = '❌ Erreur — réessayez';
+    if(btn)    btn.disabled = false;
+    setTimeout(() => { if(btnTxt) btnTxt.textContent = 'Envoyer le message'; }, 3000);
+  }
+}
+
+// ══ SAFETY NET — force hero visible si animation bloquée ══
+setTimeout(function() {
+  var els = document.querySelectorAll('.hero-eyebrow,.hero-title,.hero-sub,.hero-actions,.hero-trust');
+  els.forEach(function(el) {
+    var computed = window.getComputedStyle(el);
+    if(parseFloat(computed.opacity) < 0.1) {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.style.animation = 'none';
+    }
+  });
+}, 800);
+</script>
+</body>
+</html>
