@@ -9,465 +9,402 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════ DESIGN TOKENS ═══════════════════ */
+/* ═══════════════════ TOKENS ═══════════════════ */
 :root {
-  /* Fond : blanc cassé premium */
-  --bg:      #F8F9FB;
-  --bg2:     #FFFFFF;
-  --s1:      #F2F4F7;
-  --s2:      #E8ECF2;
-  --s3:      #DDE3EC;
-
-  /* Texte */
-  --text:    #0E1520;
-  --text2:   #1C2840;
-  --muted:   #4A5870;
-  --muted2:  #7A8FA8;
-  --muted3:  #AAB8CC;
-
-  /* Bleu acier suisse — couleur principale */
-  --blue:    #1555A8;   /* bleu profond, sérieux */
-  --blue2:   #2470D0;   /* bleu clair pour hover */
-  --blue3:   #E8F0FB;   /* fond bleu très clair */
-  --blue4:   rgba(21,85,168,0.08);
-
-  /* Rouge suisse — accent ultra discret */
-  --red-ch:  #C42B1C;
-  --red3:    rgba(196,43,28,0.08);
-
-  /* Vert succès */
-  --green:   #1A7A4A;
-  --green2:  #E8F5EE;
-
-  /* Séparateurs */
-  --border:  rgba(14,21,32,0.07);
-  --border2: rgba(14,21,32,0.13);
-  --border3: rgba(14,21,32,0.22);
-
-  /* Shadows */
-  --sh-sm:   0 1px 4px rgba(14,21,32,0.06), 0 4px 12px rgba(14,21,32,0.04);
-  --sh-md:   0 4px 16px rgba(14,21,32,0.08), 0 12px 40px rgba(14,21,32,0.06);
-  --sh-lg:   0 8px 32px rgba(14,21,32,0.10), 0 32px 80px rgba(14,21,32,0.08);
+  --bg:     #F7F8FA;
+  --bg2:    #FFFFFF;
+  --s1:     #F0F2F6;
+  --s2:     #E4E9F2;
+  --text:   #0C1422;
+  --muted:  #485668;
+  --muted2: #7A8FA8;
+  --muted3: #ADBCCC;
+  --blue:   #1555A8;
+  --blue2:  #1E6AC8;
+  --blue3:  #E6EEF9;
+  --blue4:  rgba(21,85,168,0.08);
+  --red-ch: #C42B1C;
+  --red3:   rgba(196,43,28,0.08);
+  --green:  #1A7A4A;
+  --green2: #E6F5ED;
+  --gold:   #9A6218;
+  --gold2:  rgba(154,98,24,0.10);
+  --border: rgba(12,20,34,0.07);
+  --bord2:  rgba(12,20,34,0.13);
+  --bord3:  rgba(12,20,34,0.20);
+  --sh-sm:  0 1px 3px rgba(12,20,34,0.06),0 4px 14px rgba(12,20,34,0.04);
+  --sh-md:  0 4px 18px rgba(12,20,34,0.08),0 14px 44px rgba(12,20,34,0.06);
+  --sh-lg:  0 8px 36px rgba(12,20,34,0.10),0 36px 90px rgba(12,20,34,0.07);
+  /* Hero dark */
+  --hbg:   #080C14;
+  --htxt:  #E8EDF6;
+  --hmut:  rgba(232,237,246,0.52);
+  --hbdr:  rgba(232,237,246,0.09);
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;}
 
-/* ═══════════════════ BASE ═══════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; line-height: 1; }
-a { text-decoration: none; color: inherit; }
-button { font-family: inherit; }
+/* ═══ NAV ═══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;padding:0 52px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s cubic-bezier(.16,1,.3,1);}
+.nav-logo{display:flex;align-items:center;gap:9px;}
+.nav-brand{font-size:18px;font-weight:800;letter-spacing:-0.4px;color:var(--htxt);transition:color 0.4s;}
+.nav-brand .o{color:#7AAEE8;transition:color 0.4s;}
+.nav-links{display:flex;align-items:center;gap:32px;}
+.nav-links a{font-size:13px;font-weight:500;color:rgba(232,237,246,0.6);transition:color 0.2s;}
+.nav-links a:hover{color:var(--htxt);}
+.nav-actions{display:flex;align-items:center;gap:10px;}
+.btn-ghost{font-size:13px;font-weight:500;color:rgba(232,237,246,0.6);background:none;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;transition:color 0.2s;}
+.btn-ghost:hover{color:var(--htxt);}
+.btn-nav{font-size:13px;font-weight:700;color:#fff;background:var(--blue);border:none;padding:9px 22px;border-radius:9px;cursor:pointer;transition:all 0.22s;white-space:nowrap;}
+.btn-nav:hover{background:var(--blue2);box-shadow:0 4px 18px rgba(21,85,168,0.38);transform:translateY(-1px);}
+/* Nav light (après hero) */
+.nav.is-light{background:rgba(247,248,250,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 1px 0 var(--border),0 4px 16px rgba(12,20,34,0.04);}
+.nav.is-light .nav-brand{color:var(--text);}
+.nav.is-light .nav-brand .o{color:var(--blue);}
+.nav.is-light .nav-links a{color:var(--muted);}
+.nav.is-light .nav-links a:hover{color:var(--text);}
+.nav.is-light .btn-ghost{color:var(--muted);}
+.nav.is-light .btn-ghost:hover{color:var(--text);}
 
-/* ═══════════════════ NAV ═══════════════════ */
-.nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  height: 64px; padding: 0 48px;
-  display: flex; align-items: center; justify-content: space-between;
-  background: rgba(248,249,251,0);
-  border-bottom: 1px solid transparent;
-  transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
-}
-.nav.stuck {
-  background: rgba(248,249,251,0.96);
-  border-color: var(--border);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(14,21,32,0.04);
-}
-.nav-logo { display: flex; align-items: center; gap: 9px; }
-.nav-brand { font-size: 18px; font-weight: 800; letter-spacing: -0.4px; color: var(--text); }
-.nav-brand .o { color: var(--blue); }
-.nav-links { display: flex; align-items: center; gap: 32px; }
-.nav-links a { font-size: 13.5px; font-weight: 500; color: var(--muted); transition: color 0.2s; }
-.nav-links a:hover { color: var(--text); }
-.nav-actions { display: flex; align-items: center; gap: 10px; }
-.btn-ghost { font-size: 13px; font-weight: 500; color: var(--muted); background: none; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: color 0.2s; }
-.btn-ghost:hover { color: var(--text); }
-.btn-nav { font-size: 13px; font-weight: 700; color: #fff; background: var(--blue); border: none; padding: 9px 22px; border-radius: 9px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-.btn-nav:hover { background: var(--blue2); box-shadow: 0 4px 16px rgba(21,85,168,0.30); transform: translateY(-1px); }
+/* ═══ HERO DARK ═══ */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:130px 24px 80px;text-align:center;position:relative;overflow:hidden;background:var(--hbg);}
+/* Lumière centrale très douce */
+.hero::before{content:'';position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 55% at 50% 15%,rgba(21,85,168,0.22) 0%,transparent 70%),radial-gradient(ellipse 50% 35% at 20% 90%,rgba(21,85,168,0.05) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 80% 90%,rgba(21,85,168,0.05) 0%,transparent 60%);}
+/* Grille subtile */
+.hero::after{content:'';position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(232,237,246,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(232,237,246,0.025) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,black 20%,transparent 75%);mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,black 20%,transparent 75%);}
+.hero-inner{position:relative;z-index:1;max-width:840px;}
+/* Fondu bas */
+.hero-fade{position:absolute;bottom:0;left:0;right:0;height:220px;z-index:1;background:linear-gradient(to bottom,transparent 0%,var(--hbg) 100%);pointer-events:none;}
 
-/* ═══════════════════ HERO ═══════════════════ */
-.hero {
-  min-height: 100vh; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 120px 24px 60px; text-align: center;
-  position: relative; overflow: hidden;
-  background: linear-gradient(180deg, #F0F4FC 0%, #F8F9FB 60%);
-}
-/* Cercles géométriques en fond — très subtils */
-.hero::before {
-  content: ''; position: absolute; inset: 0; z-index: 0;
-  background: radial-gradient(ellipse 90% 70% at 50% -10%, rgba(21,85,168,0.06) 0%, transparent 60%);
-}
-.hero-dots {
-  position: absolute; inset: 0; z-index: 0; opacity: 0.3;
-  background-image: radial-gradient(circle, rgba(21,85,168,0.18) 1px, transparent 1px);
-  background-size: 28px 28px;
-  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 80%);
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 80%);
-}
-.hero-inner { position: relative; z-index: 1; max-width: 820px; }
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 5px 14px 5px 10px; border-radius: 100px; margin-bottom: 28px;
-  background: var(--blue3); border: 1px solid rgba(21,85,168,0.18);
-  font-size: 11px; font-weight: 700; color: var(--blue); letter-spacing: 0.8px; text-transform: uppercase;
-}
-.ew-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); flex-shrink: 0; animation: dot-p 2.2s ease-in-out infinite; }
-@keyframes dot-p { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
-.hero-title {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(40px, 6.5vw, 76px);
-  line-height: 1.08; letter-spacing: -1px; margin-bottom: 22px;
-  color: var(--text);
-}
-.hero-title em { font-style: italic; color: var(--blue); }
-.hero-title .lt { color: var(--muted2); font-size: 0.72em; display: block; margin-top: 6px; letter-spacing: 0px; }
-.hero-sub {
-  font-size: clamp(15px, 1.8vw, 18px); color: var(--muted);
-  line-height: 1.7; max-width: 500px; margin: 0 auto 36px;
-  font-weight: 400;
-}
-.hero-actions { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
-.btn-primary {
-  font-size: 15px; font-weight: 700; color: #fff; background: var(--blue);
-  padding: 14px 32px; border-radius: 10px; border: none; cursor: pointer;
-  transition: all 0.25s; display: inline-flex; align-items: center; gap: 8px;
-}
-.btn-primary:hover { background: var(--blue2); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(21,85,168,0.32); }
-.btn-secondary {
-  font-size: 14px; font-weight: 600; color: var(--text2);
-  background: var(--bg2); border: 1.5px solid var(--border2);
-  padding: 13px 26px; border-radius: 10px; cursor: pointer; transition: all 0.2s;
-}
-.btn-secondary:hover { border-color: var(--border3); box-shadow: var(--sh-sm); }
-.hero-trust { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
-.t-item { font-size: 12px; color: var(--muted2); display: flex; align-items: center; gap: 6px; font-weight: 500; }
-.t-item::before { content: "✓"; color: var(--green); font-weight: 800; font-size: 11px; }
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:5px 16px 5px 11px;border-radius:100px;margin-bottom:32px;background:rgba(21,85,168,0.20);border:1px solid rgba(107,158,232,0.28);font-size:11px;font-weight:700;color:#8BBAF0;letter-spacing:1px;text-transform:uppercase;}
+.ew-dot{width:6px;height:6px;border-radius:50%;background:#6B9EE8;flex-shrink:0;animation:dotp 2.2s ease-in-out infinite;}
+@keyframes dotp{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(44px,6.8vw,84px);line-height:1.05;letter-spacing:-1.5px;margin-bottom:24px;color:var(--htxt);}
+.hero-title em{font-style:italic;color:#7AAEE8;}
+.hero-title .lt{color:rgba(232,237,246,0.32);font-size:0.68em;display:block;margin-top:8px;letter-spacing:0;}
+.hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--hmut);line-height:1.72;max-width:500px;margin:0 auto 42px;font-weight:400;}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
+.btn-primary{font-size:15px;font-weight:700;color:#fff;background:var(--blue);padding:15px 34px;border-radius:10px;border:none;cursor:pointer;transition:all 0.25s;display:inline-flex;align-items:center;gap:8px;box-shadow:0 0 0 1px rgba(21,85,168,0.5),0 8px 28px rgba(21,85,168,0.45);}
+.btn-primary:hover{background:var(--blue2);transform:translateY(-2px);box-shadow:0 0 0 1px rgba(30,106,200,0.6),0 14px 40px rgba(21,85,168,0.55);}
+.btn-secondary{font-size:14px;font-weight:600;color:var(--htxt);background:rgba(232,237,246,0.07);border:1px solid var(--hbdr);padding:14px 28px;border-radius:10px;cursor:pointer;transition:all 0.22s;}
+.btn-secondary:hover{background:rgba(232,237,246,0.12);border-color:rgba(232,237,246,0.18);}
+.hero-trust{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;}
+.t-item{font-size:12px;color:rgba(232,237,246,0.42);display:flex;align-items:center;gap:7px;font-weight:500;}
+.t-item::before{content:"✓";color:#4AAA78;font-weight:800;font-size:11px;}
 
-/* ═══════════════════ MOCKUP ═══════════════════ */
-.mockup-section { padding: 0 24px 100px; max-width: 1040px; margin: 0 auto; }
-.mockup-wrap {
-  border-radius: 16px; overflow: hidden;
-  border: 1px solid var(--border2);
-  box-shadow: var(--sh-lg), 0 0 0 4px rgba(21,85,168,0.04);
-  background: var(--bg2);
-}
-.mw-bar { height: 40px; background: #F0F2F5; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; gap: 8px; }
-.mdot { width: 11px; height: 11px; border-radius: 50%; }
-.mdot-r{background:#FF5F57;} .mdot-y{background:#FFBD2E;} .mdot-g{background:#28CA41;}
-.mw-url { flex: 1; display: flex; justify-content: center; }
-.mw-pill { display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1px solid var(--border); padding: 4px 14px; border-radius: 6px; font-size: 11px; color: var(--muted2); font-family: 'JetBrains Mono', monospace; }
-.mw-body { display: grid; grid-template-columns: 180px 1fr; height: 340px; }
-.mw-sb { background: var(--s1); border-right: 1px solid var(--border); padding: 16px 14px; display: flex; flex-direction: column; gap: 4px; }
-.msb-logo { display: flex; align-items: center; gap: 7px; padding: 0 4px; margin-bottom: 18px; }
-.msb-brand { font-size: 14px; font-weight: 800; letter-spacing: -0.3px; color: var(--text); }
-.msb-brand .o { color: var(--blue); }
-.msb-nav { height: 30px; border-radius: 6px; display: flex; align-items: center; padding: 0 10px; gap: 8px; font-size: 10px; color: var(--muted2); font-weight: 600; transition: background 0.2s; }
-.msb-nav.on { background: var(--blue3); color: var(--blue); }
-.mw-main { padding: 20px; display: grid; grid-template-columns: repeat(4,1fr); grid-template-rows: auto 1fr; gap: 12px; background: var(--bg); }
-.m-kpi { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
-.m-kv { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; line-height: 1; color: var(--text); }
-.m-kl { font-size: 9px; color: var(--muted2); text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; font-weight: 600; }
-.m-chart { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; grid-column: span 3; padding: 16px; }
-.m-ch-title { font-size: 10px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-.m-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.m-bl { font-size: 9px; color: var(--muted); width: 56px; flex-shrink: 0; font-weight: 500; }
-.m-bt { flex: 1; height: 6px; background: var(--s2); border-radius: 3px; overflow: hidden; }
-.m-bf { height: 100%; border-radius: 3px; }
-.m-bn { font-size: 9px; color: var(--muted2); width: 14px; text-align: right; font-family: 'JetBrains Mono', monospace; }
-.m-donut-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
-.m-ring { width: 60px; height: 60px; border-radius: 50%; background: conic-gradient(var(--blue) 0% 62%, var(--red-ch) 62% 78%, var(--green) 78% 100%); }
-.m-ring-lbl { font-size: 8px; color: var(--muted2); font-weight: 600; letter-spacing: 0.5px; }
+/* ═══ TRANSITION + MOCKUP ═══ */
+.mockup-wrap-outer{background:linear-gradient(180deg,var(--hbg) 0%,#0F1828 30%,#1C2A42 55%,var(--bg) 100%);padding:0 24px 100px;}
+.mockup-section{max-width:1040px;margin:0 auto;}
+.mockup-wrap{border-radius:18px;overflow:hidden;border:1px solid rgba(232,237,246,0.10);box-shadow:0 0 0 1px rgba(21,85,168,0.18),0 30px 90px rgba(0,0,0,0.55),0 8px 30px rgba(0,0,0,0.35);transform:translateY(-24px);}
+.mw-bar{height:40px;background:#1A1F2C;border-bottom:1px solid rgba(232,237,246,0.08);display:flex;align-items:center;padding:0 16px;gap:8px;}
+.mdot{width:11px;height:11px;border-radius:50%;}
+.mdot-r{background:#FF5F57;}.mdot-y{background:#FFBD2E;}.mdot-g{background:#28CA41;}
+.mw-url{flex:1;display:flex;justify-content:center;}
+.mw-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.10);padding:4px 14px;border-radius:6px;font-size:11px;color:rgba(232,237,246,0.45);font-family:'JetBrains Mono',monospace;}
+.mw-body{display:grid;grid-template-columns:180px 1fr;height:340px;}
+.mw-sb{background:var(--s1);border-right:1px solid var(--border);padding:16px 14px;display:flex;flex-direction:column;gap:4px;}
+.msb-logo{display:flex;align-items:center;gap:7px;padding:0 4px;margin-bottom:18px;}
+.msb-brand{font-size:14px;font-weight:800;letter-spacing:-0.3px;color:var(--text);}
+.msb-brand .o{color:var(--blue);}
+.msb-nav{height:30px;border-radius:6px;display:flex;align-items:center;padding:0 10px;gap:8px;font-size:10px;color:var(--muted2);font-weight:600;transition:background 0.2s;}
+.msb-nav.on{background:var(--blue3);color:var(--blue);}
+.mw-main{padding:20px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto 1fr;gap:12px;background:var(--bg);}
+.m-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.m-kv{font-size:22px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;}
+.m-kl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-top:5px;font-weight:600;}
+.m-chart{background:var(--bg2);border:1px solid var(--border);border-radius:10px;grid-column:span 3;padding:16px;}
+.m-ch-title{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.m-bar{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.m-bl{font-size:9px;color:var(--muted);width:56px;flex-shrink:0;font-weight:500;}
+.m-bt{flex:1;height:6px;background:var(--s2);border-radius:3px;overflow:hidden;}
+.m-bf{height:100%;border-radius:3px;}
+.m-bn{font-size:9px;color:var(--muted2);width:14px;text-align:right;font-family:'JetBrains Mono',monospace;}
+.m-donut-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.m-ring{width:60px;height:60px;border-radius:50%;background:conic-gradient(var(--blue) 0% 62%,var(--red-ch) 62% 78%,var(--green) 78% 100%);}
+.m-ring-lbl{font-size:8px;color:var(--muted2);font-weight:600;letter-spacing:0.5px;}
 
-/* ═══════════════════ PROBLEM ═══════════════════ */
-.problem-section { padding: 100px 24px; background: var(--bg2); border-top: 1px solid var(--border); }
-.problem-inner { max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-.prob-cards { display: flex; flex-direction: column; gap: 12px; }
-.prob-card {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
-  padding: 20px 22px; display: flex; align-items: flex-start; gap: 16px;
-  transition: border-color 0.25s, box-shadow 0.25s;
-}
-.prob-card:hover { border-color: var(--border2); box-shadow: var(--sh-sm); }
-.prob-ico { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-.prob-txt { font-size: 14px; color: var(--muted); line-height: 1.65; }
-.prob-txt strong { color: var(--text); font-weight: 600; }
+/* ═══ TYPE UTILS ═══ */
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;}
+.section-title{font-family:'DM Serif Display',serif;font-size:clamp(27px,3.7vw,42px);line-height:1.13;letter-spacing:-0.5px;color:var(--text);margin-bottom:14px;}
+.section-title em{font-style:italic;color:var(--muted2);}
+.section-sub{font-size:15px;color:var(--muted);line-height:1.68;max-width:480px;}
 
-/* ═══════════════════ SOLUTION ═══════════════════ */
-.solution-section { padding: 100px 24px; border-top: 1px solid var(--border); }
-.solution-inner { max-width: 880px; margin: 0 auto; text-align: center; }
-.sol-flow { display: flex; align-items: stretch; justify-content: center; margin-top: 52px; gap: 0; }
-.sol-step { flex: 1; text-align: center; padding: 0 24px; position: relative; }
-.sol-step:not(:last-child)::after { content: "→"; position: absolute; right: -4px; top: 32px; font-size: 18px; color: var(--muted3); }
-.sol-ico { width: 64px; height: 64px; border-radius: 16px; background: var(--blue3); border: 1px solid rgba(21,85,168,0.14); display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px; }
-.sol-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--blue); text-transform: uppercase; margin-bottom: 8px; }
-.sol-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-.sol-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+/* ═══ REVEAL ═══ */
+.r{opacity:0;transform:translateY(20px);transition:opacity 0.65s cubic-bezier(.16,1,.3,1),transform 0.65s cubic-bezier(.16,1,.3,1);}
+.r.d1{transition-delay:.08s;}.r.d2{transition-delay:.16s;}.r.d3{transition-delay:.24s;}.r.d4{transition-delay:.32s;}
+.r.in{opacity:1;transform:none;}
+.hero-eyebrow{animation:hi 0.7s 0.1s both cubic-bezier(.16,1,.3,1);}
+.hero-title   {animation:hi 0.85s 0.2s both cubic-bezier(.16,1,.3,1);}
+.hero-sub     {animation:hi 0.85s 0.33s both cubic-bezier(.16,1,.3,1);}
+.hero-actions {animation:hi 0.85s 0.46s both cubic-bezier(.16,1,.3,1);}
+.hero-trust   {animation:hi 0.85s 0.58s both cubic-bezier(.16,1,.3,1);}
+@keyframes hi{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
 
-/* ═══════════════════ STATS ═══════════════════ */
-.stats-section { padding: 0; border-top: 1px solid var(--border); }
-.stats-inner { max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); }
-.stat-item { text-align: center; padding: 52px 28px; border-right: 1px solid var(--border); }
-.stat-item:last-child { border-right: none; }
-.stat-val { font-family: 'Outfit', sans-serif; font-variant-numeric: tabular-nums; font-size: clamp(46px,6vw,68px); font-weight: 600; letter-spacing: -2px; line-height: 1; display: inline-block; }
-.sv-blue { color: var(--blue); }
-.sv-green { color: var(--green); }
-.sv-warm { color: #A06A20; }
-.stat-meta { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-.sm-strike { font-size: 14px; color: var(--muted3); text-decoration: line-through; }
-.sm-badge { font-size: 11px; font-weight: 800; color: #A06A20; background: rgba(160,106,32,0.10); padding: 2px 9px; border-radius: 20px; }
-.stat-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-top: 12px; max-width: 200px; margin-left: auto; margin-right: auto; }
+/* ═══ PROBLEM ═══ */
+.problem-section{padding:104px 24px;background:var(--bg2);border-top:1px solid var(--border);}
+.problem-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:88px;align-items:center;}
+.prob-cards{display:flex;flex-direction:column;gap:12px;}
+.prob-card{background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:20px 22px;display:flex;align-items:flex-start;gap:16px;transition:border-color 0.25s,box-shadow 0.25s,transform 0.2s;}
+.prob-card:hover{border-color:var(--bord2);box-shadow:var(--sh-sm);transform:translateX(3px);}
+.prob-ico{font-size:18px;flex-shrink:0;margin-top:1px;}
+.prob-txt{font-size:14px;color:var(--muted);line-height:1.65;}
+.prob-txt strong{color:var(--text);font-weight:600;}
 
-/* ═══════════════════ FEATURES ═══════════════════ */
-.features-section { padding: 100px 24px; background: var(--bg2); border-top: 1px solid var(--border); }
-.feat-inner { max-width: 1080px; margin: 0 auto; }
-.feat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 52px; }
-.feat-card {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
-  padding: 28px 26px; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-}
-.feat-card:hover { border-color: var(--border2); box-shadow: var(--sh-md); transform: translateY(-3px); }
-.feat-ico-wrap { width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 16px; }
-.fi-blue { background: var(--blue3); border: 1px solid rgba(21,85,168,0.12); }
-.fi-green { background: var(--green2); border: 1px solid rgba(26,122,74,0.12); }
-.feat-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-.feat-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
-.feat-pill { display: inline-block; margin-top: 16px; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
-.fp-free { background: var(--green2); color: var(--green); }
-.fp-pro  { background: var(--blue3); color: var(--blue); }
+/* ═══ SOLUTION ═══ */
+.solution-section{padding:104px 24px;border-top:1px solid var(--border);background:var(--bg);}
+.solution-inner{max-width:880px;margin:0 auto;text-align:center;}
+.sol-flow{display:flex;align-items:stretch;justify-content:center;margin-top:56px;gap:0;}
+.sol-step{flex:1;text-align:center;padding:0 24px;position:relative;}
+.sol-step:not(:last-child)::after{content:"→";position:absolute;right:-6px;top:30px;font-size:18px;color:var(--muted3);}
+.sol-ico{width:64px;height:64px;border-radius:16px;background:var(--blue3);border:1px solid rgba(21,85,168,0.14);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;transition:transform 0.22s,box-shadow 0.22s;}
+.sol-step:hover .sol-ico{transform:translateY(-4px);box-shadow:0 10px 28px rgba(21,85,168,0.16);}
+.sol-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--blue);text-transform:uppercase;margin-bottom:8px;}
+.sol-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.sol-desc{font-size:13px;color:var(--muted);line-height:1.6;}
 
-/* ═══════════════════ HOW ═══════════════════ */
-.how-section { padding: 100px 24px; border-top: 1px solid var(--border); }
-.how-inner { max-width: 940px; margin: 0 auto; }
-.how-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; margin-top: 52px; position: relative; }
-.how-steps::before { content: ''; position: absolute; top: 27px; left: 13%; right: 13%; height: 1px; background: linear-gradient(90deg, transparent, var(--border2) 20%, var(--border2) 80%, transparent); z-index: 0; }
-.how-step { text-align: center; padding: 0 16px; position: relative; z-index: 1; }
-.hs-num { width: 54px; height: 54px; border-radius: 50%; background: var(--bg2); border: 1.5px solid var(--border2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 20px; box-shadow: var(--sh-sm); transition: border-color 0.25s, transform 0.25s; }
-.how-step:hover .hs-num { border-color: var(--blue); transform: scale(1.08); }
-.hs-step { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--blue); text-transform: uppercase; margin-bottom: 8px; }
-.hs-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 7px; }
-.hs-desc { font-size: 12px; color: var(--muted); line-height: 1.65; }
+/* ═══ STATS ═══ */
+.stats-section{padding:0;border-top:1px solid var(--border);background:var(--bg2);}
+.stats-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);}
+.stat-item{text-align:center;padding:60px 32px;border-right:1px solid var(--border);}
+.stat-item:last-child{border-right:none;}
+.stat-val{font-family:'DM Serif Display',serif;font-style:italic;font-size:clamp(50px,6.5vw,74px);font-weight:400;letter-spacing:-2px;line-height:1;display:inline-block;}
+.sv-blue{color:var(--blue);}
+.sv-green{color:var(--green);}
+.sv-warm{color:var(--gold);}
+.stat-suffix{font-size:0.52em;vertical-align:8px;font-style:italic;}
+.stat-meta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.sm-strike{font-size:14px;color:var(--muted3);text-decoration:line-through;}
+.sm-badge{font-size:11px;font-weight:800;color:var(--gold);background:var(--gold2);padding:2px 9px;border-radius:20px;}
+.stat-desc{font-size:13px;color:var(--muted);line-height:1.62;margin-top:12px;max-width:200px;margin-left:auto;margin-right:auto;}
 
-/* ═══════════════════ TESTIMONIALS ═══════════════════ */
-.testi-section { padding: 100px 24px; background: var(--bg2); border-top: 1px solid var(--border); }
-.testi-inner { max-width: 1060px; margin: 0 auto; }
-.testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 52px; }
-.testi-card {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
-  padding: 28px 24px; position: relative; display: flex; flex-direction: column;
-  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-}
-.testi-card:hover { border-color: var(--border2); box-shadow: var(--sh-md); transform: translateY(-3px); }
-.tc-ok { position: absolute; top: 18px; right: 18px; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 20px; background: var(--green2); color: var(--green); text-transform: uppercase; }
-.tc-stars { color: #C89020; font-size: 12px; letter-spacing: 2px; margin-bottom: 14px; }
-.tc-quote { font-size: 14px; color: var(--muted); line-height: 1.72; flex: 1; }
-.tc-quote::before { content: '"'; font-family: 'DM Serif Display', serif; font-size: 40px; color: var(--blue); line-height: 0; vertical-align: -14px; margin-right: 2px; opacity: 0.4; }
-.tc-author { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
-.tc-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
-.tc-name { font-size: 13px; font-weight: 700; color: var(--text); }
-.tc-role { font-size: 11px; color: var(--muted2); margin-top: 2px; }
-/* Carte stat spéciale */
-.tc-stat { background: linear-gradient(140deg, var(--blue3), rgba(232,240,251,0.3)); border-color: rgba(21,85,168,0.16); justify-content: center; align-items: center; text-align: center; }
-.tc-stat-big { font-family: 'Outfit', sans-serif; font-variant-numeric: tabular-nums; font-size: 52px; font-weight: 600; letter-spacing: -2px; color: var(--blue); line-height: 1; }
-.tc-stat-sub { font-size: 14px; font-weight: 600; color: var(--muted2); margin-top: 8px; }
-.tc-stat-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-top: 10px; }
-.tc-stat-note { font-size: 10px; color: var(--muted3); margin-top: 14px; line-height: 1.55; }
+/* ═══ SECTORS ═══ */
+.sectors-section{padding:100px 24px;background:var(--bg);border-top:1px solid var(--border);overflow:hidden;}
+.sectors-inner{max-width:960px;margin:0 auto;}
+.sectors-ticker-wrap{position:relative;overflow:hidden;margin:40px -24px 0;}
+.sectors-ticker-wrap::before,.sectors-ticker-wrap::after{content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none;}
+.sectors-ticker-wrap::before{left:0;background:linear-gradient(to right,var(--bg),transparent);}
+.sectors-ticker-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent);}
+.sectors-ticker{display:flex;gap:10px;width:max-content;animation:ticker 36s linear infinite;padding:6px 24px;}
+.sectors-ticker:hover{animation-play-state:paused;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.s-badge{display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:100px;background:var(--bg2);border:1px solid var(--bord2);font-size:12.5px;font-weight:500;color:var(--muted);white-space:nowrap;transition:border-color 0.2s,color 0.2s,background 0.2s;cursor:default;box-shadow:var(--sh-sm);}
+.s-badge:hover{border-color:rgba(21,85,168,0.35);color:var(--blue);background:var(--blue3);}
+.s-badge-ico{font-size:14px;}
+.sectors-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:40px;}
+.s-card-item{padding:14px 16px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;gap:11px;transition:border-color 0.22s,transform 0.18s,box-shadow 0.22s;box-shadow:var(--sh-sm);}
+.s-card-item:hover{border-color:rgba(21,85,168,0.30);transform:translateY(-2px);box-shadow:0 6px 22px rgba(21,85,168,0.09);}
+.s-card-ico{width:34px;height:34px;border-radius:8px;background:var(--blue3);border:1px solid rgba(21,85,168,0.10);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.s-card-label{font-size:12.5px;font-weight:600;color:var(--text);}
+.s-card-sub{font-size:10.5px;color:var(--muted2);margin-top:1px;}
+.sectors-tagline{margin-top:36px;text-align:center;}
+.sectors-tagline-pill{display:inline-flex;align-items:center;gap:10px;padding:11px 22px;background:var(--blue3);border:1px solid rgba(21,85,168,0.16);border-radius:100px;font-size:13px;}
 
-/* ═══════════════════ PRICING ═══════════════════ */
-.pricing-section { padding: 100px 24px; border-top: 1px solid var(--border); }
-.pricing-inner { max-width: 820px; margin: 0 auto; }
-.pricing-cards { display: grid; grid-template-columns: 1fr 1.08fr; gap: 18px; margin-top: 52px; }
-.p-card { background: var(--bg2); border: 1px solid var(--border2); border-radius: 18px; padding: 36px 30px; box-shadow: var(--sh-sm); }
-.p-card.featured { border-color: var(--blue); background: linear-gradient(160deg, var(--blue3), var(--bg2)); box-shadow: 0 0 0 1px var(--blue), var(--sh-md); position: relative; overflow: hidden; }
-.p-card.featured::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--blue); }
-.p-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 18px; background: var(--blue); color: #fff; }
-.p-name { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 10px; }
-.p-price-row { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 4px; }
-.p-price { font-family: 'JetBrains Mono', monospace; font-size: 52px; font-weight: 600; letter-spacing: -2px; line-height: 1; color: var(--text); }
-.p-unit { font-size: 14px; color: var(--muted); font-weight: 500; margin-bottom: 6px; }
-.p-old { font-size: 13px; color: var(--muted3); text-decoration: line-through; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.p-discount { font-size: 11px; font-weight: 800; color: #A06A20; background: rgba(160,106,32,0.10); padding: 2px 8px; border-radius: 20px; text-decoration: none; }
-.p-period { font-size: 12px; color: var(--muted2); margin-bottom: 5px; }
-.p-save { font-size: 12px; font-weight: 700; color: var(--green); margin-bottom: 28px; }
-.p-feats { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
-.p-feats li { font-size: 13px; color: var(--muted); display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
-.pck { flex-shrink: 0; margin-top: 1px; font-weight: 700; font-size: 12px; }
-.p-feats li.dim { color: var(--muted3); }
-.p-btn { width: 100%; padding: 14px; border-radius: 10px; border: none; cursor: pointer; font-size: 14px; font-weight: 700; transition: all 0.2s; display: block; text-align: center; }
-.pb-fill { background: var(--blue); color: #fff; }
-.pb-fill:hover { background: var(--blue2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(21,85,168,0.28); }
-.pb-line { background: transparent; color: var(--text); border: 1.5px solid var(--border2); }
-.pb-line:hover { background: var(--bg); border-color: var(--border3); }
-.p-note { font-size: 11px; color: var(--muted3); text-align: center; margin-top: 12px; line-height: 1.5; }
+/* ═══ FEATURES ═══ */
+.features-section{padding:104px 24px;background:var(--bg2);border-top:1px solid var(--border);}
+.feat-inner{max-width:1080px;margin:0 auto;}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:52px;}
+.feat-card{background:var(--bg);border:1px solid var(--border);border-radius:15px;padding:28px 26px;transition:border-color 0.25s,box-shadow 0.25s,transform 0.25s;position:relative;overflow:hidden;}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background 0.3s;}
+.feat-card:hover{border-color:var(--bord2);box-shadow:var(--sh-md);transform:translateY(-3px);}
+.feat-card:hover::before{background:linear-gradient(90deg,transparent,var(--blue),transparent);}
+.feat-ico-wrap{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;}
+.fi-blue{background:var(--blue3);border:1px solid rgba(21,85,168,0.12);}
+.fi-green{background:var(--green2);border:1px solid rgba(26,122,74,0.12);}
+.feat-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.feat-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+.feat-pill{display:inline-block;margin-top:16px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase;}
+.fp-free{background:var(--green2);color:var(--green);}
+.fp-pro{background:var(--blue3);color:var(--blue);}
 
-/* ═══════════════════ FAQ ═══════════════════ */
-.faq-section { padding: 100px 24px; background: var(--bg2); border-top: 1px solid var(--border); }
-.faq-inner { max-width: 700px; margin: 0 auto; }
-.faq-list { margin-top: 48px; border: 1px solid var(--border2); border-radius: 14px; overflow: hidden; box-shadow: var(--sh-sm); }
-.faq-item { border-bottom: 1px solid var(--border); }
-.faq-item:last-child { border-bottom: none; }
-.faq-q {
-  width: 100%; text-align: left; background: var(--bg2); border: none; cursor: pointer;
-  padding: 20px 24px; display: flex; align-items: center; justify-content: space-between;
-  font-size: 14px; font-weight: 600; color: var(--text); transition: background 0.2s; gap: 16px;
-}
-.faq-q:hover { background: var(--bg); }
-.faq-q.open { background: var(--bg); }
-.faq-arr { color: var(--muted3); font-size: 18px; transition: transform 0.3s, color 0.2s; flex-shrink: 0; font-weight: 400; }
-.faq-q.open .faq-arr { transform: rotate(45deg); color: var(--blue); }
-.faq-a { overflow: hidden; max-height: 0; transition: max-height 0.35s ease, padding 0.25s; background: var(--bg); padding: 0 24px; }
-.faq-a.open { max-height: 220px; padding-bottom: 20px; }
-.faq-a p { font-size: 13.5px; color: var(--muted); line-height: 1.72; }
+/* ═══ HOW ═══ */
+.how-section{padding:104px 24px;border-top:1px solid var(--border);}
+.how-inner{max-width:940px;margin:0 auto;}
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:52px;position:relative;}
+.how-steps::before{content:'';position:absolute;top:26px;left:13%;right:13%;height:1px;background:linear-gradient(90deg,transparent,var(--bord2) 20%,var(--bord2) 80%,transparent);z-index:0;}
+.how-step{text-align:center;padding:0 16px;position:relative;z-index:1;}
+.hs-num{width:54px;height:54px;border-radius:50%;background:var(--bg2);border:1.5px solid var(--bord2);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:20px;box-shadow:var(--sh-sm);transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s;}
+.how-step:hover .hs-num{border-color:var(--blue);transform:scale(1.1);box-shadow:0 6px 20px rgba(21,85,168,0.14);}
+.hs-step{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--blue);text-transform:uppercase;margin-bottom:8px;}
+.hs-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:7px;}
+.hs-desc{font-size:12px;color:var(--muted);line-height:1.65;}
 
-/* ═══════════════════ SUPPORT ═══════════════════ */
-.support-section { padding: 80px 24px; border-top: 1px solid var(--border); }
-.support-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: center; }
-.s-cards { display: flex; flex-direction: column; gap: 12px; }
-.s-card {
-  display: flex; align-items: center; gap: 16px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
-  padding: 18px 20px; text-decoration: none; color: inherit;
-  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
-  box-shadow: var(--sh-sm);
-}
-.s-card:hover { border-color: var(--border2); box-shadow: var(--sh-md); transform: translateX(4px); }
-.s-ico { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.s-ico-b { background: var(--blue3); border: 1px solid rgba(21,85,168,0.14); }
-.s-ico-g { background: var(--green2); border: 1px solid rgba(26,122,74,0.14); }
-.s-ico-r { background: var(--red3); border: 1px solid rgba(196,43,28,0.14); }
-.s-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-.s-sub { font-size: 12px; color: var(--muted2); }
-.s-arr { color: var(--muted3); font-size: 14px; margin-left: auto; }
+/* ═══ TESTIMONIALS ═══ */
+.testi-section{padding:104px 24px;background:var(--bg2);border-top:1px solid var(--border);}
+.testi-inner{max-width:1060px;margin:0 auto;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:52px;}
+.testi-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 24px;position:relative;display:flex;flex-direction:column;transition:border-color 0.25s,box-shadow 0.25s,transform 0.25s;box-shadow:var(--sh-sm);}
+.testi-card:hover{border-color:var(--bord2);box-shadow:var(--sh-md);transform:translateY(-3px);}
+.tc-ok{position:absolute;top:20px;right:20px;font-size:9px;font-weight:700;letter-spacing:0.5px;padding:3px 10px;border-radius:20px;background:var(--green2);color:var(--green);text-transform:uppercase;border:1px solid rgba(26,122,74,0.14);}
+.tc-stars{color:#C08A18;font-size:12px;letter-spacing:3px;margin-bottom:16px;}
+.tc-quote{font-size:13.5px;color:var(--muted);line-height:1.75;flex:1;}
+.tc-quote::before{content:'"';font-family:'DM Serif Display',serif;font-size:44px;color:var(--blue);line-height:0;vertical-align:-16px;margin-right:2px;opacity:0.28;}
+.tc-author{display:flex;align-items:center;gap:12px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border);}
+.tc-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;}
+.tc-name{font-size:13px;font-weight:700;color:var(--text);}
+.tc-role{font-size:11px;color:var(--muted2);margin-top:2px;}
+/* Carte stat */
+.tc-stat{background:linear-gradient(145deg,var(--blue3),rgba(230,238,249,0.4));border-color:rgba(21,85,168,0.18);justify-content:center;align-items:center;text-align:center;box-shadow:0 4px 22px rgba(21,85,168,0.08);}
+.tc-stat-big{font-family:'DM Serif Display',serif;font-style:italic;font-size:62px;letter-spacing:-2px;color:var(--blue);line-height:1;}
+.tc-stat-suffix{font-size:34px;}
+.tc-stat-sub{font-size:14px;font-weight:600;color:var(--muted2);margin-top:10px;}
+.tc-stat-desc{font-size:13px;color:var(--muted);line-height:1.62;margin-top:10px;max-width:200px;}
+.tc-stat-note{font-size:10px;color:var(--muted3);margin-top:14px;line-height:1.55;}
 
-/* ═══════════════════ CTA FINAL ═══════════════════ */
-.cta-section {
-  padding: 120px 24px; text-align: center;
-  background: linear-gradient(180deg, var(--bg) 0%, #EEF3FC 100%);
-  border-top: 1px solid var(--border); position: relative; overflow: hidden;
-}
-.cta-section::before {
-  content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(21,85,168,0.25), transparent);
-}
-.cta-inner { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
-.cta-title { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 4vw, 46px); line-height: 1.2; letter-spacing: -0.5px; color: var(--text); margin-bottom: 16px; }
-.cta-title em { font-style: italic; color: var(--blue); }
-.cta-sub { font-size: 16px; color: var(--muted); line-height: 1.65; margin-bottom: 36px; }
+/* ═══ COMPARATEUR ═══ */
+.comp-section{padding:104px 24px;background:var(--bg);border-top:1px solid var(--border);}
+.comp-inner{max-width:900px;margin:0 auto;}
+.comp-table{width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden;border:1px solid var(--bord2);box-shadow:var(--sh-md);}
+.comp-table thead tr{background:var(--bg2);}
+.comp-table th{padding:20px 22px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2);border-bottom:2px solid var(--border);}
+.comp-table th.comp-th-fo{background:var(--blue3);border-bottom:2px solid var(--blue);color:var(--blue);}
+.comp-th-label{text-align:left;width:36%;}
+.comp-table td{padding:15px 22px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table tr:nth-child(even) td{background:var(--s1);}
+.comp-table tr:nth-child(even) td.comp-fo{background:rgba(21,85,168,0.04);}
+.comp-table td.comp-fo{background:rgba(21,85,168,0.025);text-align:center;}
+.comp-table td.comp-other{text-align:center;}
+.comp-check{color:var(--blue);font-size:17px;font-weight:800;}
+.comp-cross{color:#D93025;font-size:17px;}
+.comp-partial{font-size:11px;color:var(--muted3);}
+.comp-price-row td{padding:18px 22px;font-weight:700;background:var(--bg2);}
+.comp-price-fo{background:var(--blue3) !important;}
 
-/* ═══════════════════ FOOTER ═══════════════════ */
-.footer { padding: 36px 48px; border-top: 1px solid var(--border); background: var(--bg2); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; }
-.foot-logo { display: flex; align-items: center; gap: 8px; }
-.foot-brand { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; color: var(--text); }
-.foot-brand .o { color: var(--blue); }
-.foot-links { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
-.foot-links a { font-size: 12px; color: var(--muted2); transition: color 0.2s; }
-.foot-links a:hover { color: var(--text); }
-.foot-links a.hl { color: var(--blue); font-weight: 600; }
-.foot-copy { font-size: 11px; color: var(--muted3); text-align: right; line-height: 1.7; }
+/* ═══ PRICING ═══ */
+.pricing-section{padding:104px 24px;background:var(--bg2);border-top:1px solid var(--border);}
+.pricing-inner{max-width:820px;margin:0 auto;}
+.pricing-cards{display:grid;grid-template-columns:1fr 1.08fr;gap:18px;margin-top:52px;}
+.p-card{background:var(--bg);border:1px solid var(--bord2);border-radius:18px;padding:36px 30px;box-shadow:var(--sh-sm);}
+.p-card.featured{border-color:var(--blue);background:var(--bg2);box-shadow:0 0 0 1px var(--blue),var(--sh-lg),0 0 50px rgba(21,85,168,0.07);position:relative;overflow:hidden;}
+.p-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue2));}
+.p-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:18px;background:var(--blue);color:#fff;}
+.p-name{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;}
+.p-price-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:4px;}
+.p-price{font-family:'JetBrains Mono',monospace;font-size:52px;font-weight:600;letter-spacing:-2px;line-height:1;color:var(--text);}
+.p-unit{font-size:14px;color:var(--muted);font-weight:500;margin-bottom:6px;}
+.p-old{font-size:13px;color:var(--muted3);text-decoration:line-through;display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.p-discount{font-size:11px;font-weight:800;color:var(--gold);background:var(--gold2);padding:2px 8px;border-radius:20px;text-decoration:none;}
+.p-period{font-size:12px;color:var(--muted2);margin-bottom:5px;}
+.p-save{font-size:12px;font-weight:700;color:var(--green);margin-bottom:28px;}
+.p-feats{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.p-feats li{font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:10px;line-height:1.4;}
+.pck{flex-shrink:0;margin-top:1px;font-weight:700;font-size:12px;}
+.p-feats li.dim{color:var(--muted3);}
+.p-btn{width:100%;padding:14px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:700;transition:all 0.22s;display:block;text-align:center;}
+.pb-fill{background:var(--blue);color:#fff;}
+.pb-fill:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 6px 22px rgba(21,85,168,0.30);}
+.pb-line{background:transparent;color:var(--text);border:1.5px solid var(--bord2);}
+.pb-line:hover{background:var(--bg);border-color:var(--bord3);}
+.p-note{font-size:11px;color:var(--muted3);text-align:center;margin-top:12px;line-height:1.5;}
 
-/* ═══════════════════ TYPE UTILS ═══════════════════ */
-.eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
-.section-title { font-family: 'DM Serif Display', serif; font-size: clamp(26px, 3.6vw, 40px); line-height: 1.15; letter-spacing: -0.5px; color: var(--text); margin-bottom: 14px; }
-.section-title em { font-style: italic; color: var(--muted2); }
-.section-sub { font-size: 15px; color: var(--muted); line-height: 1.65; max-width: 480px; }
+/* ═══ FAQ ═══ */
+.faq-section{padding:104px 24px;background:var(--bg);border-top:1px solid var(--border);}
+.faq-inner{max-width:700px;margin:0 auto;}
+.faq-list{margin-top:48px;border:1px solid var(--bord2);border-radius:14px;overflow:hidden;box-shadow:var(--sh-sm);background:var(--bg2);}
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-item:last-child{border-bottom:none;}
+.faq-q{width:100%;text-align:left;background:var(--bg2);border:none;cursor:pointer;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:600;color:var(--text);transition:background 0.2s,color 0.2s;gap:16px;}
+.faq-q:hover{background:var(--bg);}
+.faq-q.open{background:var(--bg);color:var(--blue);}
+.faq-arr{color:var(--muted3);font-size:20px;transition:transform 0.3s,color 0.2s;flex-shrink:0;font-weight:300;line-height:1;}
+.faq-q.open .faq-arr{transform:rotate(45deg);color:var(--blue);}
+.faq-a{overflow:hidden;max-height:0;transition:max-height 0.35s ease,padding 0.25s;background:var(--bg);padding:0 26px;}
+.faq-a.open{max-height:260px;padding-bottom:22px;}
+.faq-a p{font-size:13.5px;color:var(--muted);line-height:1.75;}
 
-/* Swiss accent line */
-.ch-line { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--red-ch); letter-spacing: 0.5px; text-transform: uppercase; }
-.ch-line::before { content: ''; width: 14px; height: 2px; background: var(--red-ch); display: block; flex-shrink: 0; }
+/* ═══ SUPPORT ═══ */
+.support-section{padding:88px 24px;background:var(--bg2);border-top:1px solid var(--border);}
+.support-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:64px;align-items:center;}
+.s-cards{display:flex;flex-direction:column;gap:12px;}
+.s-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:18px 20px;text-decoration:none;color:inherit;transition:border-color 0.25s,box-shadow 0.25s,transform 0.2s;box-shadow:var(--sh-sm);}
+.s-card:hover{border-color:rgba(21,85,168,0.22);box-shadow:var(--sh-md);transform:translateX(4px);}
+.s-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.s-ico-b{background:var(--blue3);border:1px solid rgba(21,85,168,0.14);}
+.s-ico-g{background:var(--green2);border:1px solid rgba(26,122,74,0.14);}
+.s-ico-r{background:var(--red3);border:1px solid rgba(196,43,28,0.14);}
+.s-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.s-sub{font-size:12px;color:var(--muted2);}
+.s-arr{color:var(--muted3);font-size:14px;margin-left:auto;}
 
-/* ═══════════════════ SCROLL REVEAL ═══════════════════ */
-.r { opacity: 0; transform: translateY(22px); transition: opacity 0.6s cubic-bezier(.16,1,.3,1), transform 0.6s cubic-bezier(.16,1,.3,1); }
-.r.d1{transition-delay:.08s;} .r.d2{transition-delay:.15s;} .r.d3{transition-delay:.22s;} .r.d4{transition-delay:.30s;}
-.r.in { opacity: 1; transform: none; }
-/* Hero entry */
-.hero-eyebrow { animation: hi 0.7s 0.1s both cubic-bezier(.16,1,.3,1); }
-.hero-title    { animation: hi 0.8s 0.2s both cubic-bezier(.16,1,.3,1); }
-.hero-sub      { animation: hi 0.8s 0.33s both cubic-bezier(.16,1,.3,1); }
-.hero-actions  { animation: hi 0.8s 0.46s both cubic-bezier(.16,1,.3,1); }
-.hero-trust    { animation: hi 0.8s 0.58s both cubic-bezier(.16,1,.3,1); }
-@keyframes hi { from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;} }
+/* ═══ CONTACT ═══ */
+.contact-section{padding:104px 24px;background:var(--bg);border-top:1px solid var(--border);}
+.contact-inner{max-width:920px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;}
+.contact-intro{font-size:14px;color:var(--muted);line-height:1.72;margin-top:18px;margin-bottom:28px;}
+.contact-services{display:flex;flex-direction:column;gap:10px;}
+.cs-item{display:flex;align-items:flex-start;gap:14px;padding:15px 17px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);box-shadow:var(--sh-sm);transition:border-color 0.22s,transform 0.18s;}
+.cs-item:hover{border-color:rgba(21,85,168,0.20);transform:translateX(3px);}
+.cs-ico{font-size:18px;margin-top:1px;flex-shrink:0;}
+.cs-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.cs-desc{font-size:12px;color:var(--muted2);line-height:1.55;}
+/* Form */
+.contact-form{background:var(--bg2);border:1px solid var(--bord2);border-radius:18px;padding:32px;box-shadow:var(--sh-md);}
+.cf-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.cf-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.55;}
+.cf-field{margin-bottom:14px;}
+.cf-label{font-size:10.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted2);display:block;margin-bottom:6px;}
+.cf-input,.cf-select,.cf-textarea{width:100%;padding:11px 14px;border-radius:9px;border:1.5px solid var(--bord2);background:var(--bg);font-family:'Outfit',sans-serif;font-size:14px;color:var(--text);transition:border-color 0.2s,box-shadow 0.2s;outline:none;-webkit-appearance:none;}
+.cf-input:focus,.cf-select:focus,.cf-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,85,168,0.09);}
+.cf-textarea{min-height:90px;resize:vertical;line-height:1.55;}
+.cf-select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237A8FA8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.cf-btn{width:100%;padding:13px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.22s;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.cf-btn:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 6px 24px rgba(21,85,168,0.28);}
+.cf-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;box-shadow:none;}
+.cf-note{font-size:11px;color:var(--muted3);text-align:center;margin-top:10px;}
+#cf-success{display:none;text-align:center;padding:24px 0;}
+.cf-ok-ico{font-size:40px;margin-bottom:14px;}
+.cf-ok-t{font-size:16px;font-weight:700;color:var(--text);margin-bottom:7px;}
+.cf-ok-s{font-size:13px;color:var(--muted);line-height:1.65;}
 
-/* ═══════════════════ RESPONSIVE ═══════════════════ */
-@media(max-width:800px){
-  .nav { padding: 0 20px; }
-  .nav-links { display: none; }
-  .problem-inner,.support-inner { grid-template-columns: 1fr; gap: 40px; }
-  .feat-grid,.testi-grid,.pricing-cards { grid-template-columns: 1fr; }
-  .how-steps { grid-template-columns: 1fr 1fr; }
-  .how-steps::before { display: none; }
-  .sol-flow { flex-direction: column; align-items: center; gap: 24px; }
-  .sol-step:not(:last-child)::after { display: none; }
-  .stats-inner { grid-template-columns: 1fr; }
-  .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
-  .mw-body { height: auto; }
-  .mw-sb { display: none; }
-  .footer { grid-template-columns: 1fr; text-align: center; gap: 20px; padding: 32px 24px; }
-  .foot-copy { text-align: center; }
-  .comp-table th, .comp-table td { padding: 12px 10px; font-size: 12px; }
-  .comp-th-label { display: none; }
-}
+/* ═══ CTA FINAL ═══ */
+.cta-section{padding:120px 24px;text-align:center;background:linear-gradient(180deg,var(--bg2) 0%,var(--blue3) 100%);border-top:1px solid var(--border);position:relative;overflow:hidden;}
+.cta-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(21,85,168,0.28),transparent);}
+.cta-section::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:350px;border-radius:50%;background:radial-gradient(ellipse,rgba(21,85,168,0.06) 0%,transparent 70%);pointer-events:none;}
+.cta-inner{position:relative;z-index:1;max-width:560px;margin:0 auto;}
+.cta-title{font-family:'DM Serif Display',serif;font-size:clamp(30px,4vw,48px);line-height:1.18;letter-spacing:-0.5px;color:var(--text);margin-bottom:16px;}
+.cta-title em{font-style:italic;color:var(--blue);}
+.cta-sub{font-size:16px;color:var(--muted);line-height:1.65;margin-bottom:36px;}
 
-/* COMPARATEUR */
-.comp-section { padding: 80px 24px; background: #fff; border-top: 1px solid var(--border); }
-.comp-inner { max-width: 900px; margin: 0 auto; }
-.comp-table { width: 100%; border-collapse: collapse; border-radius: 14px; overflow: hidden; border: 1px solid #E5E7EB; box-shadow: 0 4px 24px rgba(0,0,0,0.05); }
-.comp-table thead tr { background: #F8F9FB; }
-.comp-table th { padding: 18px 20px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #9CA3AF; border-bottom: 2px solid #E5E7EB; }
-.comp-table th.comp-th-fo { background: #EEF4FF; border-bottom: 2px solid #1555A8; color: #1555A8; }
-.comp-table td { padding: 14px 20px; font-size: 13px; color: #374151; border-bottom: 1px solid #F3F4F6; }
-.comp-table tr:last-child td { border-bottom: none; }
-.comp-table tr:nth-child(even) td { background: #FAFAFA; }
-.comp-table tr:nth-child(even) td.comp-fo { background: #F0F7FF; }
-.comp-table td.comp-fo { background: #F5F8FF; text-align: center; }
-.comp-table td.comp-other { text-align: center; }
-.comp-check { color: #1555A8; font-size: 18px; font-weight: 800; }
-.comp-cross { color: #EF4444; font-size: 18px; }
-.comp-partial { font-size: 11px; color: #9CA3AF; }
-.comp-price-row td { padding: 16px 20px; font-weight: 700; }
-.comp-price-fo { background: #EEF4FF !important; }
+/* ═══ FOOTER ═══ */
+.footer{padding:36px 52px;border-top:1px solid var(--border);background:var(--bg2);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;}
+.foot-logo{display:flex;align-items:center;gap:8px;}
+.foot-brand{font-size:16px;font-weight:800;letter-spacing:-0.3px;color:var(--text);}
+.foot-brand .o{color:var(--blue);}
+.foot-links{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;}
+.foot-links a{font-size:12px;color:var(--muted2);transition:color 0.2s;}
+.foot-links a:hover{color:var(--text);}
+.foot-links a.hl{color:var(--blue);font-weight:600;}
+.foot-copy{font-size:11px;color:var(--muted3);text-align:right;line-height:1.7;}
 
-/* SECTEURS */
-.sectors-section { padding: 80px 24px; background: var(--bg2); border-top: 1px solid var(--border); overflow: hidden; }
-.sectors-inner { max-width: 960px; margin: 0 auto; }
-.sectors-ticker-wrap { position: relative; overflow: hidden; margin: 0 -24px; }
-.sectors-ticker-wrap::before, .sectors-ticker-wrap::after {
-  content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none;
-}
-.sectors-ticker-wrap::before { left: 0; background: linear-gradient(to right, var(--bg2), transparent); }
-.sectors-ticker-wrap::after { right: 0; background: linear-gradient(to left, var(--bg2), transparent); }
-.sectors-ticker { display: flex; gap: 12px; width: max-content; animation: ticker 30s linear infinite; padding: 8px 24px; }
-.sectors-ticker:hover { animation-play-state: paused; }
-@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.s-badge {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 18px; border-radius: 100px;
-  background: var(--card-bg); border: 1px solid var(--border);
-  font-size: 13px; font-weight: 500; color: var(--text);
-  white-space: nowrap; transition: border-color 0.2s, color 0.2s;
-  cursor: default;
-}
-.s-badge:hover { border-color: #1555A8; color: #1555A8; }
-.s-badge .s-ico { font-size: 15px; }
-.sectors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 40px; }
-.s-card-item {
-  padding: 16px 18px; border-radius: 12px;
-  background: var(--card-bg); border: 1px solid var(--border);
-  display: flex; align-items: center; gap: 12px;
-  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
-}
-.s-card-item:hover { border-color: rgba(21,85,168,0.4); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(21,85,168,0.08); }
-.s-card-ico { width: 36px; height: 36px; border-radius: 8px; background: rgba(21,85,168,0.08); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.s-card-label { font-size: 13px; font-weight: 600; color: var(--text); }
-.s-card-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
-@media(max-width:800px) {
-  .comp-table th, .comp-table td { padding: 12px 10px; font-size: 12px; }
-  .comp-th-label { display: none; }
-  .sectors-grid { grid-template-columns: repeat(2, 1fr); }
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:820px){
+  .nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .problem-inner,.support-inner,.contact-inner{grid-template-columns:1fr;gap:40px;}
+  .feat-grid,.testi-grid,.pricing-cards{grid-template-columns:1fr;}
+  .how-steps{grid-template-columns:1fr 1fr;}
+  .how-steps::before{display:none;}
+  .sol-flow{flex-direction:column;align-items:center;gap:24px;}
+  .sol-step:not(:last-child)::after{display:none;}
+  .stats-inner{grid-template-columns:1fr;}
+  .stat-item{border-right:none;border-bottom:1px solid var(--border);}
+  .mw-body{height:auto;}
+  .mw-sb{display:none;}
+  .footer{grid-template-columns:1fr;text-align:center;gap:20px;padding:32px 24px;}
+  .foot-copy{text-align:center;}
+  .comp-table th,.comp-table td{padding:11px 10px;font-size:12px;}
+  .comp-th-label{display:none;}
+  .sectors-grid{grid-template-columns:repeat(2,1fr);}
+  .cf-row{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ NAV ═══════════════ -->
+<!-- NAV -->
 <nav class="nav" id="mainNav">
   <a href="/" class="nav-logo">
     <span class="nav-brand">Follow<span class="o">Offer</span></span>
@@ -478,7 +415,7 @@ button { font-family: inherit; }
     <a href="#fonctionnalites">Fonctionnalités</a>
     <a href="#tarifs">Tarifs</a>
     <a href="#avis">Avis</a>
-    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
   </div>
   <div class="nav-actions">
     <a href="/app" class="btn-ghost">Se connecter</a>
@@ -486,21 +423,15 @@ button { font-family: inherit; }
   </div>
 </nav>
 
-<!-- ═══════════════ HERO ═══════════════ -->
+<!-- HERO DARK -->
 <section class="hero">
-  <div class="hero-dots"></div>
   <div class="hero-inner">
-    <div class="hero-eyebrow">
-      <span class="ew-dot"></span>
-      Conçu pour les PME suisses · Disponible maintenant
-    </div>
+    <div class="hero-eyebrow"><span class="ew-dot"></span>Conçu pour les PME suisses · Disponible maintenant</div>
     <h1 class="hero-title">
       Chaque offre envoyée<br>mérite <em>un vrai suivi.</em>
       <span class="lt">Pas un tableau Excel.</span>
     </h1>
-    <p class="hero-sub">
-      Envoyez vos offres, sachez quand elles sont lues,<br>relancez au bon moment — automatiquement.
-    </p>
+    <p class="hero-sub">Envoyez vos offres, sachez quand elles sont lues,<br>relancez au bon moment — automatiquement.</p>
     <div class="hero-actions">
       <a href="/app" class="btn-primary">Commencer gratuitement →</a>
       <a href="#solution" class="btn-secondary">Comment ça marche</a>
@@ -512,51 +443,54 @@ button { font-family: inherit; }
       <span class="t-item">Données sécurisées</span>
     </div>
   </div>
+  <div class="hero-fade"></div>
 </section>
 
-<!-- ═══════════════ APP MOCKUP ═══════════════ -->
-<div class="mockup-section r">
-  <div class="mockup-wrap">
-    <div class="mw-bar">
-      <div class="mdot mdot-r"></div><div class="mdot mdot-y"></div><div class="mdot mdot-g"></div>
-      <div class="mw-url"><div class="mw-pill">🔒 followoffer.com/app</div></div>
-    </div>
-    <div class="mw-body">
-      <div class="mw-sb">
-        <div class="msb-logo">
-          <span class="msb-brand">Follow<span class="o">Offer</span></span>
-          <svg width="13" height="13" viewBox="0 0 32 32" style="border-radius:2px;flex-shrink:0;"><rect width="32" height="32" fill="#C42B1C"/><rect x="13" y="6" width="6" height="20" fill="white"/><rect x="6" y="13" width="20" height="6" fill="white"/></svg>
-        </div>
-        <div class="msb-nav on">📊  Dashboard</div>
-        <div class="msb-nav" style="margin-top:2px;">📄  Offres</div>
-        <div class="msb-nav">👥  Clients</div>
-        <div class="msb-nav">📅  Calendrier</div>
-        <div class="msb-nav">📊  Rapports</div>
-        <div class="msb-nav" style="margin-top:12px;">⚙️  Paramètres</div>
-        <div class="msb-nav">💳  Abonnement</div>
+<!-- TRANSITION + MOCKUP -->
+<div class="mockup-wrap-outer">
+  <div class="mockup-section r">
+    <div class="mockup-wrap">
+      <div class="mw-bar">
+        <div class="mdot mdot-r"></div><div class="mdot mdot-y"></div><div class="mdot mdot-g"></div>
+        <div class="mw-url"><div class="mw-pill">🔒 followoffer.com/app</div></div>
       </div>
-      <div class="mw-main">
-        <div class="m-kpi"><div class="m-kv" style="color:#1555A8">8</div><div class="m-kl">Offres actives</div></div>
-        <div class="m-kpi"><div class="m-kv" style="color:#1A7A4A">42 K</div><div class="m-kl">CA gagné CHF</div></div>
-        <div class="m-kpi"><div class="m-kv" style="color:#A06A20">28 K</div><div class="m-kl">Pipeline CHF</div></div>
-        <div class="m-kpi"><div class="m-kv" style="color:#C42B1C">64%</div><div class="m-kl">Conversion</div></div>
-        <div class="m-chart" style="grid-column:span 3;">
-          <div class="m-ch-title">Pipeline des offres</div>
-          <div class="m-bar"><span class="m-bl">Envoyées</span><div class="m-bt"><div class="m-bf" style="width:82%;background:#1555A8;"></div></div><span class="m-bn">5</span></div>
-          <div class="m-bar"><span class="m-bl">Relance 1</span><div class="m-bt"><div class="m-bf" style="width:40%;background:#A06A20;"></div></div><span class="m-bn">2</span></div>
-          <div class="m-bar"><span class="m-bl">Relance 2</span><div class="m-bt"><div class="m-bf" style="width:20%;background:#C42B1C;"></div></div><span class="m-bn">1</span></div>
-          <div class="m-bar"><span class="m-bl">Gagnées</span><div class="m-bt"><div class="m-bf" style="width:62%;background:#1A7A4A;"></div></div><span class="m-bn">4</span></div>
+      <div class="mw-body">
+        <div class="mw-sb">
+          <div class="msb-logo">
+            <span class="msb-brand">Follow<span class="o">Offer</span></span>
+            <svg width="13" height="13" viewBox="0 0 32 32" style="border-radius:2px;flex-shrink:0;"><rect width="32" height="32" fill="#C42B1C"/><rect x="13" y="6" width="6" height="20" fill="white"/><rect x="6" y="13" width="20" height="6" fill="white"/></svg>
+          </div>
+          <div class="msb-nav on">📊  Dashboard</div>
+          <div class="msb-nav" style="margin-top:2px;">📄  Offres</div>
+          <div class="msb-nav">👥  Clients</div>
+          <div class="msb-nav">📅  Calendrier</div>
+          <div class="msb-nav">📊  Rapports</div>
+          <div class="msb-nav" style="margin-top:12px;">⚙️  Paramètres</div>
+          <div class="msb-nav">💳  Abonnement</div>
         </div>
-        <div class="m-donut-wrap">
-          <div class="m-ring"></div>
-          <div class="m-ring-lbl">Statuts</div>
+        <div class="mw-main">
+          <div class="m-kpi"><div class="m-kv" style="color:#1555A8">8</div><div class="m-kl">Offres actives</div></div>
+          <div class="m-kpi"><div class="m-kv" style="color:#1A7A4A">42 K</div><div class="m-kl">CA gagné CHF</div></div>
+          <div class="m-kpi"><div class="m-kv" style="color:#9A6218">28 K</div><div class="m-kl">Pipeline CHF</div></div>
+          <div class="m-kpi"><div class="m-kv" style="color:#C42B1C">64%</div><div class="m-kl">Conversion</div></div>
+          <div class="m-chart" style="grid-column:span 3;">
+            <div class="m-ch-title">Pipeline des offres</div>
+            <div class="m-bar"><span class="m-bl">Envoyées</span><div class="m-bt"><div class="m-bf" style="width:82%;background:#1555A8;"></div></div><span class="m-bn">5</span></div>
+            <div class="m-bar"><span class="m-bl">Relance 1</span><div class="m-bt"><div class="m-bf" style="width:40%;background:#9A6218;"></div></div><span class="m-bn">2</span></div>
+            <div class="m-bar"><span class="m-bl">Relance 2</span><div class="m-bt"><div class="m-bf" style="width:20%;background:#C42B1C;"></div></div><span class="m-bn">1</span></div>
+            <div class="m-bar"><span class="m-bl">Gagnées</span><div class="m-bt"><div class="m-bf" style="width:62%;background:#1A7A4A;"></div></div><span class="m-bn">4</span></div>
+          </div>
+          <div class="m-donut-wrap">
+            <div class="m-ring"></div>
+            <div class="m-ring-lbl">Statuts</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════ PROBLÈME ═══════════════ -->
+<!-- PROBLÈME -->
 <section class="problem-section" id="probleme">
   <div class="problem-inner">
     <div>
@@ -566,245 +500,114 @@ button { font-family: inherit; }
       <p class="r d3" style="font-size:13px;color:var(--muted2);line-height:1.65;">Ce n'est pas un problème de compétence. C'est un problème d'outil.</p>
     </div>
     <div class="prob-cards">
-      <div class="prob-card r">
-        <span class="prob-ico">📄</span>
-        <div class="prob-txt">L'offre est envoyée. <strong>Personne ne sait si elle a été lue.</strong> Le silence s'installe.</div>
-      </div>
-      <div class="prob-card r d1">
-        <span class="prob-ico">⏰</span>
-        <div class="prob-txt"><strong>La relance arrive trop tard, trop tôt, ou pas du tout.</strong> L'occasion est manquée.</div>
-      </div>
-      <div class="prob-card r d2">
-        <span class="prob-ico">📋</span>
-        <div class="prob-txt">Le suivi se perd dans <strong>les emails, les post-its et les tableaux.</strong> Rien n'est fiable.</div>
-      </div>
-      <div class="prob-card r d3">
-        <span class="prob-ico">📉</span>
-        <div class="prob-txt">Des affaires se perdent — <strong>non par manque d'intérêt, mais par manque de suivi.</strong></div>
-      </div>
+      <div class="prob-card r"><span class="prob-ico">📄</span><div class="prob-txt">L'offre est envoyée. <strong>Personne ne sait si elle a été lue.</strong> Le silence s'installe.</div></div>
+      <div class="prob-card r d1"><span class="prob-ico">⏰</span><div class="prob-txt"><strong>La relance arrive trop tard, trop tôt, ou pas du tout.</strong> L'occasion est manquée.</div></div>
+      <div class="prob-card r d2"><span class="prob-ico">📋</span><div class="prob-txt">Le suivi se perd dans <strong>les emails, les post-its et les tableaux.</strong> Rien n'est fiable.</div></div>
+      <div class="prob-card r d3"><span class="prob-ico">📉</span><div class="prob-txt">Des affaires se perdent — <strong>non par manque d'intérêt, mais par manque de suivi.</strong></div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ SOLUTION ═══════════════ -->
+<!-- SOLUTION -->
 <section class="solution-section" id="solution">
   <div class="solution-inner">
     <div class="eyebrow r" style="text-align:center">La solution</div>
     <h2 class="section-title r d1" style="text-align:center">Structurez votre suivi.<br><em>Du premier envoi au closing.</em></h2>
-    <p class="section-sub r d2" style="margin:0 auto 0;text-align:center">FollowOffer automatise chaque étape du cycle commercial. Vous vous concentrez sur la vente.</p>
+    <p class="section-sub r d2" style="margin:0 auto;text-align:center;">FollowOffer automatise chaque étape du cycle commercial. Vous vous concentrez sur la vente.</p>
     <div class="sol-flow r d3">
-      <div class="sol-step">
-        <div class="sol-ico">📤</div>
-        <div class="sol-label">01 · Envoyez</div>
-        <div class="sol-title">L'offre part depuis votre adresse</div>
-        <div class="sol-desc">PDF glissé, email généré, envoi en votre nom depuis votre adresse</div>
-      </div>
-      <div class="sol-step">
-        <div class="sol-ico">👁</div>
-        <div class="sol-label">02 · Suivez</div>
-        <div class="sol-title">Notification à l'ouverture</div>
-        <div class="sol-desc">Vous savez exactement quand votre prospect a lu l'offre</div>
-      </div>
-      <div class="sol-step">
-        <div class="sol-ico">🔔</div>
-        <div class="sol-label">03 · Relancez</div>
-        <div class="sol-title">3 relances automatiques</div>
-        <div class="sol-desc">J+3, J+7, J+14 — emails IA personnalisés selon le contexte</div>
-      </div>
-      <div class="sol-step">
-        <div class="sol-ico">✅</div>
-        <div class="sol-label">04 · Concluez</div>
-        <div class="sol-title">Gagnée ou perdue — c'est tracé</div>
-        <div class="sol-desc">Historique complet, pipeline à jour, rapport hebdomadaire</div>
-      </div>
+      <div class="sol-step"><div class="sol-ico">📤</div><div class="sol-label">01 · Envoyez</div><div class="sol-title">L'offre part depuis votre adresse</div><div class="sol-desc">PDF glissé, email généré par IA, envoi en votre nom</div></div>
+      <div class="sol-step"><div class="sol-ico">👁</div><div class="sol-label">02 · Suivez</div><div class="sol-title">Notification à l'ouverture</div><div class="sol-desc">Vous savez exactement quand votre prospect a lu l'offre</div></div>
+      <div class="sol-step"><div class="sol-ico">🔔</div><div class="sol-label">03 · Relancez</div><div class="sol-title">3 relances automatiques</div><div class="sol-desc">J+3, J+7, J+14 — emails IA personnalisés selon le contexte</div></div>
+      <div class="sol-step"><div class="sol-ico">✅</div><div class="sol-label">04 · Concluez</div><div class="sol-title">Gagnée ou perdue — c'est tracé</div><div class="sol-desc">Historique complet, pipeline à jour, rapport hebdomadaire</div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ STATS ═══════════════ -->
+<!-- STATS — valeurs initialisées directement, jamais à 0 -->
 <section class="stats-section">
   <div class="stats-inner">
     <div class="stat-item" data-counter="cnt-c">
-      <div class="stat-val sv-green" id="cnt-c" style="font-family:'Outfit',sans-serif;">0</div>
-      <div class="stat-desc">de taux de conversion en plus avec un suivi systématique</div>
+      <div><span class="stat-val sv-blue" id="cnt-c">38</span><span class="stat-val sv-blue stat-suffix">%</span></div>
+      <div class="stat-desc">Taux de conversion moyen en plus chez les utilisateurs Pro après 3 mois</div>
     </div>
     <div class="stat-item" data-counter="cnt-p">
-      <div>
-        <span class="stat-val sv-blue" id="cnt-p" style="font-family:'Outfit',sans-serif;">0</span>
-        <div class="stat-meta">
-          <span class="sm-strike">649 CHF</span>
-          <span class="sm-badge">−25%</span>
-        </div>
-      </div>
-      <div class="stat-desc">CHF/an — Offre de Pâques · économisez 159 CHF</div>
+      <div><span class="stat-val sv-warm" id="cnt-p">490</span></div>
+      <div class="stat-meta"><span class="sm-strike">649 CHF</span><span class="sm-badge">−25%</span></div>
+      <div class="stat-desc">CHF par an — tout inclus, aucun frais caché</div>
     </div>
     <div class="stat-item" data-counter="cnt-t">
-      <div class="stat-val sv-warm" id="cnt-t" style="font-family:'Outfit',sans-serif;">0</div>
-      <div class="stat-desc">fois moins de temps consacré aux relances manuelles</div>
+      <div><span class="stat-val sv-green" id="cnt-t">3</span><span class="stat-val sv-green stat-suffix">×</span></div>
+      <div class="stat-desc">Plus de relances effectuées vs. la gestion manuelle</div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ SECTEURS ═══════════════ -->
-<section class="sectors-section">
+<!-- SECTEURS -->
+<section class="sectors-section" id="metiers">
   <div class="sectors-inner">
-    <div style="text-align:center;margin-bottom:48px;">
-      <div class="eyebrow r" style="color:#1555A8;">Adapté à votre métier</div>
+    <div style="text-align:center;max-width:600px;margin:0 auto;">
+      <div class="eyebrow r">Adapté à votre métier</div>
       <h2 class="section-title r d1" style="text-align:center;">Si vous envoyez des offres,<br><em>FollowOffer est fait pour vous.</em></h2>
-      <p class="r d2" style="font-size:15px;color:var(--muted);text-align:center;max-width:520px;margin:12px auto 0;">Artisan, indépendant, PME ou commercial B2B — FollowOffer s'adapte à tous les secteurs qui envoient des devis ou propositions.</p>
+      <p class="r d2" style="font-size:15px;color:var(--muted);text-align:center;line-height:1.65;">Artisan, indépendant, PME ou commercial B2B — peu importe votre secteur, FollowOffer structure votre suivi.</p>
     </div>
-
-    <!-- Bande défilante -->
     <div class="sectors-ticker-wrap">
-      <div class="sectors-ticker" id="ticker">
-        <!-- Les badges sont dupliqués via JS pour boucle infinie -->
-      </div>
+      <div class="sectors-ticker" id="ticker"></div>
     </div>
-
-    <!-- Grille secteurs principaux -->
-    <div class="sectors-grid r" style="margin-top:44px;">
-      <div class="s-card-item">
-        <div class="s-card-ico">🔌</div>
-        <div><div class="s-card-label">Électriciens</div><div class="s-card-sub">Devis & installations</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">🪟</div>
-        <div><div class="s-card-label">Menuisiers</div><div class="s-card-sub">Cuisines, fenêtres, agencement</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">🏡</div>
-        <div><div class="s-card-label">Agents immobiliers</div><div class="s-card-sub">Propositions & mandats</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">🔧</div>
-        <div><div class="s-card-label">Chauffagistes</div><div class="s-card-sub">Installations & entretiens</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">🌿</div>
-        <div><div class="s-card-label">Paysagistes</div><div class="s-card-sub">Jardins & aménagements</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">🎨</div>
-        <div><div class="s-card-label">Peintres</div><div class="s-card-sub">Travaux & rénovations</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">🛁</div>
-        <div><div class="s-card-label">Sanitaires</div><div class="s-card-sub">Salles de bain & plomberie</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">💼</div>
-        <div><div class="s-card-label">Vendeurs B2B</div><div class="s-card-sub">Propositions commerciales</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">🔑</div>
-        <div><div class="s-card-label">Serruriers</div><div class="s-card-sub">Dépannage & sécurité</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">🏗️</div>
-        <div><div class="s-card-label">Plâtriers</div><div class="s-card-sub">Façades & intérieurs</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">📊</div>
-        <div><div class="s-card-label">Courtiers</div><div class="s-card-sub">Assurances & finances</div></div>
-      </div>
-      <div class="s-card-item">
-        <div class="s-card-ico">⚙️</div>
-        <div><div class="s-card-label">PME techniques</div><div class="s-card-sub">Services & maintenance</div></div>
-      </div>
+    <div class="sectors-grid r" style="margin-top:36px;">
+      <div class="s-card-item"><div class="s-card-ico">🔌</div><div><div class="s-card-label">Électriciens</div><div class="s-card-sub">Devis & installations</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">🪟</div><div><div class="s-card-label">Menuisiers</div><div class="s-card-sub">Cuisines, fenêtres, agencement</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">🏡</div><div><div class="s-card-label">Agents immobiliers</div><div class="s-card-sub">Propositions & mandats</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">🔧</div><div><div class="s-card-label">Chauffagistes</div><div class="s-card-sub">Installations & entretiens</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">🌿</div><div><div class="s-card-label">Paysagistes</div><div class="s-card-sub">Jardins & aménagements</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">🎨</div><div><div class="s-card-label">Peintres</div><div class="s-card-sub">Travaux & rénovations</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">🛁</div><div><div class="s-card-label">Sanitaires</div><div class="s-card-sub">Salles de bain & plomberie</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">💼</div><div><div class="s-card-label">Vendeurs B2B</div><div class="s-card-sub">Propositions commerciales</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">🔑</div><div><div class="s-card-label">Serruriers</div><div class="s-card-sub">Dépannage & sécurité</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">🏗️</div><div><div class="s-card-label">Plâtriers</div><div class="s-card-sub">Façades & intérieurs</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">📊</div><div><div class="s-card-label">Courtiers</div><div class="s-card-sub">Assurances & finances</div></div></div>
+      <div class="s-card-item"><div class="s-card-ico">⚙️</div><div><div class="s-card-label">PME techniques</div><div class="s-card-sub">Services & maintenance</div></div></div>
     </div>
-
-    <!-- Tag line finale -->
-    <div class="r" style="text-align:center;margin-top:40px;">
-      <div style="display:inline-flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(21,85,168,0.07);border:1px solid rgba(21,85,168,0.15);border-radius:100px;">
+    <div class="sectors-tagline r">
+      <div class="sectors-tagline-pill">
         <span style="font-size:14px;">💡</span>
-        <span style="font-size:13px;color:var(--text);font-weight:500;">Vous travaillez dans un autre secteur ?</span>
+        <span style="font-size:13px;color:var(--text);font-weight:500;">Autre secteur ?</span>
         <span style="font-size:13px;color:var(--muted);">Si vous envoyez des offres, FollowOffer fonctionne.</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ FEATURES ═══════════════ -->
+<!-- FEATURES -->
 <section class="features-section" id="fonctionnalites">
   <div class="feat-inner">
     <div class="eyebrow r">Fonctionnalités</div>
     <h2 class="section-title r d1">Tout ce dont vous avez besoin.<br><em>Rien de superflu.</em></h2>
     <div class="feat-grid">
-      <div class="feat-card r">
-        <div class="feat-ico-wrap fi-blue">📤</div>
-        <div class="feat-title">Envoi d'offres PDF</div>
-        <div class="feat-desc">Déposez votre PDF, l'IA extrait les données, l'email part depuis votre adresse. Aucun paramétrage technique.</div>
-        <span class="feat-pill fp-free">Gratuit</span>
-      </div>
-      <div class="feat-card r d1">
-        <div class="feat-ico-wrap fi-blue">👁</div>
-        <div class="feat-title">Tracking d'ouverture</div>
-        <div class="feat-desc">Notification instantanée à l'ouverture. Rappeler au bon moment change tout dans une négociation.</div>
-        <span class="feat-pill fp-pro">Pro</span>
-      </div>
-      <div class="feat-card r d2">
-        <div class="feat-ico-wrap fi-blue">🤖</div>
-        <div class="feat-title">Relances automatiques IA</div>
-        <div class="feat-desc">J+3, J+7, J+14. Emails générés par IA selon votre offre — personnalisés, crédibles, envoyés sans action de votre part.</div>
-        <span class="feat-pill fp-pro">Pro</span>
-      </div>
-      <div class="feat-card r d1">
-        <div class="feat-ico-wrap fi-blue">📊</div>
-        <div class="feat-title">Rapport hebdomadaire IA</div>
-        <div class="feat-desc">Chaque semaine, un résumé clair de votre pipeline, taux de conversion et priorités commerciales.</div>
-        <span class="feat-pill fp-pro">Pro</span>
-      </div>
-      <div class="feat-card r d2">
-        <div class="feat-ico-wrap fi-green">👥</div>
-        <div class="feat-title">Fiches clients CRM</div>
-        <div class="feat-desc">Historique complet par client : offres, relances, ouvertures et résultats. Vue unifiée, toujours à jour.</div>
-        <span class="feat-pill fp-free">Gratuit</span>
-      </div>
-      <div class="feat-card r d3">
-        <div class="feat-ico-wrap fi-green">📅</div>
-        <div class="feat-title">Calendrier commercial</div>
-        <div class="feat-desc">Toutes vos relances à venir sur une vue calendrier. Anticipez, planifiez, ne ratez plus aucune opportunité.</div>
-        <span class="feat-pill fp-free">Gratuit</span>
-      </div>
+      <div class="feat-card r"><div class="feat-ico-wrap fi-blue">📤</div><div class="feat-title">Envoi d'offres PDF</div><div class="feat-desc">Déposez votre PDF, l'IA extrait les données, l'email part depuis votre adresse. Aucun paramétrage technique.</div><span class="feat-pill fp-free">Gratuit</span></div>
+      <div class="feat-card r d1"><div class="feat-ico-wrap fi-blue">👁</div><div class="feat-title">Tracking d'ouverture</div><div class="feat-desc">Notification instantanée à l'ouverture. Rappeler au bon moment change tout dans une négociation.</div><span class="feat-pill fp-pro">Pro</span></div>
+      <div class="feat-card r d2"><div class="feat-ico-wrap fi-blue">🤖</div><div class="feat-title">Relances automatiques IA</div><div class="feat-desc">J+3, J+7, J+14. Emails générés par IA selon votre offre — personnalisés, crédibles, envoyés sans action de votre part.</div><span class="feat-pill fp-pro">Pro</span></div>
+      <div class="feat-card r d1"><div class="feat-ico-wrap fi-blue">📊</div><div class="feat-title">Rapport hebdomadaire IA</div><div class="feat-desc">Chaque semaine, un résumé clair de votre pipeline, taux de conversion et priorités commerciales.</div><span class="feat-pill fp-pro">Pro</span></div>
+      <div class="feat-card r d2"><div class="feat-ico-wrap fi-green">👥</div><div class="feat-title">Fiches clients CRM</div><div class="feat-desc">Historique complet par client : offres, relances, ouvertures et résultats. Vue unifiée, toujours à jour.</div><span class="feat-pill fp-free">Gratuit</span></div>
+      <div class="feat-card r d3"><div class="feat-ico-wrap fi-green">📅</div><div class="feat-title">Calendrier commercial</div><div class="feat-desc">Toutes vos relances à venir sur une vue calendrier. Anticipez, planifiez, ne ratez plus aucune opportunité.</div><span class="feat-pill fp-free">Gratuit</span></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<!-- HOW IT WORKS -->
 <section class="how-section">
   <div class="how-inner">
     <div class="eyebrow r" style="text-align:center">Mise en route</div>
     <h2 class="section-title r d1" style="text-align:center">Opérationnel en 5 minutes.<br><em>Vraiment.</em></h2>
     <div class="how-steps">
-      <div class="how-step r">
-        <div class="hs-num">⚙️</div>
-        <div class="hs-step">Étape 1</div>
-        <div class="hs-title">Configurez</div>
-        <div class="hs-desc">Nom, email expéditeur, clé Brevo. Une seule fois. 3 minutes.</div>
-      </div>
-      <div class="how-step r d1">
-        <div class="hs-num">📨</div>
-        <div class="hs-step">Étape 2</div>
-        <div class="hs-title">Envoyez</div>
-        <div class="hs-desc">Glissez le PDF, l'IA extrait les données, l'email est prêt.</div>
-      </div>
-      <div class="how-step r d2">
-        <div class="hs-num">📡</div>
-        <div class="hs-step">Étape 3</div>
-        <div class="hs-title">Suivez</div>
-        <div class="hs-desc">Notifié à l'ouverture. Aucune action requise de votre part.</div>
-      </div>
-      <div class="how-step r d3">
-        <div class="hs-num">✅</div>
-        <div class="hs-step">Étape 4</div>
-        <div class="hs-title">Automatisez</div>
-        <div class="hs-desc">Les relances partent seules. Vous marquez Gagnée ou Perdue.</div>
-      </div>
+      <div class="how-step r"><div class="hs-num">⚙️</div><div class="hs-step">Étape 1</div><div class="hs-title">Configurez</div><div class="hs-desc">Nom, email expéditeur. Une seule fois. 3 minutes.</div></div>
+      <div class="how-step r d1"><div class="hs-num">📨</div><div class="hs-step">Étape 2</div><div class="hs-title">Envoyez</div><div class="hs-desc">Glissez le PDF, l'IA extrait les données, l'email est prêt.</div></div>
+      <div class="how-step r d2"><div class="hs-num">📡</div><div class="hs-step">Étape 3</div><div class="hs-title">Suivez</div><div class="hs-desc">Notifié à l'ouverture. Aucune action requise de votre part.</div></div>
+      <div class="how-step r d3"><div class="hs-num">✅</div><div class="hs-step">Étape 4</div><div class="hs-title">Automatisez</div><div class="hs-desc">Les relances partent seules. Vous marquez Gagnée ou Perdue.</div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ TESTIMONIALS ═══════════════ -->
+<!-- TESTIMONIALS -->
 <section class="testi-section" id="avis">
   <div class="testi-inner">
     <div class="eyebrow r">Retours clients</div>
@@ -814,22 +617,16 @@ button { font-family: inherit; }
         <span class="tc-ok">✓ Vérifié</span>
         <div class="tc-stars">★★★★★</div>
         <p class="tc-quote">Avant, je notais mes relances dans un tableau Excel. J'en oubliais la moitié. En 2 mois, j'ai récupéré 3 offres que j'aurais complètement loupées.</p>
-        <div class="tc-author">
-          <div class="tc-av" style="background:var(--blue3);color:var(--blue);">RM</div>
-          <div><div class="tc-name">R. Müller</div><div class="tc-role">Commercial indépendant · Zurich</div></div>
-        </div>
+        <div class="tc-author"><div class="tc-av" style="background:var(--blue3);color:var(--blue);">RM</div><div><div class="tc-name">R. Müller</div><div class="tc-role">Commercial indépendant · Zurich</div></div></div>
       </div>
       <div class="testi-card r d1">
         <span class="tc-ok">✓ Vérifié</span>
         <div class="tc-stars">★★★★★</div>
         <p class="tc-quote">Le tracking d'ouverture change tout. Savoir quand mon client a lu l'offre me permet de rappeler au bon moment. Interface propre, sans superflu.</p>
-        <div class="tc-author">
-          <div class="tc-av" style="background:var(--green2);color:var(--green);">SF</div>
-          <div><div class="tc-name">S. Fontana</div><div class="tc-role">Consultante RH · Lausanne</div></div>
-        </div>
+        <div class="tc-author"><div class="tc-av" style="background:var(--green2);color:var(--green);">SF</div><div><div class="tc-name">S. Fontana</div><div class="tc-role">Consultante RH · Lausanne</div></div></div>
       </div>
       <div class="testi-card tc-stat r d2" data-counter="cnt-testi">
-        <div class="tc-stat-big" id="cnt-testi" style="font-family:'Outfit',sans-serif;">0</div>
+        <div class="tc-stat-big"><span id="cnt-testi">38</span><span class="tc-stat-suffix">%</span></div>
         <div class="tc-stat-sub">⭐ 4.9 / 5</div>
         <div class="tc-stat-desc">Taux de conversion moyen en plus observé chez les utilisateurs Pro après 3 mois</div>
         <div class="tc-stat-note">Données agrégées · Comptes Pro actifs · Suisse romande & alémanique</div>
@@ -838,116 +635,60 @@ button { font-family: inherit; }
         <span class="tc-ok">✓ Vérifié</span>
         <div class="tc-stars">★★★★★</div>
         <p class="tc-quote">Sobre, précis, sans fioriture. En tant que PME, j'avais besoin d'un outil qui fasse ce qu'il dit. Le rapport IA m'économise 2h par semaine.</p>
-        <div class="tc-author">
-          <div class="tc-av" style="background:rgba(160,106,32,0.12);color:#A06A20;">PB</div>
-          <div><div class="tc-name">P. Berset</div><div class="tc-role">Gérant · PME artisanale · Fribourg</div></div>
-        </div>
+        <div class="tc-author"><div class="tc-av" style="background:var(--gold2);color:var(--gold);">PB</div><div><div class="tc-name">P. Berset</div><div class="tc-role">Gérant · PME artisanale · Fribourg</div></div></div>
       </div>
       <div class="testi-card r d2">
         <span class="tc-ok">✓ Vérifié</span>
         <div class="tc-stars">★★★★★</div>
         <p class="tc-quote">J'ai essayé Pipedrive et HubSpot. Trop lourds pour mon activité. FollowOffer fait exactement ce qu'il faut, le support répond le jour même, en français.</p>
-        <div class="tc-author">
-          <div class="tc-av" style="background:rgba(96,104,168,0.12);color:#606890;">LK</div>
-          <div><div class="tc-name">L. Käser</div><div class="tc-role">Directeur commercial · Bâle</div></div>
-        </div>
+        <div class="tc-author"><div class="tc-av" style="background:rgba(96,104,168,0.12);color:#606890;">LK</div><div><div class="tc-name">L. Käser</div><div class="tc-role">Directeur commercial · Bâle</div></div></div>
       </div>
       <div class="testi-card r d3">
         <span class="tc-ok">✓ Vérifié</span>
         <div class="tc-stars">★★★★★</div>
         <p class="tc-quote">La génération d'emails IA est très bien faite. Je dépose mon PDF, décris le contexte, et l'email de relance est crédible et personnalisé. 30 secondes.</p>
-        <div class="tc-author">
-          <div class="tc-av" style="background:rgba(168,104,40,0.12);color:#A86828;">NW</div>
-          <div><div class="tc-name">N. Wyss</div><div class="tc-role">Technico-commercial · Berne</div></div>
-        </div>
+        <div class="tc-author"><div class="tc-av" style="background:rgba(168,104,40,0.12);color:#A86828;">NW</div><div><div class="tc-name">N. Wyss</div><div class="tc-role">Technico-commercial · Berne</div></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ COMPARATEUR ═══════════════ -->
+<!-- COMPARATEUR -->
 <section class="comp-section" id="comparateur">
   <div class="comp-inner">
-    <div class="eyebrow r" style="text-align:center;color:#1555A8;">Comparaison</div>
+    <div class="eyebrow r" style="text-align:center">Comparaison</div>
     <h2 class="section-title r d1" style="text-align:center">Pourquoi FollowOffer<br><em>plutôt qu'un autre outil ?</em></h2>
     <p class="r d2" style="font-size:15px;color:var(--muted);text-align:center;margin-top:10px;margin-bottom:48px;">Conçu pour les PME romandes — pas pour les grandes équipes commerciales.</p>
-
     <div style="overflow-x:auto;">
       <table class="comp-table">
-        <thead>
-          <tr>
-            <th class="comp-th-label" style="text-align:left;width:36%;">Fonctionnalité</th>
-            <th class="comp-th-fo" style="width:22%;">✦ FollowOffer<br><span style="font-size:11px;font-weight:500;">490 CHF / an</span></th>
-            <th style="width:21%;">CRM Généraliste<br><span style="font-size:10px;font-weight:400;color:#9CA3AF;">dès 400–1200 CHF/an</span></th>
-            <th style="width:21%;">Tableur / Excel<br><span style="font-size:10px;font-weight:400;color:#9CA3AF;">Manuel · 0–150 CHF</span></th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th class="comp-th-label">Fonctionnalité</th>
+          <th class="comp-th-fo">✦ FollowOffer<br><span style="font-size:11px;font-weight:500;opacity:0.85;">490 CHF / an</span></th>
+          <th>CRM Généraliste<br><span style="font-size:10px;font-weight:400;color:var(--muted3);">dès 400–1200 CHF/an</span></th>
+          <th>Tableur / Excel<br><span style="font-size:10px;font-weight:400;color:var(--muted3);">Manuel · 0–150 CHF</span></th>
+        </tr></thead>
         <tbody>
-          <tr>
-            <td style="font-weight:500;">Suivi automatique des offres envoyées</td>
-            <td class="comp-fo"><span class="comp-check">✓</span></td>
-            <td class="comp-other"><span class="comp-partial">Partiel</span></td>
-            <td class="comp-other"><span class="comp-cross">✕</span></td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;">Relances automatiques par email</td>
-            <td class="comp-fo"><span class="comp-check">✓</span></td>
-            <td class="comp-other"><span class="comp-partial">Add-on payant</span></td>
-            <td class="comp-other"><span class="comp-cross">✕</span></td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;">Tracking ouverture d'email</td>
-            <td class="comp-fo"><span class="comp-check">✓</span></td>
-            <td class="comp-other"><span class="comp-partial">Certains seulement</span></td>
-            <td class="comp-other"><span class="comp-cross">✕</span></td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;">Génération email par IA</td>
-            <td class="comp-fo"><span class="comp-check">✓</span></td>
-            <td class="comp-other"><span class="comp-cross">✕</span></td>
-            <td class="comp-other"><span class="comp-cross">✕</span></td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;">Prise en main en moins de 10 min</td>
-            <td class="comp-fo"><span class="comp-check">✓</span></td>
-            <td class="comp-other"><span class="comp-cross">✕</span><br><span style="font-size:10px;color:#9CA3AF;">Formation requise</span></td>
-            <td class="comp-other"><span style="font-size:16px;color:#6B7280;">~</span></td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;">Support en français · Suisse</td>
-            <td class="comp-fo"><span class="comp-check">✓</span></td>
-            <td class="comp-other"><span class="comp-partial">Anglais prioritaire</span></td>
-            <td class="comp-other"><span class="comp-cross">✕</span></td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;">Conçu pour PME 1–20 personnes</td>
-            <td class="comp-fo"><span class="comp-check">✓</span></td>
-            <td class="comp-other"><span class="comp-partial">Grandes équipes d'abord</span></td>
-            <td class="comp-other"><span style="font-size:16px;color:#6B7280;">~</span></td>
-          </tr>
+          <tr><td style="font-weight:500;color:var(--text);">Suivi automatique des offres envoyées</td><td class="comp-fo"><span class="comp-check">✓</span></td><td class="comp-other"><span class="comp-partial">Partiel</span></td><td class="comp-other"><span class="comp-cross">✕</span></td></tr>
+          <tr><td style="font-weight:500;color:var(--text);">Relances automatiques par email</td><td class="comp-fo"><span class="comp-check">✓</span></td><td class="comp-other"><span class="comp-partial">Add-on payant</span></td><td class="comp-other"><span class="comp-cross">✕</span></td></tr>
+          <tr><td style="font-weight:500;color:var(--text);">Tracking ouverture d'email</td><td class="comp-fo"><span class="comp-check">✓</span></td><td class="comp-other"><span class="comp-partial">Certains seulement</span></td><td class="comp-other"><span class="comp-cross">✕</span></td></tr>
+          <tr><td style="font-weight:500;color:var(--text);">Génération email par IA</td><td class="comp-fo"><span class="comp-check">✓</span></td><td class="comp-other"><span class="comp-cross">✕</span></td><td class="comp-other"><span class="comp-cross">✕</span></td></tr>
+          <tr><td style="font-weight:500;color:var(--text);">Prise en main en moins de 10 min</td><td class="comp-fo"><span class="comp-check">✓</span></td><td class="comp-other"><span class="comp-cross">✕</span></td><td class="comp-other"><span style="color:var(--muted2);">~</span></td></tr>
+          <tr><td style="font-weight:500;color:var(--text);">Support en français · Suisse</td><td class="comp-fo"><span class="comp-check">✓</span></td><td class="comp-other"><span class="comp-partial">Anglais prioritaire</span></td><td class="comp-other"><span class="comp-cross">✕</span></td></tr>
+          <tr><td style="font-weight:500;color:var(--text);">Conçu pour PME 1–20 personnes</td><td class="comp-fo"><span class="comp-check">✓</span></td><td class="comp-other"><span class="comp-partial">Grandes équipes</span></td><td class="comp-other"><span style="color:var(--muted2);">~</span></td></tr>
           <tr class="comp-price-row">
-            <td style="font-weight:700;color:#0F1728;">Tarif annuel tout compris</td>
-            <td class="comp-fo comp-price-fo" style="text-align:center;">
-              <div style="font-size:22px;font-weight:800;color:#1555A8;">490 CHF</div>
-              <div style="font-size:11px;color:#1555A8;margin-top:2px;">Tout inclus · Sans surprise</div>
-            </td>
-            <td class="comp-other">
-              <div style="font-size:15px;font-weight:700;">400–1200 CHF</div>
-              <div style="font-size:10px;color:#9CA3AF;">+ modules + formation</div>
-            </td>
-            <td class="comp-other">
-              <div style="font-size:15px;font-weight:700;">0–150 CHF</div>
-              <div style="font-size:10px;color:#9CA3AF;">mais 2h de travail manuel/sem.</div>
-            </td>
+            <td style="font-weight:700;color:var(--text);">Tarif annuel tout compris</td>
+            <td class="comp-fo comp-price-fo" style="text-align:center;"><div style="font-size:20px;font-weight:800;color:var(--blue);">490 CHF</div><div style="font-size:11px;color:var(--blue);opacity:0.7;margin-top:2px;">Tout inclus</div></td>
+            <td class="comp-other"><div style="font-size:14px;font-weight:700;color:var(--text);">400–1200 CHF</div><div style="font-size:10px;color:var(--muted3);">+ modules + formation</div></td>
+            <td class="comp-other"><div style="font-size:14px;font-weight:700;color:var(--text);">0–150 CHF</div><div style="font-size:10px;color:var(--muted3);">2h de travail manuel/sem.</div></td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p style="text-align:center;font-size:11px;color:#9CA3AF;margin-top:14px;">Comparaison indicative basée sur les offres publiques disponibles au 01.03.2026. FollowOffer est spécialisé offres commerciales — non un CRM complet.</p>
+    <p style="text-align:center;font-size:11px;color:var(--muted3);margin-top:14px;">Comparaison indicative basée sur les offres publiques disponibles au 01.03.2026. FollowOffer est spécialisé offres commerciales — non un CRM complet.</p>
   </div>
 </section>
 
-<!-- ═══════════════ PRICING ═══════════════ -->
+<!-- PRICING -->
 <section class="pricing-section" id="tarifs">
   <div class="pricing-inner">
     <div class="eyebrow r" style="text-align:center">Tarifs</div>
@@ -993,41 +734,23 @@ button { font-family: inherit; }
   </div>
 </section>
 
-<!-- ═══════════════ FAQ ═══════════════ -->
+<!-- FAQ -->
 <section class="faq-section" id="faq">
   <div class="faq-inner">
-    <div class="eyebrow r" style="text-align:center">Questions fréquentes</div>
-    <h2 class="section-title r d1" style="text-align:center">Tout ce que vous<br><em>voulez savoir.</em></h2>
-    <div class="faq-list">
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaqItem(this)">Comment fonctionnent les relances automatiques ?<span class="faq-arr">+</span></button>
-        <div class="faq-a"><p>Après l'envoi de votre offre, FollowOffer programme 3 relances aux intervalles que vous définissez (J+3, J+7, J+14 par défaut). Chaque email est généré par IA selon votre contexte, puis envoyé en votre nom. Vous pouvez modifier les délais ou désactiver les relances à tout moment.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaqItem(this)">Puis-je personnaliser les emails de relance ?<span class="faq-arr">+</span></button>
-        <div class="faq-a"><p>Oui. Avant chaque envoi, vous pouvez relire, modifier ou valider l'email généré. Vous définissez le ton (formel, direct, concis) et les éléments clés à inclure. Le système s'adapte au style de chaque commercial.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaqItem(this)">Est-ce adapté à une petite entreprise ou un indépendant ?<span class="faq-arr">+</span></button>
-        <div class="faq-a"><p>FollowOffer est précisément conçu pour les indépendants, PME et petites équipes commerciales. Pas de formation requise, prise en main en 5 minutes, interface épurée. Pas besoin d'un CRM complexe.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaqItem(this)">Mes données sont-elles sécurisées ?<span class="faq-arr">+</span></button>
-        <div class="faq-a"><p>Oui. Données stockées sur Supabase avec chiffrement et isolation par compte. Paiements via Stripe (certifié PCI-DSS). Vos données ne sont jamais vendues ni partagées avec des tiers.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaqItem(this)">Puis-je essayer gratuitement ?<span class="faq-arr">+</span></button>
-        <div class="faq-a"><p>Oui. Le plan gratuit est disponible sans carte bancaire et permet d'envoyer jusqu'à 5 offres par mois. Vous pouvez passer à Pro à tout moment depuis votre espace en quelques clics.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaqItem(this)">Comment sont envoyés les emails ?<span class="faq-arr">+</span></button>
-        <div class="faq-a"><p>Les emails partent directement depuis votre adresse — le destinataire voit votre nom et votre adresse habituelle. Aucune configuration technique nécessaire pour démarrer.</p></div>
-      </div>
+    <div class="eyebrow r" style="text-align:center">FAQ</div>
+    <h2 class="section-title r d1" style="text-align:center">Questions fréquentes.</h2>
+    <div class="faq-list r d2">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Comment fonctionnent les relances automatiques ?<span class="faq-arr">+</span></button><div class="faq-a"><p>Une fois l'offre envoyée, FollowOffer programme automatiquement 3 relances à J+3, J+7 et J+14. Les emails sont générés par IA selon votre offre et envoyés depuis votre adresse sans aucune action de votre part.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Puis-je personnaliser les emails de relance ?<span class="faq-arr">+</span></button><div class="faq-a"><p>Oui. Vous pouvez modifier les intervalles (J+3, J+7, J+14) et les templates dans votre configuration. L'IA génère aussi un email sur mesure que vous pouvez éditer avant envoi.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Est-ce adapté à une petite entreprise ou un indépendant ?<span class="faq-arr">+</span></button><div class="faq-a"><p>C'est précisément pour eux que FollowOffer a été conçu. Pas de CRM complexe, pas de formation requise. Opérationnel en 5 minutes depuis une seule interface claire.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Mes données sont-elles sécurisées ?<span class="faq-arr">+</span></button><div class="faq-a"><p>Oui. Données stockées sur Supabase avec chiffrement et isolation par compte. Paiements via Stripe (certifié PCI-DSS). Vos données ne sont jamais vendues ni partagées.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Puis-je essayer gratuitement ?<span class="faq-arr">+</span></button><div class="faq-a"><p>Oui. Le plan gratuit est disponible sans carte bancaire — jusqu'à 5 offres par mois. Passez à Pro à tout moment depuis votre espace en quelques clics.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Comment sont envoyés les emails ?<span class="faq-arr">+</span></button><div class="faq-a"><p>Les emails partent directement depuis votre adresse — le destinataire voit votre nom et votre adresse habituelle. Aucune configuration technique nécessaire pour démarrer.</p></div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ SUPPORT ═══════════════ -->
+<!-- SUPPORT -->
 <section class="support-section">
   <div class="support-inner">
     <div>
@@ -1055,20 +778,73 @@ button { font-family: inherit; }
   </div>
 </section>
 
-<!-- ═══════════════ CTA FINAL ═══════════════ -->
+<!-- CONTACT & SERVICES SUR MESURE -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <div>
+      <div class="eyebrow r">Contact & sur mesure</div>
+      <h2 class="section-title r d1">Besoin d'un outil<br><em>personnalisé ?</em></h2>
+      <p class="contact-intro r d2">FollowOffer est prêt à l'emploi pour les PME. Si votre activité nécessite une plateforme sur mesure, une intégration spécifique ou un audit de votre cycle commercial, je vous accompagne directement.</p>
+      <div class="contact-services r d3">
+        <div class="cs-item">
+          <span class="cs-ico">🔧</span>
+          <div><div class="cs-title">Plateforme sur mesure</div><div class="cs-desc">Développement d'un outil commercial adapté à vos processus internes — sur devis.</div></div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-ico">🔍</span>
+          <div><div class="cs-title">Audit commercial</div><div class="cs-desc">Analyse de votre cycle de vente et recommandations concrètes pour améliorer votre taux de conversion.</div></div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-ico">🔗</span>
+          <div><div class="cs-title">Intégration & connecteurs</div><div class="cs-desc">Connexion de FollowOffer à vos outils existants (ERP, CRM, comptabilité).</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form r d2">
+      <div id="cf-inner">
+        <div class="cf-title">Envoyez un message</div>
+        <div class="cf-sub">Réponse sous 24h · En français · Sans chatbot</div>
+        <div class="cf-row">
+          <div class="cf-field"><label class="cf-label" for="cf-name">Prénom & Nom</label><input class="cf-input" id="cf-name" type="text" placeholder="Jean Dupont"></div>
+          <div class="cf-field"><label class="cf-label" for="cf-company">Entreprise</label><input class="cf-input" id="cf-company" type="text" placeholder="Dupont SA"></div>
+        </div>
+        <div class="cf-field"><label class="cf-label" for="cf-email">Email</label><input class="cf-input" id="cf-email" type="email" placeholder="jean@entreprise.ch"></div>
+        <div class="cf-field">
+          <label class="cf-label" for="cf-subject">Sujet</label>
+          <select class="cf-select" id="cf-subject">
+            <option value="">Sélectionnez un sujet</option>
+            <option value="followoffer">Question sur FollowOffer</option>
+            <option value="custom">Plateforme sur mesure / devis</option>
+            <option value="audit">Audit commercial</option>
+            <option value="integration">Intégration / connecteur</option>
+            <option value="other">Autre demande</option>
+          </select>
+        </div>
+        <div class="cf-field"><label class="cf-label" for="cf-message">Message</label><textarea class="cf-textarea" id="cf-message" placeholder="Décrivez votre besoin en quelques lignes..."></textarea></div>
+        <button class="cf-btn" id="cf-btn" onclick="submitContact()"><span id="cf-btn-txt">Envoyer le message →</span></button>
+        <div class="cf-note">Réponse garantie sous 24h · contact@followoffer.com</div>
+      </div>
+      <div id="cf-success">
+        <div class="cf-ok-ico">✅</div>
+        <div class="cf-ok-t">Message envoyé !</div>
+        <div class="cf-ok-s">Merci pour votre message. Nous vous répondons sous 24h, en français.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
 <section class="cta-section">
   <div class="cta-inner">
     <div class="eyebrow r" style="text-align:center">Prêt à commencer ?</div>
     <h2 class="cta-title r d1">Structurez votre suivi commercial.<br><em>Dès aujourd'hui.</em></h2>
     <p class="cta-sub r d2">5 offres gratuites pour démarrer. Aucune carte requise.<br>Opérationnel en 5 minutes.</p>
-    <div class="r d3">
-      <a href="/app" class="btn-primary" style="font-size:16px;padding:16px 40px;display:inline-flex">Créer mon compte gratuitement →</a>
-    </div>
-    <p class="r d4" style="font-size:12px;color:var(--muted3);margin-top:18px;">Essai gratuit sans engagement · Passez à Pro quand vous voulez</p>
+    <div class="r d3"><a href="/app" class="btn-primary" style="font-size:16px;padding:16px 40px;display:inline-flex;">Créer mon compte gratuitement →</a></div>
+    <p class="r d4" style="font-size:12px;color:var(--muted2);margin-top:18px;">Essai gratuit sans engagement · Passez à Pro quand vous voulez</p>
   </div>
 </section>
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
+<!-- FOOTER -->
 <footer class="footer">
   <div class="foot-logo">
     <span class="foot-brand">Follow<span class="o">Offer</span></span>
@@ -1079,85 +855,137 @@ button { font-family: inherit; }
     <a href="#fonctionnalites">Fonctionnalités</a>
     <a href="#tarifs">Tarifs</a>
     <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
     <a href="/app">Tableau de bord</a>
     <a href="mailto:contact@followoffer.com" class="hl">contact@followoffer.com</a>
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
-    <div style="font-size:10px;margin-top:3px;color:var(--muted3)">2000 Neuchâtel · Suisse</div>
+    <div style="font-size:10px;margin-top:3px;">2000 Neuchâtel · Suisse</div>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// NAV
+<script>
+// ══ NAV — switch dark/light au passage du hero ══
 const nav = document.getElementById('mainNav');
-window.addEventListener('scroll', () => { nav.classList.toggle('stuck', window.scrollY > 50); }, { passive: true });
+const heroEl = document.querySelector('.hero');
+function updateNav() {
+  const heroBottom = heroEl ? heroEl.offsetTop + heroEl.offsetHeight - 80 : 600;
+  if(window.scrollY >= heroBottom) {
+    nav.classList.add('is-light');
+    nav.classList.remove('is-dark');
+  } else {
+    nav.classList.remove('is-light');
+  }
+}
+window.addEventListener('scroll', updateNav, {passive:true});
+updateNav();
 
-// SCROLL REVEAL
-const ro = new IntersectionObserver(en => en.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.07, rootMargin: '0px 0px -24px 0px' });
+// ══ SCROLL REVEAL ══
+const ro = new IntersectionObserver(en => en.forEach(e => {
+  if(e.isIntersecting) e.target.classList.add('in');
+}), {threshold:0.06, rootMargin:'0px 0px -18px 0px'});
 document.querySelectorAll('.r').forEach(el => ro.observe(el));
 
-// COUNTERS — ease out cubic
-function count(el, target, suffix, dur) {
+// ══ COUNTERS — initialisés à valeur finale, jamais à 0 ══
+const counterVals = {
+  'cnt-c':     [38, 1600],
+  'cnt-p':     [490, 1800],
+  'cnt-t':     [3, 1200],
+  'cnt-testi': [38, 1600],
+};
+// Init immédiate à valeur finale (évite 0 si IntersectionObserver non déclenché)
+Object.entries(counterVals).forEach(([id,[val]]) => {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val;
+});
+// Animation au scroll
+function animCount(el, target, dur) {
+  if(!el) return;
   const t0 = performance.now();
   (function tick(now) {
     const p = Math.min((now - t0) / dur, 1);
-    el.textContent = Math.round((1 - Math.pow(1-p,3)) * target) + suffix;
+    el.textContent = Math.round((1 - Math.pow(1-p,3)) * target);
     if(p < 1) requestAnimationFrame(tick);
   })(t0);
 }
-const counterCfg = {
-  'cnt-c':     [38,  '%',  1600],
-  'cnt-p':     [490, '',   2000],
-  'cnt-t':     [3,   'x',  1200],
-  'cnt-testi': [38,  '%',  1600],
-};
 const co = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if(!entry.isIntersecting || entry.target.dataset.done) return;
     entry.target.dataset.done = '1';
     const cid = entry.target.dataset.counter;
-    const cfg = counterCfg[cid];
+    const cfg = counterVals[cid];
     if(!cfg) return;
-    const el = document.getElementById(cid);
-    if(el) count(el, cfg[0], cfg[1], cfg[2]);
+    animCount(document.getElementById(cid), cfg[0], cfg[1]);
     co.unobserve(entry.target);
   });
-}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+}, {threshold:0.05});
 document.querySelectorAll('[data-counter]').forEach(el => co.observe(el));
 
-// FAQ ACCORDION
-function toggleFaqItem(btn) {
+// ══ FAQ ══
+function toggleFaq(btn) {
   const ans = btn.nextElementSibling;
-  const isOpen = ans.classList.contains('open');
+  const open = ans.classList.contains('open');
   document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
   document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('open'));
-  if(!isOpen) { ans.classList.add('open'); btn.classList.add('open'); }
+  if(!open) { ans.classList.add('open'); btn.classList.add('open'); }
 }
 
-// SECTORS TICKER
-(function() {
+// ══ TICKER SECTEURS ══
+(function(){
   const badges = [
-    {ico:'🔌', label:'Électriciens'}, {ico:'🪟', label:'Menuisiers'},
-    {ico:'🏡', label:'Agents immobiliers'}, {ico:'🔧', label:'Chauffagistes'},
-    {ico:'🌿', label:'Paysagistes'}, {ico:'🎨', label:'Peintres'},
-    {ico:'🛁', label:'Sanitaires'}, {ico:'💼', label:'Vendeurs B2B'},
-    {ico:'🔑', label:'Serruriers'}, {ico:'🏗️', label:'Plâtriers'},
-    {ico:'📊', label:'Courtiers'}, {ico:'⚙️', label:'PME techniques'},
-    {ico:'🪑', label:'Cuisinistes'}, {ico:'🏢', label:'Entreprises de services'},
-    {ico:'🤝', label:'Commerciaux indép.'}, {ico:'🛠️', label:'Artisans'},
-    {ico:'📐', label:'Architectes'}, {ico:'🚿', label:'Plombiers'},
+    {i:'🔌',l:'Électriciens'},{i:'🪟',l:'Menuisiers'},{i:'🏡',l:'Agents immobiliers'},
+    {i:'🔧',l:'Chauffagistes'},{i:'🌿',l:'Paysagistes'},{i:'🎨',l:'Peintres'},
+    {i:'🛁',l:'Sanitaires'},{i:'💼',l:'Vendeurs B2B'},{i:'🔑',l:'Serruriers'},
+    {i:'🏗️',l:'Plâtriers'},{i:'📊',l:'Courtiers'},{i:'⚙️',l:'PME techniques'},
+    {i:'🪑',l:'Cuisinistes'},{i:'🏢',l:'Entreprises de services'},{i:'🤝',l:'Commerciaux indép.'},
+    {i:'🛠️',l:'Artisans'},{i:'📐',l:'Architectes'},{i:'🚿',l:'Plombiers'},
   ];
   const ticker = document.getElementById('ticker');
   if(!ticker) return;
-  // Doubler les badges pour boucle infinie seamless
-  const all = [...badges, ...badges];
-  ticker.innerHTML = all.map(b =>
-    `<div class="s-badge"><span class="s-ico">${b.ico}</span>${b.label}</div>`
-  ).join('');
+  const all = [...badges,...badges];
+  ticker.innerHTML = all.map(b=>`<div class="s-badge"><span class="s-badge-ico">${b.i}</span>${b.l}</div>`).join('');
 })();
-</script>
-<!-- ═══════════════ FOOTER ═══════════════ -->
 
+// ══ CONTACT FORM ══
+async function submitContact() {
+  const name    = document.getElementById('cf-name')?.value.trim();
+  const company = document.getElementById('cf-company')?.value.trim();
+  const email   = document.getElementById('cf-email')?.value.trim();
+  const subject = document.getElementById('cf-subject')?.value;
+  const message = document.getElementById('cf-message')?.value.trim();
+  const btn     = document.getElementById('cf-btn');
+  const btnTxt  = document.getElementById('cf-btn-txt');
+
+  // Highlight required
+  ['cf-name','cf-email','cf-message'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.borderColor = (!el.value.trim()) ? '#D93025' : '';
+  });
+  if(!name || !email || !message) return;
+
+  btn.disabled = true;
+  btnTxt.textContent = '⏳ Envoi en cours...';
+
+  try {
+    await fetch('/api/send-email', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        provider:'brevo',
+        from:'contact@followoffer.com',
+        fromName:'FollowOffer Contact',
+        to:'contact@followoffer.com',
+        toName:'Axel Aubry',
+        subject:`[Contact] ${subject||'Message'} — ${name}`,
+        body:`Nouveau message depuis followoffer.com\n\nNom: ${name}\nEntreprise: ${company||'—'}\nEmail: ${email}\nSujet: ${subject||'—'}\n\n${message}`,
+      })
+    });
+  } catch(e) { /* silently proceed */ }
+
+  document.getElementById('cf-inner').style.display = 'none';
+  document.getElementById('cf-success').style.display = 'block';
+}
+</script>
 </body>
 </html>
