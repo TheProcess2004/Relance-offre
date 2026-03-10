@@ -731,9 +731,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
             <div style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px;">
               <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">⏱ Intervalles de relance pour cette offre</div>
               <div class="f3">
-                <div class="fg"><label class="fl">Relance 1 (jours)</label><input class="fi" id="of-d1" type="number" min="1" max="30" value="3" style="text-align:center;font-family:'JetBrains Mono',monospace;"></div>
-                <div class="fg"><label class="fl">Relance 2 (jours)</label><input class="fi" id="of-d2" type="number" min="1" max="60" value="7" style="text-align:center;font-family:'JetBrains Mono',monospace;"></div>
-                <div class="fg"><label class="fl">Relance 3 (jours)</label><input class="fi" id="of-d3" type="number" min="1" max="90" value="14" style="text-align:center;font-family:'JetBrains Mono',monospace;"></div>
+                <div class="fg"><label class="fl" style="font-size:9px;color:var(--gold);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">Relance 1 (jours)</label><div style="display:flex;align-items:center;gap:4px;"><button type="button" onclick="stepDay('of-d1',-1)" style="width:30px;height:30px;border-radius:6px;border:1px solid var(--border2);background:var(--s2);color:var(--text);font-size:17px;line-height:1;cursor:pointer;flex-shrink:0;font-weight:700;">−</button><input class="fi" id="of-d1" type="number" min="1" max="30" value="3" style="text-align:center;font-family:'JetBrains Mono',monospace;flex:1;"><button type="button" onclick="stepDay('of-d1',1)" style="width:30px;height:30px;border-radius:6px;border:1px solid var(--border2);background:var(--s2);color:var(--text);font-size:17px;line-height:1;cursor:pointer;flex-shrink:0;font-weight:700;">+</button></div></div>
+                <div class="fg"><label class="fl" style="font-size:9px;color:var(--purple);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">Relance 2 (jours)</label><div style="display:flex;align-items:center;gap:4px;"><button type="button" onclick="stepDay('of-d2',-1)" style="width:30px;height:30px;border-radius:6px;border:1px solid var(--border2);background:var(--s2);color:var(--text);font-size:17px;line-height:1;cursor:pointer;flex-shrink:0;font-weight:700;">−</button><input class="fi" id="of-d2" type="number" min="1" max="60" value="7" style="text-align:center;font-family:'JetBrains Mono',monospace;flex:1;"><button type="button" onclick="stepDay('of-d2',1)" style="width:30px;height:30px;border-radius:6px;border:1px solid var(--border2);background:var(--s2);color:var(--text);font-size:17px;line-height:1;cursor:pointer;flex-shrink:0;font-weight:700;">+</button></div></div>
+                <div class="fg"><label class="fl" style="font-size:9px;color:var(--orange);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">Relance 3 (jours)</label><div style="display:flex;align-items:center;gap:4px;"><button type="button" onclick="stepDay('of-d3',-1)" style="width:30px;height:30px;border-radius:6px;border:1px solid var(--border2);background:var(--s2);color:var(--text);font-size:17px;line-height:1;cursor:pointer;flex-shrink:0;font-weight:700;">−</button><input class="fi" id="of-d3" type="number" min="1" max="90" value="14" style="text-align:center;font-family:'JetBrains Mono',monospace;flex:1;"><button type="button" onclick="stepDay('of-d3',1)" style="width:30px;height:30px;border-radius:6px;border:1px solid var(--border2);background:var(--s2);color:var(--text);font-size:17px;line-height:1;cursor:pointer;flex-shrink:0;font-weight:700;">+</button></div></div>
               </div>
             </div>
           </div>
@@ -3680,13 +3680,21 @@ async function init() {
 
 
 // ══ ONBOARDING ══
+function stepDay(id, delta) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  const val = parseInt(el.value)||0;
+  const min = parseInt(el.min)||1;
+  const max = parseInt(el.max)||90;
+  el.value = Math.min(max, Math.max(min, val + delta));
+}
+
 function shouldShowOnboarding() {
   // Déjà vu → jamais remonter
   if(localStorage.getItem('of_onboarding_done')) return false;
-  // Nouveau compte = profil vide ET aucune offre
+  // Profil vide = pas encore configuré → toujours afficher
   const hasProfile = CFG.name && CFG.name.trim().length > 1;
-  const hasOffers  = OFFERS.length > 0;
-  return !hasProfile && !hasOffers;
+  return !hasProfile;
 }
 
 function startOnboarding() {
