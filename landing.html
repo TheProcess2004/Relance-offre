@@ -208,7 +208,7 @@ button { font-family: inherit; }
 .stats-inner { max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); }
 .stat-item { text-align: center; padding: 52px 28px; border-right: 1px solid var(--border); }
 .stat-item:last-child { border-right: none; }
-.stat-val { font-family: 'JetBrains Mono', monospace; font-size: clamp(46px,6vw,68px); font-weight: 600; letter-spacing: -2px; line-height: 1; display: inline-block; }
+.stat-val { font-family: 'Outfit', sans-serif; font-variant-numeric: tabular-nums; font-size: clamp(46px,6vw,68px); font-weight: 600; letter-spacing: -2px; line-height: 1; display: inline-block; }
 .sv-blue { color: var(--blue); }
 .sv-green { color: var(--green); }
 .sv-warm { color: #A06A20; }
@@ -267,7 +267,7 @@ button { font-family: inherit; }
 .tc-role { font-size: 11px; color: var(--muted2); margin-top: 2px; }
 /* Carte stat spéciale */
 .tc-stat { background: linear-gradient(140deg, var(--blue3), rgba(232,240,251,0.3)); border-color: rgba(21,85,168,0.16); justify-content: center; align-items: center; text-align: center; }
-.tc-stat-big { font-family: 'JetBrains Mono', monospace; font-size: 52px; font-weight: 600; letter-spacing: -2px; color: var(--blue); line-height: 1; }
+.tc-stat-big { font-family: 'Outfit', sans-serif; font-variant-numeric: tabular-nums; font-size: 52px; font-weight: 600; letter-spacing: -2px; color: var(--blue); line-height: 1; }
 .tc-stat-sub { font-size: 14px; font-weight: 600; color: var(--muted2); margin-top: 8px; }
 .tc-stat-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-top: 10px; }
 .tc-stat-note { font-size: 10px; color: var(--muted3); margin-top: 14px; line-height: 1.55; }
@@ -537,7 +537,7 @@ button { font-family: inherit; }
         <div class="sol-ico">📤</div>
         <div class="sol-label">01 · Envoyez</div>
         <div class="sol-title">L'offre part depuis votre adresse</div>
-        <div class="sol-desc">PDF glissé, email généré, envoi en votre nom via Brevo</div>
+        <div class="sol-desc">PDF glissé, email généré, envoi en votre nom depuis votre adresse</div>
       </div>
       <div class="sol-step">
         <div class="sol-ico">👁</div>
@@ -564,13 +564,13 @@ button { font-family: inherit; }
 <!-- ═══════════════ STATS ═══════════════ -->
 <section class="stats-section">
   <div class="stats-inner">
-    <div class="stat-item r">
-      <div class="stat-val sv-green" id="cnt-c">0</div>
+    <div class="stat-item" data-counter="cnt-c">
+      <div class="stat-val sv-green" id="cnt-c" style="font-family:'Outfit',sans-serif;">0</div>
       <div class="stat-desc">de taux de conversion en plus avec un suivi systématique</div>
     </div>
-    <div class="stat-item r d2">
+    <div class="stat-item" data-counter="cnt-p">
       <div>
-        <span class="stat-val sv-blue" id="cnt-p">0</span>
+        <span class="stat-val sv-blue" id="cnt-p" style="font-family:'Outfit',sans-serif;">0</span>
         <div class="stat-meta">
           <span class="sm-strike">649 CHF</span>
           <span class="sm-badge">−25%</span>
@@ -578,8 +578,8 @@ button { font-family: inherit; }
       </div>
       <div class="stat-desc">CHF/an — Offre de Pâques · économisez 159 CHF</div>
     </div>
-    <div class="stat-item r d3">
-      <div class="stat-val sv-warm" id="cnt-t">0</div>
+    <div class="stat-item" data-counter="cnt-t">
+      <div class="stat-val sv-warm" id="cnt-t" style="font-family:'Outfit',sans-serif;">0</div>
       <div class="stat-desc">fois moins de temps consacré aux relances manuelles</div>
     </div>
   </div>
@@ -689,8 +689,8 @@ button { font-family: inherit; }
           <div><div class="tc-name">S. Fontana</div><div class="tc-role">Consultante RH · Lausanne</div></div>
         </div>
       </div>
-      <div class="testi-card tc-stat r d2">
-        <div class="tc-stat-big" id="cnt-testi">0</div>
+      <div class="testi-card tc-stat r d2" data-counter="cnt-testi">
+        <div class="tc-stat-big" id="cnt-testi" style="font-family:'Outfit',sans-serif;">0</div>
         <div class="tc-stat-sub">⭐ 4.9 / 5</div>
         <div class="tc-stat-desc">Taux de conversion moyen en plus observé chez les utilisateurs Pro après 3 mois</div>
         <div class="tc-stat-note">Données agrégées · Comptes Pro actifs · Suisse romande & alémanique</div>
@@ -815,7 +815,7 @@ button { font-family: inherit; }
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      <a href="/cdn-cgi/l/email-protection#4c2f2322382d2f380c2a232020233b232a2a293e622f2321" class="s-card r">
+      <a href="mailto:contact@followoffer.com" class="s-card r">
         <div class="s-ico s-ico-b">✉️</div>
         <div><div class="s-title">Email · 7j/7</div><div class="s-sub"><span class="__cf_email__" data-cfemail="0c6f6362786d6f784c6a636060637b636a6a697e226f6361">[email&#160;protected]</span></div></div>
         <div class="s-arr">→</div>
@@ -859,7 +859,7 @@ button { font-family: inherit; }
     <a href="#tarifs">Tarifs</a>
     <a href="#faq">FAQ</a>
     <a href="/app">Tableau de bord</a>
-    <a href="/cdn-cgi/l/email-protection#3c5f5352485d5f487c5a535050534b535a5a594e125f5351" class="hl"><span class="__cf_email__" data-cfemail="e3808c8d97828097a3858c8f8f8c948c85858691cd808c8e">[email&#160;protected]</span></a>
+    <a href="mailto:contact@followoffer.com" class="hl">contact@followoffer.com</a>
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -885,22 +885,25 @@ function count(el, target, suffix, dur) {
     if(p < 1) requestAnimationFrame(tick);
   })(t0);
 }
-const co = new IntersectionObserver(en => {
-  en.forEach(e => {
-    if(e.isIntersecting && !e.target.dataset.done) {
-      e.target.dataset.done = '1';
-      const id = e.target.id;
-      if(id==='cnt-c')     count(e.target, 38, '%', 1800);
-      if(id==='cnt-p')     count(e.target, 490, '', 2200);
-      if(id==='cnt-t')     count(e.target, 3, 'x', 1300);
-      if(id==='cnt-testi') count(e.target, 38, '%', 1600);
-    }
+const counterCfg = {
+  'cnt-c':     [38,  '%',  1600],
+  'cnt-p':     [490, '',   2000],
+  'cnt-t':     [3,   'x',  1200],
+  'cnt-testi': [38,  '%',  1600],
+};
+const co = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(!entry.isIntersecting || entry.target.dataset.done) return;
+    entry.target.dataset.done = '1';
+    const cid = entry.target.dataset.counter;
+    const cfg = counterCfg[cid];
+    if(!cfg) return;
+    const el = document.getElementById(cid);
+    if(el) count(el, cfg[0], cfg[1], cfg[2]);
+    co.unobserve(entry.target);
   });
-}, { threshold: 0.7 });
-['cnt-c','cnt-p','cnt-t','cnt-testi'].forEach(id => {
-  const el = document.getElementById(id);
-  if(el) (el);
-});
+}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+document.querySelectorAll('[data-counter]').forEach(el => co.observe(el));
 
 // FAQ ACCORDION
 function toggleFaqItem(btn) {
@@ -912,24 +915,6 @@ function toggleFaqItem(btn) {
 }
 </script>
 <!-- ═══════════════ FOOTER ═══════════════ -->
-<footer class="footer">
-  <div class="foot-logo">
-    <span class="foot-brand">Follow<span class="o">Offer</span></span>
-    <svg width="14" height="14" viewBox="0 0 32 32" style="border-radius:2px;flex-shrink:0;"><rect width="32" height="32" fill="#C42B1C"/><rect x="13" y="6" width="6" height="20" fill="white"/><rect x="6" y="13" width="20" height="6" fill="white"/></svg>
-  </div>
-  <div class="foot-links">
-    <a href="#solution">Solution</a>
-    <a href="#fonctionnalites">Fonctionnalités</a>
-    <a href="#tarifs">Tarifs</a>
-    <a href="#faq">FAQ</a>
-    <a href="/app">Tableau de bord</a>
-    <a href="mailto:contact@followoffer.com" class="hl">contact@followoffer.com</a>
-  </div>
-  <div class="foot-copy">
-    © 2026 FollowOffer · Aubry MR
-    <div style="font-size:10px;margin-top:3px;color:var(--muted3)">2000 Neuchâtel · Suisse</div>
-  </div>
-</footer>
 
 </body>
 </html>
