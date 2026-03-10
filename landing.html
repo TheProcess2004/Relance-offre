@@ -96,28 +96,28 @@ button{font-family:inherit;}
 .t-item::before{content:"✓";color:#4AAA78;font-weight:800;font-size:11px;}
 
 /* ═══ TRANSITION + MOCKUP ═══ */
-.mockup-wrap-outer{background:linear-gradient(180deg,var(--hbg) 0%,#0F1828 35%,#1C2A42 60%,var(--bg) 100%);padding:0 24px 80px;}
+.mockup-wrap-outer{background:linear-gradient(180deg,var(--hbg) 0%,#0F1828 35%,#1C2A42 60%,var(--bg) 100%);padding:24px 24px 80px;}
 .mockup-section{max-width:1040px;margin:0 auto;}
-.mockup-wrap{border-radius:18px;overflow:hidden;border:1px solid rgba(232,237,246,0.10);box-shadow:0 0 0 1px rgba(21,85,168,0.18),0 30px 90px rgba(0,0,0,0.55),0 8px 30px rgba(0,0,0,0.35);transform:translateY(-16px);}
+.mockup-wrap{border-radius:18px;overflow:hidden;border:1px solid rgba(232,237,246,0.10);box-shadow:0 0 0 1px rgba(21,85,168,0.18),0 30px 90px rgba(0,0,0,0.55),0 8px 30px rgba(0,0,0,0.35);transform:translateY(0);}
 .mw-bar{height:40px;background:#1A1F2C;border-bottom:1px solid rgba(232,237,246,0.08);display:flex;align-items:center;padding:0 16px;gap:8px;}
 .mdot{width:11px;height:11px;border-radius:50%;}
 .mdot-r{background:#FF5F57;}.mdot-y{background:#FFBD2E;}.mdot-g{background:#28CA41;}
 .mw-url{flex:1;display:flex;justify-content:center;}
 .mw-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.10);padding:4px 14px;border-radius:6px;font-size:11px;color:rgba(232,237,246,0.45);font-family:'JetBrains Mono',monospace;}
-.mw-body{display:grid;grid-template-columns:180px 1fr;height:300px;}
-.mw-sb{background:var(--s1);border-right:1px solid var(--border);padding:16px 14px;display:flex;flex-direction:column;gap:4px;}
-.msb-logo{display:flex;align-items:center;gap:7px;padding:0 4px;margin-bottom:18px;}
+.mw-body{display:grid;grid-template-columns:180px 1fr;}
+.mw-sb{background:var(--s1);border-right:1px solid var(--border);padding:12px 10px;display:flex;flex-direction:column;gap:2px;}
+.msb-logo{display:flex;align-items:center;gap:7px;padding:0 4px;margin-bottom:12px;}
 .msb-brand{font-size:14px;font-weight:800;letter-spacing:-0.3px;color:var(--text);}
 .msb-brand .o{color:var(--blue);}
 .msb-nav{height:30px;border-radius:6px;display:flex;align-items:center;padding:0 10px;gap:8px;font-size:10px;color:var(--muted2);font-weight:600;transition:background 0.2s;}
 .msb-nav.on{background:var(--blue3);color:var(--blue);}
-.mw-main{padding:20px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto 1fr;gap:12px;background:var(--bg);}
-.m-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
-.m-kv{font-size:22px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;}
+.mw-main{padding:14px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;gap:8px;background:var(--bg);}
+.m-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
+.m-kv{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;}
 .m-kl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-top:5px;font-weight:600;}
-.m-chart{background:var(--bg2);border:1px solid var(--border);border-radius:10px;grid-column:span 3;padding:16px;}
-.m-ch-title{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
-.m-bar{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.m-chart{background:var(--bg2);border:1px solid var(--border);border-radius:10px;grid-column:span 3;padding:12px;}
+.m-ch-title{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.m-bar{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
 .m-bl{font-size:9px;color:var(--muted);width:56px;flex-shrink:0;font-weight:500;}
 .m-bt{flex:1;height:6px;background:var(--s2);border-radius:3px;overflow:hidden;}
 .m-bf{height:100%;border-radius:3px;}
@@ -474,6 +474,84 @@ button{font-family:inherit;}
   .de-footer .foot-copy { text-align: center; }
   .de-form .cf-row { grid-template-columns: 1fr; }
 }
+
+/* ══ LEGAL PANEL ══ */
+.legal-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.legal-overlay.open { opacity: 1; pointer-events: all; }
+.legal-panel {
+  width: 100%; max-width: 880px; max-height: 86vh;
+  background: #F8F9FB; border-radius: 20px 20px 0 0;
+  display: flex; flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.38s cubic-bezier(0.32,0.72,0,1);
+  overflow: hidden; box-shadow: 0 -20px 60px rgba(0,0,0,0.4);
+}
+.legal-overlay.open .legal-panel { transform: translateY(0); }
+.legal-panel-header {
+  background: #07080C; padding: 16px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.legal-panel-header h2 { font-size: 15px; font-weight: 700; color: white; margin: 0; }
+.legal-close {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); border: none;
+  color: white; font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s; line-height: 1;
+}
+.legal-close:hover { background: rgba(255,255,255,0.22); }
+.legal-tabs {
+  background: white; padding: 0 28px;
+  display: flex; gap: 2px; border-bottom: 1px solid #E2E8F0;
+  flex-shrink: 0;
+}
+.legal-tab {
+  padding: 11px 18px; border: none; background: none;
+  font-size: 13px; font-weight: 600; color: #64748B;
+  cursor: pointer; border-bottom: 3px solid transparent;
+  transition: all 0.18s; font-family: inherit; white-space: nowrap;
+}
+.legal-tab.active { color: #1555A8; border-bottom-color: #1555A8; }
+.legal-tab:hover { color: #1A1F2E; }
+.legal-body { overflow-y: auto; padding: 28px 36px 56px; flex: 1; }
+.legal-body h2 {
+  font-size: 19px; font-weight: 700; color: #1A1F2E;
+  margin: 32px 0 10px; padding-bottom: 8px;
+  border-bottom: 2px solid #E2E8F0;
+}
+.legal-body h2:first-child { margin-top: 0; }
+.legal-body h3 { font-size: 14px; font-weight: 700; color: #1A1F2E; margin: 20px 0 7px; }
+.legal-body p { color: #374151; margin-bottom: 10px; font-size: 13px; line-height: 1.7; }
+.legal-body ul { margin: 6px 0 14px 20px; }
+.legal-body li { color: #374151; font-size: 13px; margin-bottom: 5px; line-height: 1.6; }
+.legal-body a { color: #1555A8; }
+.legal-body strong { color: #1A1F2E; }
+.legal-body code { background: #F1F5F9; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+.legal-info-box {
+  background: #EFF6FF; border-left: 4px solid #1555A8;
+  padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 16px 0;
+  font-size: 13px; color: #1E40AF; line-height: 1.6;
+}
+.legal-body table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 12px; }
+.legal-body th { background: #F1F5F9; text-align: left; padding: 8px 12px; font-weight: 600; color: #1A1F2E; border: 1px solid #E2E8F0; }
+.legal-body td { padding: 8px 12px; border: 1px solid #E2E8F0; color: #374151; vertical-align: top; }
+.legal-body tr:nth-child(even) td { background: #F8FAFF; }
+.legal-date { font-size: 11px; color: #94A3B8; margin-top: 32px; padding-top: 12px; border-top: 1px solid #E2E8F0; }
+.lpanel { display: none; }
+.lpanel.active { display: block; }
+@media (max-width: 600px) {
+  .legal-panel { max-height: 92vh; }
+  .legal-body { padding: 20px 20px 48px; }
+  .legal-tabs { padding: 0 12px; overflow-x: auto; }
+  .legal-tab { padding: 10px 12px; font-size: 12px; }
+}
+
 </style>
 </head>
 <body>
@@ -833,9 +911,9 @@ button{font-family:inherit;}
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      <a href="mailto:contact@followoffer.com" class="de-s-card r">
+      <a href="/cdn-cgi/l/email-protection#84e7ebeaf0e5e7f0c4e2ebe8e8ebf3ebe2e2e1f6aae7ebe9" class="de-s-card r">
         <div class="de-s-ico de-s-ico-b">✉️</div>
-        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub">contact@followoffer.com</div></div>
+        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub"><span class="__cf_email__" data-cfemail="80e3efeef4e1e3f4c0e6efececeff7efe6e6e5f2aee3efed">[email&#160;protected]</span></div></div>
         <div style="color:rgba(226,232,244,0.25);font-size:14px;margin-left:auto;">→</div>
       </a>
       <div class="de-s-card r d1" style="cursor:default">
@@ -896,7 +974,7 @@ button{font-family:inherit;}
         </div>
         <div class="cf-field"><label class="cf-label" for="cf-message">Message</label><textarea class="cf-textarea" id="cf-message" placeholder="Décrivez votre besoin en quelques lignes..."></textarea></div>
         <button class="cf-btn" id="cf-btn" onclick="submitContact()"><span id="cf-btn-txt">Envoyer le message →</span></button>
-        <div class="cf-note">Réponse garantie sous 24h · <a href="mailto:contact@followoffer.com">contact@followoffer.com</a></div>
+        <div class="cf-note">Réponse garantie sous 24h · <a href="/cdn-cgi/l/email-protection#e1828e8f95808295a1878e8d8d8e968e87878493cf828e8c"><span class="__cf_email__" data-cfemail="65060a0b1104061125030a09090a120a030300174b060a08">[email&#160;protected]</span></a></div>
       </div>
       <div id="cf-success" style="display:none;text-align:center;padding:24px 0;">
         <div style="font-size:40px;margin-bottom:14px;">✅</div>
@@ -931,7 +1009,10 @@ button{font-family:inherit;}
     <a href="#faq">FAQ</a>
     <a href="#contact">Contact</a>
     <a href="/app">Tableau de bord</a>
-    <a href="mailto:contact@followoffer.com" class="hl">contact@followoffer.com</a>
+    <a href="#" onclick="openLegal('mentions');return false;">Mentions légales</a>
+    <a href="#" onclick="openLegal('cgv');return false;">CGV</a>
+    <a href="#" onclick="openLegal('confidentialite');return false;">Confidentialité</a>
+    <a href="/cdn-cgi/l/email-protection#7a1915140e1b190e3a1c151616150d151c1c1f0854191517" class="hl"><span class="__cf_email__" data-cfemail="7c1f1312081d1f083c1a131010130b131a1a190e521f1311">[email&#160;protected]</span></a>
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -939,7 +1020,7 @@ button{font-family:inherit;}
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══ NAV — switch dark/light au passage du hero ══
 const nav = document.getElementById('mainNav');
 const heroEl = document.querySelector('.hero');
@@ -1073,22 +1154,157 @@ async function submitContact() {
   } catch(e) {
     if(btnTxt) btnTxt.textContent = '❌ Erreur — réessayez';
     if(btn)    btn.disabled = false;
-    setTimeout(() => { if(btnTxt) btnTxt.textContent = 'Envoyer le message'; }, 3000);
+    setTimeout(() => { if(btnTxt) btnTxt.textContent = 'Envoyer le message'; if(btn) btn.disabled = false; }, 3000);
   }
 }
 
-// ══ SAFETY NET — force hero visible si animation bloquée ══
-setTimeout(function() {
-  var els = document.querySelectorAll('.hero-eyebrow,.hero-title,.hero-sub,.hero-actions,.hero-trust');
-  els.forEach(function(el) {
-    var computed = window.getComputedStyle(el);
-    if(parseFloat(computed.opacity) < 0.1) {
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-      el.style.animation = 'none';
-    }
-  });
-}, 800);
+// ══ LEGAL PANEL ══
+function openLegal(tab) {
+  document.getElementById('legal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if(tab) {
+    const btn = document.querySelector(`.legal-tab[data-tab="${tab}"]`);
+    legalTab(tab, btn);
+  }
+}
+function closeLegal() {
+  document.getElementById('legal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function legalTab(name, btn) {
+  document.querySelectorAll('.lpanel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.legal-tab').forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById('lpanel-' + name);
+  if(panel) panel.classList.add('active');
+  if(btn) btn.classList.add('active');
+  const body = document.querySelector('.legal-body');
+  if(body) body.scrollTop = 0;
+}
+if(window.location.hash.startsWith('#legal-')) {
+  const tab = window.location.hash.replace('#legal-','');
+  setTimeout(() => openLegal(tab), 400);
+}
 </script>
+
+<!-- ══ LEGAL PANEL ══ -->
+<div class="legal-overlay" id="legal-overlay" onclick="if(event.target===this)closeLegal()">
+  <div class="legal-panel">
+    <div class="legal-panel-header">
+      <h2>Informations légales — FollowOffer 🇨🇭</h2>
+      <button class="legal-close" onclick="closeLegal()">✕</button>
+    </div>
+    <div class="legal-tabs">
+      <button class="legal-tab active" data-tab="mentions" onclick="legalTab('mentions',this)">Mentions légales</button>
+      <button class="legal-tab" data-tab="cgv" onclick="legalTab('cgv',this)">CGV</button>
+      <button class="legal-tab" data-tab="confidentialite" onclick="legalTab('confidentialite',this)">Confidentialité</button>
+      <button class="legal-tab" data-tab="cookies" onclick="legalTab('cookies',this)">Cookies</button>
+    </div>
+    <div class="legal-body">
+
+      <div class="lpanel active" id="lpanel-mentions">
+        <h2>Mentions légales</h2>
+        <h3>Éditeur du service</h3>
+        <p><strong>FollowOffer</strong><br>2000 Neuchâtel, Suisse<br>
+        Email : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a><br>
+        Site : <a href="https://followoffer.com">followoffer.com</a></p>
+        <h3>Hébergement</h3>
+        <p>L'application FollowOffer est hébergée par <strong>Vercel Inc.</strong><br>
+        Les données utilisateurs sont stockées par <strong>Supabase Inc.</strong> sur des serveurs situés dans l'Union Européenne (région EU West).</p>
+        <h3>Responsabilité</h3>
+        <p>FollowOffer s'efforce de maintenir l'exactitude des informations diffusées. L'utilisateur reconnaît utiliser ces informations sous sa responsabilité exclusive.</p>
+        <h3>Propriété intellectuelle</h3>
+        <p>L'ensemble des éléments constituant le service FollowOffer sont la propriété exclusive de l'éditeur. Toute reproduction non autorisée est strictement interdite.</p>
+        <p class="legal-date">Document mis à jour en mars 2026.</p>
+      </div>
+
+      <div class="lpanel" id="lpanel-cgv">
+        <h2>Conditions Générales de Vente</h2>
+        <div class="legal-info-box">Ces conditions régissent l'accès et l'utilisation du service FollowOffer. En créant un compte, vous les acceptez dans leur intégralité.</div>
+        <h3>Article 1 — Objet</h3>
+        <p>FollowOffer est un service SaaS permettant de créer, envoyer et suivre des offres commerciales avec relances automatisées. Accessible sur <strong>followoffer.com</strong>.</p>
+        <h3>Article 2 — Plans et tarification</h3>
+        <table>
+          <tr><th>Plan</th><th>Prix</th><th>Inclus</th></tr>
+          <tr><td><strong>Gratuit</strong></td><td>0 CHF</td><td>Jusqu'à 5 offres, relances manuelles, 1 utilisateur</td></tr>
+          <tr><td><strong>Pro</strong></td><td>490 CHF / an</td><td>Offres illimitées, relances automatiques, tracking ouvertures, rapport IA, CRM clients, support prioritaire</td></tr>
+        </table>
+        <p>Tous les prix sont indiqués en Francs Suisses (CHF).</p>
+        <h3>Article 3 — Paiement</h3>
+        <p>Le paiement s'effectue par carte bancaire via <strong>Stripe</strong>. Facturation annuelle. Aucune donnée de paiement stockée sur nos serveurs.</p>
+        <h3>Article 4 — Remboursement</h3>
+        <p>Aucun remboursement après activation du plan payant. En cas de résiliation, l'accès Pro reste actif jusqu'à la fin de la période payée.</p>
+        <h3>Article 5 — Obligations de l'utilisateur</h3>
+        <ul>
+          <li>Utiliser le service dans un cadre professionnel légal</li>
+          <li>Ne pas envoyer de communications non sollicitées (spam)</li>
+          <li>Obtenir le consentement des destinataires de ses emails commerciaux (LPD)</li>
+          <li>Ne pas tenter de contourner les limites du plan gratuit</li>
+        </ul>
+        <h3>Article 6 — Résiliation</h3>
+        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>. Suppression des données sous 30 jours.</p>
+        <h3>Article 7 — Droit applicable</h3>
+        <p>CGV soumises au <strong>droit suisse</strong>. Tout litige relève de la compétence des tribunaux de Neuchâtel.</p>
+        <p class="legal-date">CGV en vigueur depuis mars 2026.</p>
+      </div>
+
+      <div class="lpanel" id="lpanel-confidentialite">
+        <h2>Politique de confidentialité</h2>
+        <div class="legal-info-box">Conforme à la <strong>Loi fédérale sur la protection des données (LPD)</strong> révisée en vigueur depuis le 1er septembre 2023, ainsi qu'au RGPD européen.</div>
+        <h3>1. Responsable du traitement</h3>
+        <p><strong>FollowOffer</strong> · 2000 Neuchâtel, Suisse<br>
+        <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
+        <h3>2. Données collectées</h3>
+        <table>
+          <tr><th>Catégorie</th><th>Données</th><th>Finalité</th></tr>
+          <tr><td><strong>Compte</strong></td><td>Email, mot de passe (hashé), prénom, nom</td><td>Authentification, communication</td></tr>
+          <tr><td><strong>Utilisation</strong></td><td>Offres créées, clients, textes générés</td><td>Fonctionnement du service</td></tr>
+          <tr><td><strong>Facturation</strong></td><td>Email, transactions (via Stripe)</td><td>Paiement, obligations comptables</td></tr>
+          <tr><td><strong>Tracking email</strong></td><td>Ouvertures d'emails (horodatage)</td><td>Suivi des offres</td></tr>
+          <tr><td><strong>Technique</strong></td><td>Logs d'accès, tokens de session</td><td>Sécurité, débogage</td></tr>
+        </table>
+        <h3>3. Sous-traitants</h3>
+        <table>
+          <tr><th>Sous-traitant</th><th>Pays</th><th>Rôle</th></tr>
+          <tr><td>Supabase</td><td>UE (EU West)</td><td>Base de données, authentification</td></tr>
+          <tr><td>Vercel</td><td>USA (SCCs)</td><td>Hébergement</td></tr>
+          <tr><td>Brevo</td><td>France / UE</td><td>Envoi d'emails</td></tr>
+          <tr><td>Stripe</td><td>USA (SCCs)</td><td>Paiement</td></tr>
+          <tr><td>Anthropic</td><td>USA (SCCs)</td><td>Génération de texte IA</td></tr>
+        </table>
+        <h3>4. Vos droits (LPD & RGPD)</h3>
+        <p>Accès, rectification, effacement, portabilité (export CSV dans l'app), opposition.<br>
+        Contact : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> — réponse sous 30 jours.<br>
+        Réclamation : <a href="https://www.edoeb.admin.ch" target="_blank">Préposé fédéral à la protection des données (PFPDT)</a>.</p>
+        <h3>5. Conservation des données</h3>
+        <ul>
+          <li>Compte actif : durée de vie du compte</li>
+          <li>Facturation : 10 ans (obligation légale suisse)</li>
+          <li>Logs techniques : 90 jours</li>
+          <li>Après résiliation : suppression sous 30 jours</li>
+        </ul>
+        <p class="legal-date">Politique en vigueur depuis mars 2026.</p>
+      </div>
+
+      <div class="lpanel" id="lpanel-cookies">
+        <h2>Cookies et tracking</h2>
+        <h3>Cookies utilisés</h3>
+        <table>
+          <tr><th>Cookie</th><th>Type</th><th>Durée</th><th>Finalité</th></tr>
+          <tr><td><code>of_refresh</code></td><td>Technique</td><td>Session</td><td>Maintien de la session (Supabase Auth)</td></tr>
+          <tr><td><code>of_cfg</code></td><td>Fonctionnel</td><td>Indéfini</td><td>Préférences utilisateur (signature, paramètres)</td></tr>
+          <tr><td>Cookies Stripe</td><td>Paiement</td><td>Variable</td><td>Sécurité lors du paiement</td></tr>
+        </table>
+        <div class="legal-info-box">FollowOffer n'utilise <strong>aucun cookie publicitaire</strong> et ne partage aucune donnée de navigation avec des régies publicitaires.</div>
+        <h3>Pixel de tracking email</h3>
+        <p>Lors de l'envoi d'une offre, un pixel invisible (2×2px) est inclus dans l'email pour détecter l'ouverture. Ces données restent dans votre espace FollowOffer et ne sont jamais partagées.</p>
+        <h3>Gestion de vos préférences</h3>
+        <p>Les cookies techniques sont nécessaires au fonctionnement. Vous pouvez les effacer depuis les paramètres de votre navigateur ou en vous déconnectant.</p>
+        <p class="legal-date">Politique en vigueur depuis mars 2026.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
