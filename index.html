@@ -3494,7 +3494,8 @@ async function doRegister() {
         });
       }
     } catch(e) {}
-    if(shouldShowOnboarding()) startOnboarding();
+    // Forcer l'onboarding à la création de compte (toujours, peu importe le plan)
+    if(!localStorage.getItem('of_onboarding_done')) startOnboarding();
   } catch(e) {
     errEl.textContent = e.message;
     errEl.style.display = 'block';
