@@ -3128,12 +3128,11 @@ async function doForgotPassword() {
   }
   showMsg('⏳ Envoi en cours...', 'var(--gold)', 'rgba(255,193,7,0.08)');
   try {
-    // Utiliser l'origine exacte (doit être dans Supabase Redirect URLs)
-    const redirectTo = window.location.origin;
-    const res = await fetch(SB_URL + '/auth/v1/recover', {
+    // Utiliser notre API qui envoie via Brevo (plus fiable que le SMTP Supabase natif)
+    const res = await fetch('/api/reset-password', {
       method: 'POST',
-      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, redirect_to: redirectTo })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
     });
     // Toujours afficher succès (sécurité : ne pas révéler si l'email existe)
     showMsg('✅ Si ce compte existe, un email de réinitialisation vient d\'être envoyé. Vérifiez vos spams.', 'var(--green)', 'rgba(30,148,100,0.08)');
@@ -3802,12 +3801,15 @@ async function obSaveProfile() {
   if(company) CFG.company = company;
   if(role) CFG.role = role;
   if(phone) CFG.phone = phone;
+  // Sauvegarder en localStorage IMMÉDIATEMENT (persistance refresh)
+  localStorage.setItem('of_cfg', JSON.stringify(CFG));
   if(name || company) {
     try {
-      for(const [k,v] of [['name',name],['company',company],['role',role],['phone',phone]]) {
-        if(v) await sbFetch('settings', {method:'POST', body:JSON.stringify({key:k, value:v}), headers:{'Prefer':'resolution=merge-duplicates,return=minimal','Content-Type':'application/json'}});
+      // Utiliser saveSetting qui gère user_id + RLS correctement
+      for(const [k,v] of [['name',name||''],['company',company||''],['role',role||''],['phone',phone||'']]) {
+        await saveSetting(k, v);
       }
-    } catch(e) {}
+    } catch(e) { console.warn('obSaveProfile error:', e.message); }
     updateUserUI();
   }
 }
@@ -3817,17 +3819,32 @@ async function obSaveEmail() {
   const key = document.getElementById('ob-brevo-key')?.value.trim();
   if(email) CFG.senderEmail = email;
   if(key) CFG.brevoKey = key;
+  // Sauvegarder en localStorage IMMÉDIATEMENT
+  localStorage.setItem('of_cfg', JSON.stringify(CFG));
   if(email || key) {
     try {
-      for(const [k,v] of [['senderEmail',email],['brevoKey',key]]) {
-        if(v) await sbFetch('settings', {method:'POST', body:JSON.stringify({key:k, value:v}), headers:{'Prefer':'resolution=merge-duplicates,return=minimal','Content-Type':'application/json'}});
-      }
-    } catch(e) {}
+      // Utiliser saveSetting qui gère user_id + RLS correctement
+      if(email) await saveSetting('senderEmail', email);
+      if(key) await saveSetting('brevoKey', key);
+    } catch(e) { console.warn('obSaveEmail error:', e.message); }
   }
 }
 
 function obFinish() {
   localStorage.setItem('of_onboarding_done','1');
+  // S'assurer que la config est bien en localStorage avant de fermer
+  localStorage.setItem('of_cfg', JSON.stringify(CFG));
+  // Peupler les champs de config pour cohérence immédiate
+  const setVal = (id, val) => { const el = document.getElementById(id); if(el && val) el.value = val; };
+  setVal('cfg-name', CFG.name);
+  setVal('cfg-name-email', CFG.name);
+  setVal('cfg-role', CFG.role);
+  setVal('cfg-company', CFG.company);
+  setVal('cfg-phone', CFG.phone);
+  setVal('cfg-sender-email', CFG.senderEmail);
+  updateSigPreview();
+  updateBrevoStatus();
+  updateUserUI();
   const overlay = document.getElementById('ob-overlay');
   if(overlay) overlay.classList.remove('open');
   go('nouvelle');
