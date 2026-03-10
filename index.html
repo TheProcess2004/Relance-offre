@@ -1387,6 +1387,7 @@ function row(o) {
     <div style="font-size:12px;color:${relColor};font-weight:${relDate==='Aujourd\'hui'||relDate==='En retard'?'600':'400'};">${relDate}</div>
     <div>${openTxt}</div>
     <div class="acts">
+      ${o.pdfUrl?`<button class="bic" onclick="event.stopPropagation();viewPDF(this.dataset.url,this.dataset.name)" data-url="${o.pdfUrl}" data-name="${(o.fichier||o.ref+'.pdf')}" title="Voir PDF">📄</button>`:''}
       <button class="bic" onclick="event.stopPropagation();confirmRelance('${o.id}')" title="Relancer">📧</button>
       <button class="bic" onclick="event.stopPropagation();actW('${o.id}')" title="Gagné">✓</button>
       <button class="bic" onclick="event.stopPropagation();actL('${o.id}')" title="Perdu">✕</button>
@@ -1777,7 +1778,7 @@ function openModal(id){
     <div class="m-acts">
       <button class="btn btn-ghost btn-sm" onclick="previewRelance('${o.id}')">👁 Voir relances</button>
       <button class="btn btn-ghost btn-sm" onclick="actR('${o.id}');closeModal()">📧 Relancer</button>
-      ${o.pdfUrl?`<button class="btn btn-blue btn-sm" onclick="viewPDF('${o.pdfUrl}','${o.fichier}')">📄 Voir PDF</button>`:''}
+      ${o.pdfUrl?`<button class="btn btn-blue btn-sm" onclick="viewPDF(this.dataset.url,this.dataset.name)" data-url="${o.pdfUrl}" data-name="${o.fichier||o.ref+'.pdf'}">📄 Voir PDF</button>`:''}
       <button class="btn btn-green btn-sm" onclick="askConfirm('won','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✓ Gagnée</button>
       <button class="btn btn-red btn-sm" onclick="askConfirm('lost','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✕ Perdue</button>
       <button class="btn btn-ghost btn-sm" onclick="editOffer('${o.id}')">✎ Modifier</button>
@@ -1807,7 +1808,7 @@ async function actR(id){
     ];
     let emailBody = '';
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (Relance ${rNum}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[rNum-1]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps du message (2-4 lignes selon le ton)\n3. Termine par une formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nNE PAS inclure le nom/signature — juste la formule finale.`}]})});
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (Relance ${rNum}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[rNum-1]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps du message (2-4 lignes selon le ton)\n3. Termine par une formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nNE PAS inclure le nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
       emailBody = data.content?.[0]?.text||'';
     } catch(e) { emailBody = `Bonjour ${o.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${o.ref} — ${o.objet} (${o.montant.toLocaleString('fr-CH')} CHF).\n\nAu plaisir d\'échanger avec vous,`; }
@@ -1922,18 +1923,20 @@ async function setFile(f){
 
   let extracted = {client:'', email:'', ref:'', montant:'', objet:''};
   try {
-    const ab = await f.arrayBuffer();
-    const bytes = new Uint8Array(ab);
-    let binary = '';
-    for(let i=0;i<bytes.byteLength;i++) binary += String.fromCharCode(bytes[i]);
-    const base64 = btoa(binary);
-    const mediaType = f.type === 'application/pdf' ? 'application/pdf' : f.type;
+    // Conversion base64 robuste (évite stack overflow sur gros fichiers)
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(f);
+    });
+    const mediaType = f.type || 'application/pdf';
 
     const response = await fetch('/api/generate', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-5',
         max_tokens: 500,
         messages: [{
           role: 'user',
@@ -1946,11 +1949,20 @@ async function setFile(f){
     });
     const data = await response.json();
     const txt = data.content?.[0]?.text || '';
-    const clean = txt.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(clean);
-    extracted = { client: parsed.client||'', email: parsed.email||'', ref: parsed.ref||'', montant: parsed.montant||'', objet: parsed.objet||'' };
+    // Nettoyage robuste: extrait le JSON même si l'IA ajoute du texte autour
+    const jsonMatch = txt.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('No JSON in response: ' + txt.slice(0,100));
+    const parsed = JSON.parse(jsonMatch[0]);
+    extracted = {
+      client: parsed.client || '',
+      email: parsed.email || '',
+      ref: parsed.ref || '',
+      montant: (parsed.montant || '').toString().replace(/[^0-9.]/g, ''),
+      objet: parsed.objet || ''
+    };
   } catch(err) {
-    console.error('Vision error:', err);
+    console.warn('Vision error:', err.message);
+    // Affiche quand même le formulaire vide pour saisie manuelle
   }
 
   // Show extract zone
@@ -2033,7 +2045,7 @@ RÈGLES ABSOLUES :
 Réponds UNIQUEMENT avec le corps de l'email, rien d'autre.`;
 
   try{
-    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:800,messages:[{role:'user',content:prompt}]})});
     const data=await r.json();
     const body=data.content.map(c=>c.text||'').join('');
     clearInterval(st);
@@ -2083,7 +2095,7 @@ async function sendOffer(){
   const clientFull=document.getElementById('ex-client')?.value||'Client';
   const email=document.getElementById('ex-email')?.value||'';
   const ref=document.getElementById('ex-ref')?.value||'OFF-NEW';
-  const montant=parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s']/g,''))||0;
+  const montant=parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s'.,](?=\d{3})/g,'').replace(/[^0-9.]/g,''))||0;
   const objet=document.getElementById('ex-objet')?.value||'';
   const contexte=document.getElementById('f-contexte')?.value||'';
   const parts=clientFull.split(' ');
@@ -2349,7 +2361,7 @@ async function previewRelance(id) {
   
   for(let i=0;i<3;i++) {
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps (2-4 lignes)\n3. Formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nPas de nom/signature — juste la formule finale.`}]})});
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps (2-4 lignes)\n3. Formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nPas de nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
       rpDrafts[i] = data.content?.[0]?.text||'';
       msgs[i] = rpDrafts[i];
@@ -2439,7 +2451,7 @@ async function previewRelance_obj(o) {
   const delays = ['J+3','J+7','J+14'];
   for(let i=0;i<3;i++) {
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps (2-4 lignes)\n3. Formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nPas de nom/signature — juste la formule finale.`}]})});
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Rédige une relance commerciale (${delays[i]}) pour une offre non répondue.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\nStyle: ${tones[i]}\n\nSTRUCTURE OBLIGATOIRE:\n1. Commence par "Bonjour ${o.prenom},"\n2. Corps (2-4 lignes)\n3. Formule de salutation adaptée au ton (ex: "Au plaisir d\'échanger avec vous,", "Bien cordialement,", "Sincères salutations,")\n\nPas de nom/signature — juste la formule finale.`}]})});
       const data = await r.json();
       rpDrafts[i] = data.content?.[0]?.text||'';
       msgs[i] = rpDrafts[i];
