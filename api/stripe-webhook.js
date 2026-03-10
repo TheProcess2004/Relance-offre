@@ -1,37 +1,49 @@
 // api/stripe-webhook.js — Vercel Serverless Function
-// Variables d'environnement nécessaires :
-// STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_URL, SUPABASE_SERVICE_KEY
+// Sans dépendance npm stripe — vérification signature manuelle
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-// Désactiver le bodyParser pour Stripe (nécessaire pour la vérification de signature)
 export const config = { api: { bodyParser: false } };
 
 async function buffer(readable) {
   const chunks = [];
-  for await (const chunk of readable) chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  for await (const chunk of readable) chunks.push(Buffer.from(chunk));
   return Buffer.concat(chunks);
+}
+
+// Vérification HMAC-SHA256 de la signature Stripe
+async function verifyStripeSignature(payload, sigHeader, secret) {
+  const parts = sigHeader.split(',');
+  const tPart = parts.find(p => p.startsWith('t='));
+  const v1Part = parts.find(p => p.startsWith('v1='));
+  if (!tPart || !v1Part) return false;
+  
+  const timestamp = tPart.substring(2);
+  const expectedSig = v1Part.substring(3);
+  const signedPayload = `${timestamp}.${payload}`;
+  
+  const key = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signedPayload));
+  const computedSig = Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('');
+  return computedSig === expectedSig;
 }
 
 async function updateSupabasePlan(userId, plan, status, customerId, subscriptionId) {
   const SB_URL = process.env.SUPABASE_URL;
   const SB_KEY = process.env.SUPABASE_SERVICE_KEY;
-
   const fields = [
     { key: 'plan', value: plan },
     { key: 'plan_status', value: status },
     { key: 'stripe_customer_id', value: customerId || '' },
     { key: 'stripe_subscription_id', value: subscriptionId || '' },
   ];
-
   for (const { key, value } of fields) {
     await fetch(`${SB_URL}/rest/v1/settings`, {
       method: 'POST',
       headers: {
-        'apikey': SB_KEY,
-        'Authorization': `Bearer ${SB_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates'
+        'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify({ user_id: userId, key, value })
     });
@@ -40,58 +52,62 @@ async function updateSupabasePlan(userId, plan, status, customerId, subscription
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
-
+  
   const sig = req.headers['stripe-signature'];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-  let event;
+  
+  let buf, bodyStr;
   try {
-    const buf = await buffer(req);
-    event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
+    buf = await buffer(req);
+    bodyStr = buf.toString('utf8');
   } catch (err) {
-    console.error('Webhook signature error:', err.message);
-    return res.status(400).json({ error: `Webhook Error: ${err.message}` });
+    return res.status(400).json({ error: 'Cannot read body' });
   }
 
-  const obj = event.data.object;
+  // Vérifier signature
+  if (webhookSecret && sig) {
+    const valid = await verifyStripeSignature(bodyStr, sig, webhookSecret);
+    if (!valid) return res.status(400).json({ error: 'Invalid signature' });
+  }
+
+  let event;
+  try { event = JSON.parse(bodyStr); }
+  catch (err) { return res.status(400).json({ error: 'Invalid JSON' }); }
+
+  const obj = event.data?.object;
+  
+  // Récupérer un abonnement Stripe via l'API REST
+  async function getSubscription(subId) {
+    const r = await fetch(`https://api.stripe.com/v1/subscriptions/${subId}`, {
+      headers: { 'Authorization': 'Basic ' + Buffer.from(process.env.STRIPE_SECRET_KEY + ':').toString('base64') }
+    });
+    return r.json();
+  }
 
   try {
     switch (event.type) {
-
-      // Paiement réussi → activer Pro
       case 'checkout.session.completed': {
         const userId = obj.metadata?.user_id;
-        if (!userId) break;
-        await updateSupabasePlan(userId, 'pro', 'active', obj.customer, obj.subscription);
-        console.log(`✅ Pro activé pour user ${userId}`);
+        if (userId) await updateSupabasePlan(userId, 'pro', 'active', obj.customer, obj.subscription);
         break;
       }
-
-      // Renouvellement réussi → maintenir Pro
       case 'invoice.payment_succeeded': {
-        const sub = await stripe.subscriptions.retrieve(obj.subscription);
+        if (!obj.subscription) break;
+        const sub = await getSubscription(obj.subscription);
         const userId = sub.metadata?.user_id;
-        if (!userId) break;
-        await updateSupabasePlan(userId, 'pro', 'active', obj.customer, obj.subscription);
+        if (userId) await updateSupabasePlan(userId, 'pro', 'active', obj.customer, obj.subscription);
         break;
       }
-
-      // Paiement échoué → passer en past_due
       case 'invoice.payment_failed': {
-        const sub = await stripe.subscriptions.retrieve(obj.subscription);
+        if (!obj.subscription) break;
+        const sub = await getSubscription(obj.subscription);
         const userId = sub.metadata?.user_id;
-        if (!userId) break;
-        await updateSupabasePlan(userId, 'pro', 'past_due', obj.customer, obj.subscription);
-        console.log(`⚠️ Paiement échoué pour user ${userId}`);
+        if (userId) await updateSupabasePlan(userId, 'pro', 'past_due', obj.customer, obj.subscription);
         break;
       }
-
-      // Abonnement annulé → repasser en gratuit
       case 'customer.subscription.deleted': {
         const userId = obj.metadata?.user_id;
-        if (!userId) break;
-        await updateSupabasePlan(userId, 'free', 'active', obj.customer, '');
-        console.log(`🔻 Abonnement annulé pour user ${userId}`);
+        if (userId) await updateSupabasePlan(userId, 'free', 'active', obj.customer, '');
         break;
       }
     }
