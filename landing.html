@@ -402,7 +402,28 @@ button { font-family: inherit; }
   .mw-sb { display: none; }
   .footer { grid-template-columns: 1fr; text-align: center; gap: 20px; padding: 32px 24px; }
   .foot-copy { text-align: center; }
+  .comp-table th, .comp-table td { padding: 12px 10px; font-size: 12px; }
+  .comp-th-label { display: none; }
 }
+
+/* COMPARATEUR */
+.comp-section { padding: 80px 24px; background: #fff; border-top: 1px solid var(--border); }
+.comp-inner { max-width: 900px; margin: 0 auto; }
+.comp-table { width: 100%; border-collapse: collapse; border-radius: 14px; overflow: hidden; border: 1px solid #E5E7EB; box-shadow: 0 4px 24px rgba(0,0,0,0.05); }
+.comp-table thead tr { background: #F8F9FB; }
+.comp-table th { padding: 18px 20px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #9CA3AF; border-bottom: 2px solid #E5E7EB; }
+.comp-table th.comp-th-fo { background: #EEF4FF; border-bottom: 2px solid #1555A8; color: #1555A8; }
+.comp-table td { padding: 14px 20px; font-size: 13px; color: #374151; border-bottom: 1px solid #F3F4F6; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table tr:nth-child(even) td { background: #FAFAFA; }
+.comp-table tr:nth-child(even) td.comp-fo { background: #F0F7FF; }
+.comp-table td.comp-fo { background: #F5F8FF; text-align: center; }
+.comp-table td.comp-other { text-align: center; }
+.comp-check { color: #1555A8; font-size: 18px; font-weight: 800; }
+.comp-cross { color: #EF4444; font-size: 18px; }
+.comp-partial { font-size: 11px; color: #9CA3AF; }
+.comp-price-row td { padding: 16px 20px; font-weight: 700; }
+.comp-price-fo { background: #EEF4FF !important; }
 </style>
 </head>
 <body>
@@ -726,6 +747,88 @@ button { font-family: inherit; }
   </div>
 </section>
 
+<!-- ═══════════════ COMPARATEUR ═══════════════ -->
+<section class="comp-section" id="comparateur">
+  <div class="comp-inner">
+    <div class="eyebrow r" style="text-align:center;color:#1555A8;">Comparaison</div>
+    <h2 class="section-title r d1" style="text-align:center">Pourquoi FollowOffer<br><em>plutôt qu'un autre outil ?</em></h2>
+    <p class="r d2" style="font-size:15px;color:var(--muted);text-align:center;margin-top:10px;margin-bottom:48px;">Conçu pour les PME romandes — pas pour les grandes équipes commerciales.</p>
+
+    <div style="overflow-x:auto;">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="comp-th-label" style="text-align:left;width:36%;">Fonctionnalité</th>
+            <th class="comp-th-fo" style="width:22%;">✦ FollowOffer<br><span style="font-size:11px;font-weight:500;">490 CHF / an</span></th>
+            <th style="width:21%;">CRM Généraliste<br><span style="font-size:10px;font-weight:400;color:#9CA3AF;">dès 400–1200 CHF/an</span></th>
+            <th style="width:21%;">Tableur / Excel<br><span style="font-size:10px;font-weight:400;color:#9CA3AF;">Manuel · 0–150 CHF</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:500;">Suivi automatique des offres envoyées</td>
+            <td class="comp-fo"><span class="comp-check">✓</span></td>
+            <td class="comp-other"><span class="comp-partial">Partiel</span></td>
+            <td class="comp-other"><span class="comp-cross">✕</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500;">Relances automatiques par email</td>
+            <td class="comp-fo"><span class="comp-check">✓</span></td>
+            <td class="comp-other"><span class="comp-partial">Add-on payant</span></td>
+            <td class="comp-other"><span class="comp-cross">✕</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500;">Tracking ouverture d'email</td>
+            <td class="comp-fo"><span class="comp-check">✓</span></td>
+            <td class="comp-other"><span class="comp-partial">Certains seulement</span></td>
+            <td class="comp-other"><span class="comp-cross">✕</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500;">Génération email par IA</td>
+            <td class="comp-fo"><span class="comp-check">✓</span></td>
+            <td class="comp-other"><span class="comp-cross">✕</span></td>
+            <td class="comp-other"><span class="comp-cross">✕</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500;">Prise en main en moins de 10 min</td>
+            <td class="comp-fo"><span class="comp-check">✓</span></td>
+            <td class="comp-other"><span class="comp-cross">✕</span><br><span style="font-size:10px;color:#9CA3AF;">Formation requise</span></td>
+            <td class="comp-other"><span style="font-size:16px;color:#6B7280;">~</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500;">Support en français · Suisse</td>
+            <td class="comp-fo"><span class="comp-check">✓</span></td>
+            <td class="comp-other"><span class="comp-partial">Anglais prioritaire</span></td>
+            <td class="comp-other"><span class="comp-cross">✕</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500;">Conçu pour PME 1–20 personnes</td>
+            <td class="comp-fo"><span class="comp-check">✓</span></td>
+            <td class="comp-other"><span class="comp-partial">Grandes équipes d'abord</span></td>
+            <td class="comp-other"><span style="font-size:16px;color:#6B7280;">~</span></td>
+          </tr>
+          <tr class="comp-price-row">
+            <td style="font-weight:700;color:#0F1728;">Tarif annuel tout compris</td>
+            <td class="comp-fo comp-price-fo" style="text-align:center;">
+              <div style="font-size:22px;font-weight:800;color:#1555A8;">490 CHF</div>
+              <div style="font-size:11px;color:#1555A8;margin-top:2px;">Tout inclus · Sans surprise</div>
+            </td>
+            <td class="comp-other">
+              <div style="font-size:15px;font-weight:700;">400–1200 CHF</div>
+              <div style="font-size:10px;color:#9CA3AF;">+ modules + formation</div>
+            </td>
+            <td class="comp-other">
+              <div style="font-size:15px;font-weight:700;">0–150 CHF</div>
+              <div style="font-size:10px;color:#9CA3AF;">mais 2h de travail manuel/sem.</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="text-align:center;font-size:11px;color:#9CA3AF;margin-top:14px;">Comparaison indicative basée sur les offres publiques disponibles au 01.03.2026. FollowOffer est spécialisé offres commerciales — non un CRM complet.</p>
+  </div>
+</section>
+
 <!-- ═══════════════ PRICING ═══════════════ -->
 <section class="pricing-section" id="tarifs">
   <div class="pricing-inner">
@@ -817,7 +920,7 @@ button { font-family: inherit; }
     <div class="s-cards">
       <a href="mailto:contact@followoffer.com" class="s-card r">
         <div class="s-ico s-ico-b">✉️</div>
-        <div><div class="s-title">Email · 7j/7</div><div class="s-sub"><span class="__cf_email__" data-cfemail="0c6f6362786d6f784c6a636060637b636a6a697e226f6361">[email&#160;protected]</span></div></div>
+        <div><div class="s-title">Email · 7j/7</div><div class="s-sub">contact@followoffer.com</div></div>
         <div class="s-arr">→</div>
       </a>
       <div class="s-card r d1" style="cursor:default">
