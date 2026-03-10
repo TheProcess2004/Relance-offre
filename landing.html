@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FollowOffer — Le suivi commercial structuré pour les PME suisses</title>
 <meta name="description" content="Envoyez vos offres, suivez les ouvertures, relancez automatiquement. Le suivi commercial professionnel pour les indépendants et PME suisses. Essai gratuit.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231555A8'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Outfit,sans-serif' font-weight='800' font-size='14' fill='white'%3EFO%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -575,7 +576,7 @@ button { font-family: inherit; }
           <span class="sm-badge">−25%</span>
         </div>
       </div>
-      <div class="stat-desc">CHF/an — offre de lancement · économisez 159 CHF</div>
+      <div class="stat-desc">CHF/an — Offre de Pâques · économisez 159 CHF</div>
     </div>
     <div class="stat-item r d3">
       <div class="stat-val sv-warm" id="cnt-t">0</div>
@@ -754,7 +755,7 @@ button { font-family: inherit; }
         <div class="p-price-row"><div class="p-price">490</div><div class="p-unit">CHF/an</div></div>
         <div class="p-old">649 CHF <span class="p-discount">−25%</span></div>
         <div class="p-period">≈ 40.83 CHF / mois · Facturé annuellement</div>
-        <div class="p-save">Économisez 159 CHF · Offre de lancement</div>
+        <div class="p-save">Économisez 159 CHF · Offre de Pâques</div>
         <ul class="p-feats">
           <li><span class="pck" style="color:var(--green)">✓</span>Offres illimitées</li>
           <li><span class="pck" style="color:var(--green)">✓</span>Relances automatiques J+3 / J+7 / J+14</li>
@@ -778,28 +779,28 @@ button { font-family: inherit; }
     <h2 class="section-title r d1" style="text-align:center">Tout ce que vous<br><em>voulez savoir.</em></h2>
     <div class="faq-list">
       <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Comment fonctionnent les relances automatiques ?<span class="faq-arr">+</span></button>
+        <button class="faq-q" onclick="toggleFaqItem(this)">Comment fonctionnent les relances automatiques ?<span class="faq-arr">+</span></button>
         <div class="faq-a"><p>Après l'envoi de votre offre, FollowOffer programme 3 relances aux intervalles que vous définissez (J+3, J+7, J+14 par défaut). Chaque email est généré par IA selon votre contexte, puis envoyé en votre nom. Vous pouvez modifier les délais ou désactiver les relances à tout moment.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Puis-je personnaliser les emails de relance ?<span class="faq-arr">+</span></button>
+        <button class="faq-q" onclick="toggleFaqItem(this)">Puis-je personnaliser les emails de relance ?<span class="faq-arr">+</span></button>
         <div class="faq-a"><p>Oui. Avant chaque envoi, vous pouvez relire, modifier ou valider l'email généré. Vous définissez le ton (formel, direct, concis) et les éléments clés à inclure. Le système s'adapte au style de chaque commercial.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Est-ce adapté à une petite entreprise ou un indépendant ?<span class="faq-arr">+</span></button>
+        <button class="faq-q" onclick="toggleFaqItem(this)">Est-ce adapté à une petite entreprise ou un indépendant ?<span class="faq-arr">+</span></button>
         <div class="faq-a"><p>FollowOffer est précisément conçu pour les indépendants, PME et petites équipes commerciales. Pas de formation requise, prise en main en 5 minutes, interface épurée. Pas besoin d'un CRM complexe.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Mes données sont-elles sécurisées ?<span class="faq-arr">+</span></button>
+        <button class="faq-q" onclick="toggleFaqItem(this)">Mes données sont-elles sécurisées ?<span class="faq-arr">+</span></button>
         <div class="faq-a"><p>Oui. Données stockées sur Supabase avec chiffrement et isolation par compte. Paiements via Stripe (certifié PCI-DSS). Vos données ne sont jamais vendues ni partagées avec des tiers.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Puis-je essayer gratuitement ?<span class="faq-arr">+</span></button>
+        <button class="faq-q" onclick="toggleFaqItem(this)">Puis-je essayer gratuitement ?<span class="faq-arr">+</span></button>
         <div class="faq-a"><p>Oui. Le plan gratuit est disponible sans carte bancaire et permet d'envoyer jusqu'à 5 offres par mois. Vous pouvez passer à Pro à tout moment depuis votre espace en quelques clics.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Quel outil d'email est nécessaire ?<span class="faq-arr">+</span></button>
-        <div class="faq-a"><p>FollowOffer utilise Brevo (ex-Sendinblue) pour les envois. Un compte Brevo gratuit suffit pour commencer. Vous conservez votre propre adresse expéditeur. Aucun changement dans votre infrastructure existante.</p></div>
+        <button class="faq-q" onclick="toggleFaqItem(this)">Comment sont envoyés les emails ?<span class="faq-arr">+</span></button>
+        <div class="faq-a"><p>Les emails partent directement depuis votre adresse — le destinataire voit votre nom et votre adresse habituelle. Aucune configuration technique nécessaire pour démarrer.</p></div>
       </div>
     </div>
   </div>
@@ -812,12 +813,11 @@ button { font-family: inherit; }
       <div class="eyebrow r">Support</div>
       <h2 class="section-title r d1">Une question ?<br><em>On répond.</em></h2>
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
-      <div class="ch-line r d3" style="margin-top:20px;">Support suisse · Neuchâtel</div>
     </div>
     <div class="s-cards">
-      <a href="mailto:contact@followoffer.com" class="s-card r">
+      <a href="/cdn-cgi/l/email-protection#4c2f2322382d2f380c2a232020233b232a2a293e622f2321" class="s-card r">
         <div class="s-ico s-ico-b">✉️</div>
-        <div><div class="s-title">Email · 7j/7</div><div class="s-sub">contact@followoffer.com</div></div>
+        <div><div class="s-title">Email · 7j/7</div><div class="s-sub"><span class="__cf_email__" data-cfemail="0c6f6362786d6f784c6a636060637b636a6a697e226f6361">[email&#160;protected]</span></div></div>
         <div class="s-arr">→</div>
       </a>
       <div class="s-card r d1" style="cursor:default">
@@ -859,7 +859,7 @@ button { font-family: inherit; }
     <a href="#tarifs">Tarifs</a>
     <a href="#faq">FAQ</a>
     <a href="/app">Tableau de bord</a>
-    <a href="mailto:contact@followoffer.com" class="hl">contact@followoffer.com</a>
+    <a href="/cdn-cgi/l/email-protection#3c5f5352485d5f487c5a535050534b535a5a594e125f5351" class="hl"><span class="__cf_email__" data-cfemail="e3808c8d97828097a3858c8f8f8c948c85858691cd808c8e">[email&#160;protected]</span></a>
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -867,7 +867,7 @@ button { font-family: inherit; }
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // NAV
 const nav = document.getElementById('mainNav');
 window.addEventListener('scroll', () => { nav.classList.toggle('stuck', window.scrollY > 50); }, { passive: true });
@@ -899,17 +899,4 @@ const co = new IntersectionObserver(en => {
 }, { threshold: 0.7 });
 ['cnt-c','cnt-p','cnt-t','cnt-testi'].forEach(id => {
   const el = document.getElementById(id);
-  if(el) co.observe(el);
-});
-
-// FAQ ACCORDION
-function faq(btn) {
-  const ans = btn.nextElementSibling;
-  const isOpen = ans.classList.contains('open');
-  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
-  document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('open'));
-  if(!isOpen) { ans.classList.add('open'); btn.classList.add('open'); }
-}
-</script>
-</body>
-</html>
+  if(el) co.observe
