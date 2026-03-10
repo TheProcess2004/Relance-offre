@@ -6,683 +6,520 @@
 <title>FollowOffer — Chaque relance compte</title>
 <meta name="description" content="Suite commerciale suisse. Envoyez vos offres, trackez les ouvertures, relancez automatiquement. 490 CHF/an.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --bg:#07090E;
-  --s1:#0C1018;
-  --s2:#111820;
-  --border:rgba(160,185,220,0.10);
-  --border2:rgba(160,185,220,0.18);
-  --blue:#4D90DC;
-  --blue-d:rgba(77,144,220,0.12);
-  --gold:#E9B84A;
-  --gold-d:rgba(233,184,74,0.10);
-  --green:#1E9464;
-  --text:#ECF0FA;
-  --muted:rgba(195,210,235,0.65);
-  --muted2:rgba(160,185,215,0.38);
-}
+:root{--bg:#07090E;--s1:#0C1018;--s2:#111820;--s3:#161E28;--border:rgba(160,185,220,0.08);--border2:rgba(160,185,220,0.18);--blue:#1A73B0;--blue2:#4D90DC;--gold:#C4A055;--green:#1E9464;--red:#C03535;--text:#ECF0FA;--muted:rgba(195,210,235,0.70);--muted2:rgba(160,185,215,0.42);--muted3:rgba(160,185,215,0.22);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
 
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(7,9,14,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{display:flex;align-items:center;gap:7px;}
-.nav-logo span{font-size:17px;font-weight:800;letter-spacing:-0.4px;color:var(--text);}
-.nav-logo span em{font-style:normal;color:var(--blue);}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(7,9,14,0);border-bottom:1px solid transparent;backdrop-filter:blur(0);transition:all 0.4s ease;}
+.nav.scrolled{background:rgba(7,9,14,0.94);border-color:var(--border);backdrop-filter:blur(20px);}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.logo-txt{font-size:18px;font-weight:800;letter-spacing:-0.5px;}
+.logo-txt span{color:var(--blue2);}
 .nav-links{display:flex;align-items:center;gap:28px;}
-.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500;transition:color 0.2s;}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.2s;font-weight:500;}
 .nav-links a:hover{color:var(--text);}
-.nav-cta{display:flex;align-items:center;gap:10px;}
-.btn-outline{padding:8px 18px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-weight:600;color:var(--text);background:transparent;cursor:pointer;text-decoration:none;transition:all 0.2s;font-family:'Outfit',sans-serif;}
-.btn-outline:hover{background:var(--s2);border-color:var(--blue);}
-.btn-primary{padding:8px 20px;border:none;border-radius:8px;font-size:13px;font-weight:700;color:#fff;background:var(--blue);cursor:pointer;text-decoration:none;font-family:'Outfit',sans-serif;transition:all 0.2s;}
-.btn-primary:hover{background:#3d7bc9;transform:translateY(-1px);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-nav-ghost{font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;font-weight:500;padding:7px 14px;border-radius:8px;transition:color 0.2s;text-decoration:none;}
+.btn-nav-ghost:hover{color:var(--text);}
+.btn-nav-cta{font-size:13px;font-weight:700;color:#fff;background:var(--blue);border:none;cursor:pointer;font-family:inherit;padding:8px 18px;border-radius:9px;transition:all 0.2s;text-decoration:none;}
+.btn-nav-cta:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(77,144,220,0.3);}
 
-/* ── HERO ── */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(77,144,220,0.08),transparent 70%);pointer-events:none;}
-.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--s1);border:1px solid var(--border2);border-radius:20px;padding:6px 14px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:28px;}
-.hero-badge span{width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block;box-shadow:0 0 8px rgba(30,148,100,0.6);}
-.hero h1{font-size:clamp(40px,7vw,78px);font-weight:900;letter-spacing:-2.5px;line-height:0.95;margin-bottom:24px;color:var(--text);}
-.hero h1 em{font-style:normal;color:var(--blue);}
-.hero h1 .serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;}
-.hero-sub{font-size:clamp(15px,2.2vw,20px);color:var(--muted);max-width:560px;line-height:1.6;margin-bottom:40px;font-weight:400;}
-.hero-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;}
-.btn-hero{padding:14px 32px;border:none;border-radius:10px;font-size:15px;font-weight:700;color:#fff;background:var(--blue);cursor:pointer;text-decoration:none;font-family:'Outfit',sans-serif;transition:all 0.25s;letter-spacing:-0.2px;}
-.btn-hero:hover{background:#3d7bc9;transform:translateY(-2px);box-shadow:0 8px 32px rgba(77,144,220,0.3);}
-.btn-hero-ghost{padding:14px 28px;border:1px solid var(--border2);border-radius:10px;font-size:15px;font-weight:600;color:var(--text);background:transparent;cursor:pointer;text-decoration:none;font-family:'Outfit',sans-serif;transition:all 0.2s;}
-.btn-hero-ghost:hover{background:var(--s1);border-color:var(--border2);}
-.hero-note{margin-top:20px;font-size:12px;color:var(--muted2);}
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 80px;position:relative;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;}
+.orb1{width:600px;height:600px;background:rgba(26,115,176,0.13);top:-150px;left:-150px;animation:f1 16s ease-in-out infinite;}
+.orb2{width:400px;height:400px;background:rgba(196,160,85,0.09);top:30%;right:-100px;animation:f2 20s ease-in-out infinite;}
+.orb3{width:350px;height:350px;background:rgba(30,148,100,0.07);bottom:-80px;left:35%;animation:f3 18s ease-in-out infinite;}
+@keyframes f1{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,-30px);}}
+@keyframes f2{0%,100%{transform:translate(0,0);}50%{transform:translate(-30px,25px);}}
+@keyframes f3{0%,100%{transform:translate(0,0);}50%{transform:translate(20px,-20px);}}
+.hero-grid{position:absolute;inset:0;z-index:0;opacity:0.022;background-image:linear-gradient(rgba(160,185,220,0.5) 1px,transparent 1px),linear-gradient(90deg,rgba(160,185,220,0.5) 1px,transparent 1px);background-size:60px 60px;}
+.hero-inner{position:relative;z-index:1;max-width:860px;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:100px;background:rgba(26,115,176,0.12);border:1px solid rgba(26,115,176,0.25);font-size:11px;font-weight:600;color:var(--blue2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:28px;animation:fd 0.7s 0.1s both;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--blue2);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+.hero-title{font-size:clamp(42px,7.5vw,90px);font-weight:900;line-height:0.93;letter-spacing:-3px;margin-bottom:24px;animation:fd 0.8s 0.2s both;}
+.hero-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--blue2);letter-spacing:-2px;}
+.hero-title .muted{color:var(--muted2);font-size:0.7em;letter-spacing:-1px;}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--muted);line-height:1.65;max-width:540px;margin:0 auto 40px;animation:fd 0.8s 0.35s both;}
+.hero-cta{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:48px;animation:fd 0.8s 0.5s both;}
+.btn-hero{font-size:15px;font-weight:700;color:#fff;background:var(--blue);padding:14px 32px;border-radius:12px;border:none;cursor:pointer;font-family:inherit;text-decoration:none;transition:all 0.25s;}
+.btn-hero:hover{background:var(--blue2);transform:translateY(-2px);box-shadow:0 8px 28px rgba(77,144,220,0.4);}
+.btn-hero-ghost{font-size:14px;font-weight:600;color:var(--muted);background:transparent;border:1px solid var(--border2);padding:13px 28px;border-radius:12px;cursor:pointer;font-family:inherit;text-decoration:none;transition:all 0.2s;}
+.btn-hero-ghost:hover{color:var(--text);border-color:rgba(160,185,220,0.32);}
+.hero-proof{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;animation:fd 0.8s 0.65s both;}
+.proof-item{font-size:12px;color:var(--muted3);display:flex;align-items:center;gap:6px;}
+.proof-item::before{content:"✓";color:var(--green);font-weight:700;font-size:11px;}
+@keyframes fd{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
 
-/* ── APP PREVIEW ── */
-.preview{padding:0 24px 100px;display:flex;justify-content:center;}
-.preview-wrap{position:relative;max-width:1000px;width:100%;}
-.preview-glow{position:absolute;top:10%;left:50%;transform:translateX(-50%);width:70%;height:60%;background:radial-gradient(ellipse,rgba(77,144,220,0.12),transparent 70%);pointer-events:none;z-index:0;}
-.preview-frame{position:relative;z-index:1;background:var(--s1);border:1px solid var(--border2);border-radius:16px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,0.6);aspect-ratio:16/9;display:flex;flex-direction:column;}
-.frame-bar{background:var(--s2);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.frame-dot{width:10px;height:10px;border-radius:50%;}
-.frame-url{flex:1;background:rgba(255,255,255,0.04);border-radius:6px;padding:4px 12px;font-size:11px;color:var(--muted2);text-align:center;}
-.frame-body{flex:1;padding:20px;display:grid;grid-template-columns:140px 1fr;gap:0;overflow:hidden;}
-.frame-sb{background:var(--s2);border-right:1px solid var(--border);padding:14px 10px;display:flex;flex-direction:column;gap:4px;}
-.fsb-logo{font-size:11px;font-weight:800;color:var(--text);margin-bottom:10px;padding:0 6px;}
-.fsb-logo em{font-style:normal;color:var(--blue);}
-.fsb-item{padding:6px 8px;border-radius:6px;font-size:10px;color:var(--muted);cursor:default;}
-.fsb-item.act{background:var(--blue-d);color:var(--blue);font-weight:600;}
-.frame-main{padding:16px;display:flex;flex-direction:column;gap:12px;overflow:hidden;}
-.frame-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.fkpi{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
-.fkpi-lbl{font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
-.fkpi-val{font-size:18px;font-weight:800;color:var(--text);}
-.fkpi-val.blue{color:var(--blue);}
-.fkpi-val.green{color:var(--green);}
-.fkpi-val.gold{color:var(--gold);}
-.frame-row{display:grid;grid-template-columns:1.5fr 1fr;gap:8px;flex:1;overflow:hidden;}
-.fcard{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;overflow:hidden;}
-.fcard-t{font-size:10px;color:var(--muted);margin-bottom:8px;font-style:italic;}
-.pipeline-bar{display:flex;flex-direction:column;gap:5px;}
-.pb-row{display:flex;align-items:center;gap:8px;font-size:9px;color:var(--muted);}
-.pb-bar{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
-.pb-fill{height:100%;border-radius:3px;}
-.donut-wrap{display:flex;align-items:center;justify-content:center;height:100%;opacity:0.7;}
+/* SCROLL HINT */
+.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.3;transition:opacity 0.5s;z-index:1;}
+.scroll-hint span{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);}
+.scroll-line{width:1px;height:28px;background:linear-gradient(to bottom,transparent,var(--muted2));animation:bounce 2.5s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
 
-/* ── FEATURES ── */
-.features{padding:100px 24px;max-width:1100px;margin:0 auto;}
-.section-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted2);margin-bottom:12px;}
-.section-title{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px;}
-.section-title em{font-style:italic;font-family:'Instrument Serif',serif;font-weight:400;color:var(--blue);}
-.section-sub{font-size:16px;color:var(--muted);max-width:480px;line-height:1.6;margin-bottom:60px;}
-.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.feat-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:28px;position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s;}
-.feat-card:hover{border-color:var(--border2);transform:translateY(-3px);}
-.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:14px 14px 0 0;opacity:0;}
-.feat-card:hover::before{opacity:1;}
-.feat-card.c-blue::before{background:var(--blue);}
-.feat-card.c-green::before{background:var(--green);}
-.feat-card.c-gold::before{background:var(--gold);}
-.feat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;}
-.feat-icon.blue{background:var(--blue-d);border:1px solid rgba(77,144,220,0.2);}
-.feat-icon.green{background:rgba(30,148,100,0.1);border:1px solid rgba(30,148,100,0.2);}
-.feat-icon.gold{background:var(--gold-d);border:1px solid rgba(233,184,74,0.2);}
-.feat-t{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--text);}
-.feat-d{font-size:13px;color:var(--muted);line-height:1.6;}
+/* APP PREVIEW */
+.preview-wrap{padding:0 24px 80px;max-width:1000px;margin:0 auto;}
+.preview-frame{border-radius:16px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 40px 120px rgba(0,0,0,0.6);background:var(--s1);}
+.preview-bar{background:var(--s2);height:38px;display:flex;align-items:center;padding:0 14px;gap:8px;border-bottom:1px solid var(--border);}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot-r{background:#FF5F57;}.dot-y{background:#FFBD2E;}.dot-g{background:#28CA41;}
+.preview-url-pill{flex:1;text-align:center;}
+.url-inner{display:inline-flex;align-items:center;gap:6px;background:var(--s3);padding:4px 14px;border-radius:6px;font-size:11px;color:var(--muted2);font-family:'JetBrains Mono',monospace;border:1px solid var(--border);}
+.preview-body{padding:20px;display:grid;grid-template-columns:160px 1fr;gap:16px;height:300px;}
+.p-sidebar{background:var(--bg);border-radius:10px;border:1px solid var(--border);padding:14px;display:flex;flex-direction:column;gap:6px;}
+.p-nav{height:18px;border-radius:4px;background:rgba(160,185,220,0.06);}
+.p-nav.active{background:rgba(26,115,176,0.2);width:88%;}
+.p-main{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;grid-template-rows:auto 1fr;gap:10px;}
+.p-kpi{background:var(--bg);border-radius:10px;border:1px solid var(--border);padding:14px;}
+.p-kpi-v{font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.p-kpi-l{font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.8px;margin-top:4px;}
+.p-chart{background:var(--bg);border-radius:10px;border:1px solid var(--border);grid-column:span 3;padding:14px;}
+.p-ring-wrap{background:var(--bg);border-radius:10px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;}
+.p-ring{width:58px;height:58px;border-radius:50%;background:conic-gradient(var(--blue2) 0% 64%,var(--red) 64% 80%,var(--green) 80% 100%);}
+.p-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.p-bar-lbl{font-size:8px;color:var(--muted2);width:50px;}
+.p-bar-track{flex:1;height:5px;background:var(--s2);border-radius:3px;overflow:hidden;}
+.p-bar-fill{height:100%;border-radius:3px;}
+.p-bar-n{font-size:8px;color:var(--muted3);width:10px;}
 
-/* ── HOW IT WORKS ── */
-.how{padding:100px 24px;background:linear-gradient(180deg,transparent,var(--s1) 20%,var(--s1) 80%,transparent);}
-.how-inner{max-width:900px;margin:0 auto;text-align:center;}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:60px;position:relative;}
-.steps::before{content:'';position:absolute;top:28px;left:12.5%;right:12.5%;height:1px;background:linear-gradient(90deg,transparent,var(--border2) 20%,var(--border2) 80%,transparent);}
-.step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 12px;}
-.step-num{width:56px;height:56px;border-radius:50%;background:var(--s2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;position:relative;z-index:1;}
-.step-t{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;}
-.step-d{font-size:12px;color:var(--muted);line-height:1.5;}
+/* STATS */
+.stats-section{padding:80px 24px;background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.stats-grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);}
+.stat-item{text-align:center;padding:32px 20px;border-right:1px solid var(--border);}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-size:clamp(52px,7vw,76px);font-weight:900;letter-spacing:-3px;line-height:1;display:inline-block;font-family:'JetBrains Mono',monospace;}
+.stat-num.c-blue{color:var(--blue2);}
+.stat-num.c-green{color:var(--green);}
+.stat-num.c-gold{color:var(--gold);}
+.stat-strike{font-size:16px;font-weight:400;color:var(--muted3);text-decoration:line-through;margin-left:6px;font-family:'Outfit',sans-serif;vertical-align:middle;letter-spacing:0;}
+.stat-badge{font-size:11px;font-weight:800;color:var(--gold);background:rgba(196,160,85,0.14);padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;font-family:'Outfit',sans-serif;}
+.stat-lbl{font-size:13px;color:var(--muted);line-height:1.5;max-width:200px;margin:10px auto 0;}
 
-/* ── PRICING ── */
-.pricing{padding:100px 24px;max-width:900px;margin:0 auto;text-align:center;}
-.pricing-cards{display:grid;grid-template-columns:1fr 1.1fr;gap:20px;margin-top:60px;text-align:left;}
-.price-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:32px;}
-.price-card.featured{border-color:var(--blue);background:linear-gradient(135deg,var(--s1),rgba(77,144,220,0.04));}
-.price-badge{display:inline-block;background:var(--blue);color:#fff;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:16px;}
-.price-name{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:4px;}
-.price-val{font-size:48px;font-weight:900;letter-spacing:-2px;color:var(--text);line-height:1;}
-.price-val span{font-size:16px;font-weight:500;color:var(--muted);letter-spacing:0;}
-.price-period{font-size:12px;color:var(--muted2);margin-top:4px;margin-bottom:24px;}
-.price-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
-.price-features li{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:9px;}
-.price-features li::before{content:'✓';color:var(--green);font-weight:700;font-size:12px;flex-shrink:0;}
-.price-features li.no{color:var(--muted2);}
-.price-features li.no::before{content:'—';color:var(--muted2);}
-.price-btn{width:100%;padding:13px;border-radius:10px;font-size:14px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer;text-decoration:none;display:block;text-align:center;transition:all 0.2s;}
-.price-btn.ghost{background:transparent;border:1px solid var(--border2);color:var(--text);}
-.price-btn.ghost:hover{background:var(--s2);}
-.price-btn.solid{background:var(--blue);border:none;color:#fff;}
-.price-btn.solid:hover{background:#3d7bc9;transform:translateY(-1px);box-shadow:0 6px 20px rgba(77,144,220,0.3);}
-.price-note{font-size:11px;color:var(--muted2);text-align:center;margin-top:16px;}
+/* FEATURES */
+.features-section{padding:100px 24px;}
+.feat-inner{max-width:1100px;margin:0 auto;}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue2);margin-bottom:12px;}
+.section-h{font-size:clamp(28px,4vw,46px);font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin-bottom:14px;}
+.section-h em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--muted2);}
+.section-p{font-size:15px;color:var(--muted);line-height:1.65;max-width:500px;}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:52px;}
+.feat-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;transition:border-color 0.25s,transform 0.25s,background 0.25s;}
+.feat-card:hover{border-color:var(--border2);transform:translateY(-4px);background:var(--s2);}
+.feat-ico{font-size:28px;margin-bottom:16px;}
+.feat-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.feat-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+.feat-tag{display:inline-block;margin-top:14px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase;}
+.t-pro{background:rgba(26,115,176,0.14);color:var(--blue2);}
+.t-free{background:rgba(30,148,100,0.12);color:var(--green);}
 
-/* ── PROOF / STATS ── */
-.proof{padding:80px 24px;max-width:900px;margin:0 auto;}
-.proof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;text-align:center;}
-.stat-val{font-size:48px;font-weight:900;letter-spacing:-2px;color:var(--text);}
-.stat-val span{color:var(--blue);}
-.stat-lbl{font-size:13px;color:var(--muted);margin-top:4px;}
+/* HOW */
+.how-section{padding:100px 24px;background:var(--s1);border-top:1px solid var(--border);}
+.how-inner{max-width:900px;margin:0 auto;}
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:56px;position:relative;}
+.how-steps::before{content:'';position:absolute;top:27px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--border2) 20%,var(--border2) 80%,transparent);z-index:0;}
+.how-step{text-align:center;padding:0 16px;position:relative;z-index:1;}
+.step-ico{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 18px;background:var(--s2);border:1px solid var(--border2);transition:transform 0.2s,border-color 0.2s;}
+.how-step:hover .step-ico{transform:scale(1.1);border-color:var(--blue2);}
+.step-n{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--blue2);text-transform:uppercase;margin-bottom:8px;}
+.step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.step-desc{font-size:12px;color:var(--muted2);line-height:1.6;}
 
-/* ── CTA FINAL ── */
-.cta-final{padding:120px 24px;text-align:center;position:relative;overflow:hidden;}
-.cta-final::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 50% 50%,rgba(77,144,220,0.06),transparent 70%);pointer-events:none;}
-.cta-final h2{font-size:clamp(32px,5vw,60px);font-weight:900;letter-spacing:-2px;line-height:1.05;margin-bottom:20px;}
-.cta-final h2 em{font-style:italic;font-family:'Instrument Serif',serif;font-weight:400;color:var(--blue);}
-.cta-final p{font-size:17px;color:var(--muted);margin-bottom:40px;}
+/* TESTIMONIALS */
+.testi-section{padding:100px 24px;}
+.testi-inner{max-width:1100px;margin:0 auto;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:52px;}
+.testi-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;transition:border-color 0.25s,transform 0.25s;display:flex;flex-direction:column;}
+.testi-card:hover{border-color:var(--border2);transform:translateY(-3px);}
+.testi-ok{position:absolute;top:16px;right:16px;font-size:9px;font-weight:700;letter-spacing:0.5px;padding:3px 8px;border-radius:20px;background:rgba(30,148,100,0.1);color:var(--green);text-transform:uppercase;}
+.testi-stars{color:#E8A838;font-size:13px;letter-spacing:2px;margin-bottom:14px;}
+.testi-txt{font-size:14px;color:var(--muted);line-height:1.7;flex:1;font-style:italic;}
+.testi-txt::before{content:'"';font-size:36px;color:var(--blue2);font-family:'Instrument Serif',serif;line-height:0;vertical-align:-12px;margin-right:2px;opacity:0.5;}
+.testi-foot{display:flex;align-items:center;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
+.testi-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;}
+.testi-nm{font-size:13px;font-weight:700;color:var(--text);}
+.testi-rl{font-size:11px;color:var(--muted2);margin-top:1px;}
+.testi-stat{background:linear-gradient(135deg,rgba(26,115,176,0.08),rgba(26,115,176,0.02));border-color:rgba(26,115,176,0.2);justify-content:center;align-items:center;text-align:center;}
+.testi-stat-n{font-size:54px;font-weight:900;letter-spacing:-2px;color:var(--blue2);font-family:'JetBrains Mono',monospace;line-height:1;}
+.testi-stat-sub{font-size:16px;font-weight:600;color:var(--muted2);margin:6px 0 12px;}
+.testi-stat-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.testi-stat-note{font-size:10px;color:var(--muted3);margin-top:14px;line-height:1.5;}
 
-/* ── FOOTER ── */
-footer{border-top:1px solid var(--border);padding:40px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
-.foot-logo{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--text);}
-.foot-logo em{font-style:normal;color:var(--blue);}
-.foot-links{display:flex;gap:20px;}
+/* PRICING */
+.pricing-section{padding:100px 24px;background:var(--s1);border-top:1px solid var(--border);}
+.pricing-inner{max-width:860px;margin:0 auto;}
+.pricing-cards{display:grid;grid-template-columns:1fr 1.1fr;gap:20px;margin-top:52px;}
+.p-card{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:36px;}
+.p-card.featured{border-color:var(--blue);background:linear-gradient(160deg,rgba(26,115,176,0.07),var(--bg));box-shadow:0 0 60px rgba(26,115,176,0.1);position:relative;overflow:hidden;}
+.p-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent);}
+.p-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:18px;background:rgba(26,115,176,0.15);color:var(--blue2);border:1px solid rgba(26,115,176,0.25);}
+.p-name{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:10px;}
+.p-amount-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:4px;}
+.p-amount{font-size:54px;font-weight:900;letter-spacing:-2px;line-height:1;color:var(--text);font-family:'JetBrains Mono',monospace;}
+.p-unit{font-size:15px;color:var(--muted);margin-bottom:6px;font-weight:500;}
+.p-old{font-size:14px;color:var(--muted3);text-decoration:line-through;display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.p-discount{font-size:11px;font-weight:800;color:var(--gold);background:rgba(196,160,85,0.13);padding:2px 8px;border-radius:20px;text-decoration:none;}
+.p-period{font-size:12px;color:var(--muted2);margin-bottom:6px;}
+.p-saving{font-size:12px;font-weight:700;color:var(--green);margin-bottom:28px;}
+.p-features{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:28px;}
+.p-features li{font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:10px;line-height:1.4;}
+.p-ck{flex-shrink:0;margin-top:1px;}
+.p-features li.dim{color:var(--muted2);}
+.p-features li.dim .p-ck{color:var(--muted3);}
+.p-btn{width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;font-size:14px;font-weight:700;font-family:inherit;transition:all 0.2s;text-decoration:none;display:block;text-align:center;}
+.p-btn.solid{background:var(--blue);color:#fff;}
+.p-btn.solid:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(77,144,220,0.35);}
+.p-btn.outline{background:transparent;color:var(--text);border:1px solid var(--border2);}
+.p-btn.outline:hover{background:var(--s2);}
+.p-note{font-size:11px;color:var(--muted3);text-align:center;margin-top:14px;}
+
+/* SUPPORT */
+.support-section{padding:80px 24px;border-top:1px solid var(--border);}
+.support-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:60px;align-items:center;}
+.s-cards{display:flex;flex-direction:column;gap:14px;}
+.s-card{display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:18px 22px;text-decoration:none;color:inherit;transition:border-color 0.25s,background 0.25s,transform 0.2s;}
+.s-card:hover{border-color:var(--border2);background:var(--s2);transform:translateX(4px);}
+.s-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.s-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.s-sub{font-size:12px;color:var(--muted2);}
+.s-arrow{color:var(--muted3);font-size:16px;margin-left:auto;}
+
+/* CTA */
+.cta-section{padding:120px 24px;text-align:center;border-top:1px solid var(--border);position:relative;overflow:hidden;}
+.cta-orb{position:absolute;width:500px;height:500px;border-radius:50%;background:rgba(26,115,176,0.07);filter:blur(80px);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.cta-inner{position:relative;z-index:1;max-width:600px;margin:0 auto;}
+
+/* FOOTER */
+.footer{padding:40px 32px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;}
+.foot-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.foot-logo-txt{font-size:16px;font-weight:800;letter-spacing:-0.5px;}
+.foot-logo-txt span{color:var(--blue2);}
+.foot-links{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;}
 .foot-links a{font-size:12px;color:var(--muted2);text-decoration:none;transition:color 0.2s;}
 .foot-links a:hover{color:var(--text);}
-.foot-copy{font-size:11px;color:var(--muted2);}
+.foot-links a.hl{color:var(--blue2);font-weight:600;}
+.foot-copy{font-size:11px;color:var(--muted3);text-align:right;line-height:1.6;}
 
-/* ── FLAG CH SVG ── */
-.flag-ch{display:inline-flex;flex-shrink:0;}
+/* SCROLL ANIMATIONS */
+.fu{opacity:0;transform:translateY(28px);transition:opacity 0.65s cubic-bezier(0.16,1,0.3,1),transform 0.65s cubic-bezier(0.16,1,0.3,1);}
+.fu.d1{transition-delay:0.1s;}.fu.d2{transition-delay:0.2s;}.fu.d3{transition-delay:0.3s;}.fu.d4{transition-delay:0.4s;}
+.fu.in{opacity:1;transform:none;}
 
-/* ── RESPONSIVE ── */
 @media(max-width:768px){
-  nav{padding:0 18px;}
   .nav-links{display:none;}
-  .hero{padding:100px 18px 60px;}
-  .hero h1{letter-spacing:-1.5px;}
-  .feat-grid{grid-template-columns:1fr;}
-  .steps{grid-template-columns:repeat(2,1fr);gap:24px;}
-  .steps::before{display:none;}
-  .pricing-cards{grid-template-columns:1fr;}
-  .proof-stats{grid-template-columns:1fr;}
-  .frame-body{grid-template-columns:1fr;}
-  .frame-sb{display:none;}
-  .frame-kpis{grid-template-columns:repeat(2,1fr);}
-  footer{flex-direction:column;align-items:flex-start;}
-  section[style*="grid-template-columns:1.2fr"]{grid-template-columns:1fr !important;}
+  .testi-grid,.feat-grid,.pricing-cards{grid-template-columns:1fr;}
+  .how-steps{grid-template-columns:1fr 1fr;}
+  .how-steps::before{display:none;}
+  .stats-grid{grid-template-columns:1fr;}
+  .stat-item{border-right:none;border-bottom:1px solid var(--border);}
+  .support-inner{grid-template-columns:1fr;}
+  .footer{grid-template-columns:1fr;text-align:center;}
+  .foot-copy{text-align:center;}
 }
-
-/* ═══ SCROLL ANIMATIONS ═══ */
-.reveal { opacity:0; transform:translateY(28px); transition:opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1); }
-.reveal.visible { opacity:1; transform:none; }
-.reveal-left { opacity:0; transform:translateX(-28px); transition:opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1); }
-.reveal-left.visible { opacity:1; transform:none; }
-.reveal-right { opacity:0; transform:translateX(28px); transition:opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1); }
-.reveal-right.visible { opacity:1; transform:none; }
-.reveal-delay-1 { transition-delay:0.1s; }
-.reveal-delay-2 { transition-delay:0.2s; }
-.reveal-delay-3 { transition-delay:0.3s; }
-.reveal-delay-4 { transition-delay:0.4s; }
-
-/* ═══ HERO GRADIENT ANIMÉ ═══ */
-.hero-bg-anim {
-  position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;
-}
-.hero-orb {
-  position:absolute;border-radius:50%;filter:blur(80px);opacity:0.12;
-  animation:orb-float 12s ease-in-out infinite;
-}
-.hero-orb.orb1 { width:500px;height:500px;background:#1A73B0;top:-100px;left:-100px;animation-delay:0s; }
-.hero-orb.orb2 { width:350px;height:350px;background:#C4A055;top:50%;right:-80px;animation-delay:-4s; }
-.hero-orb.orb3 { width:280px;height:280px;background:#1E9464;bottom:-80px;left:40%;animation-delay:-8s; }
-@keyframes orb-float {
-  0%,100%{transform:translate(0,0) scale(1);}
-  33%{transform:translate(30px,-20px) scale(1.05);}
-  66%{transform:translate(-20px,15px) scale(0.97);}
-}
-
-/* ═══ SECTION SCROLL COLOR ═══ */
-body { scroll-behavior: smooth; }
-.section-scroll-color { transition: background-color 0.8s ease; }
-
-/* ═══ TÉMOIGNAGES ═══ */
-.testimonials { padding:96px 24px; background:var(--s1); border-top:1px solid var(--border); }
-.testimonials-inner { max-width:1100px; margin:0 auto; }
-.testimonials-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:48px; }
-@media(max-width:768px){ .testimonials-grid{grid-template-columns:1fr;} }
-.testi-card {
-  background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px;
-  position:relative;transition:border-color 0.25s,transform 0.25s;
-}
-.testi-card:hover { border-color:var(--border2);transform:translateY(-3px); }
-.testi-quote { font-size:13.5px;color:var(--muted);line-height:1.7;margin-bottom:20px;font-style:italic; }
-.testi-quote::before { content:'"';font-size:32px;color:var(--gold);font-family:'Instrument Serif',serif;line-height:0;vertical-align:-10px;margin-right:4px; }
-.testi-author { display:flex;align-items:center;gap:12px;border-top:1px solid var(--border);padding-top:16px;margin-top:4px; }
-.testi-av { width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0; }
-.testi-name { font-size:13px;font-weight:700;color:var(--text); }
-.testi-role { font-size:11px;color:var(--muted2);margin-top:2px; }
-.testi-stars { color:#E8A838;font-size:11px;margin-bottom:12px;letter-spacing:1px; }
-.testi-badge { position:absolute;top:16px;right:16px;font-size:9px;font-weight:700;letter-spacing:0.8px;padding:3px 8px;border-radius:20px;background:rgba(26,115,176,0.12);color:var(--gold);text-transform:uppercase; }
-
-/* ═══ STATS BAND ═══ */
-.stats-band { background:linear-gradient(135deg,var(--s1),rgba(26,115,176,0.06)); border-top:1px solid var(--border);border-bottom:1px solid var(--border); }
-
-/* ═══ CTA FINAL AMÉLIORÉ ═══ */
-.cta-final { background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(26,115,176,0.08) 0%,transparent 70%); }
-
-/* ═══ PRICE GLOW ═══ */
-.price-card.featured { box-shadow:0 0 40px rgba(26,115,176,0.12); }
-
-/* ═══ COUNTER ANIM ═══ */
-.count-up { display:inline-block; }
-
-
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1);}
-.reveal-delay-1{transition-delay:.1s;}.reveal-delay-2{transition-delay:.2s;}.reveal-delay-3{transition-delay:.3s;}
-.reveal.visible{opacity:1;transform:none;}
-.hero-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.10;animation:orb-float 14s ease-in-out infinite;pointer-events:none;}
-.hero-orb.orb1{width:500px;height:500px;background:#1A73B0;top:-120px;left:-120px;animation-delay:0s;}
-.hero-orb.orb2{width:320px;height:320px;background:#C4A055;top:40%;right:-60px;animation-delay:-5s;}
-.hero-orb.orb3{width:260px;height:260px;background:#1E9464;bottom:-60px;left:38%;animation-delay:-9s;}
-@keyframes orb-float{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(25px,-18px) scale(1.04);}66%{transform:translate(-18px,12px) scale(.97);}}
-.nav{transition:background .3s ease;}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">
-    <span>Follow<em>Offer</em></span>
-    <svg class="flag-ch" width="14" height="14" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:3px;">
-      <rect width="32" height="32" fill="#D42B1E"/>
-      <rect x="13" y="6" width="6" height="20" fill="white"/>
-      <rect x="6" y="13" width="20" height="6" fill="white"/>
-    </svg>
-  </div>
+<nav class="nav" id="mainNav">
+  <a href="/" class="nav-logo">
+    <span class="logo-txt">Follow<span>Offer</span></span>
+    <svg width="16" height="16" viewBox="0 0 32 32" style="border-radius:3px;flex-shrink:0;"><rect width="32" height="32" fill="#D42B1E"/><rect x="13" y="6" width="6" height="20" fill="white"/><rect x="6" y="13" width="20" height="6" fill="white"/></svg>
+  </a>
   <div class="nav-links">
     <a href="#features">Fonctionnalités</a>
     <a href="#comment">Comment ça marche</a>
     <a href="#tarifs">Tarifs</a>
+    <a href="#temoignages">Avis</a>
   </div>
-  <div class="nav-cta">
-    <a href="/app" class="btn-outline">Se connecter</a>
-    <a href="/app" class="btn-primary">Essai gratuit →</a>
+  <div class="nav-right">
+    <a href="/app" class="btn-nav-ghost">Se connecter</a>
+    <a href="/app" class="btn-nav-cta">Essai gratuit →</a>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero" id="hero" style="position:relative;overflow:hidden;"><div style="position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;"><div class="hero-orb orb1"></div><div class="hero-orb orb2"></div><div class="hero-orb orb3"></div></div>
-  <div class="hero-badge"><span></span> Suite commerciale suisse · Disponible maintenant</div>
-  <h1>Vos offres méritent<br><em>une vraie suite.</em><br><span class="serif">Pas un tableur.</span></h1>
-  <p class="hero-sub">Envoyez, suivez et relancez vos offres commerciales — automatiquement, depuis une interface conçue pour les indépendants et PME suisses.</p>
-  <div class="hero-cta">
-    <a href="/app" class="btn-hero">Commencer gratuitement →</a>
-    <a href="#comment" class="btn-hero-ghost">Voir comment ça marche</a>
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="badge-dot"></span>Suite commerciale suisse · Disponible maintenant</div>
+    <h1 class="hero-title">Vos offres méritent<br><em>une vraie suite.</em><br><span class="muted">Pas un tableur Excel.</span></h1>
+    <p class="hero-sub">Envoyez, trackez les ouvertures et relancez automatiquement.<br>Conçu pour les commerciaux suisses qui veulent convertir plus.</p>
+    <div class="hero-cta">
+      <a href="/app" class="btn-hero">Créer mon compte gratuitement →</a>
+      <a href="#features" class="btn-hero-ghost">Voir les fonctionnalités</a>
+    </div>
+    <div class="hero-proof">
+      <span class="proof-item">5 offres gratuites</span>
+      <span class="proof-item">Pas de carte requise</span>
+      <span class="proof-item">Support suisse 7j/7</span>
+      <span class="proof-item">Données en Suisse</span>
+    </div>
   </div>
-  <p class="hero-note">5 offres gratuites · Pas de carte requise · 490 CHF/an pour passer Pro (au lieu de 649 CHF)</p>
+  <div class="scroll-hint" id="scrollHint"><span>Défiler</span><div class="scroll-line"></div></div>
 </section>
 
-<!-- APP PREVIEW -->
-<div class="preview">
-  <div class="preview-wrap">
-    <div class="preview-glow"></div>
-    <div class="preview-frame">
-      <div class="frame-bar">
-        <div class="frame-dot" style="background:#ff5f56;"></div>
-        <div class="frame-dot" style="background:#febc2e;"></div>
-        <div class="frame-dot" style="background:#27c840;"></div>
-        <div class="frame-url">followoffer.com</div>
+<div class="preview-wrap fu">
+  <div class="preview-frame">
+    <div class="preview-bar">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+      <div class="preview-url-pill"><div class="url-inner">🔒 followoffer.com/app</div></div>
+    </div>
+    <div class="preview-body">
+      <div class="p-sidebar">
+        <div class="p-nav active"></div>
+        <div class="p-nav" style="width:70%;margin-top:8px;"></div>
+        <div class="p-nav" style="width:60%;"></div>
+        <div class="p-nav" style="width:75%;"></div>
+        <div class="p-nav" style="width:55%;"></div>
+        <div class="p-nav" style="width:65%;margin-top:14px;"></div>
+        <div class="p-nav" style="width:80%;"></div>
       </div>
-      <div class="frame-body">
-        <div class="frame-sb">
-          <div class="fsb-logo">Follow<em>Offer</em></div>
-          <div class="fsb-item act">⊞ Dashboard</div>
-          <div class="fsb-item">📄 Rapport semaine</div>
-          <div class="fsb-item">+ Envoyer une offre</div>
-          <div class="fsb-item">📋 Toutes les offres</div>
-          <div class="fsb-item" style="color:rgba(239,68,68,0.8);">🔔 Relances <span style="background:rgba(239,68,68,0.2);border-radius:4px;padding:1px 5px;font-size:9px;">3</span></div>
-          <div class="fsb-item">👁 Détection</div>
-          <div class="fsb-item">📅 Calendrier</div>
-          <div class="fsb-item">💰 Revenus</div>
-          <div class="fsb-item">👥 Clients</div>
+      <div class="p-main">
+        <div class="p-kpi"><div class="p-kpi-v" style="color:#4D90DC">8</div><div class="p-kpi-l">Offres actives</div></div>
+        <div class="p-kpi"><div class="p-kpi-v" style="color:#1E9464">42K</div><div class="p-kpi-l">CA gagné</div></div>
+        <div class="p-kpi"><div class="p-kpi-v" style="color:#C4A055">28K</div><div class="p-kpi-l">Pipeline</div></div>
+        <div class="p-kpi"><div class="p-kpi-v" style="color:#E8A838">64%</div><div class="p-kpi-l">Conversion</div></div>
+        <div class="p-chart" style="grid-column:span 3;">
+          <div style="font-size:9px;color:rgba(160,185,220,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Pipeline des offres</div>
+          <div class="p-bar-row"><span class="p-bar-lbl">Envoyées</span><div class="p-bar-track"><div class="p-bar-fill" style="width:85%;background:#4D90DC;"></div></div><span class="p-bar-n">5</span></div>
+          <div class="p-bar-row"><span class="p-bar-lbl">Relance 1</span><div class="p-bar-track"><div class="p-bar-fill" style="width:40%;background:#C4A055;"></div></div><span class="p-bar-n">2</span></div>
+          <div class="p-bar-row"><span class="p-bar-lbl">Relance 2</span><div class="p-bar-track"><div class="p-bar-fill" style="width:20%;background:#C03535;"></div></div><span class="p-bar-n">1</span></div>
+          <div class="p-bar-row"><span class="p-bar-lbl">Gagnées</span><div class="p-bar-track"><div class="p-bar-fill" style="width:65%;background:#1E9464;"></div></div><span class="p-bar-n">4</span></div>
         </div>
-        <div class="frame-main">
-          <div class="frame-kpis">
-            <div class="fkpi"><div class="fkpi-lbl">Offres actives</div><div class="fkpi-val blue">8</div></div>
-            <div class="fkpi"><div class="fkpi-lbl">CA gagné</div><div class="fkpi-val green">42K</div></div>
-            <div class="fkpi"><div class="fkpi-lbl">Pipeline</div><div class="fkpi-val gold">28K</div></div>
-            <div class="fkpi"><div class="fkpi-lbl">Conversion</div><div class="fkpi-val">64%</div></div>
-          </div>
-          <div class="frame-row">
-            <div class="fcard">
-              <div class="fcard-t">Pipeline des offres</div>
-              <div class="pipeline-bar">
-                <div class="pb-row"><span style="width:52px">Envoyées</span><div class="pb-bar"><div class="pb-fill" style="width:65%;background:var(--blue);"></div></div><span>5</span></div>
-                <div class="pb-row"><span style="width:52px">Relance 1</span><div class="pb-bar"><div class="pb-fill" style="width:40%;background:var(--gold);"></div></div><span>2</span></div>
-                <div class="pb-row"><span style="width:52px">Relance 2</span><div class="pb-bar"><div class="pb-fill" style="width:20%;background:rgba(239,68,68,0.7);"></div></div><span>1</span></div>
-                <div class="pb-row"><span style="width:52px">Gagnées</span><div class="pb-bar"><div class="pb-fill" style="width:55%;background:var(--green);"></div></div><span>4</span></div>
-              </div>
-            </div>
-            <div class="fcard">
-              <div class="fcard-t">Résultats</div>
-              <div class="donut-wrap">
-                <svg width="80" height="80" viewBox="0 0 80 80">
-                  <circle cx="40" cy="40" r="30" fill="none" stroke="var(--border)" stroke-width="10"/>
-                  <circle cx="40" cy="40" r="30" fill="none" stroke="var(--green)" stroke-width="10" stroke-dasharray="75.4 113" stroke-dashoffset="94" stroke-linecap="round"/>
-                  <circle cx="40" cy="40" r="30" fill="none" stroke="rgba(239,68,68,0.7)" stroke-width="10" stroke-dasharray="37.7 150.7" stroke-dashoffset="20" stroke-linecap="round"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="p-ring-wrap"><div class="p-ring"></div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- FEATURES -->
-<section class="features" id="features">
-  <div class="section-label">Fonctionnalités</div>
-  <h2 class="section-title">Tout ce qu'il faut pour<br><em>ne plus perdre d'affaires.</em></h2>
-  <p class="section-sub">FollowOffer remplace vos relances manuelles par un système qui travaille à votre place.</p>
-  <div class="feat-grid">
-    <div class="feat-card c-blue">
-      <div class="feat-icon blue">📤</div>
-      <div class="feat-t">Envoi d'offres professionnel</div>
-      <div class="feat-d">Envoyez vos offres par email en votre nom, avec PDF joint. Chaque offre crée automatiquement 3 relances programmées.</div>
-    </div>
-    <div class="feat-card c-green">
-      <div class="feat-icon green">👁</div>
-      <div class="feat-t">Tracking d'ouverture en temps réel</div>
-      <div class="feat-d">Sachez exactement quand votre prospect ouvre votre offre. Pixel invisible, notification instantanée, score de chaleur.</div>
-    </div>
-    <div class="feat-card c-gold">
-      <div class="feat-icon gold">🔔</div>
-      <div class="feat-t">Relances automatiques J+3/J+7/J+14</div>
-      <div class="feat-d">Les relances partent automatiquement à 9h. Messages personnalisables, annulés dès que l'offre est gagnée ou perdue.</div>
-    </div>
-    <div class="feat-card c-blue">
-      <div class="feat-icon blue">👥</div>
-      <div class="feat-t">CRM clients intégré</div>
-      <div class="feat-d">Fiche client complète avec historique des offres, CA généré, taux de conversion par client.</div>
-    </div>
-    <div class="feat-card c-green">
-      <div class="feat-icon green">📊</div>
-      <div class="feat-t">Rapport hebdomadaire</div>
-      <div class="feat-d">Synthèse automatique chaque semaine : offres envoyées, CA gagné, relances effectuées. Exportable en Excel.</div>
-    </div>
-    <div class="feat-card c-gold">
-      <div class="feat-icon gold">📅</div>
-      <div class="feat-t">Calendrier commercial</div>
-      <div class="feat-d">Vue mensuelle de toutes vos échéances. Identifiez les périodes chargées et planifiez vos relances efficacement.</div>
+<section class="stats-section" id="stats">
+  <div class="stats-grid">
+    <div class="stat-item fu"><div class="stat-num c-green" id="cnt-pct">0</div><div class="stat-lbl">de taux de conversion en plus en relançant systématiquement</div></div>
+    <div class="stat-item fu d2"><div><span class="stat-num c-blue" id="cnt-chf">0</span><span class="stat-strike">649</span><span class="stat-badge">-25%</span></div><div class="stat-lbl">CHF/an · soit 40 CHF/mois, moins qu'un repas d'affaires</div></div>
+    <div class="stat-item fu d3"><div class="stat-num c-gold" id="cnt-x">0</div><div class="stat-lbl">fois moins de temps passé à relancer manuellement</div></div>
+  </div>
+</section>
+
+<section class="features-section" id="features">
+  <div class="feat-inner">
+    <div class="eyebrow fu">Fonctionnalités</div>
+    <h2 class="section-h fu d1">Tout ce qu'il faut pour<br><em>ne rater aucune affaire.</em></h2>
+    <p class="section-p fu d2">Une suite pensée pour les commerciaux, pas pour les développeurs.</p>
+    <div class="feat-grid">
+      <div class="feat-card fu"><div class="feat-ico">📤</div><div class="feat-title">Envoi d'offres professionnel</div><div class="feat-desc">Glissez votre PDF, renseignez le client. L'email part depuis votre adresse via Brevo. Zéro friction.</div><span class="feat-tag t-free">Gratuit</span></div>
+      <div class="feat-card fu d1"><div class="feat-ico">👁️</div><div class="feat-title">Tracking d'ouverture temps réel</div><div class="feat-desc">Notification dès que votre prospect ouvre l'email. Rappeler au bon moment, c'est gagner des affaires.</div><span class="feat-tag t-pro">Pro</span></div>
+      <div class="feat-card fu d2"><div class="feat-ico">🤖</div><div class="feat-title">Relances automatiques IA</div><div class="feat-desc">J+3, J+7, J+14. Emails générés par IA selon le contexte de votre offre. Personnalisés, pas génériques.</div><span class="feat-tag t-pro">Pro</span></div>
+      <div class="feat-card fu d1"><div class="feat-ico">📊</div><div class="feat-title">Rapport hebdomadaire IA</div><div class="feat-desc">Chaque semaine, résumé intelligent du pipeline, taux de conversion et actions prioritaires.</div><span class="feat-tag t-pro">Pro</span></div>
+      <div class="feat-card fu d2"><div class="feat-ico">👥</div><div class="feat-title">Fiches clients CRM</div><div class="feat-desc">Historique complet par client. Toutes les offres, relances, ouvertures et résultats en un coup d'œil.</div><span class="feat-tag t-free">Gratuit</span></div>
+      <div class="feat-card fu d3"><div class="feat-ico">📅</div><div class="feat-title">Calendrier des relances</div><div class="feat-desc">Vue calendrier de toutes vos relances à venir. Ne manquez plus jamais une opportunité de rappel.</div><span class="feat-tag t-free">Gratuit</span></div>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section class="how" id="comment">
+<section class="how-section" id="comment">
   <div class="how-inner">
-    <div class="section-label" style="text-align:center">Comment ça marche</div>
-    <h2 class="section-title" style="text-align:center">Opérationnel en <em>5 minutes.</em></h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">⚙️</div>
-        <div class="step-t">Configuration</div>
-        <div class="step-d">Renseignez votre nom et email expéditeur. Une seule fois.</div>
+    <div class="eyebrow fu" style="text-align:center;">Comment ça marche</div>
+    <h2 class="section-h fu d1" style="text-align:center;">En 4 étapes.<br><em>Simple comme bonjour.</em></h2>
+    <div class="how-steps">
+      <div class="how-step fu"><div class="step-ico">⚙️</div><div class="step-n">Étape 1</div><div class="step-title">Configuration</div><div class="step-desc">Renseignez votre nom et email expéditeur. Une seule fois.</div></div>
+      <div class="how-step fu d1"><div class="step-ico">📨</div><div class="step-n">Étape 2</div><div class="step-title">Envoi de l'offre</div><div class="step-desc">Client, montant, objet, PDF. L'email part en votre nom via Brevo.</div></div>
+      <div class="how-step fu d2"><div class="step-ico">👁</div><div class="step-n">Étape 3</div><div class="step-title">Tracking</div><div class="step-desc">Notification dès que le prospect ouvre votre offre.</div></div>
+      <div class="how-step fu d3"><div class="step-ico">✅</div><div class="step-n">Étape 4</div><div class="step-title">Relances auto</div><div class="step-desc">3 relances s'envoient automatiquement. Marquez Gagnée ou Perdue, c'est tout.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="testi-section" id="temoignages">
+  <div class="testi-inner">
+    <div class="eyebrow fu">Ce qu'ils en disent</div>
+    <h2 class="section-h fu d1">Ils ne perdent plus<br><em>une seule affaire.</em></h2>
+    <div class="testi-grid">
+      <div class="testi-card fu">
+        <span class="testi-ok">✓ Vérifié</span>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-txt">Avant, je notais mes relances dans un tableau Excel. J'oubliais la moitié. Depuis FollowOffer, j'ai récupéré 3 offres en 2 mois que j'aurais complètement loupées.</p>
+        <div class="testi-foot"><div class="testi-av" style="background:rgba(26,115,176,0.15);color:#4D90DC;">RM</div><div><div class="testi-nm">R. Müller</div><div class="testi-rl">Commercial indépendant · Zurich</div></div></div>
       </div>
-      <div class="step">
-        <div class="step-num">📤</div>
-        <div class="step-t">Envoi de l'offre</div>
-        <div class="step-d">Client, montant, objet, PDF. L'email part en votre nom via Brevo.</div>
+      <div class="testi-card fu d1">
+        <span class="testi-ok">✓ Vérifié</span>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-txt">Le tracking d'ouverture change tout. Je sais exactement quand mon client a lu l'offre — je rappelle dans la foulée. Mon taux de conversion a bondi.</p>
+        <div class="testi-foot"><div class="testi-av" style="background:rgba(196,160,85,0.15);color:#C4A055;">SF</div><div><div class="testi-nm">S. Fontana</div><div class="testi-rl">Consulting RH · Lausanne</div></div></div>
       </div>
-      <div class="step">
-        <div class="step-num">👁</div>
-        <div class="step-t">Tracking</div>
-        <div class="step-d">Notification dès que le prospect ouvre votre offre.</div>
+      <div class="testi-card testi-stat fu d2">
+        <div class="testi-stat-n" id="testi-cnt">0</div>
+        <div class="testi-stat-sub">⭐ 4.9 / 5</div>
+        <div class="testi-stat-desc">Taux de conversion moyen en plus observé chez les utilisateurs Pro</div>
+        <div class="testi-stat-note">Données agrégées · Comptes Pro actifs · Suisse romande & alémanique</div>
       </div>
-      <div class="step">
-        <div class="step-num">✅</div>
-        <div class="step-t">Relances auto</div>
-        <div class="step-d">3 relances s'envoient automatiquement. Marquez Gagnée ou Perdue, c'est tout.</div>
+      <div class="testi-card fu d1">
+        <span class="testi-ok">✓ Vérifié</span>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-txt">Simple, rapide, efficace. En tant que PME avec peu de ressources, c'est exactement ce qu'il me fallait. Le rapport IA m'économise 2h par semaine.</p>
+        <div class="testi-foot"><div class="testi-av" style="background:rgba(30,148,100,0.15);color:#1E9464;">PB</div><div><div class="testi-nm">P. Berset</div><div class="testi-rl">Gérant PME artisanale · Fribourg</div></div></div>
+      </div>
+      <div class="testi-card fu d2">
+        <span class="testi-ok">✓ Vérifié</span>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-txt">J'ai essayé HubSpot et Pipedrive. Trop lourds. FollowOffer fait exactement ce qu'il faut, sans la complexité. Le support répond le jour même.</p>
+        <div class="testi-foot"><div class="testi-av" style="background:rgba(96,104,168,0.15);color:#6068A8;">LK</div><div><div class="testi-nm">L. Käser</div><div class="testi-rl">Directeur commercial · Bâle</div></div></div>
+      </div>
+      <div class="testi-card fu d3">
+        <span class="testi-ok">✓ Vérifié</span>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-txt">La génération d'emails par IA est bluffante. Je glisse mon PDF, décris le contexte et l'email de relance est parfait. 30 secondes chrono.</p>
+        <div class="testi-foot"><div class="testi-av" style="background:rgba(168,104,40,0.15);color:#A86828;">NW</div><div><div class="testi-nm">N. Wyss</div><div class="testi-rl">Technico-commercial · Berne</div></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="proof">
-  <div class="proof-stats">
-    <div>
-      <div class="stat-val">+<span>38%</span></div>
-      <div class="stat-lbl">de taux de conversion en plus en relançant systématiquement</div>
+<section class="pricing-section" id="tarifs">
+  <div class="pricing-inner">
+    <div style="text-align:center;">
+      <div class="eyebrow fu">Tarifs</div>
+      <h2 class="section-h fu d1" style="text-align:center;">Un seul plan. <em>Tout inclus.</em></h2>
+      <p class="fu d2" style="font-size:15px;color:var(--muted);margin-top:10px;">Pas d'options cachées. Pas d'abonnement mensuel. Un prix annuel honnête.</p>
     </div>
-    <div>
-      <div class="stat-val"><span>490</span><span style="font-size:16px;text-decoration:line-through;color:var(--muted2);margin-left:8px;font-weight:400;">649</span></div>
-      <div class="stat-lbl">CHF/an — soit 40 CHF/mois, moins qu'un repas d'affaires</div>
-    </div>
-    <div>
-      <div class="stat-val"><span>3</span>x</div>
-      <div class="stat-lbl">moins de temps passé à relancer vos prospects manuellement</div>
-    </div>
-  </div>
-</div>
-
-<!-- PRICING -->
-<section class="pricing" id="tarifs">
-  <div class="section-label">Tarifs</div>
-  <h2 class="section-title">Un seul plan. <em>Tout inclus.</em></h2>
-  <p class="section-sub" style="margin:0 auto 60px;text-align:center;">Pas d'options cachées. Pas d'abonnement mensuel. Un prix annuel honnête.</p>
-  <div class="pricing-cards">
-    <div class="price-card reveal">
-      <div class="price-name">Gratuit</div>
-      <div class="price-val">0 <span>CHF</span></div>
-      <div class="price-period">Pour démarrer</div>
-      <ul class="price-features">
-        <li>5 offres par mois</li>
-        <li>Relances manuelles</li>
-        <li>Tracking de base</li>
-        <li class="no">Relances automatiques</li>
-        <li class="no">Rapport hebdomadaire</li>
-        <li class="no">Support prioritaire</li>
-      </ul>
-      <a href="/app" class="price-btn ghost">Commencer gratuitement</a>
-    </div>
-    <div class="price-card featured reveal reveal-delay-2">
-      <div class="price-badge">Pro · Recommandé</div>
-      <div class="price-name">FollowOffer Pro</div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-        <div class="price-val">490 <span>CHF/an</span></div>
-        <div style="display:flex;flex-direction:column;">
-          <span style="font-size:14px;color:var(--muted2);text-decoration:line-through;line-height:1;">649 CHF</span>
-          <span style="font-size:11px;font-weight:800;color:#E8A838;background:rgba(232,168,56,0.13);padding:2px 7px;border-radius:20px;letter-spacing:0.3px;margin-top:3px;">−25%</span>
-        </div>
+    <div class="pricing-cards">
+      <div class="p-card fu">
+        <div class="p-name">Gratuit</div>
+        <div class="p-amount-row"><div class="p-amount">0</div><div class="p-unit">CHF</div></div>
+        <div class="p-period" style="margin-bottom:24px;">Pour démarrer sans risque</div>
+        <ul class="p-features">
+          <li><span class="p-ck" style="color:var(--green);">✓</span>5 offres par mois</li>
+          <li><span class="p-ck" style="color:var(--green);">✓</span>Relances manuelles</li>
+          <li><span class="p-ck" style="color:var(--green);">✓</span>Tracking de base</li>
+          <li class="dim"><span class="p-ck">—</span>Relances automatiques IA</li>
+          <li class="dim"><span class="p-ck">—</span>Rapport hebdomadaire IA</li>
+          <li class="dim"><span class="p-ck">—</span>Support prioritaire</li>
+        </ul>
+        <a href="/app" class="p-btn outline">Commencer gratuitement</a>
       </div>
-      <div class="price-period">≈ 40.83 CHF / mois · Facturé annuellement · <strong style="color:var(--green);">Économisez 159 CHF</strong></div>
-      <ul class="price-features">
-        <li>Offres illimitées</li>
-        <li>Relances automatiques J+3/J+7/J+14</li>
-        <li>Tracking ouvertures en temps réel</li>
-        <li>Rapport hebdomadaire</li>
-        <li>Fiches clients CRM complètes</li>
-        <li>Support prioritaire</li>
-      </ul>
-      <a href="/app" class="price-btn solid">🚀 Passer à Pro maintenant</a>
-      <div class="price-note">Paiement sécurisé par Stripe · Annulation annuelle · Facturation unique</div>
+      <div class="p-card featured fu d2">
+        <div class="p-badge">⭐ Pro · Recommandé</div>
+        <div class="p-name">FollowOffer Pro</div>
+        <div class="p-amount-row"><div class="p-amount">490</div><div class="p-unit">CHF/an</div></div>
+        <div class="p-old">649 CHF <span class="p-discount">−25%</span></div>
+        <div class="p-period">≈ 40.83 CHF / mois · Facturé annuellement</div>
+        <div class="p-saving">✓ Économisez 159 CHF · Offre de lancement</div>
+        <ul class="p-features">
+          <li><span class="p-ck" style="color:var(--green);">✓</span>Offres illimitées</li>
+          <li><span class="p-ck" style="color:var(--green);">✓</span>Relances automatiques J+3/J+7/J+14</li>
+          <li><span class="p-ck" style="color:var(--green);">✓</span>Tracking ouvertures en temps réel</li>
+          <li><span class="p-ck" style="color:var(--green);">✓</span>Rapport hebdomadaire IA</li>
+          <li><span class="p-ck" style="color:var(--green);">✓</span>Fiches clients CRM complètes</li>
+          <li><span class="p-ck" style="color:var(--green);">✓</span>Support prioritaire 7j/7</li>
+        </ul>
+        <a href="/app" class="p-btn solid">🚀 Passer à Pro maintenant</a>
+        <div class="p-note">Paiement sécurisé par Stripe · Annulation annuelle · Facturation unique</div>
+      </div>
     </div>
   </div>
 </section>
 
-
-<!-- TÉMOIGNAGES -->
-<section class="testimonials" id="temoignages">
-  <div class="testimonials-inner">
-    <div class="section-label reveal">Ce qu'ils en disent</div>
-    <h2 class="section-title reveal reveal-delay-1">Ils ne perdent plus<br><em>une seule affaire.</em></h2>
-    <div class="testimonials-grid">
-
-      <div class="testi-card reveal reveal-delay-1">
-        <div class="testi-badge">Vérifié</div>
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-quote">Avant, je notais mes relances dans un tableau Excel. J'oubliais la moitié. Depuis FollowOffer, j'ai récupéré 3 offres en 2 mois que j'aurais complètement loupées.</div>
-        <div class="testi-author">
-          <div class="testi-av" style="background:rgba(26,115,176,0.15);color:#4D90DC;">RM</div>
-          <div>
-            <div class="testi-name">R. Müller</div>
-            <div class="testi-role">Représentant commercial · Région Zurich</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testi-card reveal reveal-delay-2">
-        <div class="testi-badge">Vérifié</div>
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-quote">Le tracking d'ouverture change tout. Je sais exactement quand mon client a lu l'offre — je rappelle dans la foulée. Mon taux de conversion a bondi de 40%.</div>
-        <div class="testi-author">
-          <div class="testi-av" style="background:rgba(196,160,85,0.15);color:#C4A055;">SF</div>
-          <div>
-            <div class="testi-name">S. Fontana</div>
-            <div class="testi-role">Indépendante · Consulting RH · Lausanne</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testi-card reveal reveal-delay-3">
-        <div class="testi-badge">Vérifié</div>
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-quote">Simple, rapide, et vraiment efficace. En tant que PME avec peu de ressources, c'est exactement ce qu'il me fallait. Le rapport hebdo IA m'économise 2h par semaine.</div>
-        <div class="testi-author">
-          <div class="testi-av" style="background:rgba(30,148,100,0.15);color:#1E9464;">PB</div>
-          <div>
-            <div class="testi-name">P. Berset</div>
-            <div class="testi-role">Gérant · PME artisanale · Fribourg</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testi-card reveal reveal-delay-1">
-        <div class="testi-badge">Vérifié</div>
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-quote">J'ai essayé HubSpot et Pipedrive. Trop lourds pour mon activité. FollowOffer fait exactement ce qu'il faut, sans la complexité. Et le support répond le jour même.</div>
-        <div class="testi-author">
-          <div class="testi-av" style="background:rgba(96,104,168,0.15);color:#6068A8;">LK</div>
-          <div>
-            <div class="testi-name">L. Käser</div>
-            <div class="testi-role">Directeur commercial · Import-export · Bâle</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testi-card reveal reveal-delay-2">
-        <div class="testi-badge">Vérifié</div>
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-quote">La génération d'emails par IA est bluffante. Je glisse mon PDF, je décris le contexte et l'email de relance est parfait. Ça prend 30 secondes.</div>
-        <div class="testi-author">
-          <div class="testi-av" style="background:rgba(168,104,40,0.15);color:#A86828;">NW</div>
-          <div>
-            <div class="testi-name">N. Wyss</div>
-            <div class="testi-role">Technico-commercial · Industrie · Berne</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testi-card reveal reveal-delay-3" style="border-color:rgba(26,115,176,0.25);background:linear-gradient(135deg,var(--bg),rgba(26,115,176,0.04));">
-        <div class="testi-stars" style="margin-bottom:16px;">⭐ 4.9/5</div>
-        <div style="font-size:28px;font-weight:900;color:var(--text);letter-spacing:-1px;margin-bottom:6px;">+38%</div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">Taux de conversion moyen observé chez les utilisateurs Pro après 3 mois d'utilisation.</div>
-        <div style="font-size:11px;color:var(--muted2);">Basé sur les données agrégées des comptes Pro · Suisse romande & alémanique</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- CTA FINAL -->
-<section class="cta-final">
-  <h2>Vos prochaines offres<br>méritent <em>une suite.</em></h2>
-  <p>Rejoignez les commerciaux suisses qui ne perdent plus d'affaires faute de relance.</p>
-  <a href="/app" class="btn-hero">Créer mon compte gratuitement →</a>
-</section>
-
-<!-- SUPPORT -->
-<section style="padding:80px 24px;border-top:1px solid var(--border);">
-  <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;">
+<section class="support-section">
+  <div class="support-inner">
     <div>
-      <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted2);margin-bottom:12px;">Support</div>
-      <h2 style="font-size:clamp(26px,3.5vw,38px);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:16px;">Une question ?<br><span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--blue);">On est là.</span></h2>
-      <p style="font-size:15px;color:var(--muted);line-height:1.65;max-width:400px;">Que ce soit pour configurer votre compte, comprendre une fonctionnalité ou résoudre un problème — répondons dans la journée, 7 jours sur 7.</p>
+      <div class="eyebrow fu">Support</div>
+      <h2 class="section-h fu d1">Une question ?<br><em>On est là.</em></h2>
+      <p class="section-p fu d2" style="margin-top:14px;">Que ce soit pour configurer votre compte ou résoudre un problème — nous répondons dans la journée, 7 jours sur 7.</p>
     </div>
-    <div style="display:flex;flex-direction:column;gap:16px;">
-      <a href="mailto:contact@followoffer.com" style="display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--border2);border-radius:14px;padding:18px 24px;text-decoration:none;transition:all 0.25s;color:inherit;" onmouseover="this.style.borderColor='var(--gold)';this.style.background='var(--s2)'" onmouseout="this.style.borderColor='var(--border2)';this.style.background='var(--s1)'">
-        <div style="width:42px;height:42px;background:var(--gold-d);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">✉️</div>
-        <div style="flex:1">
-          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;">Email · 7j/7</div>
-          <div style="font-size:13px;color:var(--gold);">contact@followoffer.com</div>
-        </div>
-        <div style="color:var(--muted2);font-size:18px;">→</div>
+    <div class="s-cards">
+      <a href="mailto:contact@followoffer.com" class="s-card fu">
+        <div class="s-ico" style="background:rgba(26,115,176,0.12);border:1px solid rgba(26,115,176,0.2);">✉️</div>
+        <div><div class="s-title">Email · 7j/7</div><div class="s-sub">contact@followoffer.com</div></div>
+        <div class="s-arrow">→</div>
       </a>
-      <div style="display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:20px 24px;">
-        <div style="width:44px;height:44px;border-radius:11px;background:rgba(30,148,100,0.1);border:1px solid rgba(30,148,100,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">⚡</div>
-        <div>
-          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;">Réponse rapide</div>
-          <div style="font-size:12px;color:var(--muted);">Réponse sous 24h garantie</div>
-        </div>
+      <div class="s-card fu d1" style="cursor:default;">
+        <div class="s-ico" style="background:rgba(30,148,100,0.10);border:1px solid rgba(30,148,100,0.18);">⚡</div>
+        <div><div class="s-title">Réponse rapide</div><div class="s-sub">Réponse sous 24h garantie</div></div>
       </div>
-      <div style="display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:20px 24px;">
-        <div style="width:44px;height:44px;border-radius:11px;background:rgba(233,184,74,0.1);border:1px solid rgba(233,184,74,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🇨🇭</div>
-        <div>
-          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;">Support suisse</div>
-          <div style="font-size:12px;color:var(--muted);">Français · Pas de chatbot</div>
-        </div>
+      <div class="s-card fu d2" style="cursor:default;">
+        <div class="s-ico" style="background:rgba(212,43,30,0.10);border:1px solid rgba(212,43,30,0.18);"><svg width="20" height="20" viewBox="0 0 32 32"><rect width="32" height="32" fill="#D42B1E"/><rect x="13" y="6" width="6" height="20" fill="white"/><rect x="6" y="13" width="20" height="6" fill="white"/></svg></div>
+        <div><div class="s-title">Support suisse</div><div class="s-sub">Français · Pas de chatbot</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="foot-logo">
-    Follow<em>Offer</em>
-    <svg width="14" height="14" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;">
-      <rect width="32" height="32" fill="#D42B1E"/>
-      <rect x="13" y="6" width="6" height="20" fill="white"/>
-      <rect x="6" y="13" width="20" height="6" fill="white"/>
-    </svg>
+<section class="cta-section">
+  <div class="cta-orb"></div>
+  <div class="cta-inner">
+    <h2 class="section-h fu" style="font-size:clamp(32px,5vw,56px);">Vos prochaines offres<br>méritent <em>une suite.</em></h2>
+    <p class="fu d1" style="font-size:16px;color:var(--muted);margin:16px 0 36px;line-height:1.65;">Rejoignez les commerciaux suisses qui ne perdent plus d'affaires faute de relance.</p>
+    <a href="/app" class="btn-hero fu d2" style="font-size:16px;padding:16px 40px;display:inline-block;">Créer mon compte gratuitement →</a>
+    <p class="fu d3" style="font-size:12px;color:var(--muted3);margin-top:20px;">Gratuit pour commencer · Aucune carte bancaire requise</p>
   </div>
+</section>
+
+<footer class="footer">
+  <a href="/" class="foot-logo">
+    <span class="foot-logo-txt">Follow<span>Offer</span></span>
+    <svg width="14" height="14" viewBox="0 0 32 32" style="border-radius:2px;flex-shrink:0;"><rect width="32" height="32" fill="#D42B1E"/><rect x="13" y="6" width="6" height="20" fill="white"/><rect x="6" y="13" width="20" height="6" fill="white"/></svg>
+  </a>
   <div class="foot-links">
-    <a href="#fonctionnalites">Fonctionnalités</a>
+    <a href="#features">Fonctionnalités</a>
     <a href="#tarifs">Tarifs</a>
     <a href="/app">Tableau de bord</a>
-    <a href="mailto:contact@followoffer.com" style="color:var(--gold-text,#4A9FE0);font-size:13px;font-weight:500;">contact@followoffer.com</a>
+    <a href="mailto:contact@followoffer.com" class="hl">contact@followoffer.com</a>
   </div>
-  <div style="font-size:11px;color:rgba(160,185,215,0.30);margin-top:6px;text-align:center;">Aubry MR · 2012 Neuchâtel · Suisse</div>
-  <div style="margin-top:24px;padding-top:24px;border-top:1px solid rgba(160,185,220,0.08);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;">
-    <div style="font-size:12px;color:rgba(195,210,235,0.35);">
-      © 2026 FollowOffer · Aubry MR · Neuchâtel, Suisse · <a href="mailto:contact@followoffer.com" style="color:rgba(195,210,235,0.45);text-decoration:none;">contact&#64;followoffer&#46;com</a>
-    </div>
-    <div style="font-size:12p
+  <div class="foot-copy">
+    © 2026 FollowOffer · Aubry MR
+    <div style="font-size:10px;margin-top:3px;">2000 Neuchâtel · Suisse</div>
+  </div>
+</footer>
+
 <script>
-(function(){
-  // ═══ SCROLL REVEAL ═══
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting) entry.target.classList.add('visible');
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
-  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => observer.observe(el));
+// NAVBAR
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
 
-  // ═══ COUNTER ANIMATION ═══
-  function animateCount(el, target) {
-    const duration = 1600;
-    const startTime = performance.now();
-    const suffix = el.textContent.replace(/[0-9]/g,'');
-    function update(now) {
-      const p = Math.min((now - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.floor(eased * target) + suffix;
-      if(p < 1) requestAnimationFrame(update);
-    }
-    requestAnimationFrame(update);
-  }
-  const cntObs = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting && !entry.target.dataset.counted) {
-        entry.target.dataset.counted = '1';
-        entry.target.querySelectorAll('.stat-val span:first-child').forEach(span => {
-          const val = parseInt(span.textContent) || 0;
-          animateCount(span, val);
-        });
-      }
-    });
-  }, { threshold: 0.5 });
-  document.querySelectorAll('.stat-item').forEach(el => cntObs.observe(el));
+// SCROLL HINT HIDE
+const sh = document.getElementById('scrollHint');
+window.addEventListener('scroll', () => { if(sh && window.scrollY > 100) sh.style.opacity = '0'; }, { passive: true, once: true });
 
-  // ═══ NAVBAR SCROLL ═══
-  let ticking = false;
-  const nav = document.querySelector('.nav');
-  window.addEventListener('scroll', () => {
-    if(!ticking) {
-      requestAnimationFrame(() => {
-        if(nav) nav.style.background = window.scrollY > 50 ? 'rgba(7,9,14,0.97)' : 'rgba(7,9,14,0.80)';
-        ticking = false;
-      });
-      ticking = true;
+// SCROLL REVEAL
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fu').forEach(el => obs.observe(el));
+
+// COUNTER ANIMATION — ease out cubic
+function counter(el, target, suffix, dur) {
+  const t0 = performance.now();
+  (function tick(now) {
+    const p = Math.min((now - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(e * target) + suffix;
+    if(p < 1) requestAnimationFrame(tick);
+    else el.textContent = target + suffix;
+  })(t0);
+}
+
+const cObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting && !e.target.dataset.done) {
+      e.target.dataset.done = '1';
+      const id = e.target.id;
+      if(id === 'cnt-pct')   counter(e.target, 38, '%', 1800);
+      if(id === 'cnt-chf')   counter(e.target, 490, '', 2200);
+      if(id === 'cnt-x')     counter(e.target, 3, 'x', 1200);
+      if(id === 'testi-cnt') counter(e.target, 38, '%', 1600);
     }
   });
-})();
+}, { threshold: 0.7 });
+
+['cnt-pct','cnt-chf','cnt-x','testi-cnt'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) cObs.observe(el);
+});
 </script>
 </body>
 </html>
