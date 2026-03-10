@@ -1,7 +1,8 @@
 // api/index.js — FollowOffer · Router unique (Vercel Hobby = max 12 functions)
 // Toutes les routes dans un seul fichier serverless
 
-export const config = { api: { bodyParser: false } };
+const config = { api: { bodyParser: false } };
+module.exports.config = config;
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 async function readBody(req) {
@@ -474,7 +475,7 @@ async function handleTrackOpen(req, res) {
 }
 
 // ── Router principal ──────────────────────────────────────────────────────────
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
 
