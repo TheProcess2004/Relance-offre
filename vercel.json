@@ -1,8 +1,15 @@
 {
   "routes": [
+    { "src": "/api/send-email", "dest": "/send-email.js" },
+    { "src": "/api/reset-password", "dest": "/reset-password.js" },
+    { "src": "/api/generate", "dest": "/generate.js" },
+    { "src": "/api/stripe-checkout", "dest": "/stripe-checkout.js" },
+    { "src": "/api/stripe-webhook", "dest": "/stripe-webhook.js" },
+    { "src": "/api/stripe-portal", "dest": "/stripe-portal.js" },
+    { "src": "/api/stripe-status", "dest": "/stripe-status.js" },
+    { "src": "/api/(.*)", "dest": "/$1.js" },
     { "src": "/app", "dest": "/index.html" },
     { "src": "/app/(.*)", "dest": "/index.html" },
-    { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/", "dest": "/landing.html" }
   ]
 }
