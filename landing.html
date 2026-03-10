@@ -899,4 +899,37 @@ const co = new IntersectionObserver(en => {
 }, { threshold: 0.7 });
 ['cnt-c','cnt-p','cnt-t','cnt-testi'].forEach(id => {
   const el = document.getElementById(id);
-  if(el) co.observe
+  if(el) (el);
+});
+
+// FAQ ACCORDION
+function toggleFaqItem(btn) {
+  const ans = btn.nextElementSibling;
+  const isOpen = ans.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('open'));
+  if(!isOpen) { ans.classList.add('open'); btn.classList.add('open'); }
+}
+</script>
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <div class="foot-logo">
+    <span class="foot-brand">Follow<span class="o">Offer</span></span>
+    <svg width="14" height="14" viewBox="0 0 32 32" style="border-radius:2px;flex-shrink:0;"><rect width="32" height="32" fill="#C42B1C"/><rect x="13" y="6" width="6" height="20" fill="white"/><rect x="6" y="13" width="20" height="6" fill="white"/></svg>
+  </div>
+  <div class="foot-links">
+    <a href="#solution">Solution</a>
+    <a href="#fonctionnalites">Fonctionnalités</a>
+    <a href="#tarifs">Tarifs</a>
+    <a href="#faq">FAQ</a>
+    <a href="/app">Tableau de bord</a>
+    <a href="mailto:contact@followoffer.com" class="hl">contact@followoffer.com</a>
+  </div>
+  <div class="foot-copy">
+    © 2026 FollowOffer · Aubry MR
+    <div style="font-size:10px;margin-top:3px;color:var(--muted3)">2000 Neuchâtel · Suisse</div>
+  </div>
+</footer>
+
+</body>
+</html>
