@@ -3714,7 +3714,7 @@ function startOnboarding() {
 function renderObStep(step) {
   const card = document.getElementById('ob-card');
   if(!card) return;
-  const steps = ['Bienvenue','Profil','Email','Flux','Prêt'];
+  const steps = ['Bienvenue','Profil & Email','Flux','Prêt'];
   const dots = steps.map((_,i) => `<div class="ob-step-dot ${i<step?'done':i===step?'active':''}"></div>`).join('');
 
   const content = [
@@ -3724,26 +3724,22 @@ function renderObStep(step) {
     <div class="ob-sub">Votre suite commerciale pour envoyer, suivre et relancer vos offres automatiquement. Configurons tout en 2 minutes.</div>
     <div class="ob-checklist">
       <div class="ob-check-item checked"><div class="ob-check-box">✓</div><div><strong>Compte créé</strong> — Vous êtes connecté</div></div>
-      <div class="ob-check-item"><div class="ob-check-box"></div><div>Remplir votre profil commercial</div></div>
-      <div class="ob-check-item"><div class="ob-check-box"></div><div>Connecter votre email</div></div>
+      <div class="ob-check-item"><div class="ob-check-box"></div><div>Compléter votre profil & signature</div></div>
+      <div class="ob-check-item"><div class="ob-check-box"></div><div>Comprendre le flux commercial</div></div>
       <div class="ob-check-item"><div class="ob-check-box"></div><div>Envoyer votre première offre</div></div>
     </div>`,
-    // Step 1 — Profil (nom déjà connu depuis inscription)
+    // Step 1 — Profil + Email + Signature (tout en une étape)
     `<div class="ob-ico">👤</div>
-    <div class="ob-title">Votre profil commercial</div>
-    <div class="ob-sub">Ces infos apparaîtront dans vos emails et signature. Votre nom et email ont été récupérés automatiquement.</div>
-    <div class="ob-field"><label>Prénom et nom</label><input id="ob-name" type="text" placeholder="Jean Dupont" value="${CFG.name||''}"></div>
-    <div class="ob-field"><label>Entreprise</label><input id="ob-company" type="text" placeholder="Dupont SA" value="${CFG.company||''}"></div>
-    <div class="ob-field"><label>Rôle / Fonction</label><input id="ob-role" type="text" placeholder="Responsable commercial" value="${CFG.role||''}"></div>
-    <div class="ob-field"><label>Téléphone</label><input id="ob-phone" type="tel" placeholder="+41 79 000 00 00" value="${CFG.phone||''}"></div>
-    <div class="ob-field" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Email du compte</div><div style="font-size:13px;color:var(--text);">${CURRENT_USER?.email||'—'} <span style="color:var(--green);font-size:11px;">✓ Récupéré</span></div></div>`,
-    // Step 2 — Email
-    `<div class="ob-ico">📧</div>
-    <div class="ob-title">Connecter votre email</div>
-    <div class="ob-sub">Configurez l'adresse email depuis laquelle vos offres seront envoyées via Brevo.</div>
+    <div class="ob-title">Votre profil & signature</div>
+    <div class="ob-sub">Ces informations apparaîtront dans tous vos emails d'offre et de relance. Elles seront enregistrées dans votre configuration.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="ob-field"><label>Prénom et nom</label><input id="ob-name" type="text" placeholder="Jean Dupont" value="${CFG.name||''}"></div>
+      <div class="ob-field"><label>Entreprise</label><input id="ob-company" type="text" placeholder="Dupont SA" value="${CFG.company||''}"></div>
+      <div class="ob-field"><label>Rôle / Fonction</label><input id="ob-role" type="text" placeholder="Responsable commercial" value="${CFG.role||''}"></div>
+      <div class="ob-field"><label>Téléphone</label><input id="ob-phone" type="tel" placeholder="+41 79 000 00 00" value="${CFG.phone||''}"></div>
+    </div>
     <div class="ob-field"><label>Email expéditeur</label><input id="ob-sender-email" type="email" placeholder="jean@entreprise.ch" value="${CFG.senderEmail||CURRENT_USER?.email||''}"></div>
-    <div class="ob-field"><label>Clé API Brevo (optionnel)</label><input id="ob-brevo-key" type="text" placeholder="xkeysib-..." value="${CFG.brevoKey||''}"></div>
-    <div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:12px;color:var(--muted);line-height:1.6;">💡 Sans clé Brevo, les emails passent par notre serveur par défaut. Pour un volume élevé, créez un compte <strong style="color:var(--text);">brevo.com</strong> gratuit.</div>`,
+    <div class="ob-field" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Compte connecté</div><div style="font-size:13px;color:var(--text);">${CURRENT_USER?.email||'—'}</div></div><span style="color:var(--green);font-size:11px;font-weight:700;">✓ Actif</span></div>`,
     // Step 3 — Flux
     `<div class="ob-ico">⚡</div>
     <div class="ob-title">Comment ça marche</div>
@@ -3777,8 +3773,10 @@ function renderObStep(step) {
 }
 
 async function obNext(currentStep) {
-  if(currentStep === 1) await obSaveProfile();
-  if(currentStep === 2) await obSaveEmail();
+  if(currentStep === 1) {
+    await obSaveProfile();
+    await obSaveEmail();
+  }
   renderObStep(currentStep + 1);
 }
 
