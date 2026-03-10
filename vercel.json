@@ -1,7 +1,8 @@
 {
-  "routes": [
-    { "src": "/app", "dest": "/index.html" },
-    { "src": "/app/(.*)", "dest": "/index.html" },
-    { "src": "/", "dest": "/landing.html" }
+  "crons": [
+    {
+      "path": "/api/cron-relances",
+      "schedule": "0 6 * * *"
+    }
   ]
 }
