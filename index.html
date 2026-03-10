@@ -1099,8 +1099,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div class="fcard-t" style="color:var(--gold);">💳 Votre abonnement</div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--s2);border-radius:10px;margin-bottom:16px;">
             <div>
-              <div style="font-size:13px;font-weight:700;">Plan Gratuit <span style="font-size:11px;background:rgba(34,197,94,0.15);color:var(--green);padding:2px 8px;border-radius:20px;margin-left:6px;">Actif</span></div>
-              <div style="font-size:12px;color:var(--muted);margin-top:3px;">Jusqu'à 5 offres · Relances manuelles</div>
+              <div style="font-size:13px;font-weight:700;" id="abo-plan-title">Plan Gratuit <span style="font-size:11px;background:rgba(34,197,94,0.15);color:var(--green);padding:2px 8px;border-radius:20px;margin-left:6px;" id="abo-plan-status">Actif</span></div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px;" id="abo-plan-desc">Jusqu'à 5 offres · Relances manuelles</div>
             </div>
             <div style="font-size:20px;font-weight:800;color:var(--gold);">0 CHF</div>
           </div>
@@ -1710,7 +1710,7 @@ function renderClients(){
     const last=c.offers[c.offers.length-1];
     return `<div class="client-card" onclick="openClientModal('${c.email}')">
       <div class="cc-top">
-        <div class="cc-av" style="background:${AVATARS[i%AVATARS.length]}22;color:${AVATARS[i%AVATARS.length]};border:1.5px solid ${AVATARS[i%AVATARS.length]}44;">${c.prenom[0]}${c.nom[0]}</div>
+        <div class="cc-av" style="background:${AVATARS[i%AVATARS.length]}22;color:${AVATARS[i%AVATARS.length]};border:1.5px solid ${AVATARS[i%AVATARS.length]}44;">${(c.prenom||'?')[0].toUpperCase()}${(c.nom||'')[0]?.toUpperCase()||''}</div>
         <div><div class="cc-name">${c.prenom} ${c.nom}</div><div class="cc-email">${c.email}</div></div>
       </div>
       <div class="cc-stats">
@@ -2849,7 +2849,7 @@ async function sbAuthFetch(path, options={}) {
 
 // Plans et leurs limites
 const PLANS_CONFIG = {
-  free:     { name: 'Gratuit',  maxOffres: 5,   relancesAuto: false, tracking: false, rapportIA: false },
+  free:     { name: 'Gratuit',  maxOffres: 5,   relancesAuto: true,  tracking: false, rapportIA: false },
   pro:      { name: 'Pro',      maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  },
   business: { name: 'Business', maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  }
 };
@@ -2935,7 +2935,7 @@ function checkOfferLimit() {
   const plan = getCurrentPlan();
   if(OFFERS.length >= plan.maxOffres) {
     if(!isPro()) {
-      toast('🔒', 'Limite ' + plan.maxOffres + ' offres atteinte — passez à Pro pour continuer');
+      toast('🔒', 'Limite de 5 offres atteinte. Passez à Pro pour des offres illimitées →');
       setTimeout(() => { go('config'); showCfgTab('abo'); }, 1500);
       return false;
     }
@@ -2969,6 +2969,49 @@ function showCfgTab(tab) {
   });
   // Remplir usage stats si onglet abo
   if(tab === 'abo') {
+    // Header plan dynamique
+    const aboTitle = document.getElementById('abo-plan-title');
+    const aboDesc  = document.getElementById('abo-plan-desc');
+    const aboStatus = document.getElementById('abo-plan-status');
+    const isPro = USER_PLAN === 'pro' || USER_PLAN === 'business';
+    if(aboTitle) {
+      if(isPro) {
+        const tn = aboTitle.childNodes[0];
+        if(tn) tn.textContent = 'FollowOffer Pro ';
+        if(aboStatus) { aboStatus.textContent = 'Actif'; aboStatus.style.background = 'rgba(26,115,176,0.18)'; aboStatus.style.color = 'var(--gold)'; }
+        if(aboDesc) aboDesc.textContent = 'Offres illimitées · Relances automatiques · Rapport IA';
+      } else {
+        const tn = aboTitle.childNodes[0];
+        if(tn) tn.textContent = 'Plan Gratuit ';
+        if(aboStatus) { aboStatus.textContent = 'Actif'; aboStatus.style.background = 'rgba(34,197,94,0.15)'; aboStatus.style.color = 'var(--green)'; }
+        if(aboDesc) aboDesc.textContent = "Jusqu'à 5 offres · Relances manuelles";
+      }
+    }
+    // Banner limite atteinte
+    const usedOffers = OFFERS.length;
+    let bannerEl = document.getElementById('abo-limit-banner');
+    if(!bannerEl) {
+      bannerEl = document.createElement('div');
+      bannerEl.id = 'abo-limit-banner';
+      bannerEl.style.cssText = 'margin:12px 0 0;padding:12px 16px;border-radius:10px;background:rgba(192,53,53,0.12);border:1px solid rgba(192,53,53,0.25);color:#E07070;font-size:12px;display:none;';
+      const aboCard = document.querySelector('#cfg-tab-abo .s-card');
+      if(aboCard) aboCard.insertBefore(bannerEl, aboCard.firstChild);
+    }
+    if(!isPro && usedOffers >= 5) {
+      bannerEl.style.display = '';
+      bannerEl.textContent = '';
+      const bSpan = document.createElement('span');
+      bSpan.innerHTML = '<strong>Limite atteinte</strong> — Vous avez ' + usedOffers + '/5 offres utilisées. ';
+      const bLink = document.createElement('a');
+      bLink.href = '#'; bLink.textContent = 'Passer à Pro →';
+      bLink.style.cssText = 'color:var(--gold);text-decoration:underline;';
+      bLink.onclick = function(ev){ ev.preventDefault(); document.querySelector('.pro-cta-btn')?.scrollIntoView({behavior:'smooth'}); };
+      bannerEl.innerHTML = '⚠️ ';
+      bannerEl.appendChild(bSpan);
+      bannerEl.appendChild(bLink);
+    } else {
+      bannerEl.style.display = 'none';
+    }
     const won = OFFERS.filter(o=>o.status==='won').length;
     const relSent = OFFERS.filter(o=>['relance1','relance2','relance3'].includes(o.status)).length;
     const uO = document.getElementById('usage-offres');
@@ -3471,7 +3514,7 @@ function updateUserUI() {
       if(upgLbl)  upgLbl.style.display='none';
     } else {
       planLbl.textContent='Plan Gratuit'; planLbl.style.color='#ECF0FA';
-      if(planSub) { const used=OFFERS.filter(o=>o.status!=='won'&&o.status!=='lost').length; const left=Math.max(0,5-used); planSub.textContent=left+' offre'+(left>1?'s':'')+' restante'+(left>1?'s':''); }
+      if(planSub) { const used=OFFERS.length; const left=Math.max(0,5-used); planSub.textContent=used+'/5 offres · '+left+' restante'+(left>1?'s':''); }
       if(upgLbl)  upgLbl.style.display='';
     }
   }
@@ -3483,15 +3526,6 @@ function updateUserUI() {
   const av=document.getElementById('user-avatar'); if(av) av.textContent=_i;
   const nm=document.getElementById('user-name');   if(nm) nm.textContent=_n;
   const rl=document.getElementById('user-role');   if(rl) rl.textContent=CFG.role?(CFG.role+(CFG.company?' · '+CFG.company:'')):(CFG.company||_e);
-  const name = CFG.name || CURRENT_USER.user_metadata?.full_name || CURRENT_USER.email.split('@')[0];
-  const role = CFG.role || CFG.senderEmail || CURRENT_USER.email;
-  const initials = name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
-  const nameEl = document.getElementById('user-name');
-  const roleEl = document.getElementById('user-role');
-  const avatarEl = document.getElementById('user-avatar');
-  if(nameEl) nameEl.textContent = name;
-  if(roleEl) roleEl.textContent = role;
-  if(avatarEl) avatarEl.textContent = initials;
 }
 
 async function loadApp() {
