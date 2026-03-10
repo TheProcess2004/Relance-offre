@@ -610,6 +610,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
       Site web
     </a>
+    <a href="/legal.html" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:11px;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Mentions légales
+    </a>
     <div class="sb-user">
       <div class="sb-av" id="user-avatar">—</div>
       <div style="flex:1;min-width:0;">
@@ -1783,6 +1787,7 @@ function openModal(id){
       <button class="btn btn-green btn-sm" onclick="askConfirm('won','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✓ Gagnée</button>
       <button class="btn btn-red btn-sm" onclick="askConfirm('lost','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✕ Perdue</button>
       <button class="btn btn-ghost btn-sm" onclick="editOffer('${o.id}')">✎ Modifier</button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red);" onclick="askDeleteOffer('${o.id}','${o.prenom} ${o.nom}')">🗑 Supprimer</button>
     </div>`;
   document.getElementById('overlay').classList.add('open');
 }
@@ -1842,6 +1847,41 @@ async function actR(id){
     renderOffres(); renderRelances(); renderUrgent();
   } catch(e){ toast('❌','Erreur: '+e.message.slice(0,50)); }
 }
+async function askDeleteOffer(id, name) {
+  closeModal();
+  pendingConfirm = { type: 'delete', id };
+  document.getElementById('conf-ico').textContent = '🗑';
+  document.getElementById('conf-t').textContent = 'Supprimer cette offre ?';
+  document.getElementById('conf-s').textContent = `${name} — Cette action est irréversible. L'offre et ses relances seront supprimées.`;
+  const btn = document.getElementById('conf-btn');
+  btn.className = 'btn btn-red';
+  btn.textContent = '🗑 Confirmer la suppression';
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+
+async function deleteOffer(id) {
+  const o = OFFERS.find(x => x.id === id);
+  if (!o) return;
+  try {
+    toast('⏳', 'Suppression en cours...');
+    // Supprimer les relances liées
+    await sbFetch('relances?offre_id=eq.' + id, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+    // Supprimer les ouvertures liées
+    await sbFetch('ouvertures?offre_id=eq.' + id, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+    // Supprimer l'offre
+    await sbFetch('offres?id=eq.' + id, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+    // Retirer du tableau local
+    OFFERS = OFFERS.filter(x => x.id !== id);
+    updateBadges();
+    renderOffres();
+    renderRelances();
+    renderUrgent();
+    toast('✅', `Offre supprimée — ${o.prenom} ${o.nom}`);
+  } catch (e) {
+    toast('❌', 'Erreur suppression : ' + e.message.slice(0, 60));
+  }
+}
+
 async function actW(id){
   const o=OFFERS.find(x=>x.id===id);
   if(!o)return;
@@ -2237,7 +2277,8 @@ async function confirmAction() {
   if(!pendingConfirm) return;
   closeConfirm();
   if(pendingConfirm.type === 'won') await actW(pendingConfirm.id);
-  else await actL(pendingConfirm.id);
+  else if(pendingConfirm.type === 'lost') await actL(pendingConfirm.id);
+  else if(pendingConfirm.type === 'delete') await deleteOffer(pendingConfirm.id);
   pendingConfirm = null;
 }
 function closeConfirm() {
