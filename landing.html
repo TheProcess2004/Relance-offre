@@ -673,6 +673,13 @@ button{font-family:inherit;}
 .mission-val{font-size:11px;font-weight:600;color:rgba(226,232,244,0.45);background:rgba(255,255,255,0.04);border:1px solid var(--de-bdr);padding:4px 12px;border-radius:100px;letter-spacing:0.3px;}
 @media(max-width:680px){.mission-inner{grid-template-columns:1fr;gap:28px;}.mission-right{border-left:none;padding-left:0;border-top:1px solid var(--de-bdr);padding-top:28px;}}
 
+/* ═══ DEMO CURSOR ═══ */
+#demo-cursor{will-change:left,top;}
+.msb-nav.demo-hover{background:rgba(21,85,168,0.08)!important;color:var(--muted)!important;}
+.msb-nav.demo-active{background:var(--blue3)!important;color:var(--blue)!important;}
+.m-kpi.demo-hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(21,85,168,0.12);}
+@keyframes clickRing{0%{transform:translate(-4px,-4px) scale(0);opacity:0.9;}100%{transform:translate(-4px,-4px) scale(1.8);opacity:0;}}
+
 </style>
 </head>
 <body>
@@ -748,22 +755,28 @@ button{font-family:inherit;}
         <div class="mw-url"><div class="mw-pill">🔒 followoffer.com/app</div></div>
       </div>
       <div class="mw-body" style="position:relative;" id="dash-mockup">
+        <div id="demo-cursor" style="position:absolute;width:16px;height:16px;z-index:50;pointer-events:none;transition:left 0.55s cubic-bezier(.4,0,.2,1),top 0.55s cubic-bezier(.4,0,.2,1);opacity:0;">
+          <svg viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="20">
+            <path d="M0 0L0 16L4.5 12L7.5 19L9.5 18L6.5 11L12 11Z" fill="white" stroke="#222" stroke-width="0.8"/>
+          </svg>
+          <div id="demo-click-ring" style="position:absolute;top:0;left:0;width:24px;height:24px;border-radius:50%;border:2px solid rgba(21,85,168,0.7);transform:translate(-4px,-4px) scale(0);opacity:0;transition:none;"></div>
+        </div>
         <div class="mw-sb">
           <div class="msb-logo">
             <span class="msb-brand">Follow<span class="o">Offer</span></span>
             <svg width="13" height="13" viewBox="0 0 32 32" style="border-radius:2px;flex-shrink:0;"><rect width="32" height="32" fill="#C42B1C"/><rect x="13" y="6" width="6" height="20" fill="white"/><rect x="6" y="13" width="20" height="6" fill="white"/></svg>
           </div>
-          <div class="msb-nav on">📊  Dashboard</div>
-          <div class="msb-nav" style="margin-top:2px;">📄  Offres</div>
-          <div class="msb-nav">👥  Clients</div>
-          <div class="msb-nav">📅  Calendrier</div>
-          <div class="msb-nav">📊  Rapports</div>
-          <div class="msb-nav" style="margin-top:12px;">⚙️  Paramètres</div>
-          <div class="msb-nav">💳  Abonnement</div>
+          <div class="msb-nav on" id="mnav-dashboard">📊  Dashboard</div>
+          <div class="msb-nav" id="mnav-offres" style="margin-top:2px;">📄  Offres</div>
+          <div class="msb-nav" id="mnav-clients">👥  Clients</div>
+          <div class="msb-nav" id="mnav-calendrier">📅  Calendrier</div>
+          <div class="msb-nav" id="mnav-rapports">📊  Rapports</div>
+          <div class="msb-nav" id="mnav-params" style="margin-top:12px;">⚙️  Paramètres</div>
+          <div class="msb-nav" id="mnav-abo">💳  Abonnement</div>
         </div>
         <div class="mw-main">
-          <div class="m-kpi"><div class="m-kv" style="color:#1555A8">8</div><div class="m-kl">Offres actives</div></div>
-          <div class="m-kpi"><div class="m-kv" style="color:#1A7A4A">42 K</div><div class="m-kl">CA gagné CHF</div></div>
+          <div class="m-kpi" id="mkpi-1"><div class="m-kv" style="color:#1555A8">8</div><div class="m-kl">Offres actives</div></div>
+          <div class="m-kpi" id="mkpi-2"><div class="m-kv" style="color:#1A7A4A">42 K</div><div class="m-kl">CA gagné CHF</div></div>
           <div class="m-kpi"><div class="m-kv" style="color:#9A6218">28 K</div><div class="m-kl">Pipeline CHF</div></div>
           <div class="m-kpi"><div class="m-kv" style="color:#C42B1C">64%</div><div class="m-kl">Conversion</div></div>
           <div class="m-chart" style="grid-column:span 3;">
@@ -965,7 +978,7 @@ button{font-family:inherit;}
         <span class="tc-ok">✓ Vérifié</span>
         <div class="tc-stars">★★★★★</div>
         <p class="tc-quote">Avant, je notais mes relances dans un tableau Excel. J'en oubliais la moitié. En 2 mois, j'ai récupéré 3 offres que j'aurais complètement loupées.</p>
-        <div class="tc-author"><div class="tc-av" style="background:var(--blue3);color:var(--blue);">RM</div><div><div class="tc-name">R. Müller</div><div class="tc-role">Commercial indépendant · Zurich</div></div></div>
+        <div class="tc-author"><div class="tc-av" style="background:var(--blue3);color:var(--blue);">RM</div><div><div class="tc-name">R. Müller</div><div class="tc-role">Commercial indépendant · Genève</div></div></div>
       </div>
       <div class="testi-card r d1">
         <span class="tc-ok">✓ Vérifié</span>
@@ -977,7 +990,7 @@ button{font-family:inherit;}
         <div class="tc-stat-big"><span id="cnt-testi">38</span><span class="tc-stat-suffix">%</span></div>
         <div class="tc-stat-sub">⭐ 4.7 / 5</div>
         <div class="tc-stat-desc">Taux de conversion moyen en plus observé chez les utilisateurs Pro après 3 mois</div>
-        <div class="tc-stat-note">Données agrégées · Comptes Pro actifs · Suisse romande & alémanique</div>
+        <div class="tc-stat-note">Données agrégées · Comptes Pro actifs · Suisse romande</div>
       </div>
       <div class="testi-card r d1">
         <span class="tc-ok">✓ Vérifié</span>
@@ -989,13 +1002,13 @@ button{font-family:inherit;}
         <span class="tc-ok">✓ Vérifié</span>
         <div class="tc-stars">★★★★★</div>
         <p class="tc-quote">J'ai essayé Pipedrive et HubSpot. Trop lourds pour mon activité. FollowOffer fait exactement ce qu'il faut, le support répond le jour même, en français.</p>
-        <div class="tc-author"><div class="tc-av" style="background:rgba(96,104,168,0.12);color:#606890;">LK</div><div><div class="tc-name">L. Käser</div><div class="tc-role">Directeur commercial · Bâle</div></div></div>
+        <div class="tc-author"><div class="tc-av" style="background:rgba(96,104,168,0.12);color:#606890;">LK</div><div><div class="tc-name">L. Käser</div><div class="tc-role">Directeur commercial · Nyon</div></div></div>
       </div>
       <div class="testi-card r d3">
         <span class="tc-ok">✓ Vérifié</span>
         <div class="tc-stars">★★★★★</div>
         <p class="tc-quote">La génération d'emails IA est très bien faite. Je dépose mon PDF, décris le contexte, et l'email de relance est crédible et personnalisé. 30 secondes.</p>
-        <div class="tc-author"><div class="tc-av" style="background:rgba(168,104,40,0.12);color:#A86828;">NW</div><div><div class="tc-name">N. Wyss</div><div class="tc-role">Technico-commercial · Berne</div></div></div>
+        <div class="tc-author"><div class="tc-av" style="background:rgba(168,104,40,0.12);color:#A86828;">NW</div><div><div class="tc-name">N. Wyss</div><div class="tc-role">Technico-commercial · Morges</div></div></div>
       </div>
     </div>
   </div>
@@ -1108,9 +1121,9 @@ button{font-family:inherit;}
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      <a href="/cdn-cgi/l/email-protection#dab9b5b4aebbb9ae9abcb5b6b6b5adb5bcbcbfa8f4b9b5b7" class="de-s-card r d1" style="text-decoration:none;">
+      <a href="mailto:contact@followoffer.com" class="de-s-card r d1" style="text-decoration:none;">
         <div class="de-s-ico" style="background:rgba(21,85,168,0.15);">✉️</div>
-        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub"><span class="__cf_email__" data-cfemail="5f3c30312b3e3c2b1f3930333330283039393a2d713c3032">[email&#160;protected]</span></div></div>
+        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub">contact@followoffer.com</div></div>
         <span style="margin-left:auto;color:rgba(226,232,244,0.3);font-size:18px;">→</span>
       </a>
       <div class="de-s-card r d1" style="cursor:default">
@@ -1171,7 +1184,7 @@ button{font-family:inherit;}
         </div>
         <div class="cf-field"><label class="cf-label" for="cf-message">Message</label><textarea class="cf-textarea" id="cf-message" placeholder="Décrivez votre besoin en quelques lignes..."></textarea></div>
         <button class="cf-btn" id="cf-btn" onclick="submitContact()"><span id="cf-btn-txt">Envoyer le message →</span></button>
-        <div class="cf-note">Réponse garantie sous 24h · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3c5f5352485d5f487c5a535050534b535a5a594e125f5351">[email&#160;protected]</a></div>
+        <div class="cf-note">Réponse garantie sous 24h · <a href="mailto:contact@followoffer.com">contact@followoffer.com</a></div>
       </div>
       <div id="cf-success" style="display:none;text-align:center;padding:24px 0;">
         <div style="font-size:40px;margin-bottom:14px;">✅</div>
@@ -1209,10 +1222,9 @@ button{font-family:inherit;}
       <p class="mission-text">FollowOffer est né d'un constat simple : les PME romandes perdent des affaires <strong>non par manque de compétence, mais par manque de suivi structuré.</strong></p>
       <p class="mission-text" style="margin-bottom:0;">Nous construisons un outil qui fait une seule chose — <strong>transformer chaque offre envoyée en une opportunité suivie jusqu'au bout.</strong> Pas un CRM de plus. Pas un outil américain surdimensionné. Un outil fait pour vous, depuis la Suisse.</p>
       <div class="mission-sig">
-        <div class="mission-sig-av">A</div>
+        <div class="mission-sig-av">FO</div>
         <div>
-          <div class="mission-sig-name">Axel Aubry</div>
-          <div class="mission-sig-role">Fondateur · FollowOffer · Neuchâtel 🇨🇭</div>
+          <div class="mission-sig-role" style="font-size:12px;color:rgba(226,232,244,0.55);">Fondateur · FollowOffer · Neuchâtel 🇨🇭</div>
         </div>
       </div>
     </div>
@@ -1235,7 +1247,7 @@ button{font-family:inherit;}
     <a href="#" onclick="openLegal('mentions');return false;">Mentions légales</a>
     <a href="#" onclick="openLegal('cgv');return false;">CGV</a>
     <a href="#" onclick="openLegal('confidentialite');return false;">Confidentialité</a>
-    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1d7e7273697c7e695d7b727171726a727b7b786f337e7270">[email&#160;protected]</a>
+    <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -1420,7 +1432,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <h2>Mentions légales</h2>
         <h3>Éditeur du service</h3>
         <p><strong>FollowOffer</strong><br>2000 Neuchâtel, Suisse<br>
-        Email : <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5d3e3233293c3e291d3b323131322a323b3b382f733e3230">[email&#160;protected]</a><br>
+        Email : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a><br>
         Site : <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>Hébergement</h3>
         <p>L'application FollowOffer est hébergée par <strong>Vercel Inc.</strong><br>
@@ -1456,7 +1468,7 @@ if(window.location.hash.startsWith('#legal-')) {
           <li>Ne pas tenter de contourner les limites du plan gratuit</li>
         </ul>
         <h3>Article 6 — Résiliation</h3>
-        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="17747879637674635771787b7b786078717172653974787a">[email&#160;protected]</a>. Suppression des données sous 30 jours.</p>
+        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>. Suppression des données sous 30 jours.</p>
         <h3>Article 7 — Droit applicable</h3>
         <p>CGV soumises au <strong>droit suisse</strong>. Tout litige relève de la compétence des tribunaux de Neuchâtel.</p>
         <p class="legal-date">CGV en vigueur depuis mars 2026.</p>
@@ -1467,7 +1479,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <div class="legal-info-box">Conforme à la <strong>Loi fédérale sur la protection des données (LPD)</strong> révisée en vigueur depuis le 1er septembre 2023, ainsi qu'au RGPD européen.</div>
         <h3>1. Responsable du traitement</h3>
         <p><strong>FollowOffer</strong> · 2000 Neuchâtel, Suisse<br>
-        <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9dfef2f3e9fcfee9ddfbf2f1f1f2eaf2fbfbf8efb3fef2f0">[email&#160;protected]</a> · <a href="https://followoffer.com">followoffer.com</a></p>
+        <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>2. Données collectées</h3>
         <table>
           <tr><th>Catégorie</th><th>Données</th><th>Finalité</th></tr>
@@ -1488,4 +1500,21 @@ if(window.location.hash.startsWith('#legal-')) {
         </table>
         <h3>4. Vos droits (LPD & RGPD)</h3>
         <p>Accès, rectification, effacement, portabilité (export CSV dans l'app), opposition.<br>
-        Contact : <a href="/cdn-cgi/l/email-protection" class="__cf
+        Contact : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a></p>
+        <h3>5. Conservation</h3>
+        <p>Données conservées pendant la durée de la relation contractuelle + 2 ans. Suppression sous 30 jours sur demande.</p>
+        <p class="legal-date">Politique mise à jour en mars 2026.</p>
+      </div>
+
+      <div class="lpanel" id="lpanel-cookies">
+        <h2>Politique cookies</h2>
+        <p>FollowOffer utilise uniquement des cookies techniques strictement nécessaires au fonctionnement du service (session d'authentification). Aucun cookie publicitaire ou de tracking tiers n'est utilisé.</p>
+        <p class="legal-date">Document mis à jour en mars 2026.</p>
+      </div>
+
+    </div><!-- .legal-body -->
+  </div><!-- .legal-panel -->
+</div><!-- .legal-overlay -->
+
+</body>
+</html>
