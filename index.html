@@ -45,6 +45,23 @@ body.light-mode .sb-sec-label{color:rgba(28,25,23,0.32);}
 /* Champs de formulaire */
 body.light-mode input,body.light-mode select,body.light-mode textarea{background:#FFFFFF;color:var(--text);border-color:rgba(0,0,0,0.12);}
 body.light-mode input::placeholder,body.light-mode textarea::placeholder{color:rgba(28,25,23,0.35);}
+/* Sidebar dark-hardcoded classes → light override */
+body.light-mode .logo-text{color:#1C1917!important;}
+body.light-mode .logo-accent{color:#2563A8!important;}
+body.light-mode .sb-tagline{color:rgba(28,25,23,0.30)!important;}
+body.light-mode .sb-sitelink{color:rgba(28,25,23,0.45)!important;}
+body.light-mode .sb-sitelink:hover{color:#1C1917!important;border-color:rgba(0,0,0,0.15)!important;}
+body.light-mode .sb-legal-link{color:rgba(28,25,23,0.35)!important;}
+body.light-mode .sb-legal-link:hover{color:rgba(28,25,23,0.65)!important;}
+body.light-mode .sb-logout-btn{color:rgba(28,25,23,0.42)!important;}
+body.light-mode .sb-logout-btn:hover{color:#1C1917!important;}
+body.light-mode .sb-home-link{color:rgba(28,25,23,0.32)!important;}
+body.light-mode .sb-home-link:hover{color:rgba(28,25,23,0.65)!important;}
+body.light-mode .sb-plan-sub{color:rgba(28,25,23,0.42)!important;}
+body.light-mode #sb-plan-label{color:#1C1917!important;}
+body.light-mode #sb-upgrade-lbl{color:#2563A8!important;}
+body.light-mode #sb-abo-btn{border-color:rgba(37,99,168,0.20)!important;background:rgba(37,99,168,0.06)!important;}
+body.light-mode #sb-abo-btn:hover{background:rgba(37,99,168,0.11)!important;}
 /* Textes — forcer le texte foncé sur toutes les classes hardcodées dark */
 body.light-mode .cn{color:#1C1917!important;font-weight:700;}
 body.light-mode .ce{color:rgba(28,25,23,0.55)!important;}
@@ -163,6 +180,18 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .sb-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--purple));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
 .sb-nm{font-size:12px;font-weight:600;color:#ECF0FA;}
 .sb-rl{font-size:10px;color:rgba(195,210,235,0.52);}
+/* Sidebar reusable classes */
+.logo-text{color:#ECF0FA;}
+.sb-tagline{color:rgba(160,185,215,0.30);}
+.sb-sitelink{display:flex;align-items:center;gap:6px;padding:7px 14px 7px 12px;margin:0 8px 6px;border-radius:8px;font-size:12px;color:var(--muted2);text-decoration:none;transition:all 0.2s;border:1px solid transparent;}
+.sb-sitelink:hover{border-color:var(--border2);color:var(--muted);}
+.sb-legal-link{display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:11px;color:rgba(255,255,255,0.28);text-decoration:none;transition:color 0.2s;}
+.sb-legal-link:hover{color:rgba(255,255,255,0.60);}
+.sb-logout-btn{font-size:10px;color:rgba(195,210,235,0.42);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-family:'Outfit',sans-serif;}
+.sb-logout-btn:hover{color:rgba(195,210,235,0.75);}
+.sb-home-link{font-size:10px;color:rgba(195,210,235,0.30);cursor:pointer;padding:0;margin-top:5px;font-family:'Outfit',sans-serif;text-decoration:none;display:block;letter-spacing:0.3px;}
+.sb-home-link:hover{color:rgba(195,210,235,0.60);}
+.sb-plan-sub{color:var(--muted2);}
 
 /* MAIN */
 .main{margin-left:230px;flex:1;display:flex;flex-direction:column;}
@@ -663,14 +692,14 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="sb-glow" style="pointer-events:none;"></div>
   <div class="sb-brand">
     <div class="sb-logo" style="display:flex;align-items:center;gap:6px;padding:2px 0;">
-      <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;letter-spacing:-0.3px;color:#ECF0FA;">Follow<span style="color:#4D90DC;">Offer</span></span>
+      <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;letter-spacing:-0.3px;" class="logo-text">Follow<span style="color:#4D90DC;" class="logo-accent">Offer</span></span>
       <svg width="13" height="13" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;flex-shrink:0;">
         <rect width="32" height="32" fill="#D42B1E"/>
         <rect x="13" y="6" width="6" height="20" fill="white"/>
         <rect x="6" y="13" width="20" height="6" fill="white"/>
       </svg>
     </div>
-    <div style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(160,185,215,0.32);padding-left:2px;margin-top:3px;font-family:'Outfit',sans-serif;">Chaque relance compte</div>
+    <div class="sb-tagline" style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;padding-left:2px;margin-top:3px;font-family:'Outfit',sans-serif;">Chaque relance compte</div>
   </div>
   <nav class="sb-nav" id="sb-nav">
     <div class="sb-section">
@@ -707,17 +736,17 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div style="display:flex;align-items:center;gap:7px;">
         <span style="font-size:13px;">💳</span>
         <div style="text-align:left;">
-          <div style="font-size:11px;font-weight:700;color:var(--text);line-height:1.25;" id="sb-plan-label" style="color:#ECF0FA;">Plan Gratuit</div>
-          <div style="font-size:9px;color:var(--muted2);letter-spacing:0.3px;" id="sb-plan-sub">5 offres / mois</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text);line-height:1.25;" id="sb-plan-label">Plan Gratuit</div>
+          <div style="font-size:9px;letter-spacing:0.3px;" class="sb-plan-sub" id="sb-plan-sub">5 offres / mois</div>
         </div>
       </div>
       <span style="font-size:9px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;" id="sb-upgrade-lbl">Upgrader →</span>
     </button>
-    <a href="/" style="display:flex;align-items:center;gap:6px;padding:7px 14px 7px 12px;margin:0 8px 6px;border-radius:8px;font-size:12px;color:var(--muted2);text-decoration:none;transition:all 0.2s;border:1px solid transparent;" onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'" onmouseout="this.style.borderColor='transparent';this.style.color='var(--muted2)'">
+    <a href="/" class="sb-sitelink">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
       Site web
     </a>
-    <a href="/landing.html#legal-mentions" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:11px;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">
+    <a href="/landing.html#legal-mentions" target="_blank" class="sb-legal-link">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       Mentions légales
     </a>
@@ -726,8 +755,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div style="flex:1;min-width:0;">
         <div class="sb-nm" id="user-name">—</div>
         <div class="sb-rl" id="user-role">—</div>
-        <button onclick="if(confirm('Se déconnecter ?')) signOut();" style="font-size:10px;color:rgba(195,210,235,0.42);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;font-family:'Outfit',sans-serif;">⎋ Déconnexion</button>
-      <a href="/" style="font-size:10px;color:rgba(195,210,235,0.30);cursor:pointer;padding:0;margin-top:5px;font-family:'Outfit',sans-serif;text-decoration:none;display:block;letter-spacing:0.3px;" onmouseover="this.style.color='rgba(195,210,235,0.60)'" onmouseout="this.style.color='rgba(195,210,235,0.30)'">← Accueil</a>
+        <button onclick="if(confirm('Se déconnecter ?')) signOut();" class="sb-logout-btn">⎋ Déconnexion</button>
+      <a href="/" class="sb-home-link">← Accueil</a>
       </div>
     </div>
   </div>
