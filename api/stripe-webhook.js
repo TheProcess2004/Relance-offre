@@ -5,7 +5,6 @@ const SB_URL = process.env.SUPABASE_URL;
 const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
 const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
 
-// Récupérer une subscription Stripe via REST (pas de require)
 async function getSubscription(subId) {
   const r = await fetch('https://api.stripe.com/v1/subscriptions/' + subId, {
     headers: { 'Authorization': 'Basic ' + Buffer.from(STRIPE_SECRET + ':').toString('base64') }
@@ -13,41 +12,46 @@ async function getSubscription(subId) {
   return r.json();
 }
 
-async function updateUserPlan(user_id, plan, stripe_customer_id, stripe_subscription_id, status) {
-  const body = {
-    plan: plan,
-    stripe_customer_id: stripe_customer_id,
-    stripe_subscription_id: stripe_subscription_id,
-    plan_status: status, // 'active' | 'canceled' | 'past_due'
-    plan_updated_at: new Date().toISOString()
-  };
-
-  // Upsert dans settings
-  const r = await fetch(`${SB_URL}/rest/v1/settings?user_id=eq.${user_id}`, {
-    method: 'PATCH',
-    headers: {
-      'apikey': SB_KEY,
-      'Authorization': `Bearer ${SB_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=minimal'
-    },
-    body: JSON.stringify(body)
+// settings = key/value store → upsert chaque clé séparément
+async function upsertSetting(user_id, key, value) {
+  const r = await fetch(`${SB_URL}/rest/v1/settings?user_id=eq.${user_id}&key=eq.${key}`, {
+    method: 'GET',
+    headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
   });
+  const existing = await r.json();
 
-  if (!r.ok) {
-    const txt = await r.text();
-    console.error('Supabase update error:', r.status, txt);
-    // Si aucune row à patcher (settings pas encore créé), on insère
+  if (existing && existing.length > 0) {
+    await fetch(`${SB_URL}/rest/v1/settings?user_id=eq.${user_id}&key=eq.${key}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json', 'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ value: String(value) })
+    });
+  } else {
     await fetch(`${SB_URL}/rest/v1/settings`, {
       method: 'POST',
       headers: {
-        'apikey': SB_KEY,
-        'Authorization': `Bearer ${SB_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
+        'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json', 'Prefer': 'return=minimal'
       },
-      body: JSON.stringify({ user_id, ...body })
+      body: JSON.stringify({ user_id, key, value: String(value) })
     });
+  }
+}
+
+async function updateUserPlan(user_id, plan, stripe_customer_id, stripe_subscription_id, status) {
+  if (!user_id) { console.error('updateUserPlan: missing user_id'); return; }
+  const updates = {
+    plan,
+    plan_status: status,
+    stripe_customer_id: stripe_customer_id || '',
+    stripe_subscription_id: stripe_subscription_id || '',
+    plan_updated_at: new Date().toISOString()
+  };
+  for (const [key, value] of Object.entries(updates)) {
+    await upsertSetting(user_id, key, value);
   }
   console.log(`✅ Plan mis à jour: user=${user_id} plan=${plan} status=${status}`);
 }
@@ -60,13 +64,11 @@ module.exports = async (req, res) => {
 
   let event;
   try {
-    // Récupérer le raw body pour la vérification signature
     const chunks = [];
     for await (const chunk of req) chunks.push(chunk);
     const rawBody = Buffer.concat(chunks);
 
     if (webhookSecret && sig) {
-      // Vérification signature HMAC manuelle
       const crypto = require('crypto');
       const parts = sig.split(',').reduce((acc, p) => {
         const [k, v] = p.split('='); acc[k] = v; return acc;
@@ -81,11 +83,11 @@ module.exports = async (req, res) => {
       event = JSON.parse(rawBody.toString());
     } else {
       event = JSON.parse(rawBody.toString());
-      console.warn('[webhook] ⚠️ Signature non vérifiée — configurez STRIPE_WEBHOOK_SECRET');
+      console.warn('[webhook] ⚠️ Signature non vérifiée');
     }
   } catch (e) {
-    console.error('[webhook] Signature invalide:', e.message);
-    return res.status(400).json({ error: 'Webhook signature invalide' });
+    console.error('[webhook] Erreur parsing:', e.message);
+    return res.status(400).json({ error: 'Webhook error' });
   }
 
   console.log('[webhook] Event:', event.type);
@@ -93,32 +95,31 @@ module.exports = async (req, res) => {
   try {
     switch (event.type) {
 
-      // ── Paiement réussi → activer le plan ──
       case 'checkout.session.completed': {
         const session = event.data.object;
         const user_id = session.metadata?.user_id;
-        const plan = session.metadata?.plan;
-        if (user_id && plan) {
+        const plan = session.metadata?.plan || 'pro';
+        if (user_id) {
           await updateUserPlan(user_id, plan, session.customer, session.subscription, 'active');
         }
         break;
       }
 
-      // ── Renouvellement mensuel réussi ──
       case 'invoice.paid': {
         const invoice = event.data.object;
+        if (!invoice.subscription) break;
         const sub = await getSubscription(invoice.subscription);
         const user_id = sub.metadata?.user_id;
-        const plan = sub.metadata?.plan;
-        if (user_id && plan) {
+        const plan = sub.metadata?.plan || 'pro';
+        if (user_id) {
           await updateUserPlan(user_id, plan, invoice.customer, invoice.subscription, 'active');
         }
         break;
       }
 
-      // ── Paiement échoué ──
       case 'invoice.payment_failed': {
         const invoice = event.data.object;
+        if (!invoice.subscription) break;
         const sub = await getSubscription(invoice.subscription);
         const user_id = sub.metadata?.user_id;
         if (user_id) {
@@ -127,7 +128,6 @@ module.exports = async (req, res) => {
         break;
       }
 
-      // ── Annulation ──
       case 'customer.subscription.deleted': {
         const sub = event.data.object;
         const user_id = sub.metadata?.user_id;
