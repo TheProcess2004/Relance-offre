@@ -176,6 +176,11 @@ module.exports = async (req, res) => {
 
     console.log(`Cron relances: ${relances.length} relances dues le ${today}`);
 
+    // DEBUG: log premier résultat pour voir la structure
+    if (relances.length > 0) {
+      console.log('DEBUG first relance:', JSON.stringify(relances[0]).slice(0, 500));
+    }
+
     for (const relance of relances) {
       const offre = relance.offres;
 
@@ -198,7 +203,10 @@ module.exports = async (req, res) => {
 
       try {
         // Récupérer les settings de l'utilisateur
-        const settings = await sbQuery(`settings?user_id=eq.${offre.user_id}&select=key,value`);
+        const userId = offre.user_id || relance.user_id;
+        console.log('DEBUG userId:', userId, 'offre.user_id:', offre.user_id, 'relance.user_id:', relance.user_id);
+        const settings = await sbQuery(`settings?user_id=eq.${userId}&select=key,value`);
+        console.log('DEBUG settings count:', settings?.length, 'keys:', settings?.map(s=>s.key).join(','));
         const cfg = {};
         (settings || []).forEach(s => { cfg[s.key] = s.value; });
 
