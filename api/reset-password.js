@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         type: 'recovery',
         email: email.toLowerCase().trim(),
-        redirect_to: APP_URL + '/'
+        redirect_to: APP_URL + '/app'
       })
     });
 
