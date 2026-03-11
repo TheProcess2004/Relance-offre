@@ -157,7 +157,11 @@ async function sendEmail({ to, toName, fromEmail, fromName, subject, body, pdfUr
 module.exports = async (req, res) => {
   // Sécurité — vérifier que c'est bien Vercel qui appelle
   const authHeader = req.headers['authorization'];
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const querySecret = (req.url || '').includes('?') 
+    ? new URLSearchParams(req.url.split('?')[1]).get('secret') 
+    : null;
+  const validSecret = process.env.CRON_SECRET;
+  if (authHeader !== `Bearer ${validSecret}` && querySecret !== validSecret) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
