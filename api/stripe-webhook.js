@@ -1,9 +1,17 @@
 // api/stripe-webhook.js
 // Reçoit les events Stripe et met à jour le plan dans Supabase
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const SB_URL = process.env.SUPABASE_URL;
-const SB_KEY = process.env.SUPABASE_SERVICE_KEY;
+const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
+const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
+
+// Récupérer une subscription Stripe via REST (pas de require)
+async function getSubscription(subId) {
+  const r = await fetch('https://api.stripe.com/v1/subscriptions/' + subId, {
+    headers: { 'Authorization': 'Basic ' + Buffer.from(STRIPE_SECRET + ':').toString('base64') }
+  });
+  return r.json();
+}
 
 async function updateUserPlan(user_id, plan, stripe_customer_id, stripe_subscription_id, status) {
   const body = {
@@ -58,7 +66,19 @@ module.exports = async (req, res) => {
     const rawBody = Buffer.concat(chunks);
 
     if (webhookSecret && sig) {
-      event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+      // Vérification signature HMAC manuelle
+      const crypto = require('crypto');
+      const parts = sig.split(',').reduce((acc, p) => {
+        const [k, v] = p.split('='); acc[k] = v; return acc;
+      }, {});
+      const timestamp = parts['t'];
+      const expected = crypto.createHmac('sha256', webhookSecret)
+        .update(timestamp + '.' + rawBody.toString())
+        .digest('hex');
+      if (expected !== parts['v1']) {
+        return res.status(400).json({ error: 'Signature invalide' });
+      }
+      event = JSON.parse(rawBody.toString());
     } else {
       event = JSON.parse(rawBody.toString());
       console.warn('[webhook] ⚠️ Signature non vérifiée — configurez STRIPE_WEBHOOK_SECRET');
@@ -87,7 +107,7 @@ module.exports = async (req, res) => {
       // ── Renouvellement mensuel réussi ──
       case 'invoice.paid': {
         const invoice = event.data.object;
-        const sub = await stripe.subscriptions.retrieve(invoice.subscription);
+        const sub = await getSubscription(invoice.subscription);
         const user_id = sub.metadata?.user_id;
         const plan = sub.metadata?.plan;
         if (user_id && plan) {
@@ -99,7 +119,7 @@ module.exports = async (req, res) => {
       // ── Paiement échoué ──
       case 'invoice.payment_failed': {
         const invoice = event.data.object;
-        const sub = await stripe.subscriptions.retrieve(invoice.subscription);
+        const sub = await getSubscription(invoice.subscription);
         const user_id = sub.metadata?.user_id;
         if (user_id) {
           await updateUserPlan(user_id, 'pro', invoice.customer, invoice.subscription, 'past_due');
