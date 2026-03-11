@@ -21,26 +21,58 @@
   --text:#ECF0FA;--muted:rgba(195,210,235,0.70);--muted2:rgba(160,185,215,0.38);
 }
 body.light-mode{
-  --bg:#F0F4FA;--s1:#FFFFFF;--s2:#EEF2F8;--s3:#E6EBF4;
-  --border:rgba(30,60,120,0.10);--border2:rgba(30,60,120,0.18);
-  --gold:#1555A8;--gold-d:rgba(21,85,168,0.10);
-  --accent:#B8860B;--accent-d:rgba(184,134,11,0.10);
-  --green:#157A50;--green-d:rgba(21,122,80,0.10);
-  --red:#B03030;--red-d:rgba(176,48,48,0.10);
-  --blue:#2868B8;--blue-d:rgba(40,104,184,0.10);
-  --purple:#4A52A0;--purple-d:rgba(74,82,160,0.10);
-  --orange:#9A6020;--orange-d:rgba(154,96,32,0.10);
-  --text:#0F1728;--muted:rgba(30,50,90,0.65);--muted2:rgba(30,50,90,0.35);
+  /* Fond principal légèrement warm-grey, pas blanc pur */
+  --bg:#F5F5F4;--s1:#FAFAF9;--s2:#F0EFED;--s3:#E8E7E4;
+  /* Bordures très subtiles */
+  --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.12);
+  /* Bleu principal adouci — pas trop saturé */
+  --gold:#2563A8;--gold-d:rgba(37,99,168,0.08);
+  --accent:#92700A;--accent-d:rgba(146,112,10,0.08);
+  --green:#166A42;--green-d:rgba(22,106,66,0.08);
+  --red:#9B2626;--red-d:rgba(155,38,38,0.07);
+  --blue:#2460A8;--blue-d:rgba(36,96,168,0.08);
+  --purple:#433E8A;--purple-d:rgba(67,62,138,0.08);
+  --orange:#8A5A18;--orange-d:rgba(138,90,24,0.08);
+  /* Texte principal bien lisible sans être noir absolu */
+  --text:#1C1917;--muted:rgba(28,25,23,0.52);--muted2:rgba(28,25,23,0.28);
 }
-body.light-mode .topbar{background:rgba(240,244,250,0.92)!important;}
-body.light-mode .sb{background:var(--s1)!important;}
-body.light-mode input,body.light-mode select,body.light-mode textarea{background:var(--s2);color:var(--text);}
-body.light-mode .kcard,body.light-mode .fcard,body.light-mode .offer-card,body.light-mode .client-card{background:var(--s1);}
-body.light-mode .overlay-box,body.light-mode .auth-box,body.light-mode .toast-el{background:var(--s1);border-color:var(--border2);}
-body.light-mode .nb{color:rgba(30,50,90,0.75);}
-body.light-mode .nb:hover{background:rgba(21,85,168,0.07);color:var(--text);}
-body.light-mode .nb.active{background:rgba(21,85,168,0.10);}
-body.light-mode .ep-card,body.light-mode .rtl,body.light-mode .ai-load,body.light-mode .pdf-extract{background:var(--s1);}
+/* Topbar et sidebar clairs */
+body.light-mode .topbar{background:rgba(245,245,244,0.95)!important;border-bottom-color:rgba(0,0,0,0.08)!important;}
+body.light-mode .sb{background:#FAFAF9!important;border-right-color:rgba(0,0,0,0.08)!important;}
+body.light-mode .sb-brand{border-bottom-color:rgba(0,0,0,0.07)!important;}
+body.light-mode .sb-foot{border-top-color:rgba(0,0,0,0.07)!important;}
+body.light-mode .sb-sec-label{color:rgba(28,25,23,0.32);}
+/* Champs de formulaire */
+body.light-mode input,body.light-mode select,body.light-mode textarea{background:#FFFFFF;color:var(--text);border-color:rgba(0,0,0,0.12);}
+body.light-mode input::placeholder,body.light-mode textarea::placeholder{color:rgba(28,25,23,0.38);}
+/* Cards & surfaces */
+body.light-mode .kcard,body.light-mode .fcard{background:#FFFFFF;border-color:rgba(0,0,0,0.07);}
+body.light-mode .offer-card,body.light-mode .client-card{background:#FFFFFF;border-color:rgba(0,0,0,0.07);}
+body.light-mode .ep-card{background:#FFFFFF;border-color:rgba(0,0,0,0.07);}
+body.light-mode .pdf-extract{background:#FFFFFF;border-color:rgba(0,0,0,0.07);}
+body.light-mode .rtl{background:#FFFFFF;border-color:rgba(0,0,0,0.07);}
+body.light-mode .ai-load{background:#FFFFFF;}
+body.light-mode .overlay-box,body.light-mode .auth-box{background:#FFFFFF;border-color:rgba(0,0,0,0.10);}
+body.light-mode .toast-el{background:#FFFFFF;border-color:rgba(0,0,0,0.12);color:var(--text);}
+/* Sidebar nav */
+body.light-mode .nb{color:rgba(28,25,23,0.62);}
+body.light-mode .nb:hover{background:rgba(0,0,0,0.04);color:var(--text);}
+body.light-mode .nb.active{background:rgba(37,99,168,0.08);color:#2563A8!important;box-shadow:inset 2.5px 0 0 #2563A8;}
+/* Boutons ghost */
+body.light-mode .btn-ghost{border-color:rgba(0,0,0,0.14);color:var(--text);}
+body.light-mode .btn-ghost:hover{background:rgba(0,0,0,0.05);}
+/* Upload zone */
+body.light-mode .upload-z{background:#FFFFFF;border-color:rgba(0,0,0,0.14);}
+/* Sections */
+body.light-mode .s-card,body.light-mode .sh{background:transparent;}
+body.light-mode .filter-bar{background:var(--s1);}
+/* Scrollbar */
+body.light-mode ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.14);}
+/* KPI gradient bars */
+body.light-mode .kcard.g::before{background:#2563A8;}
+body.light-mode .kcard.gr::before{background:#166A42;}
+body.light-mode .kcard.rd::before{background:#9B2626;}
+body.light-mode .kcard.bl::before{background:#2460A8;}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
 ::-webkit-scrollbar{width:4px;height:4px;}
@@ -2112,11 +2144,20 @@ async function genEmail(){
     if(si>steps.length)clearInterval(st);
   },700);
 
-  const tonDesc={chaleureux:'Chaleureux, naturel, humain. Évite les formules creuses. Tutoie si relation connue/fidèle.',pro:'Professionnel et formel. Vouvoiement. Structuré mais pas froid.',direct:'Très concis. Direct. Maximum 4 lignes. Pas de formules.'};
+  // Cohérence tu/vous — MÊME logique que les relances
+  const isTu = ton === 'chaleureux' && (rel === 'connu' || rel === 'fidele');
+  const pronounRule = isTu
+    ? 'TUTOIEMENT EXCLUSIF dans tout le mail (tu/toi/ton/te) — JAMAIS vous/votre'
+    : 'VOUVOIEMENT EXCLUSIF dans tout le mail (vous/votre/vos) — JAMAIS tu/toi/ton';
+  const salutFinale = isTu
+    ? (ton === 'direct' ? 'Bonne journée,' : "Au plaisir d\'en discuter avec toi,")
+    : (ton === 'pro' ? "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Meilleures salutations," : 'Bien cordialement,');
+
   const relDesc={nouveau:'Premier contact — sois attentionné, crée confiance',connu:'Client connu — relation établie, ton naturel',fidele:'Client fidèle depuis longtemps — proximité, chaleur'};
+  const tonStyle={chaleureux:'Chaleureux et naturel. Évite les formules creuses et le jargon commercial.',pro:'Professionnel et structuré mais pas froid. Sobre.',direct:'Très concis. Maximum 3 lignes. Direct et efficace.'};
 
   const societeLabel = societeRaw ? `\n- Société : ${societeRaw}` : '';
-  const prompt=`Tu es un commercial expert. Rédige un email d'accompagnement d'offre commerciale qui semble écrit à la main.
+  const prompt=`Tu es un commercial expert. Rédige un email d'accompagnement d'offre commerciale qui semble écrit à la main, pas par une IA.
 
 DONNÉES :
 - Prénom / Contact : ${prenom}${societeLabel}
@@ -2128,26 +2169,22 @@ DONNÉES :
 - Détail à mentionner : ${detail||'Aucun'}
 - Lignes exactes de l'offre (UTILISE CES DONNÉES, NE PAS INVENTER) : ${lignesPDF||'Non disponible'}
 - Relation : ${relDesc[rel]}
-- Ton : ${tonDesc[ton]}
+- Style : ${tonStyle[ton]}
 
-RÈGLES ABSOLUES :
-1. Sonne 100% humain — jamais robotique ni "template"
-2. Intègre le contexte naturellement si pertinent
-3. DONNEES STRICTES : si lignes produits fournies, utilise UNIQUEMENT ces donnees (dimensions/quantites/prix). Ne pas inventer.\n4. Mentionne l'objet concret de l'offre (pas juste "votre offre")
+RÈGLES ABSOLUES — AUCUNE EXCEPTION :
+1. ${pronounRule}
+2. Commence EXACTEMENT par "Bonjour ${prenom}," — RIEN avant, aucun objet, aucun titre
+3. DONNÉES STRICTES : si lignes produits fournies, utilise UNIQUEMENT ces données. Ne jamais inventer de chiffres.
+4. Mentionne l'objet concret de l'offre (pas juste "votre offre" ou "notre offre")
 5. Maximum 3-4 lignes de corps — percutant et naturel
-6. Commence DIRECTEMENT par "Bonjour ${prenom}," — RIEN avant
-8. INTERDIT : N'écris JAMAIS "Objet :", "**Objet", ou tout en-tête
-7. INTERDIT : N'écris JAMAIS de placeholders [Prénom], [Nom], [Signature]
-9. Ne mets PAS de signature — elle sera ajoutée automatiquement
-10. STRUCTURE OBLIGATOIRE en 3 blocs séparés par une ligne vide :
+6. INTERDIT : "Objet :", "**", placeholders [Prénom], [Signature], balises Markdown
+7. Ne mets PAS de signature — ajoutée automatiquement
+8. STRUCTURE OBLIGATOIRE (3 blocs séparés par une ligne vide) :
    - Bloc 1 : "Bonjour ${prenom},"
-   - Bloc 2 : Corps du message (2-3 lignes max)
-   - Bloc 3 : Formule de salutation adaptée au ton :
-     * Ton chaleureux → "Au plaisir d\'en discuter avec toi,"
-     * Ton pro → "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Meilleures salutations,"
-     * Ton direct → "Bien cordialement,"
+   - Bloc 2 : Corps du message (2-4 lignes)
+   - Bloc 3 : Terminer EXACTEMENT par "${salutFinale}"
 
-Réponds UNIQUEMENT avec le corps de l'email, rien d'autre.`;
+Réponds UNIQUEMENT avec le texte brut de l'email, rien d'autre.`;
 
   try{
     const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:800,messages:[{role:'user',content:prompt}]})});
