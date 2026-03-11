@@ -686,11 +686,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
               <div class="pdf-extract">
                 <div class="pdf-extract-title">✦ Données extraites automatiquement</div>
                 <div class="pdf-field" style="position:relative;">
-                  <span class="pdf-field-lbl">Client</span>
+                  <span class="pdf-field-lbl">Prénom</span>
                   <div style="flex:1;position:relative;">
-                    <input class="pdf-field-edit" id="ex-client" value="" oninput="clientAutoComplete(this.value)" onblur="setTimeout(()=>closeACDropdown(),180)" placeholder="Nom complet du client">
+                    <input class="pdf-field-edit" id="ex-prenom" value="" oninput="clientAutoComplete()" onblur="setTimeout(()=>closeACDropdown(),180)" placeholder="Prénom du contact">
                     <div id="ac-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--s2);border:1px solid var(--border2);border-radius:8px;z-index:300;max-height:180px;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.4);margin-top:3px;"></div>
                   </div>
+                </div>
+                <div class="pdf-field">
+                  <span class="pdf-field-lbl">Nom / Société</span>
+                  <input class="pdf-field-edit" id="ex-nom" value="" placeholder="Nom ou raison sociale">
                 </div>
                 <div id="client-history-badge" style="display:none;background:var(--blue-d);border:1px solid rgba(56,189,248,0.2);border-radius:7px;padding:8px 12px;margin:6px 0;font-size:11px;color:var(--blue);cursor:pointer;" onclick="showClientHistory()">
                   👤 Client connu — <span id="client-history-count"></span> offre(s) précédente(s) · <strong>Voir l'historique</strong>
@@ -1000,6 +1004,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div class="f2" style="margin-bottom:12px;">
             <div class="fg"><label class="fl">Entreprise</label><input class="fi" id="cfg-company" placeholder="Mon Entreprise SA" oninput="updateSigPreview()"></div>
             <div class="fg"><label class="fl">Téléphone</label><input class="fi" id="cfg-phone" placeholder="+41 79 000 00 00" oninput="updateSigPreview()"></div>
+            <div class="fg"><label class="fl">Site web <span style="color:var(--muted);font-size:11px;">(optionnel)</span></label><input class="fi" id="cfg-website" placeholder="https://monentreprise.ch" oninput="updateSigPreview()"></div>
           </div>
         </div>
         <div class="fcard" style="margin-bottom:18px;">
@@ -2020,7 +2025,9 @@ async function setFile(f){
     document.getElementById('up-h').textContent=f.name;
     document.getElementById('up-s').textContent=(f.size/1024).toFixed(0)+' KB · Données extraites';
     document.getElementById('pdf-extract-zone').style.display='block';
-    document.getElementById('ex-client').value=extracted.client||'';
+    const _cp=(extracted.client||'').trim().split(' ');
+    document.getElementById('ex-prenom').value=_cp[0]||'';
+    document.getElementById('ex-nom').value=_cp.slice(1).join(' ')||'';
     document.getElementById('ex-email').value=extracted.email||'';
     document.getElementById('ex-ref').value=extracted.ref||'';
     document.getElementById('ex-montant').value=extracted.montant||'';
@@ -2032,7 +2039,9 @@ async function setFile(f){
 
 // ══ GENERATE EMAIL ══
 async function genEmail(){
-  const client=document.getElementById('ex-client')?.value||'Client';
+  const prenom=(document.getElementById('ex-prenom')?.value||'').trim()||'Client';
+  const nom=(document.getElementById('ex-nom')?.value||'').trim();
+  const client=nom?`${prenom} ${nom}`:prenom;
   const email=document.getElementById('ex-email')?.value||'client@exemple.ch';
   const ref=document.getElementById('ex-ref')?.value||'OFF-XXX';
   const montant=document.getElementById('ex-montant')?.value||'0';
@@ -2043,9 +2052,6 @@ async function genEmail(){
   const detail=document.getElementById('f-detail')?.value.trim()||'';
   const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
   const lignesPDF=window._pdfLignes||'';
-
-  const parts=client.trim().split(' ');
-  const prenom=parts[0]||'Client';
 
   document.getElementById('step-form').style.display='none';
   document.getElementById('step-loading').style.display='block';
@@ -2059,7 +2065,9 @@ async function genEmail(){
     if(si>steps.length)clearInterval(st);
   },700);
 
-  const tonDesc={chaleureux:'Chaleureux, naturel, humain. Évite les formules creuses. Tutoie si relation connue/fidèle.',pro:'Professionnel et formel. Vouvoiement. Structuré mais pas froid.',direct:'Très concis. Direct. Maximum 4 lignes. Pas de formules.'};
+  const isTu = ton==='chaleureux' && (rel==='connu' || rel==='fidele');
+  const pronounRule = isTu ? 'TUTOIEMENT OBLIGATOIRE (tu/toi/ton) — aucune exception' : 'VOUVOIEMENT OBLIGATOIRE (vous/votre) — aucune exception';
+  const tonDesc={chaleureux:'Chaleureux, naturel, humain. Évite les formules creuses.',pro:'Professionnel et formel. Structuré mais pas froid.',direct:'Très concis. Direct. Maximum 4 lignes. Pas de formules.'};
   const relDesc={nouveau:'Premier contact — sois attentionné, crée confiance',connu:'Client connu — relation établie, ton naturel',fidele:'Client fidèle depuis longtemps — proximité, chaleur'};
 
   const prompt=`Tu es un commercial expert. Rédige un email d'accompagnement d'offre commerciale qui semble écrit à la main.
@@ -2078,6 +2086,7 @@ DONNÉES :
 - Ton : ${tonDesc[ton]}
 
 RÈGLES ABSOLUES :
+0. ${pronounRule}
 1. Sonne 100% humain — jamais robotique ni "template"
 2. Intègre le contexte naturellement si pertinent
 3. DONNEES STRICTES : si lignes produits fournies, utilise UNIQUEMENT ces donnees (dimensions/quantites/prix). Ne pas inventer.\n4. Mentionne l'objet concret de l'offre (pas juste "votre offre")
@@ -2144,15 +2153,14 @@ function resetToForm(){
 async function sendOffer(){
   // Vérifier limite plan Free
   if(!checkOfferLimit()) return;
-  const clientFull=document.getElementById('ex-client')?.value||'Client';
+  const prenom=(document.getElementById('ex-prenom')?.value||'').trim()||'Client';
+  const nom=(document.getElementById('ex-nom')?.value||'').trim();
+  const clientFull=nom?`${prenom} ${nom}`:prenom;
   const email=document.getElementById('ex-email')?.value||'';
   const ref=document.getElementById('ex-ref')?.value||'OFF-NEW';
   const montant=parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s'`]/g,'').replace(/[^0-9.]/g,''))||0;
   const objet=document.getElementById('ex-objet')?.value||'';
   const contexte=document.getElementById('f-contexte')?.value||'';
-  const parts=clientFull.split(' ');
-  const prenom=parts[0]||'Client';
-  const nom=parts.slice(1).join(' ')||'';
   const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
 
   const d1=parseInt(document.getElementById('of-d1')?.value)||parseInt(document.getElementById('cfg-d1')?.value)||3;
@@ -2476,10 +2484,13 @@ function closeRPOverlay() {
   document.getElementById('rp-overlay').classList.remove('open');
   rpDrafts = ['','',''];
   rpActive = 0;
+  window._rpCacheKey = null;
 }
 
 function previewNewRelances() {
-  const client = document.getElementById('ex-client')?.value||'Client';
+  const prenom=(document.getElementById('ex-prenom')?.value||'').trim()||'Client';
+  const nom=(document.getElementById('ex-nom')?.value||'').trim();
+  const client=nom?`${prenom} ${nom}`:prenom;
   const email = document.getElementById('ex-email')?.value||'';
   const ref = document.getElementById('ex-ref')?.value||'OFF-XXX';
   const montant = parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s']/g,''))||0;
@@ -2489,13 +2500,28 @@ function previewNewRelances() {
   const d3 = parseInt(document.getElementById('of-d3')?.value)||14;
   const today = new Date();
   const addDays = (d) => { const dt=new Date(today); dt.setDate(dt.getDate()+d); return dt.toISOString().slice(0,10); };
-  const fakeOffer = {id:'preview',prenom:client.split(' ')[0]||'Client',nom:client.split(' ').slice(1).join(' '),email,ref,montant,objet,relances:{r1:addDays(d1),r2:addDays(d2),r3:addDays(d3)},ton:document.getElementById('f-ton')?.value||'chaleureux',relation:document.getElementById('f-rel')?.value||'connu'};
+  const ton=document.getElementById('f-ton')?.value||'chaleureux';
+  const relation=document.getElementById('f-rel')?.value||'connu';
+  const fakeOffer = {id:'preview',prenom,nom,email,ref,montant,objet,ton,relation,relances:{r1:addDays(d1),r2:addDays(d2),r3:addDays(d3)}};
   previewRelance_obj(fakeOffer);
 }
 
 async function previewRelance_obj(o) {
   document.getElementById('rp-overlay').classList.add('open');
   rpActive = 0;
+  // Cache — ne régénère que si les données ont changé
+  const _ck = `${o.prenom}|${o.nom}|${o.ref}|${o.montant}|${o.ton||''}|${o.relation||''}`;
+  if(window._rpCacheKey === _ck && rpDrafts.every(d=>d && !d.startsWith('⏳'))) {
+    document.getElementById('rp-tabs').innerHTML = [
+    {lbl:'Relance 1',col:'var(--gold)',day:o.relances.r1},
+    {lbl:'Relance 2',col:'var(--purple)',day:o.relances.r2},
+    {lbl:'Relance 3',col:'var(--orange)',day:o.relances.r3},
+  ].map((t,i)=>`<button class="rp-tab ${i===0?'active':''}" onclick="switchRPTab(${i})" style="${i===0?`border-color:${t.col};color:${t.col};background:${t.col}22;`:''}">${t.lbl}<br><span style="font-weight:400;font-size:9px;opacity:0.7;">${t.day||'—'}</span></button>`).join('');
+    showRPContent(o, rpDrafts, 0);
+    return;
+  }
+  window._rpCacheKey = _ck;
+  rpDrafts = ['','',''];
   document.getElementById('rp-tabs').innerHTML = [
     {lbl:'Relance 1',col:'var(--gold)',day:o.relances.r1},
     {lbl:'Relance 2',col:'var(--purple)',day:o.relances.r2},
@@ -2559,7 +2585,8 @@ function exportPDF() {
 }
 
 // ══ CLIENT AUTOCOMPLETE ══
-function clientAutoComplete(val) {
+function clientAutoComplete() {
+  const val=((document.getElementById('ex-prenom')?.value||'')+' '+(document.getElementById('ex-nom')?.value||'')).trim();
   const dd = document.getElementById('ac-dropdown');
   if(!dd) return;
   const badge = document.getElementById('client-history-badge');
@@ -2588,7 +2615,8 @@ function clientAutoComplete(val) {
 }
 
 function fillClient(prenom, nom, email, entreprise, count) {
-  document.getElementById('ex-client').value = `${prenom} ${nom}`;
+  document.getElementById('ex-prenom').value = prenom;
+  document.getElementById('ex-nom').value = nom;
   document.getElementById('ex-email').value = email;
   closeACDropdown();
   const badge = document.getElementById('client-history-badge');
@@ -2668,7 +2696,7 @@ function closePDFViewer() {
 }
 
 // ══ CONFIG ══
-let CFG = { name:'', role:'', company:'', phone:'', provider:null, accessToken:null, senderEmail:'', brevoKey:'', onboarding_done:'' };
+let CFG = { name:'', role:'', company:'', phone:'', website:'', provider:null, accessToken:null, senderEmail:'', brevoKey:'', onboarding_done:'' };
 
 async function loadConfig() {
   // 1. Charger depuis localStorage en premier (instant)
@@ -2696,6 +2724,7 @@ async function loadConfig() {
   setVal('cfg-role', CFG.role);
   setVal('cfg-company', CFG.company);
   setVal('cfg-phone', CFG.phone);
+  setVal('cfg-website', CFG.website);
   setVal('cfg-sender-email', CFG.senderEmail);
   setVal('cfg-brevo-key', CFG.brevoKey);
   updateSigPreview();
@@ -2709,6 +2738,7 @@ async function saveConfig() {
   CFG.role = document.getElementById('cfg-role')?.value||'';
   CFG.company = document.getElementById('cfg-company')?.value||'';
   CFG.phone = document.getElementById('cfg-phone')?.value||'';
+  CFG.website = document.getElementById('cfg-website')?.value||'';
   CFG.senderEmail = document.getElementById('cfg-sender-email')?.value||'';
   CFG.brevoKey = document.getElementById('cfg-brevo-key')?.value||'';
   // Sauvegarder en localStorage immédiatement
@@ -2779,13 +2809,14 @@ function updateSigPreview() {
   const r = document.getElementById('cfg-role')?.value||'';
   const c = document.getElementById('cfg-company')?.value||'';
   const p = document.getElementById('cfg-phone')?.value||'';
+  const w = document.getElementById('cfg-website')?.value||CFG.website||'';
   const el = document.getElementById('sig-preview');
   if(!el) return;
   if(!n) { el.innerHTML='<em style="color:var(--muted)">Aperçu signature — remplissez les champs ci-dessus</em>'; return; }
   el.innerHTML = `<span style="color:var(--text);font-weight:600;">${n}</span>${r?`<br><span style="color:var(--muted)">${r}</span>`:''}${c?`<br><span style="color:var(--muted)">${c}</span>`:''}${p?`<br><span style="color:var(--blue)">${p}</span>`:''}`;
 }
 
-['cfg-name','cfg-role','cfg-company','cfg-phone'].forEach(id => {
+['cfg-name','cfg-role','cfg-company','cfg-phone','cfg-website'].forEach(id => {
   document.addEventListener('DOMContentLoaded',()=>{
     const el=document.getElementById(id);
     if(el) el.addEventListener('input',updateSigPreview);
@@ -3830,6 +3861,7 @@ function renderObStep(step) {
       <div class="ob-field"><label>Entreprise</label><input id="ob-company" type="text" placeholder="Dupont SA" value="${CFG.company||''}"></div>
       <div class="ob-field"><label>Rôle / Fonction</label><input id="ob-role" type="text" placeholder="Responsable commercial" value="${CFG.role||''}"></div>
       <div class="ob-field"><label>Téléphone</label><input id="ob-phone" type="tel" placeholder="+41 79 000 00 00" value="${CFG.phone||''}"></div>
+      <div class="ob-field"><label>Site web <span style="color:var(--muted);font-weight:400;">(optionnel)</span></label><input id="ob-website" type="url" placeholder="https://monentreprise.ch" value="${CFG.website||''}"></div>
     </div>
     <div class="ob-field"><label>Email expéditeur</label><input id="ob-sender-email" type="email" placeholder="jean@entreprise.ch" value="${CFG.senderEmail||CURRENT_USER?.email||''}"></div>
     <div class="ob-field" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Compte connecté</div><div style="font-size:13px;color:var(--text);">${CURRENT_USER?.email||'—'}</div></div><span style="color:var(--green);font-size:11px;font-weight:700;">✓ Actif</span></div>`,
@@ -3891,16 +3923,18 @@ async function obSaveProfile() {
   const company = document.getElementById('ob-company')?.value.trim();
   const role = document.getElementById('ob-role')?.value.trim();
   const phone = document.getElementById('ob-phone')?.value.trim();
+  const website = document.getElementById('ob-website')?.value.trim();
   if(name) CFG.name = name;
   if(company) CFG.company = company;
   if(role) CFG.role = role;
   if(phone) CFG.phone = phone;
+  if(website) CFG.website = website;
   // Sauvegarder en localStorage IMMÉDIATEMENT (persistance refresh)
   localStorage.setItem('of_cfg', JSON.stringify(CFG));
   if(name || company) {
     try {
       // Utiliser saveSetting qui gère user_id + RLS correctement
-      for(const [k,v] of [['name',name||''],['company',company||''],['role',role||''],['phone',phone||'']]) {
+      for(const [k,v] of [['name',name||''],['company',company||''],['role',role||''],['phone',phone||''],['website',website||'']]) {
         await saveSetting(k, v);
       }
     } catch(e) { console.warn('obSaveProfile error:', e.message); }
