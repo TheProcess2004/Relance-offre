@@ -1824,7 +1824,7 @@ async function actR(id){
     const styleR = rNum === 1 ? 'doux et bienveillant — simple rappel' : rNum === 2 ? 'direct et engagé — légère urgence' : 'final — laisse la porte ouverte';
     let emailBody = '';
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${rNum} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styleR}\n4. Termine EXACTEMENT par "${salutFin[rNum-1]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})}); 
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5-20251022',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${rNum} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styleR}\n4. Termine EXACTEMENT par "${salutFin[rNum-1]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})}); 
       const data = await r.json();
       emailBody = data.content?.[0]?.text||'';
     } catch(e) { emailBody = `Bonjour ${o.prenom},\n\n${isTu ? `Je reviens vers toi concernant notre offre ${o.ref} — ${o.objet}.` : `Je reviens vers vous concernant notre offre ${o.ref} — ${o.objet}.`}\n\n${salutFin[rNum-1]}`; }
@@ -1993,7 +1993,7 @@ async function setFile(f){
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
+        model: 'claude-sonnet-4-5-20251022',
         max_tokens: 500,
         messages: [{
           role: 'user',
@@ -2106,7 +2106,7 @@ RÈGLES ABSOLUES :
 Réponds UNIQUEMENT avec le corps de l'email, rien d'autre.`;
 
   try{
-    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5-20251022',max_tokens:800,messages:[{role:'user',content:prompt}]})});
     if(!r.ok) throw new Error(`API ${r.status}`);
     const data=await r.json();
     if(!data.content || !Array.isArray(data.content)) throw new Error(data.error?.message || 'Réponse IA invalide');
@@ -2488,7 +2488,7 @@ async function previewRelance(id) {
     if(rpDrafts[i]) continue; // Déjà chargé depuis DB
     anyGenerated = true;
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})});
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5-20251022',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})});
       const data = await r.json();
       rpDrafts[i] = data.content?.[0]?.text||'';
       msgs[i] = rpDrafts[i];
@@ -2693,7 +2693,7 @@ async function regenRelance() {
   ];
   const i = rpActive;
   try {
-    const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})});
+    const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5-20251022',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})});
     const data = await r.json();
     rpDrafts[i] = data.content?.[0]?.text||'';
     if(el && el.tagName === 'TEXTAREA') el.value = rpDrafts[i];
@@ -2768,7 +2768,7 @@ async function previewRelance_obj(o) {
   for(let i=0;i<3;i++) {
     if(rpDrafts[i]) { if(i===rpActive) showRPContent(o, msgs, rpActive); continue; }
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})});
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5-20251022',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})});
       const data = await r.json();
       rpDrafts[i] = data.content?.[0]?.text||'';
       msgs[i] = rpDrafts[i];
