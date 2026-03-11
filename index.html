@@ -1215,6 +1215,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div style="display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--border);padding-top:16px;margin-top:4px;">
       <button class="btn btn-ghost" onclick="closeRPOverlay()">Retour</button>
       <button class="btn btn-ghost btn-sm" onclick="regenRelance()" id="rp-regen-btn" title="Régénérer ce texte via IA">🔄</button>
+      <span id="rp-save-status" style="font-size:11px;color:var(--muted);align-self:center;opacity:0;transition:opacity 0.4s;"></span>
       <button class="btn btn-ghost btn-sm" onclick="toggleEditRelance()" id="rp-edit-btn">✎ Modifier</button>
       <button class="btn btn-gold" onclick="confirmSendOffer()">🚀 Confirmer & Envoyer</button>
     </div>
@@ -1783,7 +1784,7 @@ function openModal(id){
     </div>
     <div class="m-acts">
       <button class="btn btn-ghost btn-sm" onclick="previewRelance('${o.id}')">👁 Voir relances</button>
-      <button class="btn btn-ghost btn-sm" onclick="actR('${o.id}');closeModal()">📧 Relancer</button>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal();confirmRelance('${o.id}')">📧 Relancer</button>
       ${o.pdfUrl?`<button class="btn btn-blue btn-sm" onclick="viewPDF('${o.pdfUrl}','${o.fichier}')">📄 Voir PDF</button>`:''}
       <button class="btn btn-green btn-sm" onclick="askConfirm('won','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✓ Gagnée</button>
       <button class="btn btn-red btn-sm" onclick="askConfirm('lost','${o.id}','${o.prenom} ${o.nom}','${o.montant}')">✕ Perdue</button>
@@ -2364,25 +2365,46 @@ async function saveEdit(id) {
 }
 
 // ══ CONFIRMATION RELANCE ══
-function confirmRelance(id) {
+async function confirmRelance(id) {
   const o = OFFERS.find(x=>x.id===id);
   if(!o) return;
-  const rNum = (o.status||o.statut)==='envoyee'?1:(o.status||o.statut)==='relance1'?2:(o.status||o.statut)==='relance2'?3:1;
-  document.getElementById('m-t').textContent = '📧 Confirmer la relance';
-  document.getElementById('m-s').textContent = o.ref + ' — ' + (o.prenom||'') + ' ' + (o.nom||'');
+  // Calcul correct du numéro de la prochaine relance
+  const st = o.status||o.statut;
+  const rNum = st==='sent'||st==='envoyee'?1 : st==='relance1'?2 : st==='relance2'?3 : 1;
+  const rColors = {1:'var(--gold)',2:'var(--purple)',3:'var(--orange)'};
+  const rCol = rColors[rNum]||'var(--gold)';
+
+  // Chercher le texte sauvegardé pour cette relance
+  let savedBody = '';
+  try {
+    const rows = await sbFetch(`relances?offre_id=eq.${id}&numero=eq.${rNum}&select=email_body`);
+    savedBody = rows?.[0]?.email_body || '';
+  } catch(e) {}
+
+  const bodyPreview = savedBody
+    ? `<div style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;margin:10px 0;font-size:12px;color:var(--text);line-height:1.6;max-height:120px;overflow-y:auto;white-space:pre-wrap;">${savedBody.replace(/</g,'&lt;')}</div>`
+    : `<div style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;margin:10px 0;font-size:12px;color:var(--muted);font-style:italic;">⏳ Texte généré automatiquement par IA à l'envoi</div>`;
+
+  document.getElementById('m-t').textContent = "📧 Confirmer l'envoi";
+  document.getElementById('m-s').textContent = o.ref + ' — ' + (o.entreprise||o.prenom+' '+o.nom);
   document.getElementById('m-body').innerHTML = `
-    <div style="padding:8px 0;color:var(--muted);font-size:13px;line-height:1.6;">
-      Vous allez envoyer la <strong style="color:var(--gold)">Relance ${rNum}</strong> à<br>
-      <strong>${o.prenom} ${o.nom}</strong> — ${o.email}<br><br>
-      Offre : <strong>${o.ref}</strong> — ${o.objet}<br>
-      Montant : <strong>${(o.montant||0).toLocaleString('fr-CH')} CHF</strong>
+    <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px;">
+      Envoi de la <strong style="color:${rCol}">Relance ${rNum}</strong> à
+      <strong style="color:var(--text)">${o.prenom} ${o.nom}</strong>
+      <span style="color:var(--muted);font-size:11px;">· ${o.email}</span>
     </div>
-    <div style="background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:8px;padding:10px 12px;margin:8px 0;font-size:12px;color:var(--muted);">
-      ⚠️ Un email sera envoyé immédiatement à votre client. Cette action ne peut pas être annulée.
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">
+      ${o.ref} · ${o.objet} · <strong style="color:var(--gold);font-family:'JetBrains Mono',monospace;">${(o.montant||0).toLocaleString('fr-CH')} CHF</strong>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;">Aperçu du message :</div>
+    ${bodyPreview}
+    <div style="background:rgba(255,193,7,0.07);border:1px solid rgba(255,193,7,0.18);border-radius:8px;padding:9px 12px;margin:8px 0;font-size:11px;color:var(--muted);">
+      ⚠️ Email envoyé immédiatement — action irréversible.<br>
+      Pour modifier le texte : <em>Fermer → Voir relances → Modifier</em>
     </div>
     <div style="display:flex;gap:10px;margin-top:14px;">
-      <button class="btn btn-ghost" style="flex:1;" onclick="closeModal()">Annuler</button>
-      <button class="btn btn-gold" style="flex:1;" onclick="closeModal();actR('${id}')">📧 Confirmer l\'envoi</button>
+      <button class="btn btn-ghost" style="flex:1;" onclick="closeModal()">✕ Annuler</button>
+      <button class="btn btn-gold" style="flex:1;" onclick="closeModal();actR('${id}')">📧 Envoyer Relance ${rNum}</button>
     </div>`;
   document.getElementById('overlay').classList.add('open');
 }
@@ -2412,7 +2434,14 @@ async function previewRelance(id) {
   showRPContent(o, msgs, 0);
 
   try {
-    const rows = await sbFetch(`relances?offre_id=eq.${id}&order=numero.asc&select=id,numero,email_body,statut`);
+    // Essayer avec email_body d'abord
+    let rows = null;
+    try {
+      rows = await sbFetch(`relances?offre_id=eq.${id}&order=numero.asc&select=id,numero,email_body,statut`);
+    } catch(e2) {
+      // Colonne email_body inexistante (avant migration SQL) — charger sans
+      rows = await sbFetch(`relances?offre_id=eq.${id}&order=numero.asc&select=id,numero,statut`);
+    }
     for(const row of (rows||[])) {
       const i = (row.numero||1) - 1;
       if(i >= 0 && i < 3 && row.email_body) {
@@ -2456,11 +2485,37 @@ async function previewRelance(id) {
 // Sauvegarder un draft de relance dans Supabase
 async function saveRelanceDraft(offreId, numero, body) {
   try {
-    await sbFetch(`relances?offre_id=eq.${offreId}&numero=eq.${numero}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ email_body: body }),
-      headers: { 'Prefer': 'return=minimal' }
-    });
+    // Essayer PATCH d'abord (ligne existante)
+    const result = await sbFetch(`relances?offre_id=eq.${offreId}&numero=eq.${numero}&select=id`);
+    if(result && result.length > 0) {
+      await sbFetch(`relances?offre_id=eq.${offreId}&numero=eq.${numero}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ email_body: body }),
+        headers: { 'Prefer': 'return=minimal' }
+      });
+    } else {
+      // Créer la ligne si elle n'existe pas encore
+      const user = CURRENT_USER;
+      const d1 = parseInt(document.getElementById('cfg-d1')?.value)||3;
+      const d2 = parseInt(document.getElementById('cfg-d2')?.value)||7;
+      const d3 = parseInt(document.getElementById('cfg-d3')?.value)||14;
+      const delays = [d1, d2, d3];
+      const offre = OFFERS.find(x=>x.id===offreId);
+      const baseDate = offre ? new Date(offre.created_at||Date.now()) : new Date();
+      baseDate.setDate(baseDate.getDate() + delays[numero-1]);
+      await sbFetch('relances', {
+        method: 'POST',
+        body: JSON.stringify({
+          offre_id: offreId,
+          user_id: user?.id,
+          numero,
+          statut: 'pending',
+          date_prevue: baseDate.toISOString().slice(0,10),
+          email_body: body
+        }),
+        headers: { 'Prefer': 'return=minimal' }
+      });
+    }
   } catch(e) { console.warn('saveRelanceDraft:', e.message); }
 }
 
@@ -2530,10 +2585,19 @@ async function toggleEditRelance() {
     if(btn) { btn.textContent = '✎ Modifier'; btn.style.color = ''; }
     // Sauvegarde en DB si on a un offre_id
     if(window._rpOfferId) {
-      await saveRelanceDraft(window._rpOfferId, rpActive + 1, rpDrafts[rpActive]);
-      toast('✅', `Relance ${rpActive+1} sauvegardée`);
+      const statusEl = document.getElementById('rp-save-status');
+      if(statusEl) { statusEl.textContent = '⏳ Sauvegarde...'; statusEl.style.opacity='1'; statusEl.style.color='var(--muted)'; }
+      try {
+        await saveRelanceDraft(window._rpOfferId, rpActive + 1, rpDrafts[rpActive]);
+        if(statusEl) { statusEl.textContent = '✓ Sauvegardé'; statusEl.style.color='var(--green)'; setTimeout(()=>statusEl.style.opacity='0',2500); }
+        toast('✅', `Relance ${rpActive+1} sauvegardée`);
+      } catch(e) {
+        if(statusEl) { statusEl.textContent = '⚠️ Erreur'; statusEl.style.color='var(--red)'; }
+        toast('⚠️', 'Erreur sauvegarde — consultez la console');
+        console.error('Sauvegarde relance:', e);
+      }
     } else {
-      toast('✅', 'Texte mis à jour');
+      toast('✅', 'Texte mis à jour (aperçu)');
     }
   } else {
     // → Modifier : passer en mode édition
@@ -2595,7 +2659,10 @@ async function regenRelance() {
     const data = await r.json();
     rpDrafts[i] = data.content?.[0]?.text||'';
     if(el && el.tagName === 'TEXTAREA') el.value = rpDrafts[i];
+    const statusEl2 = document.getElementById('rp-save-status');
+    if(statusEl2) { statusEl2.textContent = '⏳ Sauvegarde...'; statusEl2.style.opacity='1'; statusEl2.style.color='var(--muted)'; }
     await saveRelanceDraft(id, i+1, rpDrafts[i]);
+    if(statusEl2) { statusEl2.textContent = '✓ Sauvegardé'; statusEl2.style.color='var(--green)'; setTimeout(()=>statusEl2.style.opacity='0',2500); }
     toast('🔄', `Relance ${i+1} régénérée et sauvegardée`);
   } catch(e) { toast('❌','Erreur génération'); }
 }
