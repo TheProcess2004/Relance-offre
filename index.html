@@ -601,7 +601,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <span style="font-size:13px;">💳</span>
         <div style="text-align:left;">
           <div style="font-size:11px;font-weight:700;color:var(--text);line-height:1.25;" id="sb-plan-label" style="color:#ECF0FA;">Plan Gratuit</div>
-          <div style="font-size:9px;color:var(--muted2);letter-spacing:0.3px;" id="sb-plan-sub">10 offres · Gratuit</div>
+          <div style="font-size:9px;color:var(--muted2);letter-spacing:0.3px;" id="sb-plan-sub">5 offres / mois</div>
         </div>
       </div>
       <span style="font-size:9px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;" id="sb-upgrade-lbl">Upgrader →</span>
@@ -1104,7 +1104,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--s2);border-radius:10px;margin-bottom:16px;">
             <div>
               <div style="font-size:13px;font-weight:700;" id="abo-plan-title">Plan Gratuit <span style="font-size:11px;background:rgba(34,197,94,0.15);color:var(--green);padding:2px 8px;border-radius:20px;margin-left:6px;" id="abo-plan-status">Actif</span></div>
-              <div style="font-size:12px;color:var(--muted);margin-top:3px;" id="abo-plan-desc">Jusqu'à 10 offres · Relances manuelles</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px;" id="abo-plan-desc">Jusqu'à 5 offres · Relances manuelles</div>
             </div>
             <div style="font-size:20px;font-weight:800;color:var(--gold);">0 CHF</div>
           </div>
@@ -1140,7 +1140,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;" id="usage-stats">
             <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
               <div style="font-size:22px;font-weight:800;color:var(--gold);" id="usage-offres">—</div>
-              <div style="font-size:11px;color:var(--muted);" id="usage-offres-label">offres / 10</div>
+              <div style="font-size:11px;color:var(--muted);" id="usage-offres-label">offres / 5</div>
             </div>
             <div style="background:var(--s2);border-radius:8px;padding:12px;text-align:center;">
               <div style="font-size:22px;font-weight:800;color:var(--blue);" id="usage-clients">—</div>
@@ -1487,67 +1487,70 @@ async function refreshOuvertures() {
 }
 
 function renderDetection(){
-  const listEl = document.getElementById('od-events-list');
-  const tbodyEl = document.getElementById('tbody-detection');
-
-  // Real opens from ouvertures table already loaded into OFFERS
-  const events = [];
-  OFFERS.forEach(o => {
-    if(o.opens > 0) {
-      events.push({
-        offre: o,
-        opens: o.opens,
-        hot: o.opens >= 3
-      });
-    }
+  // KPIs dynamiques
+  const total = OFFERS.length;
+  const opened = OFFERS.filter(o => o.opens > 0);
+  const taux = total > 0 ? Math.round(opened.length / total * 100) : 0;
+  const now = new Date();
+  const hot = OFFERS.filter(o => {
+    if(!o.lastOpen) return false;
+    const d = new Date(o.lastOpen);
+    return (now - d) < 86400000;
   });
+  document.getElementById('kpi-det-opens').textContent = opened.length;
+  document.getElementById('kpi-det-opens-sub').textContent = `Sur ${total} offre${total>1?'s':''} envoyée${total>1?'s':''}`;
+  document.getElementById('kpi-det-taux').textContent = total > 0 ? taux + '%' : '—';
+  document.getElementById('kpi-det-hot').textContent = hot.length;
 
-  // Sort by opens desc
-  events.sort((a,b) => b.opens - a.opens);
+  // Événements depuis OFFERS réels (triés par lastOpen desc)
+  const events = OFFERS
+    .filter(o => o.opens > 0 && o.lastOpen)
+    .sort((a,b) => new Date(b.lastOpen) - new Date(a.lastOpen))
+    .slice(0, 5)
+    .map(o => {
+      const daysAgo = Math.floor((now - new Date(o.lastOpen)) / 86400000);
+      const timeStr = daysAgo === 0 ? 'Aujourd\'hui' : daysAgo === 1 ? 'Hier' : `Il y a ${daysAgo}j`;
+      const isHot = daysAgo === 0;
+      return `<div class="od-event ${isHot?'hot':''}">
+        <div class="od-event-ico">${isHot?'🔥':'👁'}</div>
+        <div class="od-event-info">
+          <div class="od-event-main">${o.prenom} ${o.nom} a ouvert votre email</div>
+          <div class="od-event-sub">${o.ref} · ${o.montant.toLocaleString('fr-CH')} CHF · ${o.opens}ème ouverture</div>
+        </div>
+        <div class="od-event-time">${timeStr}</div>
+        ${isHot?`<button class="btn btn-gold btn-sm" onclick="toast('📞','Appelez ${o.prenom} ${o.nom} — ${o.email}')">Appeler</button>`:''}
+      </div>`;
+    });
 
-  if(listEl) {
-    if(!events.length) {
-      listEl.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted);">Aucune ouverture détectée pour le moment</div>';
-    } else {
-      listEl.innerHTML = events.slice(0,8).map(e => {
-        const o = e.offre;
-        const ico = e.hot ? '🔥' : '👁';
-        const cls = e.hot ? 'hot' : '';
-        const label = e.opens === 1 ? '1ère ouverture' : e.opens + 'ème ouverture';
-        return `<div class="od-event ${cls}">
-          <div class="od-event-ico">${ico}</div>
-          <div class="od-event-info">
-            <div class="od-event-main">${o.prenom} ${o.nom} a ouvert votre email</div>
-            <div class="od-event-sub">${o.ref} · ${o.montant.toLocaleString('fr-CH')} CHF · ${label}</div>
-          </div>
-          <div class="od-event-time">${o.sendDate || '—'}</div>
-          ${e.hot ? `<button class="btn btn-gold btn-sm" onclick="openModal('${o.id}')">Relancer →</button>` : ''}
-        </div>`;
-      }).join('');
-    }
-  }
+  document.getElementById('od-events-list').innerHTML = events.length > 0
+    ? events.join('')
+    : '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Aucune ouverture détectée pour l\'instant.<br><span style="font-size:11px;opacity:0.6;">Les ouvertures apparaissent ici dès qu\'un client ouvre votre email.</span></div>';
 
-  if(tbodyEl) {
-    if(!OFFERS.length) {
-      tbodyEl.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted);">Aucune offre</div>';
-    } else {
-      tbodyEl.innerHTML = OFFERS.map(o => `
-        <div class="tbl-r" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;" onclick="openModal('${o.id}')">
-          <div><div class="cn">${o.prenom} ${o.nom}</div><div class="ce">${o.email}</div></div>
-          <div class="ref">${o.ref}</div>
-          <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
-          <div style="font-size:12px;color:${o.opens > 0 ? 'var(--green)' : 'var(--muted)'}">
-            ${o.opens > 0 ? `👁 ${o.opens} vue${o.opens > 1 ? 's' : ''}` : '—'}
-          </div>
-          <div>${SL[o.status] || o.status}</div>
-          <div>
-            <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();actR('${o.id}')">📧 Relancer</button>
-          </div>
-        </div>`).join('');
-    }
-  }
+  // Tableau statut ouverture
+  const scores = o => {
+    if(o.opens === 0) return '⚪ Pas ouvert';
+    if(o.opens >= 3) return '🔥 Très chaud';
+    const d = o.lastOpen ? Math.floor((now - new Date(o.lastOpen)) / 86400000) : 99;
+    if(d < 1) return '🟢 Chaud';
+    if(d < 3) return '🟡 Tiède';
+    return '🔵 Lu';
+  };
+  document.getElementById('tbody-detection').innerHTML = OFFERS.length > 0
+    ? OFFERS.map(o=>`
+      <div class="tbl-r" style="grid-template-columns:2fr 1fr 1fr 1.2fr 1fr 1fr;" onclick="openModal('${o.id}')">
+        <div><div class="cn">${o.prenom} ${o.nom}${o.status==='lost'?' <span style="background:rgba(192,53,53,0.14);color:#cc5555;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">✕ Perdue</span>':o.status==='won'?' <span style="background:rgba(30,148,100,0.14);color:#22aa70;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">✓ Gagnée</span>':''}</div><div class="ce">${o.email}</div></div>
+        <div class="ref">${o.ref}</div>
+        <div class="amt">${o.montant.toLocaleString('fr-CH')} CHF</div>
+        <div style="font-size:12px;color:${o.opens>0?'var(--green)':'var(--muted)'};">${o.lastOpen||'—'}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${o.opens>1?'var(--gold)':'var(--muted)'};">${o.opens}×</div>
+        <div style="font-size:12px;">${scores(o)}</div>
+      </div>`).join('')
+    : '<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;">Aucune offre envoyée pour l\'instant.</div>';
 }
 
+// ══ CALENDAR ══
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
 
 function renderCalendar(){
   const today = new Date();
@@ -1969,7 +1972,7 @@ async function setFile(f){
   document.getElementById('up-h').textContent='Analyse IA en cours...';
   document.getElementById('up-s').textContent='Claude Vision lit votre document';
 
-  let extracted = {client:'', email:'', ref:'', montant:'', objet:''};
+  let extracted = {client:'', email:'', ref:'', montant:'', objet:'', lignes:''};
   try {
     // Conversion base64 robuste (évite stack overflow sur gros PDFs)
     const base64 = await new Promise((resolve, reject) => {
@@ -1990,7 +1993,7 @@ async function setFile(f){
           role: 'user',
           content: [
             { type: 'document', source: { type: 'base64', media_type: mediaType, data: base64 } },
-            { type: 'text', text: `Extrait les informations de cette offre commerciale. Réponds UNIQUEMENT en JSON valide sans texte avant ou après:\n{"client":"Nom du destinataire/client (pas le fournisseur émetteur)","email":"email du client si présent sinon vide","ref":"numéro de référence de l'offre","montant":"montant TOTAL en chiffres seulement sans CHF ni espaces ni apostrophes","objet":"description courte du produit ou service vendu"}` }
+            { type: 'text', text: `Extrait les informations de cette offre commerciale. Réponds UNIQUEMENT en JSON valide sans texte avant ou après:\n{"client":"Nom du destinataire/client (pas le fournisseur émetteur)","email":"email du client si présent sinon vide","ref":"numéro de référence de l'offre","montant":"montant TOTAL en chiffres seulement sans CHF ni espaces ni apostrophes","objet":"description courte du produit/service (5 mots max)","lignes":"Liste EXACTE des lignes produits copiees du document sans rien inventer. Pour chaque ligne produit: nom + dimensions exactes + quantite + unite + prix unitaire + remise si presente. Exemple: Profil EPDM 20x3mm - 1000M a 0.65CHF; Profil EPDM 20x3mm - 1500M a 0.65CHF remise5%; Transport usine-Neuchatel - 1x 35CHF. Separees par point-virgule. COPIE FIDELE uniquement, aucune invention."}` }
           ]
         }]
       })
@@ -2022,6 +2025,7 @@ async function setFile(f){
     document.getElementById('ex-ref').value=extracted.ref||'';
     document.getElementById('ex-montant').value=extracted.montant||'';
     document.getElementById('ex-objet').value=extracted.objet||'';
+    window._pdfLignes = extracted.lignes||'';
     toast('✦','PDF analysé par IA — vérifiez les données');
   }
 }
@@ -2038,6 +2042,7 @@ async function genEmail(){
   const rel=document.getElementById('f-rel').value;
   const detail=document.getElementById('f-detail')?.value.trim()||'';
   const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
+  const lignesPDF=window._pdfLignes||'';
 
   const parts=client.trim().split(' ');
   const prenom=parts[0]||'Client';
@@ -2068,19 +2073,20 @@ DONNÉES :
 - Fichier joint : ${fileName}
 - Contexte de l'échange : ${contexte||'Pas de contexte spécifique'}
 - Détail à mentionner : ${detail||'Aucun'}
+- Lignes exactes de l'offre (UTILISE CES DONNÉES, NE PAS INVENTER) : ${lignesPDF||'Non disponible'}
 - Relation : ${relDesc[rel]}
 - Ton : ${tonDesc[ton]}
 
 RÈGLES ABSOLUES :
 1. Sonne 100% humain — jamais robotique ni "template"
 2. Intègre le contexte naturellement si pertinent
-3. Mentionne l'objet concret de l'offre (pas juste "votre offre")
-4. Maximum 3-4 lignes de corps — percutant et naturel
-5. Commence DIRECTEMENT par "Bonjour ${prenom}," — RIEN avant
-6. INTERDIT : N'écris JAMAIS "Objet :", "**Objet", ou tout en-tête
+3. DONNEES STRICTES : si lignes produits fournies, utilise UNIQUEMENT ces donnees (dimensions/quantites/prix). Ne pas inventer.\n4. Mentionne l'objet concret de l'offre (pas juste "votre offre")
+5. Maximum 3-4 lignes de corps — percutant et naturel
+6. Commence DIRECTEMENT par "Bonjour ${prenom}," — RIEN avant
+8. INTERDIT : N'écris JAMAIS "Objet :", "**Objet", ou tout en-tête
 7. INTERDIT : N'écris JAMAIS de placeholders [Prénom], [Nom], [Signature]
-8. Ne mets PAS de signature — elle sera ajoutée automatiquement
-9. STRUCTURE OBLIGATOIRE en 3 blocs séparés par une ligne vide :
+9. Ne mets PAS de signature — elle sera ajoutée automatiquement
+10. STRUCTURE OBLIGATOIRE en 3 blocs séparés par une ligne vide :
    - Bloc 1 : "Bonjour ${prenom},"
    - Bloc 2 : Corps du message (2-3 lignes max)
    - Bloc 3 : Formule de salutation adaptée au ton :
@@ -2923,7 +2929,7 @@ async function sbAuthFetch(path, options={}) {
 
 // Plans et leurs limites
 const PLANS_CONFIG = {
-  free:     { name: 'Gratuit',  maxOffres: 10,   relancesAuto: true,  tracking: false, rapportIA: false },
+  free:     { name: 'Gratuit',  maxOffres: 5,   relancesAuto: true,  tracking: false, rapportIA: false },
   pro:      { name: 'Pro',      maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  },
   business: { name: 'Business', maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  }
 };
@@ -2953,8 +2959,8 @@ async function startCheckout(plan) {
         plan,
         user_email: CURRENT_USER.email,
         user_id: CURRENT_USER.id,
-        success_url: window.location.origin + '/?payment=success&plan=' + plan,
-        cancel_url: window.location.origin + '/?payment=cancelled'
+        success_url: window.location.origin,
+        cancel_url: window.location.origin
       })
     });
     const data = await r.json();
@@ -2965,7 +2971,7 @@ async function startCheckout(plan) {
       if(btn) { btn.textContent = '🚀 Passer à ' + plan; btn.disabled = false; }
     }
   } catch(e) {
-    toast('❌', 'Erreur réseau — contactez contact@followoffer.com');
+    toast('❌', 'Erreur réseau — contactez contact@aubrymr.ch');
     if(btn) { btn.textContent = '🚀 Passer à ' + plan; btn.disabled = false; }
   }
 }
@@ -3009,7 +3015,7 @@ function checkOfferLimit() {
   const plan = getCurrentPlan();
   if(OFFERS.length >= plan.maxOffres) {
     if(!isPro()) {
-      toast('🔒', 'Limite de 10 offres atteinte. Passez à Pro pour des offres illimitées →');
+      toast('🔒', 'Limite de 5 offres atteinte. Passez à Pro pour des offres illimitées →');
       setTimeout(() => { go('config'); showCfgTab('abo'); }, 1500);
       return false;
     }
@@ -3058,7 +3064,7 @@ function showCfgTab(tab) {
         const tn = aboTitle.childNodes[0];
         if(tn) tn.textContent = 'Plan Gratuit ';
         if(aboStatus) { aboStatus.textContent = 'Actif'; aboStatus.style.background = 'rgba(34,197,94,0.15)'; aboStatus.style.color = 'var(--green)'; }
-        if(aboDesc) aboDesc.textContent = "Jusqu'à 10 offres · Relances manuelles";
+        if(aboDesc) aboDesc.textContent = "Jusqu'à 5 offres · Relances manuelles";
       }
     }
     // Banner limite atteinte
@@ -3071,7 +3077,7 @@ function showCfgTab(tab) {
       const aboCard = document.querySelector('#cfg-tab-abo .s-card');
       if(aboCard) aboCard.insertBefore(bannerEl, aboCard.firstChild);
     }
-    if(!isPro && usedOffers >= 10) {
+    if(!isPro && usedOffers >= 5) {
       bannerEl.style.display = '';
       bannerEl.textContent = '';
       const bSpan = document.createElement('span');
@@ -3093,7 +3099,7 @@ function showCfgTab(tab) {
     const uR = document.getElementById('usage-relances');
     if(uO) uO.textContent = OFFERS.length;
     const uOL = document.getElementById('usage-offres-label');
-    if(uOL) uOL.textContent = USER_PLAN === 'pro' ? 'offres (illimitées)' : 'offres / 10';
+    if(uOL) uOL.textContent = USER_PLAN === 'pro' ? 'offres (illimitées)' : 'offres / 5';
     if(uR) {
       // Compter via statut offres (fiable, immédiat)
       const fromStatus = OFFERS.reduce((acc,o)=>{
@@ -3224,35 +3230,22 @@ async function doForgotPassword() {
 
 // Détecter si on revient d'un lien de reset
 function checkResetMode() {
-  // Format 1: hash #access_token=...&type=recovery (Supabase natif)
+  // Lire le hash (format Supabase: #access_token=...&type=recovery)
   const hash = window.location.hash;
-  const hashParams = new URLSearchParams(hash.replace('#','?'));
-  if(hashParams.get('type') === 'recovery' && hashParams.get('access_token')) {
+  const params = new URLSearchParams(hash.replace('#','?'));
+  const type = params.get('type');
+  const accessToken = params.get('access_token');
+  if(type === 'recovery' && accessToken) {
+    // Nettoyer l'URL pour ne pas rejouer au reload
     history.replaceState(null, '', window.location.pathname);
-    showResetPasswordForm(hashParams.get('access_token'));
+    showResetPasswordForm(accessToken);
     return;
   }
-  // Format 2: query ?token=...&type=recovery (notre API custom)
+  // Aussi vérifier les query params (cas PKCE)
   const qp = new URLSearchParams(window.location.search);
-  if(qp.get('type') === 'recovery' && qp.get('token')) {
-    // Échanger le token contre un access_token via Supabase
-    const htoken = qp.get('token');
+  if(qp.get('type') === 'recovery' && qp.get('access_token')) {
     history.replaceState(null, '', window.location.pathname);
-    fetch(SB_URL + '/auth/v1/verify', {
-      method: 'POST',
-      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'recovery', token: htoken })
-    }).then(r => r.json()).then(data => {
-      if(data.access_token) showResetPasswordForm(data.access_token);
-      else { showAuthScreen(); toast('❌','Lien expiré — demandez un nouveau lien'); }
-    }).catch(() => { showAuthScreen(); toast('❌','Erreur — demandez un nouveau lien'); });
-    return;
-  }
-  // Format 3: query params access_token (cas PKCE)
-  const qp2 = new URLSearchParams(window.location.search);
-  if(qp2.get('type') === 'recovery' && qp2.get('access_token')) {
-    history.replaceState(null, '', window.location.pathname);
-    showResetPasswordForm(qp2.get('access_token'));
+    showResetPasswordForm(qp.get('access_token'));
   }
 }
 
