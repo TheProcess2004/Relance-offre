@@ -70,23 +70,23 @@ button{font-family:inherit;}
 .nav.is-light .btn-ghost:hover{color:var(--text);}
 
 /* ═══ HERO DARK ═══ */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:130px 24px 80px;text-align:center;position:relative;overflow:hidden;background:var(--hbg);}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 24px 60px;text-align:center;position:relative;overflow:hidden;background:var(--hbg);}
 /* Lumière centrale très douce */
 .hero::before{content:'';position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 90% 60% at 50% 10%,rgba(21,85,168,0.32) 0%,transparent 65%),radial-gradient(ellipse 40% 25% at 15% 85%,rgba(21,85,168,0.10) 0%,transparent 55%),radial-gradient(ellipse 40% 25% at 85% 85%,rgba(21,85,168,0.10) 0%,transparent 55%),radial-gradient(ellipse 60% 40% at 50% 100%,rgba(30,106,200,0.08) 0%,transparent 60%);}
 /* Grille subtile */
 .hero::after{content:'';position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(232,237,246,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(232,237,246,0.025) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,black 20%,transparent 75%);mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,black 20%,transparent 75%);}
 .hero-inner{position:relative;z-index:1;max-width:840px;}
 /* Fondu bas */
-.hero-fade{position:absolute;bottom:0;left:0;right:0;height:260px;z-index:1;background:linear-gradient(to bottom,transparent 0%,var(--hbg) 100%);pointer-events:none;}
+.hero-fade{position:absolute;bottom:0;left:0;right:0;height:160px;z-index:1;background:linear-gradient(to bottom,transparent 0%,var(--hbg) 100%);pointer-events:none;}
 
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:5px 16px 5px 11px;border-radius:100px;margin-bottom:32px;background:rgba(21,85,168,0.20);border:1px solid rgba(107,158,232,0.28);font-size:11px;font-weight:700;color:#8BBAF0;letter-spacing:1px;text-transform:uppercase;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:5px 16px 5px 11px;border-radius:100px;margin-bottom:22px;background:rgba(21,85,168,0.20);border:1px solid rgba(107,158,232,0.28);font-size:11px;font-weight:700;color:#8BBAF0;letter-spacing:1px;text-transform:uppercase;}
 .ew-dot{width:6px;height:6px;border-radius:50%;background:#6B9EE8;flex-shrink:0;animation:dotp 2.2s ease-in-out infinite;}
 @keyframes dotp{0%,100%{opacity:1;}50%{opacity:0.3;}}
-.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(44px,6.8vw,84px);line-height:1.05;letter-spacing:-1.5px;margin-bottom:24px;color:var(--htxt);}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(40px,5.8vw,72px);line-height:1.05;letter-spacing:-1.5px;margin-bottom:18px;color:var(--htxt);}
 .hero-title em{font-style:italic;color:#7AAEE8;}
-.hero-title .lt{color:rgba(232,237,246,0.38);font-size:0.52em;display:block;margin-top:12px;letter-spacing:3px;text-transform:uppercase;font-family:'Outfit',sans-serif;font-weight:700;font-style:normal;}
-.hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--hmut);line-height:1.72;max-width:520px;margin:0 auto 42px;font-weight:400;}
-.hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
+.hero-title .lt{color:rgba(232,237,246,0.38);font-size:0.45em;display:block;margin-top:10px;letter-spacing:3.5px;text-transform:uppercase;font-family:'Outfit',sans-serif;font-weight:700;font-style:normal;}
+.hero-sub{font-size:clamp(14px,1.5vw,17px);color:var(--hmut);line-height:1.68;max-width:520px;margin:0 auto 28px;font-weight:400;}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:28px;}
 .btn-primary{font-size:15px;font-weight:700;color:#fff;background:var(--blue);padding:15px 34px;border-radius:10px;border:none;cursor:pointer;transition:all 0.25s;display:inline-flex;align-items:center;gap:8px;box-shadow:0 0 0 1px rgba(21,85,168,0.5),0 8px 32px rgba(21,85,168,0.52),0 2px 8px rgba(0,0,0,0.30);}
 .btn-primary:hover{background:var(--blue2);transform:translateY(-2px);box-shadow:0 0 0 1px rgba(30,106,200,0.6),0 14px 40px rgba(21,85,168,0.55);}
 .btn-secondary{font-size:14px;font-weight:600;color:var(--htxt);background:rgba(232,237,246,0.07);border:1px solid var(--hbdr);padding:14px 28px;border-radius:10px;cursor:pointer;transition:all 0.22s;}
@@ -96,7 +96,7 @@ button{font-family:inherit;}
 .t-item::before{content:"✓";color:#4AAA78;font-weight:800;font-size:11px;}
 
 /* ═══ TRANSITION + MOCKUP ═══ */
-.mockup-wrap-outer{background:linear-gradient(180deg,var(--hbg) 0%,#0F1828 35%,#1C2A42 60%,var(--bg) 100%);padding:24px 24px 80px;}
+.mockup-wrap-outer{background:linear-gradient(180deg,var(--hbg) 0%,#0F1828 40%,#1C2A42 65%,var(--bg) 100%);padding:0 24px 80px;}
 .mockup-section{max-width:1040px;margin:0 auto;}
 .mockup-wrap{border-radius:18px;overflow:hidden;border:1px solid rgba(232,237,246,0.10);box-shadow:0 0 0 1px rgba(21,85,168,0.18),0 30px 90px rgba(0,0,0,0.55),0 8px 30px rgba(0,0,0,0.35);transform:translateY(0);}
 .mw-bar{height:40px;background:#1A1F2C;border-bottom:1px solid rgba(232,237,246,0.08);display:flex;align-items:center;padding:0 16px;gap:8px;}
@@ -556,7 +556,7 @@ button{font-family:inherit;}
 /* ═══ HERO UPGRADES ═══ */
 .ew-sep{opacity:0.35;margin:0 2px;}
 .ew-live{color:#4ADE80;font-weight:800;letter-spacing:0.5px;display:inline-flex;align-items:center;gap:5px;}
-.hero-social-proof{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:28px;}
+.hero-social-proof{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:18px;}
 .hsp-avatars{display:flex;}
 .hsp-av{width:30px;height:30px;border-radius:50%;border:2px solid rgba(8,12,20,0.9);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;margin-left:-8px;flex-shrink:0;}
 .hsp-av:first-child{margin-left:0;}
@@ -574,6 +574,8 @@ button{font-family:inherit;}
 
 /* Tooltip */
 .hs-tip{position:absolute;bottom:calc(100% + 10px);width:230px;background:rgba(8,12,22,0.97);border:1px solid rgba(21,85,168,0.35);border-radius:12px;padding:14px;box-shadow:0 8px 36px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.04);backdrop-filter:blur(12px);opacity:0;transform:translateY(6px) scale(0.96);transition:opacity 0.2s cubic-bezier(.16,1,.3,1),transform 0.2s cubic-bezier(.16,1,.3,1);pointer-events:none;z-index:20;}
+.hs-tip-below{bottom:auto;top:calc(100% + 10px);transform:translateY(-6px) scale(0.96);}
+.hs-point:hover .hs-tip-below{transform:translateY(0) scale(1);}
 .hs-tip-right{left:16px;}
 .hs-tip-left{right:16px;}
 .hs-point:hover .hs-tip{opacity:1;transform:translateY(0) scale(1);}
@@ -588,6 +590,88 @@ button{font-family:inherit;}
 
 /* Mockup positioning fix */
 .mw-body{position:relative;}
+
+/* ═══ PREMIUM HERO UPGRADES ═══ */
+
+/* Noise grain texture overlay */
+.hero-grain{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0.032;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;}
+
+/* Dot grid overlay */
+.hero-dots{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:radial-gradient(rgba(232,237,246,0.09) 1px, transparent 1px);
+  background-size:28px 28px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 50%, black 0%, transparent 80%);
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 50%, black 0%, transparent 80%);}
+
+/* Scroll indicator */
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  animation:hi 1s 1.2s both cubic-bezier(.16,1,.3,1);}
+.hero-scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(232,237,246,0) 0%,rgba(232,237,246,0.22) 100%);}
+.hero-scroll-dot{width:5px;height:5px;border-radius:50%;background:rgba(232,237,246,0.30);animation:scrollDot 2s ease-in-out infinite;}
+@keyframes scrollDot{0%,100%{transform:translateY(0);opacity:0.3;}50%{transform:translateY(8px);opacity:0.8;}}
+.hero-scroll-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(232,237,246,0.22);font-weight:600;}
+
+/* Mockup entrance animation + subtle perspective */
+.mockup-wrap{
+  animation:mockupIn 1s 0.5s both cubic-bezier(.16,1,.3,1);
+  transform-origin:50% 0%;
+}
+@keyframes mockupIn{
+  from{opacity:0;transform:translateY(40px) scale(0.97);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+
+/* Animated glow ring on primary CTA */
+.btn-primary{position:relative;overflow:hidden;}
+.btn-primary::after{content:'';position:absolute;inset:-2px;border-radius:12px;background:conic-gradient(from 0deg,transparent 0%,rgba(107,158,232,0.6) 20%,transparent 40%);animation:btnRing 3s linear infinite;z-index:-1;opacity:0;transition:opacity 0.3s;}
+.btn-primary:hover::after{opacity:1;}
+@keyframes btnRing{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* KPI cards hover - subtle lift on mockup (landing only) */
+.m-kpi{transition:transform 0.18s,box-shadow 0.18s;}
+.m-kpi:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(21,85,168,0.12);}
+
+/* Hotspot entrance animation */
+.hs-point{animation:hsIn 0.6s both cubic-bezier(.34,1.56,.64,1);}
+.hs-point:nth-child(1){animation-delay:1.4s;}
+.hs-point:nth-child(2){animation-delay:1.7s;}
+.hs-point:nth-child(3){animation-delay:2.0s;}
+.hs-point:nth-child(4){animation-delay:2.3s;}
+@keyframes hsIn{from{opacity:0;transform:translate(-50%,-50%) scale(0);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+
+/* Floating badge above mockup */
+.mockup-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-bottom:16px;
+  padding:5px 14px 5px 10px;
+  border-radius:100px;
+  background:rgba(21,85,168,0.15);
+  border:1px solid rgba(107,158,232,0.22);
+  font-size:11px;font-weight:600;color:rgba(232,237,246,0.55);
+  letter-spacing:0.5px;
+}
+.mockup-badge-dot{width:6px;height:6px;border-radius:50%;background:#4ADE80;flex-shrink:0;animation:dotp 2s ease-in-out infinite;}
+
+/* ═══ MISSION BLOCK ═══ */
+.mission-section{padding:80px 24px;background:var(--de-bg2);border-top:1px solid var(--de-bdr);}
+.mission-inner{max-width:760px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:56px;align-items:start;}
+.mission-left{padding-top:4px;}
+.mission-eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#7AAEE8;margin-bottom:14px;}
+.mission-title{font-family:'DM Serif Display',serif;font-size:clamp(22px,2.8vw,30px);line-height:1.18;letter-spacing:-0.3px;color:var(--de-txt);margin-bottom:0;}
+.mission-title em{font-style:italic;color:rgba(226,232,244,0.45);}
+.mission-right{border-left:1px solid var(--de-bdr);padding-left:48px;}
+.mission-text{font-size:15px;color:rgba(226,232,244,0.62);line-height:1.78;margin-bottom:24px;}
+.mission-text strong{color:var(--de-txt);font-weight:600;}
+.mission-sig{display:flex;align-items:center;gap:12px;padding-top:20px;border-top:1px solid var(--de-bdr);}
+.mission-sig-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#1555A8,#3B82F6);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:white;flex-shrink:0;}
+.mission-sig-name{font-size:13px;font-weight:700;color:var(--de-txt);}
+.mission-sig-role{font-size:11px;color:rgba(226,232,244,0.38);margin-top:1px;}
+.mission-values{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.mission-val{font-size:11px;font-weight:600;color:rgba(226,232,244,0.45);background:rgba(255,255,255,0.04);border:1px solid var(--de-bdr);padding:4px 12px;border-radius:100px;letter-spacing:0.3px;}
+@media(max-width:680px){.mission-inner{grid-template-columns:1fr;gap:28px;}.mission-right{border-left:none;padding-left:0;border-top:1px solid var(--de-bdr);padding-top:28px;}}
 
 </style>
 </head>
@@ -614,6 +698,13 @@ button{font-family:inherit;}
 
 <!-- HERO DARK -->
 <section class="hero">
+  <div class="hero-grain"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-lbl">Scroll</div>
+    <div class="hero-scroll-line"></div>
+    <div class="hero-scroll-dot"></div>
+  </div>
   <div class="hero-inner">
     <div class="hero-eyebrow">
   <span class="ew-dot"></span>
@@ -636,15 +727,9 @@ button{font-family:inherit;}
       <span class="t-item">Données hébergées en Europe</span>
     </div>
     <div class="hero-social-proof">
-      <div class="hsp-avatars">
-        <div class="hsp-av" style="background:linear-gradient(135deg,#3B82F6,#1E40AF);">RM</div>
-        <div class="hsp-av" style="background:linear-gradient(135deg,#10B981,#047857);">SF</div>
-        <div class="hsp-av" style="background:linear-gradient(135deg,#F59E0B,#B45309);">PB</div>
-        <div class="hsp-av" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9);">LK</div>
-      </div>
       <div class="hsp-text">
         <span class="hsp-stars">★★★★★</span>
-        <span class="hsp-note">4.9/5 · Utilisé par +120 PME romandes</span>
+        <span class="hsp-note">4.7/5 · Utilisé par +107 PME romandes</span>
       </div>
     </div>
   </div>
@@ -654,6 +739,9 @@ button{font-family:inherit;}
 <!-- TRANSITION + MOCKUP -->
 <div class="mockup-wrap-outer">
   <div class="mockup-section r">
+    <div style="text-align:center;margin-bottom:16px;">
+      <span class="mockup-badge"><span class="mockup-badge-dot"></span>Interface temps réel · Aperçu interactif</span>
+    </div>
     <div class="mockup-wrap">
       <div class="mw-bar">
         <div class="mdot mdot-r"></div><div class="mdot mdot-y"></div><div class="mdot mdot-g"></div>
@@ -694,10 +782,10 @@ button{font-family:inherit;}
       <!-- HOTSPOTS interactifs -->
       <div class="hs-layer" id="hs-layer">
         <!-- Point 1 — KPIs (haut gauche) -->
-        <div class="hs-point" style="left:39%;top:22%;" data-hs="1">
+        <div class="hs-point" style="left:39%;top:42%;" data-hs="1">
           <span class="hs-pulse"></span>
           <span class="hs-dot"></span>
-          <div class="hs-tip hs-tip-right">
+          <div class="hs-tip hs-tip-right hs-tip-below">
             <div class="hs-tip-ico">📊</div>
             <div class="hs-tip-content">
               <div class="hs-tip-title">Pipeline en temps réel</div>
@@ -718,7 +806,7 @@ button{font-family:inherit;}
           </div>
         </div>
         <!-- Point 3 — Donut (droite) -->
-        <div class="hs-point" style="left:90%;top:62%;" data-hs="3">
+        <div class="hs-point" style="left:88%;top:65%;" data-hs="3">
           <span class="hs-pulse" style="animation-delay:.8s"></span>
           <span class="hs-dot"></span>
           <div class="hs-tip hs-tip-left">
@@ -887,7 +975,7 @@ button{font-family:inherit;}
       </div>
       <div class="testi-card tc-stat r d2" data-counter="cnt-testi">
         <div class="tc-stat-big"><span id="cnt-testi">38</span><span class="tc-stat-suffix">%</span></div>
-        <div class="tc-stat-sub">⭐ 4.9 / 5</div>
+        <div class="tc-stat-sub">⭐ 4.7 / 5</div>
         <div class="tc-stat-desc">Taux de conversion moyen en plus observé chez les utilisateurs Pro après 3 mois</div>
         <div class="tc-stat-note">Données agrégées · Comptes Pro actifs · Suisse romande & alémanique</div>
       </div>
@@ -1102,6 +1190,32 @@ button{font-family:inherit;}
     <p class="cta-sub r d2" style="font-size:16px;line-height:1.65;margin-bottom:36px;">5 offres gratuites pour démarrer. Aucune carte requise.<br>Opérationnel en 5 minutes.</p>
     <div class="r d3"><a href="/app" class="btn-primary" style="font-size:16px;padding:16px 40px;display:inline-flex;">Créer mon compte gratuitement →</a></div>
     <p class="r d4" style="font-size:12px;color:rgba(226,232,244,0.30);margin-top:18px;">Essai gratuit sans engagement · Passez à Pro quand vous voulez</p>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="mission-section dark-end">
+  <div class="mission-inner">
+    <div class="mission-left r">
+      <div class="mission-eyebrow">Notre mission</div>
+      <h2 class="mission-title">Structuré.<br>Simple.<br><em>Suisse.</em></h2>
+      <div class="mission-values">
+        <span class="mission-val">🇨🇭 Local</span>
+        <span class="mission-val">🔒 Privé</span>
+        <span class="mission-val">⚡ Direct</span>
+      </div>
+    </div>
+    <div class="mission-right r d1">
+      <p class="mission-text">FollowOffer est né d'un constat simple : les PME romandes perdent des affaires <strong>non par manque de compétence, mais par manque de suivi structuré.</strong></p>
+      <p class="mission-text" style="margin-bottom:0;">Nous construisons un outil qui fait une seule chose — <strong>transformer chaque offre envoyée en une opportunité suivie jusqu'au bout.</strong> Pas un CRM de plus. Pas un outil américain surdimensionné. Un outil fait pour vous, depuis la Suisse.</p>
+      <div class="mission-sig">
+        <div class="mission-sig-av">A</div>
+        <div>
+          <div class="mission-sig-name">Axel Aubry</div>
+          <div class="mission-sig-role">Fondateur · FollowOffer · Neuchâtel 🇨🇭</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
