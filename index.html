@@ -686,11 +686,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
               <div class="pdf-extract">
                 <div class="pdf-extract-title">✦ Données extraites automatiquement</div>
                 <div class="pdf-field" style="position:relative;">
-                  <span class="pdf-field-lbl">Client</span>
+                  <span class="pdf-field-lbl">Prénom / Contact</span>
                   <div style="flex:1;position:relative;">
-                    <input class="pdf-field-edit" id="ex-client" value="" oninput="clientAutoComplete(this.value)" onblur="setTimeout(()=>closeACDropdown(),180)" placeholder="Nom complet du client">
+                    <input class="pdf-field-edit" id="ex-prenom" value="" oninput="clientAutoComplete(this.value)" onblur="setTimeout(()=>closeACDropdown(),180)" placeholder="Pierre">
                     <div id="ac-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--s2);border:1px solid var(--border2);border-radius:8px;z-index:300;max-height:180px;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.4);margin-top:3px;"></div>
                   </div>
+                </div>
+                <div class="pdf-field">
+                  <span class="pdf-field-lbl">Société</span>
+                  <input class="pdf-field-edit" id="ex-societe" value="" placeholder="Saabag S.A. (optionnel)">
                 </div>
                 <div id="client-history-badge" style="display:none;background:var(--blue-d);border:1px solid rgba(56,189,248,0.2);border-radius:7px;padding:8px 12px;margin:6px 0;font-size:11px;color:var(--blue);cursor:pointer;" onclick="showClientHistory()">
                   👤 Client connu — <span id="client-history-count"></span> offre(s) précédente(s) · <strong>Voir l'historique</strong>
@@ -1995,7 +1999,7 @@ async function setFile(f){
           role: 'user',
           content: [
             { type: 'document', source: { type: 'base64', media_type: mediaType, data: base64 } },
-            { type: 'text', text: `Extrait les informations de cette offre commerciale. Réponds UNIQUEMENT en JSON valide sans texte avant ou après:\n{"client":"Nom du destinataire/client (pas le fournisseur émetteur)","email":"email du client si présent sinon vide","ref":"numéro de référence de l'offre","montant":"montant TOTAL en chiffres seulement sans CHF ni espaces ni apostrophes","objet":"description courte du produit/service (5 mots max)","lignes":"Liste EXACTE des lignes produits copiees du document sans rien inventer. Pour chaque ligne produit: nom + dimensions exactes + quantite + unite + prix unitaire + remise si presente. Exemple: Profil EPDM 20x3mm - 1000M a 0.65CHF; Profil EPDM 20x3mm - 1500M a 0.65CHF remise5%; Transport usine-Neuchatel - 1x 35CHF. Separees par point-virgule. COPIE FIDELE uniquement, aucune invention."}` }
+            { type: 'text', text: `Extrait les informations de cette offre commerciale. Réponds UNIQUEMENT en JSON valide sans texte avant ou après:\n{"prenom":"Prénom ou prénom+nom du contact destinataire (la personne physique, pas la société — ex: Pierre, Marc Dupont)","societe":"Nom de la société cliente destinataire si présente, sinon vide","email":"email du client si présent sinon vide","ref":"numéro de référence de l'offre","montant":"montant TOTAL en chiffres seulement sans CHF ni espaces ni apostrophes","objet":"description courte du produit/service (5 mots max)","lignes":"Liste EXACTE des lignes produits copiees du document sans rien inventer. Pour chaque ligne produit: nom + dimensions exactes + quantite + unite + prix unitaire + remise si presente. Exemple: Profil EPDM 20x3mm - 1000M a 0.65CHF; Profil EPDM 20x3mm - 1500M a 0.65CHF remise5%; Transport usine-Neuchatel - 1x 35CHF. Separees par point-virgule. COPIE FIDELE uniquement, aucune invention."}` }
           ]
         }]
       })
@@ -2006,7 +2010,8 @@ async function setFile(f){
     if(!jsonMatch) throw new Error('No JSON in response');
     const parsed = JSON.parse(jsonMatch[0]);
     extracted = {
-      client: parsed.client || '',
+      prenom: parsed.prenom || '',
+      societe: parsed.societe || '',
       email: parsed.email || '',
       ref: parsed.ref || '',
       montant: (parsed.montant || '').toString().replace(/[^0-9.]/g, ''),
@@ -2022,7 +2027,8 @@ async function setFile(f){
     document.getElementById('up-h').textContent=f.name;
     document.getElementById('up-s').textContent=(f.size/1024).toFixed(0)+' KB · Données extraites';
     document.getElementById('pdf-extract-zone').style.display='block';
-    document.getElementById('ex-client').value=extracted.client||'';
+    document.getElementById('ex-prenom').value=extracted.prenom||'';
+    document.getElementById('ex-societe').value=extracted.societe||'';
     document.getElementById('ex-email').value=extracted.email||'';
     document.getElementById('ex-ref').value=extracted.ref||'';
     document.getElementById('ex-montant').value=extracted.montant||'';
@@ -2034,7 +2040,8 @@ async function setFile(f){
 
 // ══ GENERATE EMAIL ══
 async function genEmail(){
-  const client=document.getElementById('ex-client')?.value||'Client';
+  const prenomRaw=document.getElementById('ex-prenom')?.value||'';
+  const societeRaw=document.getElementById('ex-societe')?.value||'';
   const email=document.getElementById('ex-email')?.value||'client@exemple.ch';
   const ref=document.getElementById('ex-ref')?.value||'OFF-XXX';
   const montant=document.getElementById('ex-montant')?.value||'0';
@@ -2046,8 +2053,8 @@ async function genEmail(){
   const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
   const lignesPDF=window._pdfLignes||'';
 
-  const parts=client.trim().split(' ');
-  const prenom=parts[0]||'Client';
+  // Prénom pour la salutation — si pas de prénom, utiliser le nom de société
+  const prenom = prenomRaw.split(' ')[0] || societeRaw.split(' ')[0] || 'Client';
 
   document.getElementById('step-form').style.display='none';
   document.getElementById('step-loading').style.display='block';
@@ -2064,11 +2071,11 @@ async function genEmail(){
   const tonDesc={chaleureux:'Chaleureux, naturel, humain. Évite les formules creuses. Tutoie si relation connue/fidèle.',pro:'Professionnel et formel. Vouvoiement. Structuré mais pas froid.',direct:'Très concis. Direct. Maximum 4 lignes. Pas de formules.'};
   const relDesc={nouveau:'Premier contact — sois attentionné, crée confiance',connu:'Client connu — relation établie, ton naturel',fidele:'Client fidèle depuis longtemps — proximité, chaleur'};
 
+  const societeLabel = societeRaw ? `\n- Société : ${societeRaw}` : '';
   const prompt=`Tu es un commercial expert. Rédige un email d'accompagnement d'offre commerciale qui semble écrit à la main.
 
 DONNÉES :
-- Prénom client : ${prenom}
-- Nom complet : ${client}
+- Prénom / Contact : ${prenom}${societeLabel}
 - Objet de l'offre : ${objet}
 - Montant : ${montant} CHF
 - Référence : ${ref}
@@ -2146,15 +2153,18 @@ function resetToForm(){
 async function sendOffer(){
   // Vérifier limite plan Free
   if(!checkOfferLimit()) return;
-  const clientFull=document.getElementById('ex-client')?.value||'Client';
+  const prenomField=document.getElementById('ex-prenom')?.value||'';
+  const societeField=document.getElementById('ex-societe')?.value||'';
   const email=document.getElementById('ex-email')?.value||'';
   const ref=document.getElementById('ex-ref')?.value||'OFF-NEW';
   const montant=parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s'`]/g,'').replace(/[^0-9.]/g,''))||0;
   const objet=document.getElementById('ex-objet')?.value||'';
   const contexte=document.getElementById('f-contexte')?.value||'';
-  const parts=clientFull.split(' ');
-  const prenom=parts[0]||'Client';
-  const nom=parts.slice(1).join(' ')||'';
+  // prenom = contact physique (pour la salutation "Bonjour Pierre,")
+  // nom = société si renseignée, sinon nom de famille du contact
+  const prenom = prenomField.split(' ')[0] || societeField.split(' ')[0] || 'Client';
+  const nom = prenomField.split(' ').slice(1).join(' ') || '';
+  const entreprise = societeField || '';
   const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
 
   const d1=parseInt(document.getElementById('of-d1')?.value)||parseInt(document.getElementById('cfg-d1')?.value)||3;
@@ -2174,7 +2184,7 @@ async function sendOffer(){
       if(existingClients.length > 0) {
         clientId = existingClients[0].id;
       } else {
-        const newClient = await sbFetch('clients', {method:'POST', body:JSON.stringify({prenom,nom,email,entreprise:''})});
+        const newClient = await sbFetch('clients', {method:'POST', body:JSON.stringify({prenom,nom,email,entreprise:entreprise||''})});
         clientId = newClient[0]?.id;
         // Si toujours pas d'id (doublon email autre user), récupérer l'existant
         if(!clientId) {
@@ -2237,7 +2247,7 @@ async function sendOffer(){
       const emailBody = rawBody && rawBody !== '—'
         ? rawBody
         : `Bonjour ${prenom},\n\nVeuillez trouver ci-joint notre offre ${ref} — ${objet} pour un montant de ${montant.toLocaleString('fr-CH')} CHF.\n\nN\'hésitez pas à me contacter pour toute question.\n\nAu plaisir d\'échanger avec vous,${buildSignature()}`;
-      emailSent = await sendBrevoEmail({to:email, toName:`${prenom} ${nom}`, subject:`Offre ${ref} — ${objet}`, body:emailBody, pdfUrl, pdfName:uploadedFile?.name||`${ref}.pdf`, offerId});
+      emailSent = await sendBrevoEmail({to:email, toName:entreprise ? `${prenom} — ${entreprise}` : `${prenom} ${nom}`, subject:`Offre ${ref} — ${objet}`, body:emailBody, pdfUrl, pdfName:uploadedFile?.name||`${ref}.pdf`, offerId});
     } else if(email && !CFG.senderEmail) {
       toast('⚠️', 'Renseignez votre email expéditeur dans Configuration pour envoyer');
     }
@@ -2693,8 +2703,8 @@ async function regenRelance() {
 }
 
 function previewNewRelances() {
-  const prenom = document.getElementById('ex-prenom')?.value||'';
-  const nom = document.getElementById('ex-nom')?.value||'';
+  const prenom = (document.getElementById('ex-prenom')?.value||'').split(' ')[0] || 'Client';
+  const nom = document.getElementById('ex-societe')?.value || (document.getElementById('ex-prenom')?.value||'').split(' ').slice(1).join(' ') || '';
   const email = document.getElementById('ex-email')?.value||'';
   const ref = document.getElementById('ex-ref')?.value||'OFF-XXX';
   const montant = parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s']/g,''))||0;
@@ -2830,7 +2840,9 @@ function clientAutoComplete(val) {
 }
 
 function fillClient(prenom, nom, email, entreprise, count) {
-  document.getElementById('ex-client').value = `${prenom} ${nom}`;
+  // Remplir Prénom + Société depuis l'autocomplete
+  document.getElementById('ex-prenom').value = `${prenom} ${nom}`.trim();
+  document.getElementById('ex-societe').value = '';
   document.getElementById('ex-email').value = email;
   closeACDropdown();
   const badge = document.getElementById('client-history-badge');
@@ -3171,7 +3183,7 @@ async function sbAuthFetch(path, options={}) {
 
 // Plans et leurs limites
 const PLANS_CONFIG = {
-  free:     { name: 'Gratuit',  maxOffres: 10,   relancesAuto: true,  tracking: false, rapportIA: false },
+  free:     { name: 'Gratuit',  maxOffres: 5,    relancesAuto: true,  tracking: false, rapportIA: false },
   pro:      { name: 'Pro',      maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  },
   business: { name: 'Business', maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  }
 };
