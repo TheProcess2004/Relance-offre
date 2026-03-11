@@ -1128,20 +1128,12 @@ async function submitContact() {
   if(btnTxt) btnTxt.textContent = 'Envoi…';
 
   try {
-    await fetch('https://api.brevo.com/v3/smtp/email', {
+    const resp = await fetch('/api/contact', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': 'xkeysib-placeholder'
-      },
-      body: JSON.stringify({
-        sender: { name: name, email: 'noreply@followoffer.com' },
-        to: [{ email: 'contact@followoffer.com', name: 'FollowOffer' }],
-        replyTo: { email: email, name: name },
-        subject: subject || 'Message depuis followoffer.com',
-        htmlContent: `<p><b>De :</b> ${name}${company ? ' — ' + company : ''}<br><b>Email :</b> ${email}</p><p>${message.replace(/\n/g,'<br>')}</p>`
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, company, email, subject, message })
     });
+    if (!resp.ok) throw new Error('Erreur serveur');
     if(btnTxt) btnTxt.textContent = '✅ Message envoyé !';
     ['cf-name','cf-company','cf-email','cf-subject','cf-message'].forEach(id => {
       const el = document.getElementById(id);
