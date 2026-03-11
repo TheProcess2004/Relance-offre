@@ -20,6 +20,27 @@
   --orange:#A86828;--orange-d:rgba(168,104,40,0.11);
   --text:#ECF0FA;--muted:rgba(195,210,235,0.70);--muted2:rgba(160,185,215,0.38);
 }
+body.light-mode{
+  --bg:#F0F4FA;--s1:#FFFFFF;--s2:#EEF2F8;--s3:#E6EBF4;
+  --border:rgba(30,60,120,0.10);--border2:rgba(30,60,120,0.18);
+  --gold:#1555A8;--gold-d:rgba(21,85,168,0.10);
+  --accent:#B8860B;--accent-d:rgba(184,134,11,0.10);
+  --green:#157A50;--green-d:rgba(21,122,80,0.10);
+  --red:#B03030;--red-d:rgba(176,48,48,0.10);
+  --blue:#2868B8;--blue-d:rgba(40,104,184,0.10);
+  --purple:#4A52A0;--purple-d:rgba(74,82,160,0.10);
+  --orange:#9A6020;--orange-d:rgba(154,96,32,0.10);
+  --text:#0F1728;--muted:rgba(30,50,90,0.65);--muted2:rgba(30,50,90,0.35);
+}
+body.light-mode .topbar{background:rgba(240,244,250,0.92)!important;}
+body.light-mode .sb{background:var(--s1)!important;}
+body.light-mode input,body.light-mode select,body.light-mode textarea{background:var(--s2);color:var(--text);}
+body.light-mode .kcard,body.light-mode .fcard,body.light-mode .offer-card,body.light-mode .client-card{background:var(--s1);}
+body.light-mode .overlay-box,body.light-mode .auth-box,body.light-mode .toast-el{background:var(--s1);border-color:var(--border2);}
+body.light-mode .nb{color:rgba(30,50,90,0.75);}
+body.light-mode .nb:hover{background:rgba(21,85,168,0.07);color:var(--text);}
+body.light-mode .nb.active{background:rgba(21,85,168,0.10);}
+body.light-mode .ep-card,body.light-mode .rtl,body.light-mode .ai-load,body.light-mode .pdf-extract{background:var(--s1);}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
 ::-webkit-scrollbar{width:4px;height:4px;}
@@ -631,6 +652,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="topbar">
     <div class="tb-title" id="page-title">Dashboard</div>
     <div class="tb-right">
+      <button class="btn btn-ghost btn-sm" id="theme-toggle" onclick="toggleTheme()" title="Basculer mode clair/sombre" style="font-size:15px;width:34px;height:34px;padding:0;justify-content:center;">🌙</button>
       <button class="btn btn-ghost btn-sm" onclick="go('config')">⚙ Config</button>
       <button class="btn btn-ghost btn-sm" onclick="go('rapport')">📊 Rapport semaine</button>
       <button class="btn btn-gold" onclick="go('nouvelle')">+ Envoyer une offre</button>
@@ -687,9 +709,16 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
                 <div class="pdf-extract-title">✦ Données extraites automatiquement</div>
                 <div class="pdf-field" style="position:relative;">
                   <span class="pdf-field-lbl">Prénom / Contact</span>
-                  <div style="flex:1;position:relative;">
-                    <input class="pdf-field-edit" id="ex-prenom" value="" oninput="clientAutoComplete(this.value)" onblur="setTimeout(()=>closeACDropdown(),180)" placeholder="Pierre">
-                    <div id="ac-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--s2);border:1px solid var(--border2);border-radius:8px;z-index:300;max-height:180px;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.4);margin-top:3px;"></div>
+                  <div style="flex:1;display:flex;gap:6px;position:relative;">
+                    <select id="ex-civilite" style="background:var(--s2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:12px;padding:0 8px;height:36px;cursor:pointer;flex-shrink:0;font-family:'Outfit',sans-serif;">
+                      <option value="">—</option>
+                      <option value="M.">M.</option>
+                      <option value="Mme">Mme</option>
+                    </select>
+                    <div style="flex:1;position:relative;">
+                      <input class="pdf-field-edit" id="ex-prenom" value="" oninput="clientAutoComplete(this.value)" onblur="setTimeout(()=>closeACDropdown(),180)" placeholder="Pierre">
+                      <div id="ac-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--s2);border:1px solid var(--border2);border-radius:8px;z-index:300;max-height:180px;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.4);margin-top:3px;"></div>
+                    </div>
                   </div>
                 </div>
                 <div class="pdf-field">
@@ -1004,6 +1033,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div class="f2" style="margin-bottom:12px;">
             <div class="fg"><label class="fl">Entreprise</label><input class="fi" id="cfg-company" placeholder="Mon Entreprise SA" oninput="updateSigPreview()"></div>
             <div class="fg"><label class="fl">Téléphone</label><input class="fi" id="cfg-phone" placeholder="+41 79 000 00 00" oninput="updateSigPreview()"></div>
+          </div>
+          <div class="fg" style="margin-bottom:0;">
+            <label class="fl">Site web <span style="color:var(--muted);font-weight:400;">(optionnel)</span></label>
+            <input class="fi" id="cfg-website" type="url" placeholder="https://www.monentreprise.ch" oninput="updateSigPreview()">
           </div>
         </div>
         <div class="fcard" style="margin-bottom:18px;">
@@ -1999,7 +2032,7 @@ async function setFile(f){
           role: 'user',
           content: [
             { type: 'document', source: { type: 'base64', media_type: mediaType, data: base64 } },
-            { type: 'text', text: `Extrait les informations de cette offre commerciale. Réponds UNIQUEMENT en JSON valide sans texte avant ou après:\n{"prenom":"Prénom ou prénom+nom du contact destinataire (la personne physique, pas la société — ex: Pierre, Marc Dupont)","societe":"Nom de la société cliente destinataire si présente, sinon vide","email":"email du client si présent sinon vide","ref":"numéro de référence de l'offre","montant":"montant TOTAL en chiffres seulement sans CHF ni espaces ni apostrophes","objet":"description courte du produit/service (5 mots max)","lignes":"Liste EXACTE des lignes produits copiees du document sans rien inventer. Pour chaque ligne produit: nom + dimensions exactes + quantite + unite + prix unitaire + remise si presente. Exemple: Profil EPDM 20x3mm - 1000M a 0.65CHF; Profil EPDM 20x3mm - 1500M a 0.65CHF remise5%; Transport usine-Neuchatel - 1x 35CHF. Separees par point-virgule. COPIE FIDELE uniquement, aucune invention."}` }
+            { type: 'text', text: `Extrait les informations de cette offre/devis commerciale. Réponds UNIQUEMENT en JSON valide sans texte avant ou après:\n{"prenom":"Prénom ou prénom+nom du contact destinataire (la personne physique à qui l'offre est adressée — ex: Pierre, Paul Durand). Si pas de prénom visible, mets le nom complet.","societe":"Nom de la société cliente destinataire si présente, sinon vide","email":"email du client si présent sinon vide","ref":"numéro de référence ou numéro de devis de l'offre (cherche Réf., Devis n°, Offre n°, etc.)","montant":"montant TOTAL TTC en chiffres seulement sans symbole monétaire ni espaces ni points de séparation (ex: 4131.38 pour 4 131,38€ ou 4'131.38 CHF). Si pas de TTC, prends HT.","objet":"description courte du travail ou produit principal (5 mots max)","lignes":"Liste EXACTE des lignes produits copiees du document sans rien inventer. Separees par point-virgule."}` }
           ]
         }]
       })
@@ -2021,11 +2054,14 @@ async function setFile(f){
     console.warn('Vision error:', err.message);
   }
 
-  // Show extract zone
+  // Show extract zone — vérifier si l'extraction a réussi
   {
-    document.getElementById('up-ico').textContent='✅';
-    document.getElementById('up-h').textContent=f.name;
-    document.getElementById('up-s').textContent=(f.size/1024).toFixed(0)+' KB · Données extraites';
+    const hasData = !!(extracted.prenom || extracted.societe || extracted.ref || extracted.montant || extracted.objet);
+    document.getElementById('up-ico').textContent = hasData ? '✅' : '⚠️';
+    document.getElementById('up-h').textContent = f.name;
+    document.getElementById('up-s').textContent = hasData
+      ? (f.size/1024).toFixed(0)+' KB · Données extraites'
+      : (f.size/1024).toFixed(0)+' KB · Remplissez les champs manuellement';
     document.getElementById('pdf-extract-zone').style.display='block';
     document.getElementById('ex-prenom').value=extracted.prenom||'';
     document.getElementById('ex-societe').value=extracted.societe||'';
@@ -2034,7 +2070,11 @@ async function setFile(f){
     document.getElementById('ex-montant').value=extracted.montant||'';
     document.getElementById('ex-objet').value=extracted.objet||'';
     window._pdfLignes = extracted.lignes||'';
-    toast('✦','PDF analysé par IA — vérifiez les données');
+    if(hasData) toast('✦','PDF analysé — vérifiez et complétez les données');
+    else toast('⚠️','Extraction partielle — remplissez les champs manuellement');
+    // Focaliser le premier champ vide important
+    if(!extracted.prenom) setTimeout(()=>document.getElementById('ex-prenom')?.focus(), 300);
+    else if(!extracted.email) setTimeout(()=>document.getElementById('ex-email')?.focus(), 300);
   }
 }
 
@@ -2053,8 +2093,12 @@ async function genEmail(){
   const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
   const lignesPDF=window._pdfLignes||'';
 
+  const civilite = document.getElementById('ex-civilite')?.value || '';
   // Prénom pour la salutation — si pas de prénom, utiliser le nom de société
-  const prenom = prenomRaw.split(' ')[0] || societeRaw.split(' ')[0] || 'Client';
+  const prenomBase = prenomRaw.split(' ')[0] || societeRaw.split(' ')[0] || 'Client';
+  // Salutation selon civilité : rien → prénom, M./Mme → Monsieur/Madame + nom
+  const nomFamille = prenomRaw.includes(' ') ? prenomRaw.split(' ').slice(1).join(' ') : (societeRaw || prenomBase);
+  const prenom = civilite === '' ? prenomBase : (civilite === 'M.' ? 'Monsieur ' + nomFamille : 'Madame ' + nomFamille);
 
   document.getElementById('step-form').style.display='none';
   document.getElementById('step-loading').style.display='block';
@@ -2269,6 +2313,7 @@ async function sendOffer(){
     if(document.getElementById('f-contexte')) document.getElementById('f-contexte').value='';
     if(document.getElementById('f-detail')) document.getElementById('f-detail').value='';
 
+    const clientFull = `${prenom} ${nom}`.trim() || societeField || 'Client';
     if(emailSent) toast('🚀',`Email envoyé à ${clientFull} depuis ${CFG.senderEmail} ✅`);
     else toast('🚀',`Offre sauvegardée — ${email?'configurez Brevo pour envoyer':'email manquant'}`);
     setTimeout(()=>go('offres'),1400);
@@ -3155,6 +3200,22 @@ function toast(ico,txt){
   tt=setTimeout(()=>el.classList.remove('show'),3400);
 }
 
+// ══ THEME ══
+function toggleTheme(){
+  const isLight = document.body.classList.toggle('light-mode');
+  const btn = document.getElementById('theme-toggle');
+  if(btn) btn.textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('of_theme', isLight ? 'light' : 'dark');
+}
+function applyTheme(){
+  const saved = localStorage.getItem('of_theme');
+  if(saved === 'light'){
+    document.body.classList.add('light-mode');
+    const btn = document.getElementById('theme-toggle');
+    if(btn) btn.textContent = '☀️';
+  }
+}
+
 // ══ INIT ══
 // ══ AUTH ══
 let CURRENT_USER = null;
@@ -3669,6 +3730,7 @@ function loadSession() {
 
 // Appel au démarrage pour s'assurer que USER_TOKEN est chargé
 loadSession();
+applyTheme(); // Restaurer le thème sauvegardé
 
 async function sbFetch(path, options={}) {
   const token = USER_TOKEN || SB_KEY;
