@@ -72,7 +72,7 @@ button{font-family:inherit;}
 /* ═══ HERO DARK ═══ */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:130px 24px 80px;text-align:center;position:relative;overflow:hidden;background:var(--hbg);}
 /* Lumière centrale très douce */
-.hero::before{content:'';position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 55% at 50% 15%,rgba(21,85,168,0.22) 0%,transparent 70%),radial-gradient(ellipse 50% 35% at 20% 90%,rgba(21,85,168,0.05) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 80% 90%,rgba(21,85,168,0.05) 0%,transparent 60%);}
+.hero::before{content:'';position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 90% 60% at 50% 10%,rgba(21,85,168,0.32) 0%,transparent 65%),radial-gradient(ellipse 40% 25% at 15% 85%,rgba(21,85,168,0.10) 0%,transparent 55%),radial-gradient(ellipse 40% 25% at 85% 85%,rgba(21,85,168,0.10) 0%,transparent 55%),radial-gradient(ellipse 60% 40% at 50% 100%,rgba(30,106,200,0.08) 0%,transparent 60%);}
 /* Grille subtile */
 .hero::after{content:'';position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(232,237,246,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(232,237,246,0.025) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,black 20%,transparent 75%);mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,black 20%,transparent 75%);}
 .hero-inner{position:relative;z-index:1;max-width:840px;}
@@ -84,10 +84,10 @@ button{font-family:inherit;}
 @keyframes dotp{0%,100%{opacity:1;}50%{opacity:0.3;}}
 .hero-title{font-family:'DM Serif Display',serif;font-size:clamp(44px,6.8vw,84px);line-height:1.05;letter-spacing:-1.5px;margin-bottom:24px;color:var(--htxt);}
 .hero-title em{font-style:italic;color:#7AAEE8;}
-.hero-title .lt{color:rgba(232,237,246,0.32);font-size:0.68em;display:block;margin-top:8px;letter-spacing:0;}
-.hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--hmut);line-height:1.72;max-width:500px;margin:0 auto 42px;font-weight:400;}
+.hero-title .lt{color:rgba(232,237,246,0.38);font-size:0.52em;display:block;margin-top:12px;letter-spacing:3px;text-transform:uppercase;font-family:'Outfit',sans-serif;font-weight:700;font-style:normal;}
+.hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--hmut);line-height:1.72;max-width:520px;margin:0 auto 42px;font-weight:400;}
 .hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
-.btn-primary{font-size:15px;font-weight:700;color:#fff;background:var(--blue);padding:15px 34px;border-radius:10px;border:none;cursor:pointer;transition:all 0.25s;display:inline-flex;align-items:center;gap:8px;box-shadow:0 0 0 1px rgba(21,85,168,0.5),0 8px 28px rgba(21,85,168,0.45);}
+.btn-primary{font-size:15px;font-weight:700;color:#fff;background:var(--blue);padding:15px 34px;border-radius:10px;border:none;cursor:pointer;transition:all 0.25s;display:inline-flex;align-items:center;gap:8px;box-shadow:0 0 0 1px rgba(21,85,168,0.5),0 8px 32px rgba(21,85,168,0.52),0 2px 8px rgba(0,0,0,0.30);}
 .btn-primary:hover{background:var(--blue2);transform:translateY(-2px);box-shadow:0 0 0 1px rgba(30,106,200,0.6),0 14px 40px rgba(21,85,168,0.55);}
 .btn-secondary{font-size:14px;font-weight:600;color:var(--htxt);background:rgba(232,237,246,0.07);border:1px solid var(--hbdr);padding:14px 28px;border-radius:10px;cursor:pointer;transition:all 0.22s;}
 .btn-secondary:hover{background:rgba(232,237,246,0.12);border-color:rgba(232,237,246,0.18);}
@@ -552,6 +552,43 @@ button{font-family:inherit;}
   .legal-tab { padding: 10px 12px; font-size: 12px; }
 }
 
+
+/* ═══ HERO UPGRADES ═══ */
+.ew-sep{opacity:0.35;margin:0 2px;}
+.ew-live{color:#4ADE80;font-weight:800;letter-spacing:0.5px;display:inline-flex;align-items:center;gap:5px;}
+.hero-social-proof{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:28px;}
+.hsp-avatars{display:flex;}
+.hsp-av{width:30px;height:30px;border-radius:50%;border:2px solid rgba(8,12,20,0.9);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;margin-left:-8px;flex-shrink:0;}
+.hsp-av:first-child{margin-left:0;}
+.hsp-text{display:flex;flex-direction:column;gap:2px;}
+.hsp-stars{font-size:12px;color:#FBBF24;letter-spacing:1px;}
+.hsp-note{font-size:11px;color:rgba(232,237,246,0.45);font-weight:500;}
+
+/* ═══ HOTSPOT SYSTEM ═══ */
+.hs-layer{position:absolute;inset:0;pointer-events:none;z-index:10;}
+.hs-point{position:absolute;width:28px;height:28px;transform:translate(-50%,-50%);pointer-events:all;cursor:pointer;}
+.hs-pulse{position:absolute;inset:0;border-radius:50%;background:rgba(21,85,168,0.35);animation:hsPulse 2.4s ease-out infinite;}
+.hs-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#fff;border:2.5px solid #1555A8;box-shadow:0 0 0 3px rgba(21,85,168,0.25),0 2px 8px rgba(0,0,0,0.35);transition:transform 0.18s,box-shadow 0.18s;z-index:2;}
+.hs-point:hover .hs-dot{transform:translate(-50%,-50%) scale(1.25);box-shadow:0 0 0 5px rgba(21,85,168,0.35),0 4px 16px rgba(0,0,0,0.4);}
+@keyframes hsPulse{0%{transform:scale(0.7);opacity:0.8;}100%{transform:scale(2.4);opacity:0;}}
+
+/* Tooltip */
+.hs-tip{position:absolute;bottom:calc(100% + 10px);width:230px;background:rgba(8,12,22,0.97);border:1px solid rgba(21,85,168,0.35);border-radius:12px;padding:14px;box-shadow:0 8px 36px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.04);backdrop-filter:blur(12px);opacity:0;transform:translateY(6px) scale(0.96);transition:opacity 0.2s cubic-bezier(.16,1,.3,1),transform 0.2s cubic-bezier(.16,1,.3,1);pointer-events:none;z-index:20;}
+.hs-tip-right{left:16px;}
+.hs-tip-left{right:16px;}
+.hs-point:hover .hs-tip{opacity:1;transform:translateY(0) scale(1);}
+.hs-tip-ico{font-size:20px;margin-bottom:8px;}
+.hs-tip-title{font-size:12px;font-weight:700;color:#E8EDF6;margin-bottom:4px;letter-spacing:-0.1px;}
+.hs-tip-desc{font-size:11px;color:rgba(232,237,246,0.55);line-height:1.6;}
+
+/* Légende */
+.hs-legend{display:flex;justify-content:center;margin-top:18px;}
+.hs-leg-item{display:flex;align-items:center;gap:8px;font-size:11.5px;color:rgba(232,237,246,0.35);font-weight:500;}
+.hs-leg-dot{width:8px;height:8px;border-radius:50%;background:#1555A8;box-shadow:0 0 0 3px rgba(21,85,168,0.25);flex-shrink:0;animation:hsPulse 2.4s ease-out infinite;}
+
+/* Mockup positioning fix */
+.mw-body{position:relative;}
+
 </style>
 </head>
 <body>
@@ -578,11 +615,16 @@ button{font-family:inherit;}
 <!-- HERO DARK -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-eyebrow"><span class="ew-dot"></span>Conçu pour les PME suisses · Disponible maintenant</div>
+    <div class="hero-eyebrow">
+  <span class="ew-dot"></span>
+  <span>Conçu pour les PME suisses</span>
+  <span class="ew-sep">·</span>
+  <span class="ew-live">● Live</span>
+</div>
     <h1 class="hero-title">
-      Chaque offre envoyée<br>mérite <em>un vrai suivi.</em>
+      Envoyez.<br><em>Suivez. Relancez.</em><br><span class="lt">Automatiquement.</span>
     </h1>
-    <p class="hero-sub">Envoyez vos offres, sachez quand elles sont lues,<br>relancez au bon moment — automatiquement.</p>
+    <p class="hero-sub">Les PME suisses qui utilisent FollowOffer relancent <strong style="color:var(--htxt);font-weight:600;">3× plus</strong> et convertissent <strong style="color:var(--htxt);font-weight:600;">38% mieux.</strong><br>Sans effort supplémentaire.</p>
     <div class="hero-actions">
       <a href="/app" class="btn-primary">Commencer gratuitement →</a>
       <a href="#solution" class="btn-secondary">Comment ça marche</a>
@@ -591,7 +633,19 @@ button{font-family:inherit;}
       <span class="t-item">5 offres gratuites, sans carte</span>
       <span class="t-item">Opérationnel en 5 minutes</span>
       <span class="t-item">Support suisse 7j/7</span>
-      <span class="t-item">Données sécurisées</span>
+      <span class="t-item">Données hébergées en Europe</span>
+    </div>
+    <div class="hero-social-proof">
+      <div class="hsp-avatars">
+        <div class="hsp-av" style="background:linear-gradient(135deg,#3B82F6,#1E40AF);">RM</div>
+        <div class="hsp-av" style="background:linear-gradient(135deg,#10B981,#047857);">SF</div>
+        <div class="hsp-av" style="background:linear-gradient(135deg,#F59E0B,#B45309);">PB</div>
+        <div class="hsp-av" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9);">LK</div>
+      </div>
+      <div class="hsp-text">
+        <span class="hsp-stars">★★★★★</span>
+        <span class="hsp-note">4.9/5 · Utilisé par +120 PME romandes</span>
+      </div>
     </div>
   </div>
   <div class="hero-fade"></div>
@@ -605,7 +659,7 @@ button{font-family:inherit;}
         <div class="mdot mdot-r"></div><div class="mdot mdot-y"></div><div class="mdot mdot-g"></div>
         <div class="mw-url"><div class="mw-pill">🔒 followoffer.com/app</div></div>
       </div>
-      <div class="mw-body">
+      <div class="mw-body" style="position:relative;" id="dash-mockup">
         <div class="mw-sb">
           <div class="msb-logo">
             <span class="msb-brand">Follow<span class="o">Offer</span></span>
@@ -637,6 +691,61 @@ button{font-family:inherit;}
           </div>
         </div>
       </div>
+      <!-- HOTSPOTS interactifs -->
+      <div class="hs-layer" id="hs-layer">
+        <!-- Point 1 — KPIs (haut gauche) -->
+        <div class="hs-point" style="left:39%;top:22%;" data-hs="1">
+          <span class="hs-pulse"></span>
+          <span class="hs-dot"></span>
+          <div class="hs-tip hs-tip-right">
+            <div class="hs-tip-ico">📊</div>
+            <div class="hs-tip-content">
+              <div class="hs-tip-title">Pipeline en temps réel</div>
+              <div class="hs-tip-desc">CA gagné, pipeline actif et taux de conversion mis à jour à chaque action.</div>
+            </div>
+          </div>
+        </div>
+        <!-- Point 2 — Chart barres (milieu) -->
+        <div class="hs-point" style="left:65%;top:68%;" data-hs="2">
+          <span class="hs-pulse" style="animation-delay:.4s"></span>
+          <span class="hs-dot"></span>
+          <div class="hs-tip hs-tip-left">
+            <div class="hs-tip-ico">🔔</div>
+            <div class="hs-tip-content">
+              <div class="hs-tip-title">Suivi des relances IA</div>
+              <div class="hs-tip-desc">J+3, J+7, J+14 — chaque offre suit son cycle automatiquement, sans action de votre part.</div>
+            </div>
+          </div>
+        </div>
+        <!-- Point 3 — Donut (droite) -->
+        <div class="hs-point" style="left:90%;top:62%;" data-hs="3">
+          <span class="hs-pulse" style="animation-delay:.8s"></span>
+          <span class="hs-dot"></span>
+          <div class="hs-tip hs-tip-left">
+            <div class="hs-tip-ico">👁</div>
+            <div class="hs-tip-content">
+              <div class="hs-tip-title">Statuts en un coup d'œil</div>
+              <div class="hs-tip-desc">Envoyées, en relance, gagnées ou perdues — votre pipeline commercial toujours lisible.</div>
+            </div>
+          </div>
+        </div>
+        <!-- Point 4 — Sidebar nav -->
+        <div class="hs-point" style="left:11%;top:55%;" data-hs="4">
+          <span class="hs-pulse" style="animation-delay:1.2s"></span>
+          <span class="hs-dot"></span>
+          <div class="hs-tip hs-tip-right">
+            <div class="hs-tip-ico">⚡</div>
+            <div class="hs-tip-content">
+              <div class="hs-tip-title">Navigation ultra-simple</div>
+              <div class="hs-tip-desc">Offres, clients, calendrier et rapports — tout accessible en 1 clic, sans formation.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Légende hotspots -->
+    <div class="hs-legend r">
+      <div class="hs-leg-item"><span class="hs-leg-dot"></span>Survolez les points pour explorer les fonctionnalités</div>
     </div>
   </div>
 </div>
@@ -913,7 +1022,7 @@ button{font-family:inherit;}
     <div class="s-cards">
       <a href="/cdn-cgi/l/email-protection#dab9b5b4aebbb9ae9abcb5b6b6b5adb5bcbcbfa8f4b9b5b7" class="de-s-card r d1" style="text-decoration:none;">
         <div class="de-s-ico" style="background:rgba(21,85,168,0.15);">✉️</div>
-        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub">contact@followoffer.com</div></div>
+        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub"><span class="__cf_email__" data-cfemail="5f3c30312b3e3c2b1f3930333330283039393a2d713c3032">[email&#160;protected]</span></div></div>
         <span style="margin-left:auto;color:rgba(226,232,244,0.3);font-size:18px;">→</span>
       </a>
       <div class="de-s-card r d1" style="cursor:default">
@@ -974,7 +1083,7 @@ button{font-family:inherit;}
         </div>
         <div class="cf-field"><label class="cf-label" for="cf-message">Message</label><textarea class="cf-textarea" id="cf-message" placeholder="Décrivez votre besoin en quelques lignes..."></textarea></div>
         <button class="cf-btn" id="cf-btn" onclick="submitContact()"><span id="cf-btn-txt">Envoyer le message →</span></button>
-        <div class="cf-note">Réponse garantie sous 24h · contact@followoffer.com</div>
+        <div class="cf-note">Réponse garantie sous 24h · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3c5f5352485d5f487c5a535050534b535a5a594e125f5351">[email&#160;protected]</a></div>
       </div>
       <div id="cf-success" style="display:none;text-align:center;padding:24px 0;">
         <div style="font-size:40px;margin-bottom:14px;">✅</div>
@@ -1012,7 +1121,7 @@ button{font-family:inherit;}
     <a href="#" onclick="openLegal('mentions');return false;">Mentions légales</a>
     <a href="#" onclick="openLegal('cgv');return false;">CGV</a>
     <a href="#" onclick="openLegal('confidentialite');return false;">Confidentialité</a>
-    contact@followoffer.com
+    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1d7e7273697c7e695d7b727171726a727b7b786f337e7270">[email&#160;protected]</a>
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -1020,7 +1129,7 @@ button{font-family:inherit;}
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══ NAV — switch dark/light au passage du hero ══
 const nav = document.getElementById('mainNav');
 const heroEl = document.querySelector('.hero');
@@ -1197,7 +1306,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <h2>Mentions légales</h2>
         <h3>Éditeur du service</h3>
         <p><strong>FollowOffer</strong><br>2000 Neuchâtel, Suisse<br>
-        Email : contact@followoffer.com<br>
+        Email : <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5d3e3233293c3e291d3b323131322a323b3b382f733e3230">[email&#160;protected]</a><br>
         Site : <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>Hébergement</h3>
         <p>L'application FollowOffer est hébergée par <strong>Vercel Inc.</strong><br>
@@ -1233,7 +1342,7 @@ if(window.location.hash.startsWith('#legal-')) {
           <li>Ne pas tenter de contourner les limites du plan gratuit</li>
         </ul>
         <h3>Article 6 — Résiliation</h3>
-        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à contact@followoffer.com. Suppression des données sous 30 jours.</p>
+        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="17747879637674635771787b7b786078717172653974787a">[email&#160;protected]</a>. Suppression des données sous 30 jours.</p>
         <h3>Article 7 — Droit applicable</h3>
         <p>CGV soumises au <strong>droit suisse</strong>. Tout litige relève de la compétence des tribunaux de Neuchâtel.</p>
         <p class="legal-date">CGV en vigueur depuis mars 2026.</p>
@@ -1244,7 +1353,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <div class="legal-info-box">Conforme à la <strong>Loi fédérale sur la protection des données (LPD)</strong> révisée en vigueur depuis le 1er septembre 2023, ainsi qu'au RGPD européen.</div>
         <h3>1. Responsable du traitement</h3>
         <p><strong>FollowOffer</strong> · 2000 Neuchâtel, Suisse<br>
-        contact@followoffer.com · <a href="https://followoffer.com">followoffer.com</a></p>
+        <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9dfef2f3e9fcfee9ddfbf2f1f1f2eaf2fbfbf8efb3fef2f0">[email&#160;protected]</a> · <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>2. Données collectées</h3>
         <table>
           <tr><th>Catégorie</th><th>Données</th><th>Finalité</th></tr>
@@ -1265,21 +1374,4 @@ if(window.location.hash.startsWith('#legal-')) {
         </table>
         <h3>4. Vos droits (LPD & RGPD)</h3>
         <p>Accès, rectification, effacement, portabilité (export CSV dans l'app), opposition.<br>
-        Contact : contact@followoffer.com — réponse sous 30 jours.<br>
-        Réclamation : <a href="https://www.edoeb.admin.ch" target="_blank">Préposé fédéral à la protection des données (PFPDT)</a>.</p>
-        <h3>5. Conservation des données</h3>
-        <ul>
-          <li>Compte actif : durée de vie du compte</li>
-          <li>Facturation : 10 ans (obligation légale suisse)</li>
-          <li>Logs techniques : 90 jours</li>
-          <li>Après résiliation : suppression sous 30 jours</li>
-        </ul>
-        <p class="legal-date">Politique en vigueur depuis mars 2026.</p>
-      </div>
-
-      <div class="lpanel" id="lpanel-cookies">
-        <h2>Cookies et tracking</h2>
-        <h3>Cookies utilisés</h3>
-        <table>
-          <tr><th>Cookie</th><th>Type</th><th>Durée</th><th>Finalité</th></tr>
-          <tr><td><code>of_refresh</code></td><td>Technique</td><td>S
+        Contact : <a href="/cdn-cgi/l/email-protection" class="__cf
