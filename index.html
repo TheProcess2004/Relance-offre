@@ -3230,22 +3230,43 @@ async function doForgotPassword() {
 
 // Détecter si on revient d'un lien de reset
 function checkResetMode() {
-  // Lire le hash (format Supabase: #access_token=...&type=recovery)
+  // Format 1: hash #access_token=...&type=recovery (Supabase natif)
   const hash = window.location.hash;
-  const params = new URLSearchParams(hash.replace('#','?'));
-  const type = params.get('type');
-  const accessToken = params.get('access_token');
-  if(type === 'recovery' && accessToken) {
-    // Nettoyer l'URL pour ne pas rejouer au reload
+  const hashParams = new URLSearchParams(hash.replace('#','?'));
+  if(hashParams.get('type') === 'recovery' && hashParams.get('access_token')) {
     history.replaceState(null, '', window.location.pathname);
-    showResetPasswordForm(accessToken);
+    showResetPasswordForm(hashParams.get('access_token'));
     return;
   }
-  // Aussi vérifier les query params (cas PKCE)
+  // Format 2: query ?token=...&type=recovery (hashed token via redirect_to)
   const qp = new URLSearchParams(window.location.search);
+  if(qp.get('type') === 'recovery' && qp.get('token')) {
+    const htoken = qp.get('token');
+    history.replaceState(null, '', window.location.pathname);
+    // Échanger le hashed token contre un access_token via Supabase verify
+    fetch(SB_URL + '/auth/v1/verify', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'recovery', token: htoken })
+    }).then(r => r.json()).then(data => {
+      if(data.access_token) {
+        showResetPasswordForm(data.access_token);
+      } else {
+        console.error('verify error:', data);
+        showAuthScreen();
+        setTimeout(() => toast('⚠️', 'Lien expiré — demandez un nouveau lien de réinitialisation'), 500);
+      }
+    }).catch(err => {
+      console.error('verify fetch error:', err);
+      showAuthScreen();
+    });
+    return;
+  }
+  // Format 3: query ?access_token=...&type=recovery
   if(qp.get('type') === 'recovery' && qp.get('access_token')) {
     history.replaceState(null, '', window.location.pathname);
     showResetPasswordForm(qp.get('access_token'));
+    return;
   }
 }
 
