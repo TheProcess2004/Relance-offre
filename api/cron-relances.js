@@ -157,9 +157,7 @@ async function sendEmail({ to, toName, fromEmail, fromName, subject, body, pdfUr
 module.exports = async (req, res) => {
   // Sécurité — vérifier que c'est bien Vercel qui appelle
   const authHeader = req.headers['authorization'];
-  const querySecret = new URLSearchParams(req.url?.split('?')[1] || '').get('secret');
-  const validSecret = process.env.CRON_SECRET;
-  if (authHeader !== `Bearer ${validSecret}` && querySecret !== validSecret) {
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
@@ -169,7 +167,7 @@ module.exports = async (req, res) => {
   try {
     // Récupérer toutes les relances dues aujourd'hui ou avant
     const relances = await sbQuery(
-      `relances?statut=eq.pending&date_prevue=lte.${today}&select=*,offres(id,reference,objet,montant,statut,pdf_url,fichier_nom,ton,relation,user_id,clients(prenom,nom,email,entreprise))`
+      `relances?statut=eq.pending&date_prevue=lte.${today}&select=*,offres(id,reference,objet,montant,statut,pdf_url,fichier_nom,user_id,clients(prenom,nom,email,entreprise))`
     );
 
     console.log(`Cron relances: ${relances.length} relances dues le ${today}`);
