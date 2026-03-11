@@ -3,7 +3,7 @@
 //  1. Générant un lien de reset via l'API Admin Supabase
 //  2. Envoyant l'email via Brevo (fiable, déjà configuré)
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { email } = req.body;
@@ -13,11 +13,11 @@ export default async function handler(req, res) {
 
   const BREVO_KEY = process.env.BREVO_API_KEY;
   const SB_URL = process.env.SUPABASE_URL || 'https://eripvzfinfevuebccyzu.supabase.co';
-  const SB_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+  const SB_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
   const APP_URL = process.env.APP_URL || 'https://followoffer.com';
 
   if (!BREVO_KEY) return res.status(500).json({ error: 'BREVO_API_KEY manquant' });
-  if (!SB_SERVICE_KEY) return res.status(500).json({ error: 'SUPABASE_SERVICE_KEY manquant' });
+  if (!SB_SERVICE_KEY) return res.status(500).json({ error: 'SUPABASE_SERVICE_ROLE_KEY manquant' });
 
   try {
     // 1. Générer le lien de reset via Supabase Admin API
