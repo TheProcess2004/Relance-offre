@@ -2929,7 +2929,7 @@ async function sbAuthFetch(path, options={}) {
 
 // Plans et leurs limites
 const PLANS_CONFIG = {
-  free:     { name: 'Gratuit',  maxOffres: 5,   relancesAuto: true,  tracking: false, rapportIA: false },
+  free:     { name: 'Gratuit',  maxOffres: 10,   relancesAuto: true,  tracking: false, rapportIA: false },
   pro:      { name: 'Pro',      maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  },
   business: { name: 'Business', maxOffres: 9999, relancesAuto: true,  tracking: true,  rapportIA: true  }
 };
@@ -3015,7 +3015,7 @@ function checkOfferLimit() {
   const plan = getCurrentPlan();
   if(OFFERS.length >= plan.maxOffres) {
     if(!isPro()) {
-      toast('🔒', 'Limite de 5 offres atteinte. Passez à Pro pour des offres illimitées →');
+      toast('🔒', 'Limite de ' + plan.maxOffres + ' offres atteinte. Passez à Pro pour des offres illimitées →');
       setTimeout(() => { go('config'); showCfgTab('abo'); }, 1500);
       return false;
     }
