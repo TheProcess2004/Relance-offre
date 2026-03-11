@@ -2959,6 +2959,7 @@ async function loadConfig() {
   setVal('cfg-role', CFG.role);
   setVal('cfg-company', CFG.company);
   setVal('cfg-phone', CFG.phone);
+  setVal('cfg-website', CFG.website);
   setVal('cfg-sender-email', CFG.senderEmail);
   setVal('cfg-brevo-key', CFG.brevoKey);
   updateSigPreview();
@@ -2972,13 +2973,13 @@ async function saveConfig() {
   CFG.role = document.getElementById('cfg-role')?.value||'';
   CFG.company = document.getElementById('cfg-company')?.value||'';
   CFG.phone = document.getElementById('cfg-phone')?.value||'';
+  CFG.website = document.getElementById('cfg-website')?.value||'';
   CFG.senderEmail = document.getElementById('cfg-sender-email')?.value||'';
   CFG.brevoKey = document.getElementById('cfg-brevo-key')?.value||'';
   // Sauvegarder en localStorage immédiatement
   localStorage.setItem('of_cfg', JSON.stringify(CFG));
-  localStorage.setItem('of_cfg', JSON.stringify(CFG));
   try {
-    for(const k of ['name','role','company','phone','senderEmail','brevoKey']) {
+    for(const k of ['name','role','company','phone','website','senderEmail','brevoKey']) {
       await saveSetting(k, CFG[k]);
     }
     updateSigPreview();
@@ -2994,37 +2995,31 @@ async function saveConfig() {
 async function saveSetting(key, value) {
   const token = USER_TOKEN || SB_KEY;
   const uid = CURRENT_USER?.id;
+  if(!uid) { console.warn('saveSetting: pas de user_id'); return; }
+
   const headers = {
     'apikey': SB_KEY,
     'Authorization': 'Bearer ' + token,
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Prefer': 'resolution=merge-duplicates,return=minimal'
   };
 
-  // Tenter PATCH d'abord (si la clé existe déjà)
-  const patchRes = await fetch(SB_URL + '/rest/v1/settings?key=eq.' + encodeURIComponent(key) + (uid ? '&user_id=eq.' + uid : ''), {
-    method: 'PATCH',
-    headers: {...headers, 'Prefer': 'return=minimal'},
-    body: JSON.stringify({value})
-  });
-  if(patchRes.status === 204 || patchRes.status === 200) return; // Mis à jour
-
-  // Sinon INSERT (nouveau)
-  const insertRes = await fetch(SB_URL + '/rest/v1/settings', {
+  // Upsert Supabase : POST avec merge-duplicates = INSERT ou UPDATE selon contrainte unique(user_id, key)
+  const res = await fetch(SB_URL + '/rest/v1/settings', {
     method: 'POST',
-    headers: {...headers, 'Prefer': 'return=minimal'},
-    body: JSON.stringify({key, value})
+    headers,
+    body: JSON.stringify({user_id: uid, key, value})
   });
-  if(insertRes.status === 204 || insertRes.status === 201 || insertRes.status === 200) return;
 
-  const errText = await insertRes.text().catch(()=>'');
-  // 23505 = doublon, ignorer (PATCH a dû le mettre à jour)
-  if(errText.includes('23505') || errText.includes('duplicate')) return;
-  // 42501 = RLS, sauvegarder en local uniquement
+  if(res.status === 200 || res.status === 201 || res.status === 204) return;
+
+  const errText = await res.text().catch(()=>'');
+  if(errText.includes('23505') || errText.includes('duplicate')) return; // doublon OK
   if(errText.includes('42501') || errText.includes('row-level')) {
-    console.warn('RLS settings - sauvegarde locale uniquement');
+    console.warn('saveSetting RLS error — sauvegarde locale uniquement');
     return;
   }
-  console.warn('saveSetting warning:', errText);
+  console.warn('saveSetting warning:', res.status, errText);
 }
 
 function updateBrevoStatus() {
@@ -4099,6 +4094,7 @@ function renderObStep(step) {
       <div class="ob-field"><label>Entreprise</label><input id="ob-company" type="text" placeholder="Dupont SA" value="${CFG.company||''}"></div>
       <div class="ob-field"><label>Rôle / Fonction</label><input id="ob-role" type="text" placeholder="Responsable commercial" value="${CFG.role||''}"></div>
       <div class="ob-field"><label>Téléphone</label><input id="ob-phone" type="tel" placeholder="+41 79 000 00 00" value="${CFG.phone||''}"></div>
+      <div class="ob-field"><label>Site web <span style="color:var(--muted);font-weight:400;">(optionnel)</span></label><input id="ob-website" type="url" placeholder="https://www.monentreprise.ch" value="${CFG.website||''}"></div>
     </div>
     <div class="ob-field"><label>Email expéditeur</label><input id="ob-sender-email" type="email" placeholder="jean@entreprise.ch" value="${CFG.senderEmail||CURRENT_USER?.email||''}"></div>
     <div class="ob-field" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Compte connecté</div><div style="font-size:13px;color:var(--text);">${CURRENT_USER?.email||'—'}</div></div><span style="color:var(--green);font-size:11px;font-weight:700;">✓ Actif</span></div>`,
@@ -4156,25 +4152,26 @@ async function obNext(currentStep) {
 }
 
 async function obSaveProfile() {
-  const name = document.getElementById('ob-name')?.value.trim();
-  const company = document.getElementById('ob-company')?.value.trim();
-  const role = document.getElementById('ob-role')?.value.trim();
-  const phone = document.getElementById('ob-phone')?.value.trim();
+  const name = document.getElementById('ob-name')?.value.trim()||'';
+  const company = document.getElementById('ob-company')?.value.trim()||'';
+  const role = document.getElementById('ob-role')?.value.trim()||'';
+  const phone = document.getElementById('ob-phone')?.value.trim()||'';
+  const website = document.getElementById('ob-website')?.value.trim()||'';
   if(name) CFG.name = name;
   if(company) CFG.company = company;
   if(role) CFG.role = role;
   if(phone) CFG.phone = phone;
+  if(website) CFG.website = website;
   // Sauvegarder en localStorage IMMÉDIATEMENT (persistance refresh)
   localStorage.setItem('of_cfg', JSON.stringify(CFG));
-  if(name || company) {
-    try {
-      // Utiliser saveSetting qui gère user_id + RLS correctement
-      for(const [k,v] of [['name',name||''],['company',company||''],['role',role||''],['phone',phone||'']]) {
-        await saveSetting(k, v);
-      }
-    } catch(e) { console.warn('obSaveProfile error:', e.message); }
+  try {
+    // Sauvegarder tout — même les champs vides pour effacer les anciennes valeurs
+    for(const [k,v] of [['name',name],['company',company],['role',role],['phone',phone],['website',website]]) {
+      await saveSetting(k, v);
+    }
     updateUserUI();
-  }
+    console.log('✅ Profil onboarding sauvegardé en DB');
+  } catch(e) { console.warn('obSaveProfile error:', e.message); }
 }
 
 async function obSaveEmail() {
@@ -4205,6 +4202,7 @@ function obFinish() {
   setVal('cfg-role', CFG.role);
   setVal('cfg-company', CFG.company);
   setVal('cfg-phone', CFG.phone);
+  setVal('cfg-website', CFG.website);
   setVal('cfg-sender-email', CFG.senderEmail);
   updateSigPreview();
   updateBrevoStatus();
