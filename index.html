@@ -686,15 +686,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
               <div class="pdf-extract">
                 <div class="pdf-extract-title">✦ Données extraites automatiquement</div>
                 <div class="pdf-field" style="position:relative;">
-                  <span class="pdf-field-lbl">Prénom</span>
+                  <span class="pdf-field-lbl">Client</span>
                   <div style="flex:1;position:relative;">
-                    <input class="pdf-field-edit" id="ex-prenom" value="" oninput="clientAutoComplete()" onblur="setTimeout(()=>closeACDropdown(),180)" placeholder="Prénom du contact">
+                    <input class="pdf-field-edit" id="ex-client" value="" oninput="clientAutoComplete(this.value)" onblur="setTimeout(()=>closeACDropdown(),180)" placeholder="Nom complet du client">
                     <div id="ac-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--s2);border:1px solid var(--border2);border-radius:8px;z-index:300;max-height:180px;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.4);margin-top:3px;"></div>
                   </div>
-                </div>
-                <div class="pdf-field">
-                  <span class="pdf-field-lbl">Nom / Société</span>
-                  <input class="pdf-field-edit" id="ex-nom" value="" placeholder="Nom ou raison sociale">
                 </div>
                 <div id="client-history-badge" style="display:none;background:var(--blue-d);border:1px solid rgba(56,189,248,0.2);border-radius:7px;padding:8px 12px;margin:6px 0;font-size:11px;color:var(--blue);cursor:pointer;" onclick="showClientHistory()">
                   👤 Client connu — <span id="client-history-count"></span> offre(s) précédente(s) · <strong>Voir l'historique</strong>
@@ -1004,7 +1000,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div class="f2" style="margin-bottom:12px;">
             <div class="fg"><label class="fl">Entreprise</label><input class="fi" id="cfg-company" placeholder="Mon Entreprise SA" oninput="updateSigPreview()"></div>
             <div class="fg"><label class="fl">Téléphone</label><input class="fi" id="cfg-phone" placeholder="+41 79 000 00 00" oninput="updateSigPreview()"></div>
-            <div class="fg"><label class="fl">Site web <span style="color:var(--muted);font-size:11px;">(optionnel)</span></label><input class="fi" id="cfg-website" placeholder="https://monentreprise.ch" oninput="updateSigPreview()"></div>
           </div>
         </div>
         <div class="fcard" style="margin-bottom:18px;">
@@ -1219,6 +1214,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div id="rp-content"></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--border);padding-top:16px;margin-top:4px;">
       <button class="btn btn-ghost" onclick="closeRPOverlay()">Retour</button>
+      <button class="btn btn-ghost btn-sm" onclick="regenRelance()" id="rp-regen-btn" title="Régénérer ce texte via IA">🔄</button>
       <button class="btn btn-ghost btn-sm" onclick="toggleEditRelance()" id="rp-edit-btn">✎ Modifier</button>
       <button class="btn btn-gold" onclick="confirmSendOffer()">🚀 Confirmer & Envoyer</button>
     </div>
@@ -2025,9 +2021,7 @@ async function setFile(f){
     document.getElementById('up-h').textContent=f.name;
     document.getElementById('up-s').textContent=(f.size/1024).toFixed(0)+' KB · Données extraites';
     document.getElementById('pdf-extract-zone').style.display='block';
-    const _cp=(extracted.client||'').trim().split(' ');
-    document.getElementById('ex-prenom').value=_cp[0]||'';
-    document.getElementById('ex-nom').value=_cp.slice(1).join(' ')||'';
+    document.getElementById('ex-client').value=extracted.client||'';
     document.getElementById('ex-email').value=extracted.email||'';
     document.getElementById('ex-ref').value=extracted.ref||'';
     document.getElementById('ex-montant').value=extracted.montant||'';
@@ -2039,9 +2033,7 @@ async function setFile(f){
 
 // ══ GENERATE EMAIL ══
 async function genEmail(){
-  const prenom=(document.getElementById('ex-prenom')?.value||'').trim()||'Client';
-  const nom=(document.getElementById('ex-nom')?.value||'').trim();
-  const client=nom?`${prenom} ${nom}`:prenom;
+  const client=document.getElementById('ex-client')?.value||'Client';
   const email=document.getElementById('ex-email')?.value||'client@exemple.ch';
   const ref=document.getElementById('ex-ref')?.value||'OFF-XXX';
   const montant=document.getElementById('ex-montant')?.value||'0';
@@ -2052,6 +2044,9 @@ async function genEmail(){
   const detail=document.getElementById('f-detail')?.value.trim()||'';
   const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
   const lignesPDF=window._pdfLignes||'';
+
+  const parts=client.trim().split(' ');
+  const prenom=parts[0]||'Client';
 
   document.getElementById('step-form').style.display='none';
   document.getElementById('step-loading').style.display='block';
@@ -2065,9 +2060,7 @@ async function genEmail(){
     if(si>steps.length)clearInterval(st);
   },700);
 
-  const isTu = ton==='chaleureux' && (rel==='connu' || rel==='fidele');
-  const pronounRule = isTu ? 'TUTOIEMENT OBLIGATOIRE (tu/toi/ton) — aucune exception' : 'VOUVOIEMENT OBLIGATOIRE (vous/votre) — aucune exception';
-  const tonDesc={chaleureux:'Chaleureux, naturel, humain. Évite les formules creuses.',pro:'Professionnel et formel. Structuré mais pas froid.',direct:'Très concis. Direct. Maximum 4 lignes. Pas de formules.'};
+  const tonDesc={chaleureux:'Chaleureux, naturel, humain. Évite les formules creuses. Tutoie si relation connue/fidèle.',pro:'Professionnel et formel. Vouvoiement. Structuré mais pas froid.',direct:'Très concis. Direct. Maximum 4 lignes. Pas de formules.'};
   const relDesc={nouveau:'Premier contact — sois attentionné, crée confiance',connu:'Client connu — relation établie, ton naturel',fidele:'Client fidèle depuis longtemps — proximité, chaleur'};
 
   const prompt=`Tu es un commercial expert. Rédige un email d'accompagnement d'offre commerciale qui semble écrit à la main.
@@ -2086,7 +2079,6 @@ DONNÉES :
 - Ton : ${tonDesc[ton]}
 
 RÈGLES ABSOLUES :
-0. ${pronounRule}
 1. Sonne 100% humain — jamais robotique ni "template"
 2. Intègre le contexte naturellement si pertinent
 3. DONNEES STRICTES : si lignes produits fournies, utilise UNIQUEMENT ces donnees (dimensions/quantites/prix). Ne pas inventer.\n4. Mentionne l'objet concret de l'offre (pas juste "votre offre")
@@ -2153,14 +2145,15 @@ function resetToForm(){
 async function sendOffer(){
   // Vérifier limite plan Free
   if(!checkOfferLimit()) return;
-  const prenom=(document.getElementById('ex-prenom')?.value||'').trim()||'Client';
-  const nom=(document.getElementById('ex-nom')?.value||'').trim();
-  const clientFull=nom?`${prenom} ${nom}`:prenom;
+  const clientFull=document.getElementById('ex-client')?.value||'Client';
   const email=document.getElementById('ex-email')?.value||'';
   const ref=document.getElementById('ex-ref')?.value||'OFF-NEW';
   const montant=parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s'`]/g,'').replace(/[^0-9.]/g,''))||0;
   const objet=document.getElementById('ex-objet')?.value||'';
   const contexte=document.getElementById('f-contexte')?.value||'';
+  const parts=clientFull.split(' ');
+  const prenom=parts[0]||'Client';
+  const nom=parts.slice(1).join(' ')||'';
   const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
 
   const d1=parseInt(document.getElementById('of-d1')?.value)||parseInt(document.getElementById('cfg-d1')?.value)||3;
@@ -2402,6 +2395,11 @@ async function previewRelance(id) {
   const o = OFFERS.find(x=>x.id===id);
   if(!o) return;
   closeModal();
+
+  window._rpOfferId = id; // Garder l'id pour la sauvegarde
+  rpActive = 0;
+  window._rpCacheKey = null; // Forcer rechargement depuis DB
+
   document.getElementById('rp-overlay').classList.add('open');
   document.getElementById('rp-tabs').innerHTML = [
     {lbl:'Relance 1',col:'var(--gold)',day:o.relances.r1},
@@ -2409,11 +2407,23 @@ async function previewRelance(id) {
     {lbl:'Relance 3',col:'var(--orange)',day:o.relances.r3},
   ].map((t,i)=>`<button class="rp-tab ${i===0?'active':''}" onclick="switchRPTab(${i})" style="${i===0?`border-color:${t.col};color:${t.col};background:${t.col}22;`:''}">${t.lbl}<br><span style="font-weight:400;font-size:9px;opacity:0.7;">${t.day||'—'}</span></button>`).join('');
 
-  const msgs = ['Chargement...','Chargement...','Chargement...'];
+  // 1. Charger les contenus sauvegardés depuis Supabase d'abord
+  const msgs = ['⏳ Chargement...','⏳ Chargement...','⏳ Chargement...'];
   showRPContent(o, msgs, 0);
 
-  // Generate all 3 relances via AI
-  // Cohérence tutoiement: lire ton+relation depuis l'objet offre
+  try {
+    const rows = await sbFetch(`relances?offre_id=eq.${id}&order=numero.asc&select=id,numero,email_body,statut`);
+    for(const row of (rows||[])) {
+      const i = (row.numero||1) - 1;
+      if(i >= 0 && i < 3 && row.email_body) {
+        rpDrafts[i] = row.email_body;
+        msgs[i] = row.email_body;
+      }
+    }
+    showRPContent(o, msgs, 0);
+  } catch(e) { console.warn('Load relances:', e.message); }
+
+  // 2. Générer seulement les relances sans contenu sauvegardé
   const rTon = o.ton || 'chaleureux';
   const rRel = o.relation || 'connu';
   const isTu = rTon === 'chaleureux' && (rRel === 'connu' || rRel === 'fidele');
@@ -2426,22 +2436,47 @@ async function previewRelance(id) {
     'direct et engagé — légère urgence, invite à répondre',
     'final — laisse la porte ouverte sans pression'
   ];
-  const delays = ['J+3','J+7','J+14'];
+  let anyGenerated = false;
   for(let i=0;i<3;i++) {
+    if(rpDrafts[i]) continue; // Déjà chargé depuis DB
+    anyGenerated = true;
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})}); 
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})});
       const data = await r.json();
       rpDrafts[i] = data.content?.[0]?.text||'';
       msgs[i] = rpDrafts[i];
       if(i===rpActive) showRPContent(o, msgs, rpActive);
+      // Sauvegarder immédiatement en DB
+      await saveRelanceDraft(id, i+1, rpDrafts[i]);
     } catch(e) { rpDrafts[i] = `Bonjour ${o.prenom},\n\n${isTu ? `Je reviens vers toi concernant l'offre ${o.ref}.` : `Je reviens vers vous concernant l'offre ${o.ref}.`}\n\n${saluts[i]}`; }
   }
   showRPContent(o, msgs, rpActive);
 }
 
+// Sauvegarder un draft de relance dans Supabase
+async function saveRelanceDraft(offreId, numero, body) {
+  try {
+    await sbFetch(`relances?offre_id=eq.${offreId}&numero=eq.${numero}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ email_body: body }),
+      headers: { 'Prefer': 'return=minimal' }
+    });
+  } catch(e) { console.warn('saveRelanceDraft:', e.message); }
+}
+
 function showRPContent(o, msgs, idx) {
   const labels = ['Relance 1','Relance 2','Relance 3'];
   const days = [o.relances.r1,o.relances.r2,o.relances.r3];
+  const isLoading = !msgs[idx] || msgs[idx].startsWith('⏳');
+  const bodyHtml = isLoading
+    ? `<div style="color:var(--muted);font-style:italic;padding:16px 0;">⏳ Génération en cours...</div>`
+    : `<textarea id="rp-body-text"
+        style="width:100%;min-height:160px;background:transparent;border:none;resize:vertical;
+               color:var(--text);font-size:13px;line-height:1.7;font-family:'Outfit',sans-serif;
+               outline:none;padding:0;cursor:default;"
+        readonly
+        oninput="rpDrafts[rpActive]=this.value"
+      >${msgs[idx]}</textarea>`;
   document.getElementById('rp-content').innerHTML = `
     <div class="rp-email">
       <div class="rp-email-head">
@@ -2449,11 +2484,19 @@ function showRPContent(o, msgs, idx) {
         <div class="rp-email-row"><span>Objet :</span><span>Re: Offre ${o.ref} — ${o.objet}</span></div>
         <div class="rp-email-row"><span>Date :</span><span>${days[idx]||'Programmée'} — ${labels[idx]}</span></div>
       </div>
-      <div class="rp-email-body" id="rp-body-text">${msgs[idx]==='Chargement...'?'<div style="color:var(--muted);font-style:italic;">⏳ Génération en cours...</div>':msgs[idx]}</div>
+      <div class="rp-email-body" style="padding:0;">${bodyHtml}</div>
     </div>`;
+  // Remettre le bon état bouton modifier
+  const btn = document.getElementById('rp-edit-btn');
+  if(btn) btn.textContent = '✎ Modifier';
 }
 
 function switchRPTab(idx) {
+  // Sauvegarder le contenu de l'onglet actuel avant de changer
+  const cur = document.getElementById('rp-body-text');
+  if(cur && cur.tagName === 'TEXTAREA') {
+    rpDrafts[rpActive] = cur.value;
+  }
   rpActive = idx;
   document.querySelectorAll('.rp-tab').forEach((t,i)=>{
     t.classList.toggle('active',i===idx);
@@ -2462,35 +2505,103 @@ function switchRPTab(idx) {
     else t.style.cssText='';
   });
   const el = document.getElementById('rp-body-text');
-  if(el) el.textContent = rpDrafts[idx]||'⏳ Génération...';
+  if(el && el.tagName === 'TEXTAREA') {
+    el.value = rpDrafts[idx]||'';
+    el.readOnly = true;
+    el.style.cursor = 'default';
+    const btn = document.getElementById('rp-edit-btn');
+    if(btn) btn.textContent = '✎ Modifier';
+  }
 }
 
-function toggleEditRelance() {
+async function toggleEditRelance() {
   const el = document.getElementById('rp-body-text');
-  if(!el) return;
-  if(el.contentEditable==='true') {
-    rpDrafts[rpActive] = el.textContent;
-    el.contentEditable = 'false';
-    document.getElementById('rp-edit-btn').textContent = '✎ Modifier';
-    toast('✅','Modifications sauvegardées');
+  if(!el || el.tagName !== 'TEXTAREA') return;
+  const btn = document.getElementById('rp-edit-btn');
+  if(!el.readOnly) {
+    // → Valider : sauvegarde mémoire + DB
+    rpDrafts[rpActive] = el.value;
+    el.readOnly = true;
+    el.style.cursor = 'default';
+    el.style.background = 'transparent';
+    el.style.borderRadius = '';
+    el.style.border = 'none';
+    el.style.padding = '0';
+    if(btn) { btn.textContent = '✎ Modifier'; btn.style.color = ''; }
+    // Sauvegarde en DB si on a un offre_id
+    if(window._rpOfferId) {
+      await saveRelanceDraft(window._rpOfferId, rpActive + 1, rpDrafts[rpActive]);
+      toast('✅', `Relance ${rpActive+1} sauvegardée`);
+    } else {
+      toast('✅', 'Texte mis à jour');
+    }
   } else {
-    el.contentEditable = 'true';
+    // → Modifier : passer en mode édition
+    el.readOnly = false;
+    el.style.cursor = 'text';
+    el.style.background = 'rgba(255,255,255,0.04)';
+    el.style.borderRadius = '8px';
+    el.style.border = '1px solid rgba(77,144,220,0.35)';
+    el.style.padding = '10px 12px';
     el.focus();
-    document.getElementById('rp-edit-btn').textContent = '✓ Valider';
+    // Placer le curseur à la fin
+    el.selectionStart = el.selectionEnd = el.value.length;
+    if(btn) { btn.textContent = '✓ Valider'; btn.style.color = 'var(--green)'; }
   }
 }
 
 function closeRPOverlay() {
+  // Sauvegarder silencieusement si l'onglet actif est en édition
+  const el = document.getElementById('rp-body-text');
+  if(el && el.tagName === 'TEXTAREA' && !el.readOnly && window._rpOfferId) {
+    rpDrafts[rpActive] = el.value;
+    saveRelanceDraft(window._rpOfferId, rpActive + 1, rpDrafts[rpActive]);
+  }
   document.getElementById('rp-overlay').classList.remove('open');
   rpDrafts = ['','',''];
   rpActive = 0;
-  window._rpCacheKey = null;
+  window._rpOfferId = null;
+}
+
+// Régénérer la relance active via IA (écrase le texte actuel)
+async function regenRelance() {
+  const id = window._rpOfferId;
+  if(!id) return; // preview nouvelle offre = pas de regen DB
+  const o = OFFERS.find(x=>x.id===id);
+  if(!o) return;
+  const el = document.getElementById('rp-body-text');
+  if(el && el.tagName === 'TEXTAREA') {
+    el.value = '⏳ Régénération...';
+    el.readOnly = true;
+  }
+  const btn = document.getElementById('rp-edit-btn');
+  if(btn) btn.textContent = '✎ Modifier';
+
+  const rTon = o.ton || 'chaleureux';
+  const rRel = o.relation || 'connu';
+  const isTu = rTon === 'chaleureux' && (rRel === 'connu' || rRel === 'fidele');
+  const pronoun = isTu ? 'tutoiement exclusif (tu/toi/ton) — aucune exception' : 'vouvoiement exclusif (vous/votre) — aucune exception';
+  const saluts = isTu
+    ? ["Au plaisir d'en discuter avec toi,", "N'hésite pas si tu as des questions. Au plaisir,", "Je reste disponible si tu veux en reparler. Bonne continuation,"]
+    : ['Meilleures salutations,', "Pour tout complément d'information, n'hésitez pas à nous contacter. Meilleures salutations,", 'Sincères salutations,'];
+  const styles = [
+    'doux et bienveillant — simple rappel chaleureux',
+    'direct et engagé — légère urgence, invite à répondre',
+    'final — laisse la porte ouverte sans pression'
+  ];
+  const i = rpActive;
+  try {
+    const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})});
+    const data = await r.json();
+    rpDrafts[i] = data.content?.[0]?.text||'';
+    if(el && el.tagName === 'TEXTAREA') el.value = rpDrafts[i];
+    await saveRelanceDraft(id, i+1, rpDrafts[i]);
+    toast('🔄', `Relance ${i+1} régénérée et sauvegardée`);
+  } catch(e) { toast('❌','Erreur génération'); }
 }
 
 function previewNewRelances() {
-  const prenom=(document.getElementById('ex-prenom')?.value||'').trim()||'Client';
-  const nom=(document.getElementById('ex-nom')?.value||'').trim();
-  const client=nom?`${prenom} ${nom}`:prenom;
+  const client = document.getElementById('ex-client')?.value||'Client';
   const email = document.getElementById('ex-email')?.value||'';
   const ref = document.getElementById('ex-ref')?.value||'OFF-XXX';
   const montant = parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s']/g,''))||0;
@@ -2500,28 +2611,13 @@ function previewNewRelances() {
   const d3 = parseInt(document.getElementById('of-d3')?.value)||14;
   const today = new Date();
   const addDays = (d) => { const dt=new Date(today); dt.setDate(dt.getDate()+d); return dt.toISOString().slice(0,10); };
-  const ton=document.getElementById('f-ton')?.value||'chaleureux';
-  const relation=document.getElementById('f-rel')?.value||'connu';
-  const fakeOffer = {id:'preview',prenom,nom,email,ref,montant,objet,ton,relation,relances:{r1:addDays(d1),r2:addDays(d2),r3:addDays(d3)}};
+  const fakeOffer = {id:'preview',prenom:client.split(' ')[0]||'Client',nom:client.split(' ').slice(1).join(' '),email,ref,montant,objet,relances:{r1:addDays(d1),r2:addDays(d2),r3:addDays(d3)},ton:document.getElementById('f-ton')?.value||'chaleureux',relation:document.getElementById('f-rel')?.value||'connu'};
   previewRelance_obj(fakeOffer);
 }
 
 async function previewRelance_obj(o) {
   document.getElementById('rp-overlay').classList.add('open');
   rpActive = 0;
-  // Cache — ne régénère que si les données ont changé
-  const _ck = `${o.prenom}|${o.nom}|${o.ref}|${o.montant}|${o.ton||''}|${o.relation||''}`;
-  if(window._rpCacheKey === _ck && rpDrafts.every(d=>d && !d.startsWith('⏳'))) {
-    document.getElementById('rp-tabs').innerHTML = [
-    {lbl:'Relance 1',col:'var(--gold)',day:o.relances.r1},
-    {lbl:'Relance 2',col:'var(--purple)',day:o.relances.r2},
-    {lbl:'Relance 3',col:'var(--orange)',day:o.relances.r3},
-  ].map((t,i)=>`<button class="rp-tab ${i===0?'active':''}" onclick="switchRPTab(${i})" style="${i===0?`border-color:${t.col};color:${t.col};background:${t.col}22;`:''}">${t.lbl}<br><span style="font-weight:400;font-size:9px;opacity:0.7;">${t.day||'—'}</span></button>`).join('');
-    showRPContent(o, rpDrafts, 0);
-    return;
-  }
-  window._rpCacheKey = _ck;
-  rpDrafts = ['','',''];
   document.getElementById('rp-tabs').innerHTML = [
     {lbl:'Relance 1',col:'var(--gold)',day:o.relances.r1},
     {lbl:'Relance 2',col:'var(--purple)',day:o.relances.r2},
@@ -2585,8 +2681,7 @@ function exportPDF() {
 }
 
 // ══ CLIENT AUTOCOMPLETE ══
-function clientAutoComplete() {
-  const val=((document.getElementById('ex-prenom')?.value||'')+' '+(document.getElementById('ex-nom')?.value||'')).trim();
+function clientAutoComplete(val) {
   const dd = document.getElementById('ac-dropdown');
   if(!dd) return;
   const badge = document.getElementById('client-history-badge');
@@ -2615,8 +2710,7 @@ function clientAutoComplete() {
 }
 
 function fillClient(prenom, nom, email, entreprise, count) {
-  document.getElementById('ex-prenom').value = prenom;
-  document.getElementById('ex-nom').value = nom;
+  document.getElementById('ex-client').value = `${prenom} ${nom}`;
   document.getElementById('ex-email').value = email;
   closeACDropdown();
   const badge = document.getElementById('client-history-badge');
@@ -2696,7 +2790,7 @@ function closePDFViewer() {
 }
 
 // ══ CONFIG ══
-let CFG = { name:'', role:'', company:'', phone:'', website:'', provider:null, accessToken:null, senderEmail:'', brevoKey:'', onboarding_done:'' };
+let CFG = { name:'', role:'', company:'', phone:'', provider:null, accessToken:null, senderEmail:'', brevoKey:'', onboarding_done:'' };
 
 async function loadConfig() {
   // 1. Charger depuis localStorage en premier (instant)
@@ -2724,7 +2818,6 @@ async function loadConfig() {
   setVal('cfg-role', CFG.role);
   setVal('cfg-company', CFG.company);
   setVal('cfg-phone', CFG.phone);
-  setVal('cfg-website', CFG.website);
   setVal('cfg-sender-email', CFG.senderEmail);
   setVal('cfg-brevo-key', CFG.brevoKey);
   updateSigPreview();
@@ -2738,7 +2831,6 @@ async function saveConfig() {
   CFG.role = document.getElementById('cfg-role')?.value||'';
   CFG.company = document.getElementById('cfg-company')?.value||'';
   CFG.phone = document.getElementById('cfg-phone')?.value||'';
-  CFG.website = document.getElementById('cfg-website')?.value||'';
   CFG.senderEmail = document.getElementById('cfg-sender-email')?.value||'';
   CFG.brevoKey = document.getElementById('cfg-brevo-key')?.value||'';
   // Sauvegarder en localStorage immédiatement
@@ -2809,14 +2901,13 @@ function updateSigPreview() {
   const r = document.getElementById('cfg-role')?.value||'';
   const c = document.getElementById('cfg-company')?.value||'';
   const p = document.getElementById('cfg-phone')?.value||'';
-  const w = document.getElementById('cfg-website')?.value||CFG.website||'';
   const el = document.getElementById('sig-preview');
   if(!el) return;
   if(!n) { el.innerHTML='<em style="color:var(--muted)">Aperçu signature — remplissez les champs ci-dessus</em>'; return; }
   el.innerHTML = `<span style="color:var(--text);font-weight:600;">${n}</span>${r?`<br><span style="color:var(--muted)">${r}</span>`:''}${c?`<br><span style="color:var(--muted)">${c}</span>`:''}${p?`<br><span style="color:var(--blue)">${p}</span>`:''}`;
 }
 
-['cfg-name','cfg-role','cfg-company','cfg-phone','cfg-website'].forEach(id => {
+['cfg-name','cfg-role','cfg-company','cfg-phone'].forEach(id => {
   document.addEventListener('DOMContentLoaded',()=>{
     const el=document.getElementById(id);
     if(el) el.addEventListener('input',updateSigPreview);
@@ -3861,7 +3952,6 @@ function renderObStep(step) {
       <div class="ob-field"><label>Entreprise</label><input id="ob-company" type="text" placeholder="Dupont SA" value="${CFG.company||''}"></div>
       <div class="ob-field"><label>Rôle / Fonction</label><input id="ob-role" type="text" placeholder="Responsable commercial" value="${CFG.role||''}"></div>
       <div class="ob-field"><label>Téléphone</label><input id="ob-phone" type="tel" placeholder="+41 79 000 00 00" value="${CFG.phone||''}"></div>
-      <div class="ob-field"><label>Site web <span style="color:var(--muted);font-weight:400;">(optionnel)</span></label><input id="ob-website" type="url" placeholder="https://monentreprise.ch" value="${CFG.website||''}"></div>
     </div>
     <div class="ob-field"><label>Email expéditeur</label><input id="ob-sender-email" type="email" placeholder="jean@entreprise.ch" value="${CFG.senderEmail||CURRENT_USER?.email||''}"></div>
     <div class="ob-field" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Compte connecté</div><div style="font-size:13px;color:var(--text);">${CURRENT_USER?.email||'—'}</div></div><span style="color:var(--green);font-size:11px;font-weight:700;">✓ Actif</span></div>`,
@@ -3923,18 +4013,16 @@ async function obSaveProfile() {
   const company = document.getElementById('ob-company')?.value.trim();
   const role = document.getElementById('ob-role')?.value.trim();
   const phone = document.getElementById('ob-phone')?.value.trim();
-  const website = document.getElementById('ob-website')?.value.trim();
   if(name) CFG.name = name;
   if(company) CFG.company = company;
   if(role) CFG.role = role;
   if(phone) CFG.phone = phone;
-  if(website) CFG.website = website;
   // Sauvegarder en localStorage IMMÉDIATEMENT (persistance refresh)
   localStorage.setItem('of_cfg', JSON.stringify(CFG));
   if(name || company) {
     try {
       // Utiliser saveSetting qui gère user_id + RLS correctement
-      for(const [k,v] of [['name',name||''],['company',company||''],['role',role||''],['phone',phone||''],['website',website||'']]) {
+      for(const [k,v] of [['name',name||''],['company',company||''],['role',role||''],['phone',phone||'']]) {
         await saveSetting(k, v);
       }
     } catch(e) { console.warn('obSaveProfile error:', e.message); }
