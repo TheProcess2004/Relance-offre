@@ -2046,9 +2046,9 @@ async function genEmail(){
   const ref=document.getElementById('ex-ref')?.value||'OFF-XXX';
   const montant=document.getElementById('ex-montant')?.value||'0';
   const objet=document.getElementById('ex-objet')?.value||'nos services';
-  const contexte=document.getElementById('f-contexte').value.trim();
-  const ton=document.getElementById('f-ton').value;
-  const rel=document.getElementById('f-rel').value;
+  const contexte=document.getElementById('f-contexte')?.value?.trim()||'';
+  const ton=document.getElementById('f-ton')?.value||'chaleureux';
+  const rel=document.getElementById('f-rel')?.value||'connu';
   const detail=document.getElementById('f-detail')?.value.trim()||'';
   const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
   const lignesPDF=window._pdfLignes||'';
@@ -2115,12 +2115,13 @@ Réponds UNIQUEMENT avec le corps de l'email, rien d'autre.`;
     document.getElementById('step-loading').style.display='none';
 
     const subjects={chaleureux:`Ton offre pour ${objet} — ${ref}`,pro:`Offre ${ref} — ${objet}`,direct:`${ref} · ${montant} CHF · ${objet}`};
-    document.getElementById('prev-to').textContent=`${client} <${email}>`;
+    const clientDisplay = societeRaw || prenomRaw || 'Client';
+    document.getElementById('prev-to').textContent=`${clientDisplay} <${email}>`;
     document.getElementById('prev-from').textContent=`${CFG.name||CURRENT_USER?.email||'—'} <${CFG.senderEmail||CURRENT_USER?.email||'—'}>`;
     document.getElementById('prev-sub').textContent=subjects[ton];
     document.getElementById('prev-pj').textContent=`📎 ${fileName}`;
     document.getElementById('prev-body').textContent=body;
-    document.getElementById('prev-name').textContent=client;
+    document.getElementById('prev-name').textContent=clientDisplay;
 
     const d1=document.getElementById('of-d1')?.value||document.getElementById('cfg-d1')?.value||3;
     const d2=document.getElementById('of-d2')?.value||document.getElementById('cfg-d2')?.value||7;
@@ -2265,7 +2266,7 @@ async function sendOffer(){
     document.getElementById('up-ico').textContent='📄';
     document.getElementById('up-h').textContent='Déposer l\'offre PDF';
     document.getElementById('up-s').textContent='L\'IA extrait automatiquement les informations';
-    document.getElementById('f-contexte').value='';
+    if(document.getElementById('f-contexte')) document.getElementById('f-contexte').value='';
     if(document.getElementById('f-detail')) document.getElementById('f-detail').value='';
 
     if(emailSent) toast('🚀',`Email envoyé à ${clientFull} depuis ${CFG.senderEmail} ✅`);
