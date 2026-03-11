@@ -785,7 +785,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <div style="background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:20px;">
           <div style="flex:1;font-size:13px;color:var(--muted);">Envoi à <strong id="prev-name" style="color:var(--text);">—</strong> + relances automatiques activées</div>
           <button class="btn btn-ghost btn-sm" onclick="resetToForm()">Annuler</button>
-          <button class="btn btn-ghost btn-sm" onclick="previewNewRelances()">👁 Voir relances</button>
+          <button class="btn btn-ghost btn-sm" onclick="previewNewRelances()" title="Prévisualiser et modifier les emails de relance avant envoi — vos modifications seront conservées">👁 Voir relances</button>
           <button class="btn btn-gold" onclick="sendOffer()">📤 Envoyer l'offre</button>
         </div>
       </div>
@@ -2204,12 +2204,17 @@ async function sendOffer(){
     const offerId = newOffre[0]?.id;
     if(!offerId) throw new Error('Offre non créée — vérifiez les permissions Supabase (RLS)');
 
-    // 3. Create relances
+    // 3. Create relances — injecter les drafts pré-envoi si disponibles
+    const draftKey = `of_rdraft_${ref}_${email}`;
+    let preDrafts = [];
+    try { preDrafts = JSON.parse(localStorage.getItem(draftKey)||'[]'); } catch(e) {}
     await sbFetch('relances', {method:'POST', body:JSON.stringify([
-      {offre_id:offerId, numero:1, date_prevue:addDays(d1), statut:'pending'},
-      {offre_id:offerId, numero:2, date_prevue:addDays(d2), statut:'pending'},
-      {offre_id:offerId, numero:3, date_prevue:addDays(d3), statut:'pending'},
+      {offre_id:offerId, user_id:CURRENT_USER?.id, numero:1, date_prevue:addDays(d1), statut:'pending', email_body:preDrafts[0]||null},
+      {offre_id:offerId, user_id:CURRENT_USER?.id, numero:2, date_prevue:addDays(d2), statut:'pending', email_body:preDrafts[1]||null},
+      {offre_id:offerId, user_id:CURRENT_USER?.id, numero:3, date_prevue:addDays(d3), statut:'pending', email_body:preDrafts[2]||null},
     ])});
+    // Nettoyer le localStorage après injection
+    try { localStorage.removeItem(draftKey); } catch(e) {}
 
     // 4. Upload PDF to Supabase Storage
     let pdfUrl = '';
@@ -2584,8 +2589,9 @@ async function toggleEditRelance() {
     el.style.padding = '0';
     if(btn) { btn.textContent = '✎ Modifier'; btn.style.color = ''; }
     // Sauvegarde en DB si on a un offre_id
+    const statusEl = document.getElementById('rp-save-status');
     if(window._rpOfferId) {
-      const statusEl = document.getElementById('rp-save-status');
+      // Mode post-envoi → sauvegarder en Supabase
       if(statusEl) { statusEl.textContent = '⏳ Sauvegarde...'; statusEl.style.opacity='1'; statusEl.style.color='var(--muted)'; }
       try {
         await saveRelanceDraft(window._rpOfferId, rpActive + 1, rpDrafts[rpActive]);
@@ -2596,8 +2602,17 @@ async function toggleEditRelance() {
         toast('⚠️', 'Erreur sauvegarde — consultez la console');
         console.error('Sauvegarde relance:', e);
       }
+    } else if(window._rpDraftKey) {
+      // Mode pré-envoi → sauvegarder en localStorage
+      try {
+        const cur = JSON.parse(localStorage.getItem(window._rpDraftKey)||'[]');
+        cur[rpActive] = rpDrafts[rpActive];
+        localStorage.setItem(window._rpDraftKey, JSON.stringify(cur));
+        if(statusEl) { statusEl.textContent = '✓ Sauvegardé'; statusEl.style.color='var(--green)'; statusEl.style.opacity='1'; setTimeout(()=>statusEl.style.opacity='0',2500); }
+        toast('✅', `Relance ${rpActive+1} sauvegardée — sera utilisée à l'envoi`);
+      } catch(e) { toast('⚠️', 'Erreur sauvegarde locale'); }
     } else {
-      toast('✅', 'Texte mis à jour (aperçu)');
+      toast('✅', 'Texte mis à jour');
     }
   } else {
     // → Modifier : passer en mode édition
@@ -2615,11 +2630,21 @@ async function toggleEditRelance() {
 }
 
 function closeRPOverlay() {
-  // Sauvegarder silencieusement si l'onglet actif est en édition
+  // Sauvegarder silencieusement à la fermeture si en cours d'édition
   const el = document.getElementById('rp-body-text');
-  if(el && el.tagName === 'TEXTAREA' && !el.readOnly && window._rpOfferId) {
-    rpDrafts[rpActive] = el.value;
-    saveRelanceDraft(window._rpOfferId, rpActive + 1, rpDrafts[rpActive]);
+  if(el && el.tagName === 'TEXTAREA') {
+    rpDrafts[rpActive] = el.value; // toujours capturer le contenu actuel
+    if(!el.readOnly) {
+      if(window._rpOfferId) {
+        saveRelanceDraft(window._rpOfferId, rpActive + 1, rpDrafts[rpActive]);
+      } else if(window._rpDraftKey) {
+        try {
+          const cur = JSON.parse(localStorage.getItem(window._rpDraftKey)||'[]');
+          cur[rpActive] = rpDrafts[rpActive];
+          localStorage.setItem(window._rpDraftKey, JSON.stringify(cur));
+        } catch(e) {}
+      }
+    }
   }
   document.getElementById('rp-overlay').classList.remove('open');
   rpDrafts = ['','',''];
@@ -2668,7 +2693,8 @@ async function regenRelance() {
 }
 
 function previewNewRelances() {
-  const client = document.getElementById('ex-client')?.value||'Client';
+  const prenom = document.getElementById('ex-prenom')?.value||'';
+  const nom = document.getElementById('ex-nom')?.value||'';
   const email = document.getElementById('ex-email')?.value||'';
   const ref = document.getElementById('ex-ref')?.value||'OFF-XXX';
   const montant = parseFloat((document.getElementById('ex-montant')?.value||'0').replace(/[\s']/g,''))||0;
@@ -2678,21 +2704,42 @@ function previewNewRelances() {
   const d3 = parseInt(document.getElementById('of-d3')?.value)||14;
   const today = new Date();
   const addDays = (d) => { const dt=new Date(today); dt.setDate(dt.getDate()+d); return dt.toISOString().slice(0,10); };
-  const fakeOffer = {id:'preview',prenom:client.split(' ')[0]||'Client',nom:client.split(' ').slice(1).join(' '),email,ref,montant,objet,relances:{r1:addDays(d1),r2:addDays(d2),r3:addDays(d3)},ton:document.getElementById('f-ton')?.value||'chaleureux',relation:document.getElementById('f-rel')?.value||'connu'};
+  const ton = document.getElementById('f-ton')?.value||'chaleureux';
+  const relation = document.getElementById('f-rel')?.value||'connu';
+  // Clé unique pour stocker les drafts pré-envoi
+  const draftKey = `of_rdraft_${ref}_${email}`;
+  const fakeOffer = {id:'preview', _draftKey:draftKey, prenom, nom, email, ref, montant, objet,
+    relances:{r1:addDays(d1),r2:addDays(d2),r3:addDays(d3)}, ton, relation};
   previewRelance_obj(fakeOffer);
 }
 
 async function previewRelance_obj(o) {
   document.getElementById('rp-overlay').classList.add('open');
   rpActive = 0;
+  window._rpOfferId = null; // mode preview nouvelle offre
+  window._rpDraftKey = o._draftKey || null; // clé localStorage pour les drafts pré-envoi
+  // Sous-titre contextuel
+  const rpSub = document.querySelector('#rp-overlay .modal-s');
+  if(rpSub) rpSub.innerHTML = window._rpDraftKey
+    ? "✏️ Modifiez les emails avant d'envoyer l'offre — vos textes seront conservés"
+    : "Vérifiez et modifiez chaque email avant l'envoi";
   document.getElementById('rp-tabs').innerHTML = [
     {lbl:'Relance 1',col:'var(--gold)',day:o.relances.r1},
     {lbl:'Relance 2',col:'var(--purple)',day:o.relances.r2},
     {lbl:'Relance 3',col:'var(--orange)',day:o.relances.r3},
   ].map((t,i)=>`<button class="rp-tab ${i===0?'active':''}" onclick="switchRPTab(${i})" style="${i===0?`border-color:${t.col};color:${t.col};background:${t.col}22;`:''}">${t.lbl}<br><span style="font-weight:400;font-size:9px;opacity:0.7;">${t.day||'—'}</span></button>`).join('');
   const msgs = ['⏳ Génération...','⏳ Génération...','⏳ Génération...'];
+
+  // Charger les drafts pré-envoi depuis localStorage si disponibles
+  if(window._rpDraftKey) {
+    try {
+      const saved = JSON.parse(localStorage.getItem(window._rpDraftKey)||'[]');
+      for(let i=0;i<3;i++) { if(saved[i]) { rpDrafts[i]=saved[i]; msgs[i]=saved[i]; } }
+    } catch(e) {}
+  }
   showRPContent(o, msgs, 0);
-  // Cohérence tutoiement: lire ton+relation depuis l'objet offre
+
+  // Générer seulement les relances sans draft existant
   const rTon = o.ton || 'chaleureux';
   const rRel = o.relation || 'connu';
   const isTu = rTon === 'chaleureux' && (rRel === 'connu' || rRel === 'fidele');
@@ -2705,14 +2752,20 @@ async function previewRelance_obj(o) {
     'direct et engagé — légère urgence, invite à répondre',
     'final — laisse la porte ouverte sans pression'
   ];
-  const delays = ['J+3','J+7','J+14'];
   for(let i=0;i<3;i++) {
+    if(rpDrafts[i]) { if(i===rpActive) showRPContent(o, msgs, rpActive); continue; }
     try {
-      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})}); 
+      const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:500,messages:[{role:'user',content:`Tu es un commercial expert. Rédige la relance ${i+1} pour une offre sans réponse.\nClient: ${o.prenom} ${o.nom}\nObjet: ${o.objet}\nMontant: ${o.montant.toLocaleString('fr-CH')} CHF\nRéf: ${o.ref}\n\nRÈGLES ABSOLUES :\n1. Utilise UNIQUEMENT le ${pronoun}\n2. Commence EXACTEMENT par "Bonjour ${o.prenom},"\n3. Corps: 2-3 lignes, style ${styles[i]}\n4. Termine EXACTEMENT par "${saluts[i]}"\n5. Pas de signature — ajoutée automatiquement\n\nRéponds UNIQUEMENT avec le texte de l'email.`}]})});
       const data = await r.json();
       rpDrafts[i] = data.content?.[0]?.text||'';
       msgs[i] = rpDrafts[i];
       if(i===rpActive) showRPContent(o, msgs, rpActive);
+      // Sauvegarder en localStorage si mode pré-envoi
+      if(window._rpDraftKey) {
+        const cur = JSON.parse(localStorage.getItem(window._rpDraftKey)||'[]');
+        cur[i] = rpDrafts[i];
+        localStorage.setItem(window._rpDraftKey, JSON.stringify(cur));
+      }
     } catch(e) { rpDrafts[i] = `Bonjour ${o.prenom},\n\n${isTu ? `Je reviens vers toi concernant l'offre ${o.ref}.` : `Je reviens vers vous concernant l'offre ${o.ref}.`}\n\n${saluts[i]}`; }
   }
 }
