@@ -28,8 +28,8 @@ module.exports = async (req, res) => {
       },
       body: JSON.stringify({
         type: 'recovery',
-        email: email.toLowerCase().trim()
-        // PAS de redirect_to — on va reconstruire l'URL nous-mêmes
+        email: email.toLowerCase().trim(),
+        redirect_to: 'https://followoffer.com/app'
       })
     });
 
