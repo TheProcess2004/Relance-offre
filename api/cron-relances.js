@@ -38,10 +38,10 @@ async function sbQuery(path, options = {}) {
 }
 
 async function generateEmailBody(offre, rNum) {
-  // Vouvoiement par défaut pour les relances auto (plus professionnel)
-  const ton = offre.ton || 'formel';
-  const relation = offre.relation || 'prospect';
-  const isTu = false; // Vouvoiement par défaut pour relances auto
+  // Cohérence tu/vous — lire ton+relation depuis l'offre
+  const ton = offre.ton || 'chaleureux';
+  const relation = offre.relation || 'connu';
+  const isTu = ton === 'chaleureux' && (relation === 'connu' || relation === 'fidele');
 
   const pronoun = isTu
     ? 'tutoiement exclusif (tu/toi/ton) — aucune exception'
@@ -156,11 +156,12 @@ async function sendEmail({ to, toName, fromEmail, fromName, subject, body, pdfUr
 
 module.exports = async (req, res) => {
   // Sécurité — vérifier que c'est bien Vercel qui appelle
-  // Sécurité — vérifier le secret Vercel si configuré
-  const cronSecret = process.env.CRON_SECRET;
   const authHeader = req.headers['authorization'];
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    console.error('Cron auth failed. Header:', authHeader ? 'present' : 'absent');
+  const querySecret = (req.url || '').includes('?') 
+    ? new URLSearchParams(req.url.split('?')[1]).get('secret') 
+    : null;
+  const validSecret = process.env.CRON_SECRET;
+  if (authHeader !== `Bearer ${validSecret}` && querySecret !== validSecret) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
@@ -174,6 +175,11 @@ module.exports = async (req, res) => {
     );
 
     console.log(`Cron relances: ${relances.length} relances dues le ${today}`);
+
+    // DEBUG: log premier résultat pour voir la structure
+    if (relances.length > 0) {
+      console.log('DEBUG first relance:', JSON.stringify(relances[0]).slice(0, 500));
+    }
 
     for (const relance of relances) {
       const offre = relance.offres;
@@ -197,16 +203,19 @@ module.exports = async (req, res) => {
 
       try {
         // Récupérer les settings de l'utilisateur
-        const settings = await sbQuery(`settings?user_id=eq.${offre.user_id}&select=key,value`);
+        const userId = offre.user_id || relance.user_id;
+        console.log('DEBUG userId:', userId, 'offre.user_id:', offre.user_id, 'relance.user_id:', relance.user_id);
+        const settings = await sbQuery(`settings?user_id=eq.${userId}&select=key,value`);
+        console.log('DEBUG settings count:', settings?.length, 'keys:', settings?.map(s=>s.key).join(','));
         const cfg = {};
         (settings || []).forEach(s => { cfg[s.key] = s.value; });
 
         const fromEmail = cfg.senderEmail || cfg.sender_email || process.env.BREVO_SENDER_EMAIL;
-        const fromName = cfg.name || cfg.sender_name || 'FollowOffer';
+        const fromName = cfg.name || cfg.sender_name || '';
 
         if (!fromEmail) {
           results.skipped++;
-          results.details.push({ id: relance.id, offre: offre.reference, reason: 'email expéditeur non configuré (configurez Settings > Email)' });
+          results.details.push({ id: relance.id, offre: offre.reference, reason: 'email expéditeur non configuré' });
           continue;
         }
 
