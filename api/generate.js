@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     const body = req.body;
     
     // Forcer le bon modèle (alias stable)
-    const model = body.model || 'claude-sonnet-4-5-20251022';
+    const model = 'claude-sonnet-4-6';  // Modèle actuel — ne pas laisser le client choisir
 
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
