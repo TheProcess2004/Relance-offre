@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   const BREVO_KEY    = process.env.BREVO_API_KEY;
   const SB_URL       = process.env.SUPABASE_URL;
   const SB_KEY       = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
-  const APP_URL      = process.env.APP_URL || 'https://followoffer.com';
+  const APP_URL      = 'https://followoffer.com';
 
   if (!BREVO_KEY) return res.status(500).json({ error: 'BREVO_API_KEY manquant' });
   if (!SB_KEY)    return res.status(500).json({ error: 'SUPABASE_SERVICE_ROLE_KEY manquant' });
