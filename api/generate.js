@@ -3,50 +3,50 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const apiKey = process.env.ANTHROPIC_KEY || process.env.CLAUDE_API_KEY;
-  if (!apiKey) {
-    console.error('CLAUDE_API_KEY not set');
-    return res.status(500).json({ error: 'API key not configured' });
+  const ANTHROPIC_KEY = process.env.ANTHROPIC_KEY;
+  if (!ANTHROPIC_KEY) {
+    console.error('[generate] ANTHROPIC_KEY manquante');
+    return res.status(500).json({ error: 'Configuration manquante: ANTHROPIC_KEY non définie sur Vercel' });
   }
 
   try {
     const body = req.body;
+    
+    // Forcer le bon modèle (alias stable)
+    const model = body.model || 'claude-sonnet-4-5-20251022';
 
-    // Force le bon modèle et max_tokens raisonnable
-    const payload = {
-      model: 'claude-sonnet-4-5',
-      max_tokens: body.max_tokens || 1000,
-      messages: body.messages,
-    };
-
-    // Passer le system prompt si fourni
-    if (body.system) payload.system = body.system;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
+        'x-api-key': ANTHROPIC_KEY,
         'anthropic-version': '2023-06-01',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        model,
+        max_tokens: body.max_tokens || 1000,
+        messages: body.messages,
+        ...(body.system ? { system: body.system } : {}),
+      }),
     });
 
-    const data = await response.json();
+    const data = await anthropicRes.json();
 
-    if (!response.ok) {
-      console.error('Anthropic API error:', data);
-      return res.status(response.status).json({ error: data.error?.message || 'Anthropic API error', details: data });
+    if (!anthropicRes.ok) {
+      console.error('[generate] Anthropic error:', anthropicRes.status, JSON.stringify(data));
+      return res.status(anthropicRes.status).json({ 
+        error: data.error?.message || `Erreur Anthropic ${anthropicRes.status}`,
+        detail: data 
+      });
     }
 
     return res.status(200).json(data);
 
   } catch (err) {
-    console.error('generate handler error:', err);
+    console.error('[generate] Exception:', err.message);
     return res.status(500).json({ error: err.message });
   }
 }
