@@ -38,10 +38,10 @@ async function sbQuery(path, options = {}) {
 }
 
 async function generateEmailBody(offre, rNum) {
-  // Cohérence tu/vous — lire ton+relation depuis l'offre
-  const ton = offre.ton || 'chaleureux';
-  const relation = offre.relation || 'connu';
-  const isTu = ton === 'chaleureux' && (relation === 'connu' || relation === 'fidele');
+  // Vouvoiement par défaut pour les relances auto (plus professionnel)
+  const ton = offre.ton || 'formel';
+  const relation = offre.relation || 'prospect';
+  const isTu = false; // Vouvoiement par défaut pour relances auto
 
   const pronoun = isTu
     ? 'tutoiement exclusif (tu/toi/ton) — aucune exception'
@@ -156,8 +156,11 @@ async function sendEmail({ to, toName, fromEmail, fromName, subject, body, pdfUr
 
 module.exports = async (req, res) => {
   // Sécurité — vérifier que c'est bien Vercel qui appelle
+  // Sécurité — vérifier le secret Vercel si configuré
+  const cronSecret = process.env.CRON_SECRET;
   const authHeader = req.headers['authorization'];
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    console.error('Cron auth failed. Header:', authHeader ? 'present' : 'absent');
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
@@ -167,7 +170,7 @@ module.exports = async (req, res) => {
   try {
     // Récupérer toutes les relances dues aujourd'hui ou avant
     const relances = await sbQuery(
-      `relances?statut=eq.pending&date_prevue=lte.${today}&select=*,offres(id,reference,objet,montant,statut,pdf_url,fichier_nom,ton,relation,user_id,clients(prenom,nom,email,entreprise))`
+      `relances?statut=eq.pending&date_prevue=lte.${today}&select=*,offres(id,reference,objet,montant,statut,pdf_url,fichier_nom,user_id,clients(prenom,nom,email,entreprise))`
     );
 
     console.log(`Cron relances: ${relances.length} relances dues le ${today}`);
@@ -198,12 +201,12 @@ module.exports = async (req, res) => {
         const cfg = {};
         (settings || []).forEach(s => { cfg[s.key] = s.value; });
 
-        const fromEmail = cfg.senderEmail || cfg.sender_email;
-        const fromName = cfg.name || cfg.sender_name || '';
+        const fromEmail = cfg.senderEmail || cfg.sender_email || process.env.BREVO_SENDER_EMAIL;
+        const fromName = cfg.name || cfg.sender_name || 'FollowOffer';
 
         if (!fromEmail) {
           results.skipped++;
-          results.details.push({ id: relance.id, offre: offre.reference, reason: 'email expéditeur non configuré' });
+          results.details.push({ id: relance.id, offre: offre.reference, reason: 'email expéditeur non configuré (configurez Settings > Email)' });
           continue;
         }
 
