@@ -44,7 +44,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 html{overflow-x:hidden;}html,html{overflow-x:hidden;}html{overflow-x:hidden;}
-body{margin:0;padding:0;width:100%;}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1;}
+body{margin:0;padding:0;width:100%;background:#04080F;}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1;}
 a{text-decoration:none;color:inherit;}
 button{font-family:inherit;}
 
@@ -118,9 +118,9 @@ button{font-family:inherit;}
     #132550 66%,
     #1e3570 74%,
     #d0e0f4 84%,
-    #e4eef8 90%,
-    #eef4fb 95%,
-    #F4F7FB 100%
+    #eaf2fb 90%,
+    #f4f8fc 95%,
+    #ffffff 100%
   );
   padding:0 16px 80px;
   overflow:hidden;
@@ -224,7 +224,7 @@ button{font-family:inherit;}
 @keyframes hi{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
 
 /* ═══ PROBLEM ═══ */
-.problem-section{background:var(--bg);padding:104px 24px;background:var(--bg2);border-top:1px solid var(--border);}
+.problem-section{background:#ffffff;padding:104px 24px;}
 .problem-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:88px;align-items:center;}
 .prob-cards{display:flex;flex-direction:column;gap:12px;}
 .prob-card{background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:20px 22px;display:flex;align-items:flex-start;gap:16px;transition:border-color 0.25s,box-shadow 0.25s,transform 0.2s;}
@@ -799,6 +799,11 @@ button{font-family:inherit;}
   .legal-body { padding: 14px 14px 36px !important; }
   .legal-tabs { overflow-x: auto !important; padding: 0 10px !important; }
   .legal-tab { font-size: 12px !important; padding: 8px 10px !important; }
+}
+
+/* ══ FAILSAFE : sections toujours visibles sans JS ══ */
+@media (max-width: 768px) {
+  .r { opacity: 1 !important; transform: none !important; }
 }
 </style>
 </head>
@@ -1383,7 +1388,20 @@ button{font-family:inherit;}
     </div>
   </div>
 </div>
-<script>
+<script>/* ══ GUARD IMMÉDIAT MOBILE ══ */
+(function(){
+  if(window.innerWidth <= 1024){
+    var style = document.createElement('style');
+    style.textContent = '.r{opacity:1!important;transform:none!important;visibility:visible!important;}section,div{max-height:none!important;}';
+    document.head.appendChild(style);
+    document.documentElement.style.overflow = '';
+    document.documentElement.style.height = 'auto';
+    document.body && (document.body.style.overflow = '');
+    document.body && (document.body.style.height = 'auto');
+  }
+})();
+
+
 /* ══ CANVAS HEXAGONAL ══ */
 (function(){
   var canvas = document.getElementById('hero-canvas');
