@@ -212,6 +212,7 @@ button{font-family:inherit;}
 
 /* ═══ REVEAL ═══ */
 .r{opacity:0;transform:translateY(20px);transition:opacity 0.65s cubic-bezier(.16,1,.3,1),transform 0.65s cubic-bezier(.16,1,.3,1);}
+.r.visible{opacity:1;transform:translateY(0);}
 .r.d1{transition-delay:.08s;}.r.d2{transition-delay:.16s;}.r.d3{transition-delay:.24s;}.r.d4{transition-delay:.32s;}
 .r.in{opacity:1;transform:none;}
 .hero-eyebrow{animation:hi 0.7s 0.1s both cubic-bezier(.16,1,.3,1);}
@@ -933,6 +934,29 @@ button{font-family:inherit;}
     gap: 12px !important;
   }
 }
+
+/* ══ HERO SHAPES ══ */
+.hero-shapes{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;}
+.hs-hex{position:absolute;opacity:0.07;}
+.hs-hex::before{content:'';position:absolute;width:100%;height:100%;background:rgba(77,144,232,0.6);clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);}
+.hs-hex-1{width:340px;height:340px;top:-80px;right:8%;animation:hexFloat1 14s ease-in-out infinite;}
+.hs-hex-2{width:200px;height:200px;bottom:10%;left:5%;animation:hexFloat2 18s ease-in-out infinite;}
+.hs-hex-3{width:120px;height:120px;top:30%;right:20%;animation:hexFloat1 22s ease-in-out infinite reverse;}
+.hs-ring{position:absolute;border-radius:50%;border:1px solid rgba(77,144,232,0.15);pointer-events:none;}
+.hs-ring-1{width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%);animation:ringPulse 8s ease-in-out infinite;}
+.hs-ring-2{width:780px;height:780px;top:50%;left:50%;transform:translate(-50%,-50%);animation:ringPulse 8s ease-in-out infinite 2s;}
+@keyframes hexFloat1{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-24px) rotate(8deg);}}
+@keyframes hexFloat2{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-18px) rotate(-6deg);}}
+@keyframes ringPulse{0%,100%{opacity:0.4;transform:translate(-50%,-50%) scale(1);}50%{opacity:0.08;transform:translate(-50%,-50%) scale(1.08);}}
+
+/* TICKER ITEMS */
+.sectors-ticker{display:flex;gap:12px;will-change:transform;}
+.st-item{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 16px;white-space:nowrap;flex-shrink:0;}
+.st-ico{font-size:18px;}
+.st-label{font-size:13px;font-weight:600;color:var(--txt);}
+
+/* ══ HERO CANVAS ══ */
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;display:block;}
 </style>
 </head>
 <body>
@@ -958,7 +982,7 @@ button{font-family:inherit;}
 
 <!-- HERO DARK -->
 <section class="hero">
-  
+  <canvas id="hero-canvas"></canvas>
   <div class="hero-bg-gradient"></div>
   <div class="hero-glow"></div>
   <div class="hero-inner">
@@ -1118,16 +1142,16 @@ button{font-family:inherit;}
 <section class="stats-section">
   <div class="stats-inner">
     <div class="stat-item" data-counter="cnt-c">
-      <div><span class="stat-val sv-blue" id="cnt-c">38</span><span class="stat-val sv-blue stat-suffix">%</span></div>
+      <div><span class="stat-val sv-blue" id="cnt-c" data-target="38" data-suffix="%">0%</span></div>
       <div class="stat-desc">Taux de conversion moyen en plus chez les utilisateurs Pro après 3 mois</div>
     </div>
     <div class="stat-item" data-counter="cnt-p">
-      <div><span class="stat-val sv-warm" id="cnt-p">490</span></div>
+      <div><span class="stat-val sv-warm" id="cnt-p" data-target="490" data-suffix="">0</span></div>
       <div class="stat-meta"><span class="sm-strike">649 CHF</span><span class="sm-badge">−25%</span></div>
       <div class="stat-desc">CHF par an — tout inclus, aucun frais caché</div>
     </div>
     <div class="stat-item" data-counter="cnt-t">
-      <div><span class="stat-val sv-green" id="cnt-t">3</span><span class="stat-val sv-green stat-suffix">×</span></div>
+      <div><span class="stat-val sv-green" id="cnt-t" data-target="3" data-suffix="×">0×</span></div>
       <div class="stat-desc">Plus de relances effectuées vs. la gestion manuelle</div>
     </div>
   </div>
@@ -1351,7 +1375,10 @@ button{font-family:inherit;}
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>
+      <a href="mailto:contact@followoffer.com" class="de-s-card r d0" style="text-decoration:none;">
+        <div class="de-s-ico" style="background:rgba(21,85,168,0.20);border:1px solid rgba(21,85,168,0.35);">✉️</div>
+        <div><div class="de-s-title">contact@followoffer.com</div><div class="de-s-sub">Réponse directe · Sans intermédiaire</div></div>
+      </a>
       <div class="de-s-card r d1" style="cursor:default">
         <div class="de-s-ico de-s-ico-g">⚡</div>
         <div><div class="de-s-title">Réponse garantie sous 24h</div><div class="de-s-sub">Jours ouvrables et week-end</div></div>
@@ -1587,6 +1614,194 @@ button{font-family:inherit;}
   </div>
 </div>
 <script>
+/* ══ CANVAS HEXAGONAL ══ */
+(function(){
+  var canvas = document.getElementById('hero-canvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W, H, hexes = [], nodes = [], LINES = [];
+  var HEX = 36, NC = 20;
+
+  function resize(){
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    buildGrid();
+  }
+
+  function buildGrid(){
+    hexes = [];
+    var cw = HEX * 2, rh = Math.sqrt(3) * HEX;
+    var cols = Math.ceil(W / (cw * 0.75)) + 2;
+    var rows = Math.ceil(H / rh) + 2;
+    for(var r = -1; r < rows; r++){
+      for(var c = -1; c < cols; c++){
+        hexes.push({ x: c * cw * 0.75, y: r * rh + (c % 2 === 0 ? 0 : rh / 2) });
+      }
+    }
+    /* Noeuds lumineux aléatoires */
+    var shuffled = hexes.slice().sort(function(){ return Math.random() - 0.5; });
+    nodes = [];
+    for(var i = 0; i < shuffled.length && nodes.length < NC; i++){
+      var hx = shuffled[i];
+      if(hx.x > 30 && hx.x < W - 30 && hx.y > 30 && hx.y < H * 0.8){
+        nodes.push({ x: hx.x, y: hx.y, phase: Math.random() * Math.PI * 2, speed: 0.012 + Math.random() * 0.02, r: 2 + Math.random() * 2 });
+      }
+    }
+    /* Connexions entre noeuds proches */
+    LINES = [];
+    for(var a = 0; a < nodes.length; a++){
+      for(var b = a + 1; b < nodes.length; b++){
+        var dx = nodes[a].x - nodes[b].x, dy = nodes[a].y - nodes[b].y;
+        if(Math.sqrt(dx*dx + dy*dy) < HEX * 4) LINES.push([a, b]);
+      }
+    }
+  }
+
+  function drawHex(cx, cy, r){
+    ctx.beginPath();
+    for(var i = 0; i < 6; i++){
+      var ang = Math.PI / 180 * (60 * i - 30);
+      if(i === 0) ctx.moveTo(cx + r * Math.cos(ang), cy + r * Math.sin(ang));
+      else ctx.lineTo(cx + r * Math.cos(ang), cy + r * Math.sin(ang));
+    }
+    ctx.closePath();
+  }
+
+  function draw(ts){
+    ctx.clearRect(0, 0, W, H);
+    /* Grille hexagonale */
+    for(var i = 0; i < hexes.length; i++){
+      var hx = hexes[i].x, hy = hexes[i].y;
+      var distX = Math.abs(hx - W * 0.45) / W;
+      var distY = Math.max(0, hy / H - 0.6);
+      var alpha = Math.max(0, 0.28 - distX * 0.4 - distY * 1.2);
+      if(alpha < 0.008) continue;
+      ctx.strokeStyle = 'rgba(60,110,210,' + alpha.toFixed(3) + ')';
+      ctx.lineWidth = 0.7;
+      drawHex(hx, hy, HEX - 1);
+      ctx.stroke();
+    }
+    /* Lignes de connexion */
+    for(var l = 0; l < LINES.length; l++){
+      var na = nodes[LINES[l][0]], nb = nodes[LINES[l][1]];
+      var t = (Math.sin(ts * 0.0008 + l) + 1) / 2;
+      var a2 = 0.06 + t * 0.22;
+      var g = ctx.createLinearGradient(na.x, na.y, nb.x, nb.y);
+      g.addColorStop(0, 'rgba(80,150,255,' + a2.toFixed(3) + ')');
+      g.addColorStop(0.5, 'rgba(120,180,255,' + (a2 * 1.8).toFixed(3) + ')');
+      g.addColorStop(1, 'rgba(80,150,255,' + a2.toFixed(3) + ')');
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(na.x, na.y);
+      ctx.lineTo(nb.x, nb.y);
+      ctx.stroke();
+    }
+    /* Noeuds lumineux */
+    for(var n = 0; n < nodes.length; n++){
+      var nd = nodes[n];
+      nd.phase += nd.speed;
+      var glow = (Math.sin(nd.phase) + 1) / 2;
+      var rad = nd.r + glow * 3;
+      /* Halo */
+      var halo = ctx.createRadialGradient(nd.x, nd.y, 0, nd.x, nd.y, rad * 6);
+      halo.addColorStop(0, 'rgba(100,180,255,' + (0.5 + glow * 0.4).toFixed(2) + ')');
+      halo.addColorStop(0.5, 'rgba(60,120,220,' + (0.12 + glow * 0.12).toFixed(2) + ')');
+      halo.addColorStop(1, 'rgba(60,120,220,0)');
+      ctx.beginPath();
+      ctx.arc(nd.x, nd.y, rad * 6, 0, Math.PI * 2);
+      ctx.fillStyle = halo;
+      ctx.fill();
+      /* Point central brillant */
+      var dot = ctx.createRadialGradient(nd.x, nd.y, 0, nd.x, nd.y, rad);
+      dot.addColorStop(0, 'rgba(230,245,255,' + (0.9 + glow * 0.1).toFixed(2) + ')');
+      dot.addColorStop(0.6, 'rgba(100,170,255,' + (0.6 + glow * 0.3).toFixed(2) + ')');
+      dot.addColorStop(1, 'rgba(60,120,220,0)');
+      ctx.beginPath();
+      ctx.arc(nd.x, nd.y, rad, 0, Math.PI * 2);
+      ctx.fillStyle = dot;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(draw);
+})();
+
+/* ══ COMPTEURS ANIMÉS ══ */
+(function(){
+  var targets = [
+    { id: 'cnt-c', target: 38, suffix: '%', duration: 1600 },
+    { id: 'cnt-p', target: 490, suffix: '', duration: 2000 },
+    { id: 'cnt-t', target: 3, suffix: '×', duration: 1200 }
+  ];
+  targets.forEach(function(cfg){
+    var el = document.getElementById(cfg.id);
+    if(!el) return;
+    var obs = new IntersectionObserver(function(entries){
+      if(!entries[0].isIntersecting) return;
+      obs.unobserve(el);
+      var start = null;
+      function step(ts){
+        if(!start) start = ts;
+        var p = Math.min((ts - start) / cfg.duration, 1);
+        var ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(ease * cfg.target) + cfg.suffix;
+        if(p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }, { threshold: 0.4 });
+    obs.observe(el);
+  });
+})();
+
+(function(){
+  /* SECTORS TICKER scroll infini */
+  var ticker = document.getElementById('ticker');
+  if(!ticker) return;
+  var items = [
+    {ico:'🔌',label:'Électriciens'},
+    {ico:'🪟',label:'Menuisiers'},
+    {ico:'🏡',label:'Agents immobiliers'},
+    {ico:'🔧',label:'Chauffagistes'},
+    {ico:'🌿',label:'Paysagistes'},
+    {ico:'🎨',label:'Peintres'},
+    {ico:'🚿',label:'Sanitaires'},
+    {ico:'💼',label:'Vendeurs B2B'},
+    {ico:'🔑',label:'Serruriers'},
+    {ico:'🏗️',label:'Plâtriers'},
+    {ico:'📊',label:'Courtiers'},
+    {ico:'⚙️',label:'PME techniques'},
+    {ico:'📐',label:'Architectes'},
+    {ico:'🖥️',label:'Agences web'},
+    {ico:'📸',label:'Photographes'},
+    {ico:'🏢',label:'Agences immo'}
+  ];
+  var html = '';
+  items.forEach(function(it){
+    html += '<div class="st-item"><span class="st-ico">'+it.ico+'</span><span class="st-label">'+it.label+'</span></div>';
+  });
+  ticker.innerHTML = html + html; /* double pour loop infinie */
+  var pos = 0;
+  var speed = 0.5;
+  function animTicker(){
+    pos -= speed;
+    var half = ticker.scrollWidth / 2;
+    if(Math.abs(pos) >= half) pos = 0;
+    ticker.style.transform = 'translateX('+pos+'px)';
+    requestAnimationFrame(animTicker);
+  }
+  animTicker();
+})();
+
+(function(){
+  /* Forcer visibilité immédiate des éléments hero */
+  document.querySelectorAll('.hero .r').forEach(function(el){el.classList.add('visible');});
+  /* Fallback global après 2s */
+  setTimeout(function(){document.querySelectorAll('.r').forEach(function(el){el.classList.add('visible');});},2000);
+})();
 (function(){
   /* NAV scroll dark→light */
   var nav=document.getElementById('mainNav');
