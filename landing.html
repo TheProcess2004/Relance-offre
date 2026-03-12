@@ -156,7 +156,6 @@ button{font-family:inherit;}
 .btn-secondary:hover{background:rgba(232,237,246,0.12);border-color:rgba(232,237,246,0.18);}
 .hero-trust{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;}
 .t-item{font-size:12px;color:rgba(232,237,246,0.42);display:flex;align-items:center;gap:7px;font-weight:500;}
-.t-item::before{content:"✓";color:#4AAA78;font-weight:800;font-size:11px;}
 
 /* ═══ TRANSITION + MOCKUP ═══ */
 .mockup-section{max-width:1040px;margin:0 auto;}
@@ -717,64 +716,69 @@ button{font-family:inherit;}
   .hero { padding: 80px 20px 48px !important; min-height: auto !important; height: auto !important; }
   .hero-title { font-size: 32px !important; line-height: 1.12 !important; }
   .hero-sub { font-size: 15px !important; }
-  .hero-actions { flex-direction: column !important; gap: 10px !important; align-items: stretch !important; max-width: 340px !important; margin: 24px auto 0 !important; }
+  .hero-actions { flex-direction: column !important; gap: 10px !important; align-items: stretch !important; max-width: 340px !important; margin: 20px auto 0 !important; }
   .hero-actions a { text-align: center !important; }
   .hero-trust { flex-wrap: wrap !important; justify-content: center !important; gap: 6px 16px !important; margin-top: 24px !important; }
   .hero-eyebrow { font-size: 11px !important; }
 
   /* ── SECTIONS ── */
-  .problem-section { padding: 56px 20px !important; }
+  .problem-section { padding: 40px 20px !important; }
   .problem-inner { grid-template-columns: 1fr !important; gap: 24px !important; }
   .prob-items { gap: 12px !important; }
 
-  .solution-section { padding: 56px 20px !important; }
-  .sol-steps { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .solution-section { padding: 40px 20px !important; }
+  .sol-flow { flex-direction: column !important; gap: 16px !important; }
+  .sol-step::after { display: none !important; }
 
-  .stats-section { padding: 56px 20px !important; }
-  .stats-inner { grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
-  .stat-val { font-size: 40px !important; }
+  .stats-section { padding: 40px 20px !important; }
+  .stats-inner { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .stat-item { padding: 28px 20px !important; border-right: none !important; border-bottom: 1px solid var(--border); }
+  .stat-item:last-child { border-bottom: none !important; }
+  .stat-val { font-size: 52px !important; }
 
-  .sectors-section { padding: 56px 20px !important; }
+  .sectors-section { padding: 40px 20px !important; }
   .sectors-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
   .s-card-item { padding: 10px 12px !important; font-size: 13px !important; }
 
-  .features-section { padding: 56px 20px !important; }
-  .features-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .features-section { padding: 40px 20px !important; }
+  .feat-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
   .feat-card { padding: 18px 16px !important; }
 
-  .how-section { padding: 56px 20px !important; }
+  .how-section { padding: 40px 20px !important; }
   .how-steps { grid-template-columns: 1fr !important; gap: 14px !important; }
 
-  .testi-section { padding: 56px 20px !important; }
+  .testi-section { padding: 40px 20px !important; }
   .testi-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .tc-stat { display: none !important; }
 
-  .pricing-section { padding: 56px 20px !important; }
+  .pricing-section { padding: 40px 20px !important; }
   .pricing-cards, .pricing-grid { grid-template-columns: 1fr !important; gap: 14px !important; max-width: 360px !important; margin: 28px auto 0 !important; }
 
-  .faq-section { padding: 56px 20px !important; }
+  .faq-section { padding: 40px 20px !important; }
   .faq-list { max-width: 100% !important; }
   .faq-q { font-size: 14px !important; padding: 15px 16px !important; }
   .faq-a { padding: 0 16px !important; }
   .faq-item.open .faq-a { padding: 12px 16px 18px !important; }
 
-  .de-support { padding: 56px 20px !important; }
+  .de-support { padding: 40px 20px !important; }
   .support-inner { grid-template-columns: 1fr !important; gap: 20px !important; }
 
-  .de-contact { padding: 56px 20px !important; }
+  .de-contact { padding: 40px 20px !important; }
   .contact-inner { grid-template-columns: 1fr !important; gap: 20px !important; }
   .cf-row { flex-direction: column !important; }
   .de-form { padding: 18px 14px !important; }
 
-  .de-cta { padding: 56px 20px !important; }
-  .cta-title { font-size: 26px !important; }
+  .de-cta { padding: 40px 20px !important; }
+  .cta-title { font-size: 24px !important; }
   .cta-actions { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
   .cta-actions a { text-align: center !important; }
 
-  .de-footer { padding: 24px 20px !important; text-align: center !important; }
+  .de-footer { padding: 24px 20px !important; text-align: center !important; grid-template-columns: 1fr !important; gap: 16px !important; }
+  .foot-copy { text-align: center !important; }
   .foot-links { flex-wrap: wrap !important; justify-content: center !important; gap: 6px 12px !important; }
 
   /* ── TITRES ── */
-  .section-title { font-size: 24px !important; line-height: 1.2 !important; }
+  .section-title { font-size: 22px !important; line-height: 1.18 !important; margin-bottom: 10px !important; }
   .section-sub { font-size: 14px !important; }
 
   /* ── LEGAL ── */
@@ -932,6 +936,7 @@ button{font-family:inherit;}
     </div>
   </div>
 </div>
+</div><!-- /mockup-wrap-outer -->
 
 <!-- PROBLÈME -->
 <section class="problem-section" id="probleme">
