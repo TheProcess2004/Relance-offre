@@ -122,7 +122,7 @@ button{font-family:inherit;}
     #eef4fb 95%,
     #F4F7FB 100%
   );
-  padding:0 24px 80px;
+  padding:0 16px 80px;
   overflow:hidden;
 }
 /* Lueur bleue derrière le mockup */
@@ -133,7 +133,7 @@ button{font-family:inherit;}
   background:radial-gradient(ellipse at 50% 50%, rgba(21,85,200,0.18) 0%, transparent 65%);
   pointer-events:none;z-index:0;
 }
-.mockup-section{max-width:1040px;margin:0 auto;position:relative;z-index:1;}
+.mockup-section{max-width:1160px;margin:0 auto;position:relative;z-index:1;}
 .mockup-wrap{
   border-radius:16px;overflow:hidden;
   border:1px solid rgba(120,165,240,0.22);
@@ -174,7 +174,7 @@ button{font-family:inherit;}
     #F0F4FA 92%,
     #F7F8FA 100%
   );
-  padding:0 24px 80px;
+  padding:0 16px 80px;
 }
 .mockup-section{max-width:1040px;margin:0 auto;}
 .mockup-wrap{border-radius:16px;overflow:hidden;border:1px solid rgba(100,150,230,0.18);box-shadow:0 0 0 1px rgba(21,85,168,0.25),0 0 60px rgba(21,85,168,0.15),0 40px 100px rgba(0,0,0,0.6),0 8px 30px rgba(0,0,0,0.4);}
@@ -701,132 +701,104 @@ button{font-family:inherit;}
    ══════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* ─── RESET SCROLL — critique iOS Safari ─── */
-  html { overflow-x: hidden; overflow-y: auto; height: auto; }
-  body { overflow-x: hidden; overflow-y: auto; height: auto; }
+  /* ── RESET FONDAMENTAL ── */
+  html { overflow-x: hidden !important; overflow-y: scroll !important; height: auto !important; -webkit-overflow-scrolling: touch; }
+  body { overflow-x: hidden !important; overflow-y: visible !important; height: auto !important; min-height: 100%; }
 
-  /* ─── SCROLL REVEAL — tout visible immédiatement ─── */
-  .r, [class*=" r "], .r.d1, .r.d2, .r.d3, .r.d4 {
+  /* ── SCROLL REVEAL : tout visible immédiatement, sans exception ── */
+  .r { opacity: 1 !important; transform: none !important; transition: none !important; visibility: visible !important; }
+
+  /* ── TOUTES LES SECTIONS : forcer display et visibilité ── */
+  section, .problem-section, .solution-section, .stats-section,
+  .sectors-section, .features-section, .how-section, .testi-section,
+  .pricing-section, .faq-section, .de-support, .de-contact,
+  .de-cta, .de-footer {
+    display: block !important;
+    visibility: visible !important;
     opacity: 1 !important;
-    transform: translateY(0) !important;
-    transition: none !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
-  /* ─── NAV ─── */
+  /* ── EXCEPTIONS : masquer comparateur + mockup ── */
+  .comp-section { display: none !important; }
+  .mockup-wrap-outer { display: none !important; height: 0 !important; padding: 0 !important; margin: 0 !important; overflow: hidden !important; max-height: 0 !important; }
+  .hs-point, .hs-tip, .hs-ring, .hs-dot, .hs-pb, .hs-pb-fill, .hd { display: none !important; }
+
+  /* ── NAV ── */
   .nav { height: 56px !important; padding: 0 16px !important; }
   .nav-links { display: none !important; }
   .btn-ghost { display: none !important; }
 
-  /* ─── HERO ─── */
-  .hero { padding: 80px 20px 48px !important; }
+  /* ── HERO ── */
+  .hero { padding: 80px 20px 48px !important; min-height: auto !important; height: auto !important; }
   .hero-title { font-size: 32px !important; line-height: 1.12 !important; }
-  .hero-sub { font-size: 15px !important; max-width: 100% !important; }
-  .hero-actions {
-    flex-direction: column !important;
-    gap: 10px !important;
-    align-items: stretch !important;
-    max-width: 340px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
+  .hero-sub { font-size: 15px !important; }
+  .hero-actions { flex-direction: column !important; gap: 10px !important; align-items: stretch !important; max-width: 340px !important; margin: 24px auto 0 !important; }
   .hero-actions a { text-align: center !important; }
-  .hero-trust {
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-    gap: 6px 20px !important;
-  }
+  .hero-trust { flex-wrap: wrap !important; justify-content: center !important; gap: 6px 16px !important; margin-top: 24px !important; }
   .hero-eyebrow { font-size: 11px !important; }
 
-  /* ─── MOCKUP DASHBOARD — caché sur mobile ─── */
-  .mockup-wrap-outer {
-    display: none !important;
-    height: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-  }
+  /* ── SECTIONS ── */
+  .problem-section { padding: 56px 20px !important; }
+  .problem-inner { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .prob-items { gap: 12px !important; }
 
-  /* ─── HOTSPOTS — cachés (désactivés sur mobile) ─── */
-  .hs-point, .hs-tip, .hs-ring, .hs-dot,
-  .hs-pb, .hs-pb-fill, .hd { display: none !important; }
+  .solution-section { padding: 56px 20px !important; }
+  .sol-steps { grid-template-columns: 1fr !important; gap: 14px !important; }
 
-  /* ─── COMPARATEUR — caché sur mobile ─── */
-  .comp-section { display: none !important; }
-
-  /* ─── PROBLEM SECTION ─── */
-  .problem-section { padding: 64px 20px !important; }
-  .problem-inner { grid-template-columns: 1fr !important; gap: 28px !important; }
-
-  /* ─── SOLUTION ─── */
-  .solution-section { padding: 64px 20px !important; }
-  .sol-steps { grid-template-columns: 1fr !important; gap: 16px !important; }
-
-  /* ─── STATS ─── */
-  .stats-section { padding: 60px 20px !important; }
+  .stats-section { padding: 56px 20px !important; }
   .stats-inner { grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
-  .stat-val { font-size: 42px !important; }
-  .stat-label { font-size: 12px !important; }
+  .stat-val { font-size: 40px !important; }
 
-  /* ─── SECTEURS / TICKER ─── */
-  .sectors-section { padding: 60px 20px !important; }
-  .sectors-ticker-wrap { overflow: hidden !important; }
+  .sectors-section { padding: 56px 20px !important; }
   .sectors-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
   .s-card-item { padding: 10px 12px !important; font-size: 13px !important; }
 
-  /* ─── FONCTIONNALITÉS ─── */
-  .features-section { padding: 64px 20px !important; }
-  .features-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .feat-card { padding: 20px !important; }
+  .features-section { padding: 56px 20px !important; }
+  .features-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .feat-card { padding: 18px 16px !important; }
 
-  /* ─── COMMENT ÇA MARCHE ─── */
-  .how-section { padding: 64px 20px !important; }
-  .how-steps { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .how-section { padding: 56px 20px !important; }
+  .how-steps { grid-template-columns: 1fr !important; gap: 14px !important; }
 
-  /* ─── TÉMOIGNAGES ─── */
-  .testi-section { padding: 64px 20px !important; }
-  .testi-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .testi-section { padding: 56px 20px !important; }
+  .testi-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
 
-  /* ─── PRICING ─── */
-  .pricing-section { padding: 64px 20px !important; }
-  .pricing-cards, .pricing-grid { grid-template-columns: 1fr !important; gap: 16px !important; max-width: 380px !important; margin-left: auto !important; margin-right: auto !important; }
+  .pricing-section { padding: 56px 20px !important; }
+  .pricing-cards, .pricing-grid { grid-template-columns: 1fr !important; gap: 14px !important; max-width: 360px !important; margin: 28px auto 0 !important; }
 
-  /* ─── FAQ ─── */
-  .faq-section { padding: 64px 20px !important; }
+  .faq-section { padding: 56px 20px !important; }
   .faq-list { max-width: 100% !important; }
-  .faq-q { font-size: 14px !important; padding: 16px 18px !important; }
-  .faq-a { padding: 0 18px !important; }
-  .faq-item.open .faq-a { padding: 12px 18px 20px !important; }
+  .faq-q { font-size: 14px !important; padding: 15px 16px !important; }
+  .faq-a { padding: 0 16px !important; }
+  .faq-item.open .faq-a { padding: 12px 16px 18px !important; }
 
-  /* ─── SUPPORT ─── */
-  .de-support { padding: 64px 20px !important; }
-  .support-inner { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .de-support { padding: 56px 20px !important; }
+  .support-inner { grid-template-columns: 1fr !important; gap: 20px !important; }
 
-  /* ─── CONTACT ─── */
-  .de-contact { padding: 64px 20px !important; }
-  .contact-inner { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .de-contact { padding: 56px 20px !important; }
+  .contact-inner { grid-template-columns: 1fr !important; gap: 20px !important; }
   .cf-row { flex-direction: column !important; }
-  .de-form { padding: 20px 16px !important; }
+  .de-form { padding: 18px 14px !important; }
 
-  /* ─── CTA ─── */
-  .de-cta { padding: 60px 20px !important; }
-  .cta-title { font-size: 28px !important; }
+  .de-cta { padding: 56px 20px !important; }
+  .cta-title { font-size: 26px !important; }
   .cta-actions { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
   .cta-actions a { text-align: center !important; }
 
-  /* ─── FOOTER ─── */
-  .de-footer { padding: 28px 20px !important; text-align: center !important; }
-  .foot-links { flex-wrap: wrap !important; justify-content: center !important; gap: 8px 14px !important; }
-  .foot-copy { font-size: 11px !important; }
+  .de-footer { padding: 24px 20px !important; text-align: center !important; }
+  .foot-links { flex-wrap: wrap !important; justify-content: center !important; gap: 6px 12px !important; }
 
-  /* ─── TITRES SECTIONS ─── */
-  .section-title { font-size: 26px !important; line-height: 1.2 !important; }
+  /* ── TITRES ── */
+  .section-title { font-size: 24px !important; line-height: 1.2 !important; }
   .section-sub { font-size: 14px !important; }
 
-  /* ─── LEGAL PANEL ─── */
-  .legal-panel { max-height: 92vh !important; border-radius: 20px 20px 0 0 !important; }
-  .legal-body { padding: 16px 16px 40px !important; }
-  .legal-tabs { padding: 0 10px !important; overflow-x: auto !important; }
-  .legal-tab { padding: 9px 12px !important; font-size: 12px !important; }
+  /* ── LEGAL ── */
+  .legal-panel { max-height: 90vh !important; border-radius: 20px 20px 0 0 !important; }
+  .legal-body { padding: 14px 14px 36px !important; }
+  .legal-tabs { overflow-x: auto !important; padding: 0 10px !important; }
+  .legal-tab { font-size: 12px !important; padding: 8px 10px !important; }
 }
 </style>
 </head>
@@ -1712,39 +1684,40 @@ function switchLegalTab(t){
 
 /* SCROLL REVEAL */
 (function(){
-  /* Hero visible immédiatement */
-  document.querySelectorAll('.hero .r, .hero-title, .hero-sub, .hero-actions, .hero-trust, .hero-eyebrow').forEach(function(el){
+  function makeVisible(el){
+    el.style.opacity='1';
+    el.style.transform='none';
+    el.style.visibility='visible';
     el.classList.add('visible');
-    el.style.opacity = '1';
-    el.style.transform = 'none';
-  });
-  /* Fallback global 600ms */
-  setTimeout(function(){
-    document.querySelectorAll('.r').forEach(function(el){
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-      el.classList.add('visible');
-    });
-  }, 600);
-  /* IntersectionObserver pour le reste */
+  }
+
+  /* Forcer immédiatement les éléments hero */
+  document.querySelectorAll('.hero *').forEach(makeVisible);
+
+  /* Mobile : TOUT forcer visible d'emblée + libérer scroll */
+  if(window.innerWidth <= 768){
+    document.body.style.overflow='';
+    document.body.style.height='auto';
+    document.documentElement.style.overflow='';
+    document.documentElement.style.height='auto';
+    document.querySelectorAll('.r, section, section *').forEach(makeVisible);
+    return; /* pas d'observer sur mobile */
+  }
+
+  /* Desktop : IntersectionObserver classique */
   document.querySelectorAll('.r').forEach(function(el){
     var obs = new IntersectionObserver(function(entries){
       if(!entries[0].isIntersecting) return;
-      el.classList.add('visible');
+      makeVisible(el);
       obs.unobserve(el);
-    },{threshold:0.05, rootMargin:'0px 0px -20px 0px'});
+    },{threshold:0.05, rootMargin:'0px 0px -30px 0px'});
     obs.observe(el);
   });
-  /* Mobile : tout forcer visible + libérer scroll */
-  if(window.innerWidth <= 768){
-    document.querySelectorAll('.r').forEach(function(el){
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-      el.classList.add('visible');
-    });
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
-  }
+
+  /* Fallback desktop 800ms */
+  setTimeout(function(){
+    document.querySelectorAll('.r').forEach(makeVisible);
+  }, 800);
 })();
 </script>
 </body>
