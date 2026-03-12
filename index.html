@@ -137,6 +137,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .sb-glow{position:absolute;top:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(233,184,74,0.06),transparent 70%);pointer-events:none;}
 .sb-brand{padding:18px 20px 16px;border-bottom:1px solid var(--border);}
 .sb-logo{font-family:'Instrument Serif',serif;font-size:20px;color:var(--gold);display:flex;align-items:center;gap:9px;}
+.logo-follow{color:#ECF0FA;}
+.logo-offer{color:#4D90DC;}
 .sb-version{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:3px;}
 .sb-nav{padding:14px 10px;flex:1;overflow-y:auto;}
 .sb-section{margin-bottom:18px;}
@@ -785,6 +787,14 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
             <div id="pdf-extract-zone" style="display:none;">
               <div class="pdf-extract">
                 <div class="pdf-extract-title">✦ Données extraites automatiquement</div>
+                <div class="pdf-field" style="position:relative;">
+                  <span class="pdf-field-lbl">Civilité</span>
+                  <select class="pdf-field-edit" id="ex-civilite" style="cursor:pointer;">
+                    <option value="">— (aucune)</option>
+                    <option value="M.">M.</option>
+                    <option value="Mme">Mme</option>
+                  </select>
+                </div>
                 <div class="pdf-field" style="position:relative;">
                   <span class="pdf-field-lbl">Prénom / Contact</span>
                   <div style="flex:1;position:relative;">
@@ -2154,8 +2164,13 @@ async function genEmail(){
   const fileName=uploadedFile?uploadedFile.name:ref+'.pdf';
   const lignesPDF=window._pdfLignes||'';
 
-  // Prénom pour la salutation — si pas de prénom, utiliser le nom de société
-  const prenom = prenomRaw.split(' ')[0] || societeRaw.split(' ')[0] || 'Client';
+  // Civilité + prénom pour la salutation
+  const civilite = document.getElementById('ex-civilite')?.value || '';
+  // Si civilité M./Mme → utiliser NOM (dernier mot) sinon PRÉNOM (premier mot)
+  const prenomFirst = prenomRaw.split(' ')[0] || societeRaw.split(' ')[0] || 'Client';
+  const nomLast = prenomRaw.split(' ').slice(-1)[0] || prenomFirst;
+  // Avec civilité : "M. Martin" / "Mme Durand" ; sans : "Pierre"
+  const prenom = civilite ? `${civilite} ${nomLast}` : prenomFirst;
 
   document.getElementById('step-form').style.display='none';
   document.getElementById('step-loading').style.display='block';
@@ -2192,7 +2207,7 @@ RÈGLES ABSOLUES :
 2. Intègre le contexte naturellement si pertinent
 3. DONNEES STRICTES : si lignes produits fournies, utilise UNIQUEMENT ces donnees (dimensions/quantites/prix). Ne pas inventer.\n4. Mentionne l'objet concret de l'offre (pas juste "votre offre")
 5. Maximum 3-4 lignes de corps — percutant et naturel
-6. Commence DIRECTEMENT par "Bonjour ${prenom}," — RIEN avant
+6. Commence DIRECTEMENT par "Bonjour ${prenom}," — RIEN avant (${prenom} contient déjà la civilité si applicable)
 8. INTERDIT : N'écris JAMAIS "Objet :", "**Objet", ou tout en-tête
 7. INTERDIT : N'écris JAMAIS de placeholders [Prénom], [Nom], [Signature]
 9. Ne mets PAS de signature — elle sera ajoutée automatiquement
@@ -2356,6 +2371,7 @@ async function sendOffer(){
       const emailBody = rawBody && rawBody !== '—'
         ? rawBody
         : `Bonjour ${prenom},\n\nVeuillez trouver ci-joint notre offre ${ref} — ${objet} pour un montant de ${montant.toLocaleString('fr-CH')} CHF.\n\nN\'hésitez pas à me contacter pour toute question.\n\nAu plaisir d\'échanger avec vous,${buildSignature()}`;
+  // Note: prenom contient déjà la civilité si sélectionnée
       emailSent = await sendBrevoEmail({to:email, toName:entreprise ? `${prenom} — ${entreprise}` : `${prenom} ${nom}`, subject:`Offre ${ref} — ${objet}`, body:emailBody, pdfUrl, pdfName:uploadedFile?.name||`${ref}.pdf`, offerId});
     } else if(email && !CFG.senderEmail) {
       toast('⚠️', 'Renseignez votre email expéditeur dans Configuration pour envoyer');
@@ -3245,8 +3261,9 @@ function buildSignature() {
   const r = CFG.role || '';
   const c = CFG.company || '';
   const p = CFG.phone || '';
+  const w = CFG.website || '';
   if(!n && !c) return '';
-  return `\n\n--\n${n||''}${r?'\n'+r:''}${c?'\n'+c:''}${p?'\n'+p:''}`;
+  return `\n\n--\n${n||''}${r?'\n'+r:''}${c?'\n'+c:''}${p?'\n'+p:''}${w?'\n'+w:''}`;
 }
 
 // ══ TOAST ══
