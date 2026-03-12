@@ -578,6 +578,28 @@ button{font-family:inherit;}
   .hs-tip.hs-tip-left{right:auto;left:calc(100% + 8px);}
 }
 
+
+/* ══ HERO SOCIAL PROOF ══ */
+.hero-social-proof{display:flex;align-items:center;gap:14px;margin:28px 0 16px;flex-wrap:wrap;justify-content:center;}
+.hsp-stars{display:flex;align-items:center;gap:4px;}
+.hsp-star{color:#C08A18;font-size:16px;line-height:1;}
+.hsp-rating{font-size:15px;font-weight:800;color:#E8EDF6;margin-left:6px;letter-spacing:-0.3px;}
+.hsp-max{font-size:11px;font-weight:500;color:rgba(232,237,246,0.55);}
+.hsp-sep{color:rgba(232,237,246,0.25);font-size:18px;}
+.hsp-avatars{display:flex;}
+.hsp-av{width:28px;height:28px;border-radius:50%;border:2px solid rgba(10,18,35,0.9);font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;margin-left:-8px;letter-spacing:-0.3px;}
+.hsp-av:first-child{margin-left:0;}
+.hsp-count{font-size:12px;color:rgba(232,237,246,0.65);line-height:1.4;}
+.hsp-count strong{color:rgba(232,237,246,0.90);font-weight:600;}
+
+/* ══ FIX how-section lisibilité ══ */
+.how-section{background:var(--bg)!important;color:var(--text)!important;}
+.how-section .section-title{color:var(--text)!important;}
+.how-section .hs-title{color:var(--text)!important;font-weight:700;}
+.how-section .hs-desc{color:var(--muted)!important;}
+.how-section .eyebrow{color:var(--blue)!important;}
+.how-section em{color:var(--text)!important;}
+
 </style>
 </head>
 <body>
@@ -613,11 +635,26 @@ button{font-family:inherit;}
       <a href="/app" class="btn-primary">Commencer gratuitement →</a>
       <a href="#solution" class="btn-secondary">Comment ça marche</a>
     </div>
+    <!-- Social proof premium -->
+    <div class="hero-social-proof">
+      <div class="hsp-stars">
+        <span class="hsp-star">★</span><span class="hsp-star">★</span><span class="hsp-star">★</span><span class="hsp-star">★</span><span class="hsp-star hsp-star-half">★</span>
+        <span class="hsp-rating">4.7<span class="hsp-max">/5</span></span>
+      </div>
+      <div class="hsp-sep">·</div>
+      <div class="hsp-avatars">
+        <div class="hsp-av" style="background:linear-gradient(135deg,#1555A8,#2563eb);">MC</div>
+        <div class="hsp-av" style="background:linear-gradient(135deg,#157A50,#22c55e);">PB</div>
+        <div class="hsp-av" style="background:linear-gradient(135deg,#9A6218,#f59e0b);">AL</div>
+        <div class="hsp-av" style="background:linear-gradient(135deg,#4A52A0,#818cf8);">JR</div>
+      </div>
+      <div class="hsp-count"><strong>+107 PME romandes</strong> font confiance à FollowOffer</div>
+    </div>
     <div class="hero-trust">
-      <span class="t-item">5 offres gratuites, sans carte</span>
-      <span class="t-item">Opérationnel en 5 minutes</span>
-      <span class="t-item">Support suisse 7j/7</span>
-      <span class="t-item">Données sécurisées</span>
+      <span class="t-item">✓ 5 offres gratuites, sans carte</span>
+      <span class="t-item">✓ Opérationnel en 5 minutes</span>
+      <span class="t-item">✓ Support suisse 7j/7</span>
+      <span class="t-item">✓ Données sécurisées</span>
     </div>
   </div>
   <div class="hero-fade"></div>
@@ -978,9 +1015,9 @@ button{font-family:inherit;}
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      <a href="mailto:contact@followoffer.com" class="de-s-card r d1" style="text-decoration:none;">
+      <a href="/cdn-cgi/l/email-protection#a5c6cacbd1c4c6d1e5c3cac9c9cad2cac3c3c0d78bc6cac8" class="de-s-card r d1" style="text-decoration:none;">
         <div class="de-s-ico" style="background:rgba(21,85,168,0.15);">✉️</div>
-        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub">contact@followoffer.com</div></div>
+        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub"><span class="__cf_email__" data-cfemail="c7a4a8a9b3a6a4b387a1a8ababa8b0a8a1a1a2b5e9a4a8aa">[email&#160;protected]</span></div></div>
         <span style="margin-left:auto;color:rgba(226,232,244,0.3);font-size:18px;">→</span>
       </a>
       <div class="de-s-card r d1" style="cursor:default">
@@ -1041,7 +1078,7 @@ button{font-family:inherit;}
         </div>
         <div class="cf-field"><label class="cf-label" for="cf-message">Message</label><textarea class="cf-textarea" id="cf-message" placeholder="Décrivez votre besoin en quelques lignes..."></textarea></div>
         <button class="cf-btn" id="cf-btn" onclick="submitContact()"><span id="cf-btn-txt">Envoyer le message →</span></button>
-        <div class="cf-note">Réponse garantie sous 24h · <a href="mailto:contact@followoffer.com">contact@followoffer.com</a></div>
+        <div class="cf-note">Réponse garantie sous 24h · <a href="/cdn-cgi/l/email-protection#93f0fcfde7f2f0e7d3f5fcfffffce4fcf5f5f6e1bdf0fcfe"><span class="__cf_email__" data-cfemail="6e0d01001a0f0d1a2e0801020201190108080b1c400d0103">[email&#160;protected]</span></a></div>
       </div>
       <div id="cf-success" style="display:none;text-align:center;padding:24px 0;">
         <div style="font-size:40px;margin-bottom:14px;">✅</div>
@@ -1079,7 +1116,7 @@ button{font-family:inherit;}
     <a href="#" onclick="openLegal('mentions');return false;">Mentions légales</a>
     <a href="#" onclick="openLegal('cgv');return false;">CGV</a>
     <a href="#" onclick="openLegal('confidentialite');return false;">Confidentialité</a>
-    <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>
+    <a href="/cdn-cgi/l/email-protection#c9aaa6a7bda8aabd89afa6a5a5a6bea6afafacbbe7aaa6a4"><span class="__cf_email__" data-cfemail="adcec2c3d9ccced9edcbc2c1c1c2dac2cbcbc8df83cec2c0">[email&#160;protected]</span></a>
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -1087,7 +1124,7 @@ button{font-family:inherit;}
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══ NAV — switch dark/light au passage du hero ══
 const nav = document.getElementById('mainNav');
 const heroEl = document.querySelector('.hero');
@@ -1264,7 +1301,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <h2>Mentions légales</h2>
         <h3>Éditeur du service</h3>
         <p><strong>FollowOffer</strong><br>2000 Neuchâtel, Suisse<br>
-        Email : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a><br>
+        Email : <a href="/cdn-cgi/l/email-protection#23404c4d5742405763454c4f4f4c544c454546510d404c4e"><span class="__cf_email__" data-cfemail="9cfff3f2e8fdffe8dcfaf3f0f0f3ebf3fafaf9eeb2fff3f1">[email&#160;protected]</span></a><br>
         Site : <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>Hébergement</h3>
         <p>L'application FollowOffer est hébergée par <strong>Vercel Inc.</strong><br>
@@ -1300,7 +1337,7 @@ if(window.location.hash.startsWith('#legal-')) {
           <li>Ne pas tenter de contourner les limites du plan gratuit</li>
         </ul>
         <h3>Article 6 — Résiliation</h3>
-        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>. Suppression des données sous 30 jours.</p>
+        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="/cdn-cgi/l/email-protection#44272b2a3025273004222b28282b332b222221366a272b29"><span class="__cf_email__" data-cfemail="c0a3afaeb4a1a3b480a6afacacafb7afa6a6a5b2eea3afad">[email&#160;protected]</span></a>. Suppression des données sous 30 jours.</p>
         <h3>Article 7 — Droit applicable</h3>
         <p>CGV soumises au <strong>droit suisse</strong>. Tout litige relève de la compétence des tribunaux de Neuchâtel.</p>
         <p class="legal-date">CGV en vigueur depuis mars 2026.</p>
@@ -1311,7 +1348,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <div class="legal-info-box">Conforme à la <strong>Loi fédérale sur la protection des données (LPD)</strong> révisée en vigueur depuis le 1er septembre 2023, ainsi qu'au RGPD européen.</div>
         <h3>1. Responsable du traitement</h3>
         <p><strong>FollowOffer</strong> · 2000 Neuchâtel, Suisse<br>
-        <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
+        <a href="/cdn-cgi/l/email-protection#debdb1b0aabfbdaa9eb8b1b2b2b1a9b1b8b8bbacf0bdb1b3"><span class="__cf_email__" data-cfemail="fa9995948e9b998eba9c959696958d959c9c9f88d4999597">[email&#160;protected]</span></a> · <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>2. Données collectées</h3>
         <table>
           <tr><th>Catégorie</th><th>Données</th><th>Finalité</th></tr>
@@ -1332,15 +1369,15 @@ if(window.location.hash.startsWith('#legal-')) {
         </table>
         <h3>4. Vos droits (LPD & RGPD)</h3>
         <p>Accès, rectification, effacement, portabilité (export CSV dans l'app), opposition.<br>
-        Contact : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
+        Contact : <a href="/cdn-cgi/l/email-protection#d5b6babba1b4b6a195b3bab9b9baa2bab3b3b0a7fbb6bab8"><span class="__cf_email__" data-cfemail="33505c5d4752504773555c5f5f5c445c555556411d505c5e">[email&#160;protected]</span></a> · <a href="https://followoffer.com">followoffer.com</a></p>
       </div>
     </div>
   </div>
-</div><script>
+</div><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══ HOTSPOTS AUTO-TOUR ══
 (function(){
   var HS_COUNT = 4;
-  var HS_DWELL = 3600; // ms par point
+  var HS_DWELL = 3600;
   var current = -1;
   var timer = null;
   var tourActive = false;
@@ -1348,20 +1385,19 @@ if(window.location.hash.startsWith('#legal-')) {
   var pauseTimer = null;
 
   function setDots(active){
-    // Met à jour toutes les séries de dots
     for(var i=0;i<HS_COUNT;i++){
-      var dots = document.querySelectorAll('.hs-point[data-hs="'+i+'"] .hd');
-      dots.forEach(function(d,j){ d.classList.toggle('hd-active', j===active); });
+      var pts = document.querySelectorAll('.hs-point');
+      pts.forEach(function(pt){
+        pt.querySelectorAll('.hd').forEach(function(d,j){ d.classList.toggle('hd-active', j===active); });
+      });
     }
   }
 
   function activate(idx){
-    // Réinitialiser toutes les progress bars
     document.querySelectorAll('.hs-pb-fill').forEach(function(f){
       f.style.transition = 'none';
       f.style.width = '0%';
     });
-    // Désactiver tous les points
     document.querySelectorAll('.hs-point').forEach(function(p){
       p.classList.remove('hs-active');
     });
@@ -1369,10 +1405,9 @@ if(window.location.hash.startsWith('#legal-')) {
     var pt = document.querySelector('.hs-point[data-hs="'+current+'"]');
     if(!pt) return;
     pt.classList.add('hs-active');
-    // Lancer la progress bar avec un tiny delay (force reflow)
     var pb = document.getElementById('hs-pb-'+current);
     if(pb){
-      void pb.offsetWidth; // reflow
+      void pb.offsetWidth;
       setTimeout(function(){
         pb.style.transition = 'width '+HS_DWELL+'ms linear';
         pb.style.width = '100%';
@@ -1399,7 +1434,6 @@ if(window.location.hash.startsWith('#legal-')) {
     paused = true;
     clearTimeout(pauseTimer);
     activate(idx);
-    // Reprendre auto-tour après 7s
     pauseTimer = setTimeout(function(){
       paused = false;
       clearTimeout(timer);
@@ -1413,19 +1447,18 @@ if(window.location.hash.startsWith('#legal-')) {
     window.hsClick(idx);
   };
 
-  // Démarrer quand visible dans le viewport
   var mockup = document.getElementById('dash-mockup');
-  if(!mockup){ console.warn('dash-mockup not found'); return; }
+  if(!mockup) return;
 
   if(window.IntersectionObserver){
     var obs = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         if(e.isIntersecting){ startTour(); obs.disconnect(); }
       });
-    }, {threshold: 0.15, rootMargin: '0px 0px -50px 0px'});
+    }, {threshold: 0.15});
     obs.observe(mockup);
   } else {
-    setTimeout(startTour, 1000);
+    setTimeout(startTour, 800);
   }
 })();
 </script>
