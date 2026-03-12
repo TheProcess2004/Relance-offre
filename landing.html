@@ -391,6 +391,8 @@ button{font-family:inherit;}
 .faq-arr{color:var(--muted3);font-size:20px;transition:transform 0.3s,color 0.2s;flex-shrink:0;font-weight:300;line-height:1;}
 .faq-q.open .faq-arr{transform:rotate(45deg);color:var(--blue);}
 .faq-a{overflow:hidden;max-height:0;transition:max-height 0.35s ease,padding 0.25s;background:var(--bg);padding:0 26px;}
+.faq-item.open .faq-a{max-height:600px;padding:16px 26px 24px;}
+.faq-item.open .faq-arr{transform:rotate(45deg);}
 .faq-a.open{max-height:260px;padding-bottom:22px;}
 .faq-a p{font-size:13.5px;color:var(--muted);line-height:1.75;}
 
@@ -566,9 +568,8 @@ button{font-family:inherit;}
   width: 100%; max-width: 880px; max-height: 86vh;
   background: #F8F9FB; border-radius: 20px 20px 0 0;
   display: flex; flex-direction: column;
-  transform: translateY(100%);
-  transition: transform 0.38s cubic-bezier(0.32,0.72,0,1);
   overflow: hidden; box-shadow: 0 -20px 60px rgba(0,0,0,0.4);
+  margin-top: auto;
 }
 .legal-overlay.open .legal-panel { transform: translateY(0); }
 .legal-panel-header {
@@ -625,10 +626,64 @@ button{font-family:inherit;}
 .lpanel { display: none; }
 .lpanel.active { display: block; }
 @media (max-width: 600px) {
+  /* LEGAL */
   .legal-panel { max-height: 92vh; }
   .legal-body { padding: 20px 20px 48px; }
   .legal-tabs { padding: 0 12px; overflow-x: auto; }
   .legal-tab { padding: 10px 12px; font-size: 12px; }
+
+  /* NAV */
+  .nav { height: 56px !important; padding: 0 16px !important; }
+  .nav-links { display: none !important; }
+  .btn-ghost { display: none !important; }
+  .nav-logo span { font-size: 15px !important; }
+
+  /* HERO */
+  .hero { padding: 90px 20px 60px !important; min-height: auto !important; }
+  .hero-title { font-size: 32px !important; line-height: 1.15 !important; }
+  .hero-sub { font-size: 14px !important; }
+  .hero-actions { flex-direction: column !important; gap: 10px !important; align-items: center !important; }
+  .hero-actions a { width: 100% !important; text-align: center !important; }
+  .hero-trust { flex-direction: column !important; gap: 8px !important; align-items: center !important; }
+
+  /* MOCKUP */
+  .mockup-wrap-outer { display: none !important; }
+
+  /* SECTIONS */
+  .section-title { font-size: 26px !important; }
+  .problem-inner, .support-inner, .contact-inner { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .features-grid { grid-template-columns: 1fr !important; }
+  .how-steps { grid-template-columns: 1fr !important; }
+  .testi-grid { grid-template-columns: 1fr !important; }
+
+  /* COMPARATEUR — caché sur mobile */
+  .comp-section { display: none !important; }
+
+  /* PRICING */
+  .pricing-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  /* FAQ */
+  .faq-q { font-size: 14px !important; padding: 18px 20px !important; }
+
+  /* SECTORS */
+  .sectors-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+  .s-card-item { padding: 10px 12px !important; }
+
+  /* STATS */
+  .stats-inner { grid-template-columns: 1fr !important; gap: 24px !important; }
+
+  /* FOOTER */
+  .foot-links { flex-direction: column !important; gap: 10px !important; align-items: center !important; }
+
+  /* CONTACT FORM */
+  .de-contact .contact-inner { grid-template-columns: 1fr !important; }
+  .cf-row { flex-direction: column !important; }
+
+  /* SUPPORT */
+  .de-support .support-inner { grid-template-columns: 1fr !important; }
+
+  /* HOTSPOTS — cachés sur mobile */
+  .hs-point, .hs-tip, .hs-ring, .hs-dot, .hs-pb, .hs-pb-fill, .hd { display: none !important; visibility: hidden !important; }
 }
 
 
@@ -1852,12 +1907,18 @@ function toggleFaq(b){
 /* LEGAL MODAL */
 function openLegal(t){
   var m=document.getElementById('legal-modal');
-  if(m){m.style.display='flex';document.body.style.overflow='hidden';}
+  if(!m)return;
+  m.style.display='flex';
+  m.style.alignItems='flex-end';
+  m.style.justifyContent='center';
+  document.body.style.overflow='hidden';
   if(t){switchLegalTab(t);}
 }
 function closeLegal(){
   var m=document.getElementById('legal-modal');
-  if(m){m.style.display='none';document.body.style.overflow='';}
+  if(!m)return;
+  m.style.display='none';
+  document.body.style.overflow='';
 }
 function switchLegalTab(t){
   document.querySelectorAll('.legal-tab').forEach(function(x){x.classList.remove('active');});
