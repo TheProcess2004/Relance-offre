@@ -104,7 +104,7 @@ button{font-family:inherit;}
 }
 /* Fondu bas vers zone mockup */
 .hero-fade{
-  position:absolute;bottom:0;left:0;right:0;height:35%;z-index:4;
+  position:absolute;bottom:0;left:0;right:0;height:220px;z-index:4;
   background:linear-gradient(to bottom,transparent 0%,#04080F 100%);
   pointer-events:none;
 }
@@ -194,7 +194,7 @@ button{font-family:inherit;}
 .msb-nav.on{background:var(--blue3);color:var(--blue);}
 .mw-main{padding:14px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;gap:8px;background:var(--bg);}
 .m-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
-.m-kv{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;}
+.m-kv{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;white-space:nowrap;}
 .m-kl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-top:5px;font-weight:600;}
 .m-chart{background:var(--bg2);border:1px solid var(--border);border-radius:10px;grid-column:span 3;padding:12px;}
 .m-ch-title{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
@@ -710,111 +710,194 @@ button{font-family:inherit;}
 /* ── Mobile ≤ 600px ──────────────────────────────────── */
 @media (max-width: 600px) {
 
-  /* Base anti-overflow */
   html, body { overflow-x: hidden; max-width: 100vw; }
 
-  /* NAV */
-  .nav { padding: 0 16px !important; }
+  /* ── NAV ── */
+  .nav {
+    padding: 0 16px !important;
+    height: 56px !important;
+  }
   .nav-links { display: none !important; }
-  .nav-actions { gap: 6px !important; }
-  .btn-ghost { padding: 7px 10px !important; font-size: 12px !important; }
-  .btn-nav { padding: 8px 14px !important; font-size: 12px !important; }
+  /* Cacher "Se connecter" sur mobile, garder juste le CTA */
+  .btn-ghost { display: none !important; }
+  .btn-nav {
+    padding: 9px 16px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
 
-  /* HERO */
-  .hero { padding: 88px 20px 100px !important; }
-  .hero-eyebrow { font-size: 9px !important; padding: 4px 12px 4px 9px !important; margin-bottom: 22px !important; }
-  .hero-title { font-size: clamp(32px, 8.5vw, 46px) !important; line-height: 1.08 !important; letter-spacing: -0.8px !important; margin-bottom: 18px !important; }
-  .hero-sub { font-size: 14px !important; margin-bottom: 28px !important; }
-  .hero-actions { flex-direction: column !important; gap: 10px !important; width: 100% !important; margin-bottom: 28px !important; }
-  .btn-primary, .btn-secondary { width: 100% !important; justify-content: center !important; font-size: 14px !important; padding: 14px 20px !important; }
-  .hero-social-proof { flex-direction: column !important; gap: 8px !important; align-items: center !important; margin: 0 0 16px !important; }
-  .hero-trust { flex-direction: column !important; gap: 7px !important; align-items: center !important; }
+  /* ── HERO ── */
+  .hero {
+    min-height: auto !important;
+    padding: 96px 20px 60px !important;
+  }
+  /* Canvas ok mais ne doit pas bloquer le texte */
+  #hero-canvas { opacity: 0.65; pointer-events: none !important; }
+  .hero-glow { display: none !important; }  /* Simplifier sur mobile */
+  .hero-bg-gradient {
+    background:
+      radial-gradient(ellipse 130% 50% at 50% 0%, rgba(18,68,160,0.55) 0%,transparent 65%),
+      #04080F !important;
+  }
+  .hero-fade { height: 20% !important; }
+
+  .hero-eyebrow {
+    font-size: 9px !important;
+    padding: 4px 11px 4px 8px !important;
+    margin-bottom: 18px !important;
+    letter-spacing: 0.5px !important;
+  }
+  .hero-title {
+    font-size: 34px !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.8px !important;
+    margin-bottom: 16px !important;
+  }
+  .hero-sub {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    margin-bottom: 28px !important;
+  }
+  .hero-actions {
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+    margin-bottom: 32px !important;
+  }
+  .btn-primary {
+    width: 100% !important;
+    justify-content: center !important;
+    font-size: 15px !important;
+    padding: 15px 20px !important;
+  }
+  .btn-secondary {
+    width: 100% !important;
+    justify-content: center !important;
+    font-size: 13px !important;
+    padding: 12px 20px !important;
+  }
+  /* Social proof compact */
+  .hero-social-proof {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    margin: 0 0 20px !important;
+  }
+  .hsp-count { font-size: 11px !important; }
+  /* Trust items en 2 colonnes */
+  .hero-trust {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px 12px !important;
+    text-align: left !important;
+  }
   .t-item { font-size: 11px !important; }
-  /* Canvas : laisser tourner mais réduire intensité */
-  #hero-canvas { opacity: 0.75; }
-  .hero-glow { width: 280px !important; height: 300px !important; }
 
-  /* MOCKUP — visible mais compact sur mobile */
-  .mockup-wrap-outer { padding: 0 14px 60px !important; }
+  /* ── MOCKUP ── */
+  .mockup-wrap-outer {
+    padding: 0 12px 50px !important;
+  }
   .mockup-section { padding: 0 !important; }
-  .mockup-wrap { border-radius: 10px !important; }
-  .mw-bar { height: 30px !important; padding: 0 10px !important; gap: 6px !important; }
-  .mdot { width: 9px !important; height: 9px !important; }
-  .mw-pill { font-size: 9px !important; padding: 3px 10px !important; }
+  .mockup-wrap { border-radius: 10px !important; overflow: hidden !important; }
+  .mw-bar {
+    height: 28px !important;
+    padding: 0 10px !important;
+    gap: 5px !important;
+  }
+  .mdot { width: 8px !important; height: 8px !important; }
+  .mw-pill { font-size: 9px !important; padding: 2px 9px !important; }
+  /* Cacher sidebar */
   .mw-sb { display: none !important; }
   .mw-body { grid-template-columns: 1fr !important; }
+  /* Main grid: 2 KPI seulement, puis chart */
   .mw-main {
+    display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    padding: 10px !important;
+    padding: 8px !important;
     gap: 6px !important;
+    background: var(--bg) !important;
   }
-  .m-kpi:nth-child(3), .m-kpi:nth-child(4) { display: none !important; }
-  .m-chart { grid-column: span 2 !important; }
+  /* Garder seulement les 2 premiers KPI */
+  .m-kpi { padding: 8px 10px !important; }
+  .m-kpi:nth-child(3),
+  .m-kpi:nth-child(4) { display: none !important; }
+  .m-kv {
+    font-size: 20px !important;
+    white-space: nowrap !important;
+  }
+  .m-kl { font-size: 8px !important; }
+  /* Chart pleine largeur */
+  .m-chart {
+    grid-column: 1 / -1 !important;
+    padding: 10px !important;
+  }
+  .m-ch-title { font-size: 9px !important; }
+  .m-bl { font-size: 8px !important; width: 46px !important; }
+  .m-bn { font-size: 8px !important; }
+  /* Masquer donut */
   .m-donut-wrap { display: none !important; }
-  .m-kv { font-size: 15px !important; }
+  /* Masquer hotspots */
   .hs-point, .hs-bar { display: none !important; }
 
-  /* SECTIONS */
-  .problem-section, .solution-section, .stats-section, .sectors-section,
-  .features-section, .feat-section, .how-section, .testi-section,
-  .pricing-section, .faq-section, .support-section, .comp-section {
-    padding-top: 64px !important;
-    padding-bottom: 64px !important;
+  /* ── SECTIONS GÉNÉRALES ── */
+  section {
     padding-left: 20px !important;
     padding-right: 20px !important;
+  }
+  .problem-section, .solution-section, .stats-section, .sectors-section,
+  .feat-section, .how-section, .testi-section, .pricing-section,
+  .faq-section, .support-section, .comp-section {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
   }
   .de-support, .de-contact, .de-cta {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
-  .section-title { font-size: clamp(24px, 7vw, 32px) !important; }
+  .section-title { font-size: 26px !important; line-height: 1.15 !important; }
   .section-sub { font-size: 14px !important; }
 
-  /* TICKER */
-  .sectors-ticker-wrap {
-    margin: 24px 0 0 !important;
-    overflow: hidden !important;
-  }
+  /* ── TICKER ── */
+  .sectors-ticker-wrap { margin: 20px 0 0 !important; overflow: hidden !important; }
 
-  /* STATS */
+  /* ── STATS ── */
   .stats-inner { grid-template-columns: 1fr 1fr !important; }
-  .stat-item { border-right: none !important; border-bottom: 1px solid var(--border) !important; }
+  .stat-item { border-right: none !important; padding: 20px 16px !important; }
 
-  /* FEATS */
-  .feat-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  /* ── FEATURES ── */
+  .feat-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
 
-  /* HOW */
-  .how-steps { grid-template-columns: 1fr 1fr !important; gap: 16px !important; }
+  /* ── HOW ── */
+  .how-steps { grid-template-columns: 1fr 1fr !important; gap: 14px !important; }
   .how-steps::before { display: none !important; }
 
-  /* TESTI */
+  /* ── TESTI ── */
   .testi-grid { grid-template-columns: 1fr !important; }
 
-  /* PRICING */
-  .pricing-cards { grid-template-columns: 1fr !important; gap: 14px !important; }
+  /* ── PRICING ── */
+  .pricing-cards { grid-template-columns: 1fr !important; gap: 12px !important; }
   .p-featured { transform: none !important; }
 
-  /* COMP TABLE */
-  .comp-table th, .comp-table td { padding: 9px 8px !important; font-size: 11px !important; }
+  /* ── COMP TABLE ── */
+  .comp-table th, .comp-table td { padding: 8px 6px !important; font-size: 11px !important; }
   .comp-th-label { display: none !important; }
 
-  /* FOOTER */
+  /* ── FOOTER ── */
   .footer {
     grid-template-columns: 1fr !important;
     text-align: center !important;
-    padding: 28px 20px !important;
-    gap: 16px !important;
+    padding: 24px 20px !important;
+    gap: 14px !important;
   }
   .foot-links { justify-content: center !important; flex-wrap: wrap !important; gap: 10px !important; }
   .foot-copy { text-align: center !important; }
   .de-footer {
     grid-template-columns: 1fr !important;
     text-align: center !important;
-    padding: 28px 20px !important;
-    gap: 16px !important;
+    padding: 24px 20px !important;
+    gap: 12px !important;
   }
 }
-
 </style>
 </head>
 <body>
@@ -1599,151 +1682,94 @@ if(window.location.hash.startsWith('#legal-')) {
   var canvas = document.getElementById('hero-canvas');
   if(!canvas) return;
   var ctx = canvas.getContext('2d');
-
-  var W, H, hexes = [], nodes = [], lines = [];
-  var HEX_SIZE = 38; // rayon hex
-  var NODE_COUNT = 18;
-  var LINE_COUNT = 12;
-
+  var W, H, hexes=[], nodes=[], lines=[];
+  var HEX_SIZE=38, NODE_COUNT=18, LINE_COUNT=12;
   function resize(){
-    W = canvas.width  = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
+    W=canvas.width=canvas.offsetWidth;
+    H=canvas.height=canvas.offsetHeight;
     buildGrid();
   }
-
-  // Calcul des centres hexagonaux
   function buildGrid(){
-    hexes = [];
-    var w = HEX_SIZE * 2;
-    var h = Math.sqrt(3) * HEX_SIZE;
-    var cols = Math.ceil(W / (w * 0.75)) + 2;
-    var rows = Math.ceil(H / h) + 2;
-    for(var r = -1; r < rows; r++){
-      for(var c = -1; c < cols; c++){
-        var x = c * w * 0.75;
-        var y = r * h + (c % 2 === 0 ? 0 : h / 2);
-        hexes.push({x: x, y: y});
+    hexes=[];
+    var w=HEX_SIZE*2, h=Math.sqrt(3)*HEX_SIZE;
+    var cols=Math.ceil(W/(w*0.75))+2, rows=Math.ceil(H/h)+2;
+    for(var r=-1;r<rows;r++){
+      for(var c=-1;c<cols;c++){
+        hexes.push({x:c*w*0.75, y:r*h+(c%2===0?0:h/2)});
       }
     }
-    // Sélectionner les noeuds lumineux
-    nodes = [];
-    var shuffled = hexes.slice().sort(function(){ return Math.random() - 0.5; });
-    for(var i = 0; i < Math.min(NODE_COUNT, shuffled.length); i++){
-      if(shuffled[i].x > 0 && shuffled[i].x < W && shuffled[i].y > 20 && shuffled[i].y < H * 0.75){
-        nodes.push({
-          x: shuffled[i].x, y: shuffled[i].y,
-          pulse: Math.random() * Math.PI * 2,
-          speed: 0.015 + Math.random() * 0.025,
-          baseR: 2 + Math.random() * 2.5
-        });
-      }
+    nodes=[];
+    var shuffled=hexes.slice().sort(function(){return Math.random()-0.5;});
+    for(var i=0;i<shuffled.length&&nodes.length<NODE_COUNT;i++){
+      var hx=shuffled[i].x,hy=shuffled[i].y;
+      if(hx>20&&hx<W-20&&hy>20&&hy<H*0.72) nodes.push({x:hx,y:hy,pulse:Math.random()*Math.PI*2,speed:0.015+Math.random()*0.025,baseR:2+Math.random()*2.5});
     }
-    // Lignes de connexion entre noeuds proches
-    lines = [];
-    for(var a = 0; a < nodes.length; a++){
-      for(var b = a+1; b < nodes.length; b++){
-        var dx = nodes[a].x - nodes[b].x;
-        var dy = nodes[a].y - nodes[b].y;
-        var d = Math.sqrt(dx*dx + dy*dy);
-        if(d < HEX_SIZE * 3.5 && lines.length < LINE_COUNT){
-          lines.push({a: a, b: b, d: d});
-        }
+    lines=[];
+    for(var a=0;a<nodes.length;a++){
+      for(var b=a+1;b<nodes.length&&lines.length<LINE_COUNT;b++){
+        var dx=nodes[a].x-nodes[b].x,dy=nodes[a].y-nodes[b].y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<HEX_SIZE*3.5) lines.push({a:a,b:b,d:d});
       }
     }
   }
-
-  function hexPath(cx, cy, r){
+  function hexPath(cx,cy,r){
     ctx.beginPath();
-    for(var i = 0; i < 6; i++){
-      var angle = Math.PI / 180 * (60 * i - 30);
-      var px = cx + r * Math.cos(angle);
-      var py = cy + r * Math.sin(angle);
-      if(i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-    }
+    for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);var px=cx+r*Math.cos(a),py=cy+r*Math.sin(a);i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}
     ctx.closePath();
   }
-
   function draw(ts){
-    ctx.clearRect(0, 0, W, H);
-
-    // ── Hexagones ──────────────────────────────
-    for(var i = 0; i < hexes.length; i++){
-      var hx = hexes[i].x, hy = hexes[i].y;
-      // Visibilité selon distance au centre et vers le bas
-      var distX = (hx - W/2) / W;
-      var distY = hy / H;
-      var alpha = Math.max(0, 0.28 - Math.abs(distX) * 0.5 - Math.max(0, distY - 0.6) * 0.8);
-      if(alpha < 0.01) continue;
-
-      ctx.strokeStyle = 'rgba(55,100,200,' + alpha.toFixed(3) + ')';
-      ctx.lineWidth = 0.8;
-      hexPath(hx, hy, HEX_SIZE - 1);
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<hexes.length;i++){
+      var hx=hexes[i].x,hy=hexes[i].y;
+      var distX=(hx-W/2)/W,distY=hy/H;
+      var alpha=Math.max(0,0.30-Math.abs(distX)*0.5-Math.max(0,distY-0.55)*0.9);
+      if(alpha<0.01) continue;
+      ctx.strokeStyle='rgba(55,100,200,'+alpha.toFixed(3)+')';
+      ctx.lineWidth=0.85;
+      hexPath(hx,hy,HEX_SIZE-1);
       ctx.stroke();
     }
-
-    // ── Lignes de connexion ────────────────────
-    for(var l = 0; l < lines.length; l++){
-      var na = nodes[lines[l].a], nb = nodes[lines[l].b];
-      var pulse = (Math.sin(ts * 0.001 + l) + 1) / 2;
-      var alpha2 = 0.08 + pulse * 0.18;
-      var grad = ctx.createLinearGradient(na.x, na.y, nb.x, nb.y);
-      grad.addColorStop(0, 'rgba(77,143,232,' + alpha2.toFixed(3) + ')');
-      grad.addColorStop(0.5, 'rgba(100,165,255,' + (alpha2 * 1.6).toFixed(3) + ')');
-      grad.addColorStop(1, 'rgba(77,143,232,' + alpha2.toFixed(3) + ')');
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.moveTo(na.x, na.y);
-      ctx.lineTo(nb.x, nb.y);
-      ctx.stroke();
+    for(var l=0;l<lines.length;l++){
+      var na=nodes[lines[l].a],nb=nodes[lines[l].b];
+      var p=(Math.sin(ts*0.001+l)+1)/2;
+      var a2=0.08+p*0.20;
+      var g=ctx.createLinearGradient(na.x,na.y,nb.x,nb.y);
+      g.addColorStop(0,'rgba(77,143,232,'+a2.toFixed(3)+')');
+      g.addColorStop(0.5,'rgba(100,165,255,'+(a2*1.7).toFixed(3)+')');
+      g.addColorStop(1,'rgba(77,143,232,'+a2.toFixed(3)+')');
+      ctx.strokeStyle=g;ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);ctx.stroke();
     }
-
-    // ── Noeuds lumineux ────────────────────────
-    for(var n = 0; n < nodes.length; n++){
-      var nd = nodes[n];
-      nd.pulse += nd.speed;
-      var glow = (Math.sin(nd.pulse) + 1) / 2;
-      var r = nd.baseR + glow * 2.5;
-
-      // Halo externe
-      var halo = ctx.createRadialGradient(nd.x, nd.y, 0, nd.x, nd.y, r * 5);
-      halo.addColorStop(0, 'rgba(100,170,255,' + (0.55 + glow * 0.35).toFixed(2) + ')');
-      halo.addColorStop(0.4, 'rgba(77,143,232,' + (0.15 + glow * 0.15).toFixed(2) + ')');
-      halo.addColorStop(1, 'rgba(77,143,232,0)');
-      ctx.beginPath();
-      ctx.arc(nd.x, nd.y, r * 5, 0, Math.PI * 2);
-      ctx.fillStyle = halo;
-      ctx.fill();
-
-      // Coeur lumineux
-      var core = ctx.createRadialGradient(nd.x, nd.y, 0, nd.x, nd.y, r);
-      core.addColorStop(0, 'rgba(200,225,255,' + (0.9 + glow * 0.1).toFixed(2) + ')');
-      core.addColorStop(0.5, 'rgba(100,160,240,' + (0.7 + glow * 0.2).toFixed(2) + ')');
-      core.addColorStop(1, 'rgba(50,100,200,0)');
-      ctx.beginPath();
-      ctx.arc(nd.x, nd.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = core;
-      ctx.fill();
+    for(var n=0;n<nodes.length;n++){
+      var nd=nodes[n];nd.pulse+=nd.speed;
+      var gw=(Math.sin(nd.pulse)+1)/2;
+      var r=nd.baseR+gw*2.5;
+      var h1=ctx.createRadialGradient(nd.x,nd.y,0,nd.x,nd.y,r*5);
+      h1.addColorStop(0,'rgba(100,170,255,'+(0.55+gw*0.35).toFixed(2)+')');
+      h1.addColorStop(0.4,'rgba(77,143,232,'+(0.15+gw*0.15).toFixed(2)+')');
+      h1.addColorStop(1,'rgba(77,143,232,0)');
+      ctx.beginPath();ctx.arc(nd.x,nd.y,r*5,0,Math.PI*2);ctx.fillStyle=h1;ctx.fill();
+      var c1=ctx.createRadialGradient(nd.x,nd.y,0,nd.x,nd.y,r);
+      c1.addColorStop(0,'rgba(220,235,255,'+(0.9+gw*0.1).toFixed(2)+')');
+      c1.addColorStop(0.5,'rgba(100,160,240,'+(0.7+gw*0.2).toFixed(2)+')');
+      c1.addColorStop(1,'rgba(50,100,200,0)');
+      ctx.beginPath();ctx.arc(nd.x,nd.y,r,0,Math.PI*2);ctx.fillStyle=c1;ctx.fill();
     }
-
     requestAnimationFrame(draw);
   }
-
-  // Init
-  window.addEventListener('resize', function(){ resize(); });
+  window.addEventListener('resize',function(){resize();});
   resize();
   requestAnimationFrame(draw);
 })();
 
-
+/* ═══ HOTSPOTS ═══ */
 (function(){
   var HS_COUNT=4,HS_DWELL=3600,current=-1,timer=null,tourActive=false,paused=false,pauseTimer=null;
   function activate(idx){
     document.querySelectorAll('.hs-pb-fill').forEach(function(f){f.style.transition='none';f.style.width='0%';});
     document.querySelectorAll('.hs-point').forEach(function(p){p.classList.remove('hs-active');});
     current=((idx%HS_COUNT)+HS_COUNT)%HS_COUNT;
-    var pt=document.querySelector('.hs-point[data-hs="'+current+'"]');
-    if(!pt)return;
+    var pt=document.querySelector('.hs-point[data-hs="'+current+'"]');if(!pt)return;
     pt.classList.add('hs-active');
     var pb=document.getElementById('hs-pb-'+current);
     if(pb){void pb.offsetWidth;setTimeout(function(){pb.style.transition='width '+HS_DWELL+'ms linear';pb.style.width='100%';},20);}
@@ -1751,56 +1777,51 @@ if(window.location.hash.startsWith('#legal-')) {
   function next(){if(!paused)activate(current+1);timer=setTimeout(next,HS_DWELL);}
   function startTour(){if(tourActive)return;tourActive=true;activate(0);timer=setTimeout(next,HS_DWELL);}
   window.hsClick=function(idx){clearTimeout(timer);paused=true;clearTimeout(pauseTimer);activate(idx);pauseTimer=setTimeout(function(){paused=false;timer=setTimeout(next,HS_DWELL);},7000);};
-  var mockup=document.getElementById('dash-mockup');
-  if(!mockup)return;
+  var mockup=document.getElementById('dash-mockup');if(!mockup)return;
   if(window.IntersectionObserver){
-    var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){startTour();obs.disconnect();}});},{threshold:0.15});
-    obs.observe(mockup);
-  }else{setTimeout(startTour,800);}
+    new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){startTour();this.disconnect();}},this);},{threshold:0.15}).observe(mockup);
+  }else setTimeout(startTour,800);
 })();
+
+/* ═══ NAV SCROLL ═══ */
 (function(){
-  var nav=document.getElementById('mainNav'),heroEl=document.querySelector('.hero');
-  function updateNav(){
-    if(!nav||!heroEl)return;
-    var hb=heroEl.offsetTop+heroEl.offsetHeight-80;
-    if(window.scrollY>=hb){nav.classList.add('is-light');nav.classList.remove('is-dark');}
-    else{nav.classList.add('is-dark');nav.classList.remove('is-light');}
-  }
-  window.addEventListener('scroll',updateNav,{passive:true});
-  updateNav();
+  var nav=document.getElementById('mainNav'),hero=document.querySelector('.hero');
+  function upd(){if(!nav||!hero)return;var hb=hero.offsetTop+hero.offsetHeight-80;window.scrollY>=hb?(nav.classList.add('is-light'),nav.classList.remove('is-dark')):(nav.classList.remove('is-light'));}
+  window.addEventListener('scroll',upd,{passive:true});upd();
 })();
-function toggleFaq(btn){
-  var item=btn.parentElement,isOpen=item.classList.contains('open');
-  document.querySelectorAll('.faq-item.open').forEach(function(i){i.classList.remove('open');});
-  if(!isOpen)item.classList.add('open');
-}
-function openLegal(tab){document.getElementById('legal-modal').style.display='flex';document.body.style.overflow='hidden';if(tab)switchLegalTab(tab);}
+
+/* ═══ FAQ ═══ */
+function toggleFaq(b){var i=b.parentElement,o=i.classList.contains('open');document.querySelectorAll('.faq-item.open').forEach(function(x){x.classList.remove('open');});if(!o)i.classList.add('open');}
+
+/* ═══ LEGAL ═══ */
+function openLegal(t){document.getElementById('legal-modal').style.display='flex';document.body.style.overflow='hidden';if(t)switchLegalTab(t);}
 function closeLegal(){document.getElementById('legal-modal').style.display='none';document.body.style.overflow='';}
-function switchLegalTab(tab){
-  document.querySelectorAll('.legal-tab').forEach(function(t){t.classList.remove('active');});
-  document.querySelectorAll('.legal-pane').forEach(function(p){p.style.display='none';});
-  var btn=document.querySelector('.legal-tab[data-tab="'+tab+'"]'),pane=document.getElementById('legal-'+tab);
-  if(btn)btn.classList.add('active');
-  if(pane)pane.style.display='block';
+function switchLegalTab(t){
+  document.querySelectorAll('.legal-tab').forEach(function(x){x.classList.remove('active');});
+  document.querySelectorAll('.legal-pane').forEach(function(x){x.style.display='none';});
+  var b=document.querySelector('.legal-tab[data-tab="'+t+'"]'),p=document.getElementById('legal-'+t);
+  if(b)b.classList.add('active');if(p)p.style.display='block';
 }
+
+/* ═══ COUNTERS ═══ */
 (function(){
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(!entry.isIntersecting)return;
-      var el=entry.target,target=parseInt(el.getAttribute('data-count')),suffix=el.getAttribute('data-suffix')||'';
-      var start=null;
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    new IntersectionObserver(function(entries){entries.forEach(function(e){
+      if(!e.isIntersecting)return;
+      var target=parseInt(el.getAttribute('data-count')),suffix=el.getAttribute('data-suffix')||'',start=null;
       function step(ts){if(!start)start=ts;var p=Math.min((ts-start)/1800,1),ease=1-Math.pow(1-p,3);el.textContent=Math.round(ease*target)+suffix;if(p<1)requestAnimationFrame(step);}
-      requestAnimationFrame(step);
-      obs.unobserve(el);
-    });
-  },{threshold:0.3});
-  document.querySelectorAll('[data-count]').forEach(function(c){obs.observe(c);});
+      requestAnimationFrame(step);this.unobserve(el);
+    },this);},{threshold:0.3}).observe(el);
+  });
 })();
+
+/* ═══ REVEAL ═══ */
 (function(){
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
-  },{threshold:0.05,rootMargin:'0px 0px -30px 0px'});
-  document.querySelectorAll('.r').forEach(function(el){obs.observe(el);});
+  document.querySelectorAll('.r').forEach(function(el){
+    new IntersectionObserver(function(entries){entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('visible');this.unobserve(e.target);}
+    },this);},{threshold:0.05,rootMargin:'0px 0px -30px 0px'}).observe(el);
+  });
 })();
 </script>
 </body>
