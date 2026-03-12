@@ -791,8 +791,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
                   <span class="pdf-field-lbl">Civilité</span>
                   <select class="pdf-field-edit" id="ex-civilite" style="cursor:pointer;">
                     <option value="">— (aucune)</option>
-                    <option value="M.">M.</option>
-                    <option value="Mme">Mme</option>
+                    <option value="Monsieur">Monsieur</option>
+                    <option value="Madame">Madame</option>
                   </select>
                 </div>
                 <div class="pdf-field" style="position:relative;">
@@ -2390,6 +2390,7 @@ async function sendOffer(){
     if(document.getElementById('f-contexte')) document.getElementById('f-contexte').value='';
     if(document.getElementById('f-detail')) document.getElementById('f-detail').value='';
 
+    const clientFull = societeField ? `${prenomField} — ${societeField}` : prenomField || email;
     if(emailSent) toast('🚀',`Email envoyé à ${clientFull} depuis ${CFG.senderEmail} ✅`);
     else toast('🚀',`Offre sauvegardée — ${email?'configurez Brevo pour envoyer':'email manquant'}`);
     setTimeout(()=>go('offres'),1400);
