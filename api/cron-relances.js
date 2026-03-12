@@ -18,7 +18,6 @@ function fetchBuffer(url) {
 
 async function sbQuery(path, options = {}) {
   const SB_URL = process.env.SUPABASE_URL;
-  // Support les deux noms de variable (ancienne + nouvelle convention)
   const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
   const res = await fetch(`${SB_URL}/rest/v1/${path}`, {
     ...options,
@@ -38,7 +37,6 @@ async function sbQuery(path, options = {}) {
 }
 
 async function generateEmailBody(offre, rNum) {
-  // Cohérence tu/vous — lire ton+relation depuis l'offre
   const ton = offre.ton || 'chaleureux';
   const relation = offre.relation || 'connu';
   const isTu = ton === 'chaleureux' && (relation === 'connu' || relation === 'fidele');
@@ -67,6 +65,12 @@ async function generateEmailBody(offre, rNum) {
 
   const montantFmt = Number(offre.montant || 0).toLocaleString('fr-CH') + ' CHF';
 
+  // Si un email_body est déjà stocké en DB, l'utiliser directement
+  if (offre.email_body && offre.email_body.trim().length > 20) {
+    console.log(`Using stored email_body for relance ${rNum}`);
+    return offre.email_body;
+  }
+
   try {
     const ANTHROPIC_KEY = process.env.ANTHROPIC_KEY;
     if (!ANTHROPIC_KEY) throw new Error('No ANTHROPIC_KEY');
@@ -79,7 +83,7 @@ async function generateEmailBody(offre, rNum) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 400,
         messages: [{
           role: 'user',
@@ -105,7 +109,6 @@ Réponds UNIQUEMENT avec le texte de l'email.`
     return data.content?.[0]?.text || '';
   } catch (e) {
     console.error('AI generation error:', e.message);
-    // Fallback cohérent tu/vous
     return isTu
       ? `Bonjour ${offre.prenom},\n\nJe reviens vers toi concernant notre offre ${offre.reference} — ${offre.objet} (${montantFmt}).\n\nN'hésite pas à me faire signe si tu as des questions.\n\n${saluts[rNum - 1]}`
       : `Bonjour ${offre.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${offre.reference} — ${offre.objet} (${montantFmt}).\n\nN'hésitez pas à me contacter pour toute question.\n\n${saluts[rNum - 1]}`;
@@ -116,7 +119,6 @@ async function sendEmail({ to, toName, fromEmail, fromName, subject, body, pdfUr
   const BREVO_KEY = process.env.BREVO_API_KEY;
   const APP_URL = process.env.APP_URL || 'https://followoffer.com';
 
-  // Pixel de tracking (même logique que l'app)
   const pixel = offerId
     ? `<div style="max-height:0;overflow:hidden;mso-hide:all;"><img src="${APP_URL}/api/track-open?id=${offerId}" width="2" height="2" style="width:2px;height:2px;border:0;display:block;" alt="" /></div>`
     : '';
@@ -124,7 +126,6 @@ async function sendEmail({ to, toName, fromEmail, fromName, subject, body, pdfUr
   const htmlContent = `<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#333;">${body.replace(/\n/g, '<br>')}</div>${pixel}`;
 
   const payload = {
-    // Envoyer depuis l'email de l'utilisateur (pas contact@followoffer.com)
     sender: { name: fromName || 'FollowOffer', email: fromEmail },
     to: [{ name: toName, email: to }],
     subject,
@@ -155,13 +156,13 @@ async function sendEmail({ to, toName, fromEmail, fromName, subject, body, pdfUr
 }
 
 module.exports = async (req, res) => {
-  // Sécurité — vérifier que c'est bien Vercel qui appelle
+  // Sécurité — vérifier CRON_SECRET
   const authHeader = req.headers['authorization'];
-  const querySecret = (req.url || '').includes('?') 
-    ? new URLSearchParams(req.url.split('?')[1]).get('secret') 
+  const querySecret = (req.url || '').includes('?')
+    ? new URLSearchParams(req.url.split('?')[1]).get('secret')
     : null;
   const validSecret = process.env.CRON_SECRET;
-  if (authHeader !== `Bearer ${validSecret}` && querySecret !== validSecret) {
+  if (validSecret && authHeader !== `Bearer ${validSecret}` && querySecret !== validSecret) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
@@ -169,125 +170,128 @@ module.exports = async (req, res) => {
   const results = { sent: 0, errors: 0, skipped: 0, details: [] };
 
   try {
-    // Récupérer toutes les relances dues aujourd'hui ou avant
-    const relances = await sbQuery(
-      `relances?statut=eq.pending&date_prevue=lte.${today}&select=*,offres(id,reference,objet,montant,statut,pdf_url,fichier_nom,user_id,clients(prenom,nom,email,entreprise))`
+    // ── ÉTAPE 1 : Relances pending dues ──
+    const relancesRaw = await sbQuery(
+      `relances?statut=eq.pending&date_prevue=lte.${today}&select=*`
     );
+    console.log(`Cron ${today}: ${relancesRaw.length} relances pending`);
 
-    console.log(`Cron relances: ${relances.length} relances dues le ${today}`);
-
-    // DEBUG: log premier résultat pour voir la structure
-    if (relances.length > 0) {
-      console.log('DEBUG first relance:', JSON.stringify(relances[0]).slice(0, 500));
+    if (!relancesRaw.length) {
+      return res.status(200).json({ success: true, date: today, ...results, info: 'Aucune relance due' });
     }
 
-    for (const relance of relances) {
-      const offre = relance.offres;
+    // ── ÉTAPE 2 : Charger offres + clients en 2 requêtes séparées (évite les FK Supabase) ──
+    const offreIds = [...new Set(relancesRaw.map(r => r.offre_id).filter(Boolean))];
+    const offresRaw = await sbQuery(`offres?id=in.(${offreIds.join(',')})&select=*`);
 
-      if (!offre || !offre.clients) {
+    const clientIds = [...new Set(offresRaw.map(o => o.client_id).filter(Boolean))];
+    const clientsRaw = clientIds.length
+      ? await sbQuery(`clients?id=in.(${clientIds.join(',')})&select=*`)
+      : [];
+
+    // Index O(1)
+    const offresMap  = Object.fromEntries(offresRaw.map(o => [o.id, o]));
+    const clientsMap = Object.fromEntries(clientsRaw.map(c => [c.id, c]));
+
+    console.log(`Offres chargées: ${offresRaw.length}, clients: ${clientsRaw.length}`);
+
+    // ── ÉTAPE 3 : Traiter chaque relance ──
+    for (const relance of relancesRaw) {
+      const offre   = offresMap[relance.offre_id] || null;
+      const client  = offre ? (clientsMap[offre.client_id] || null) : null;
+
+      if (!offre || !client) {
         results.skipped++;
-        results.details.push({ id: relance.id, reason: 'offre ou client manquant' });
+        results.details.push({ id: relance.id, reason: 'offre ou client introuvable en DB' });
         continue;
       }
 
-      // Ignorer si l'offre est déjà gagnée/perdue
+      // Annuler si offre terminée
       if (['won', 'lost'].includes(offre.statut)) {
         await sbQuery(`relances?id=eq.${relance.id}`, {
           method: 'PATCH',
           body: JSON.stringify({ statut: 'cancelled' })
         });
         results.skipped++;
-        results.details.push({ id: relance.id, offre: offre.reference, reason: `offre ${offre.statut}` });
+        results.details.push({ id: relance.id, offre: offre.reference, reason: `offre ${offre.statut} — relance annulée` });
         continue;
       }
 
       try {
-        // Récupérer les settings de l'utilisateur
+        // Settings de l'utilisateur
         const userId = offre.user_id || relance.user_id;
-        console.log('DEBUG userId:', userId, 'offre.user_id:', offre.user_id, 'relance.user_id:', relance.user_id);
-        const settings = await sbQuery(`settings?user_id=eq.${userId}&select=key,value`);
-        console.log('DEBUG settings count:', settings?.length, 'keys:', settings?.map(s=>s.key).join(','));
+        const settingsRows = await sbQuery(`settings?user_id=eq.${userId}&select=key,value`);
         const cfg = {};
-        (settings || []).forEach(s => { cfg[s.key] = s.value; });
+        (settingsRows || []).forEach(s => { cfg[s.key] = s.value; });
 
         const fromEmail = cfg.senderEmail || cfg.sender_email || process.env.BREVO_SENDER_EMAIL;
-        const fromName = cfg.name || cfg.sender_name || '';
+        const fromName  = cfg.name || cfg.sender_name || '';
 
         if (!fromEmail) {
           results.skipped++;
-          results.details.push({ id: relance.id, offre: offre.reference, reason: 'email expéditeur non configuré' });
+          results.details.push({ id: relance.id, offre: offre.reference, reason: 'email expéditeur non configuré dans Paramètres > Email' });
           continue;
         }
-
-        if (!offre.clients.email) {
+        if (!client.email) {
           results.skipped++;
-          results.details.push({ id: relance.id, offre: offre.reference, reason: 'email destinataire manquant' });
+          results.details.push({ id: relance.id, offre: offre.reference, reason: 'email destinataire manquant sur la fiche client' });
           continue;
         }
 
         const rNum = relance.numero;
 
-        // Générer le corps de l'email avec cohérence tu/vous
+        // Générer le corps (utilise email_body stocké si disponible)
         const emailBody = await generateEmailBody({
-          prenom: offre.clients.prenom,
-          nom: offre.clients.nom,
+          prenom: client.prenom,
+          nom: client.nom,
           objet: offre.objet,
           montant: offre.montant,
           reference: offre.reference,
           ton: offre.ton,
-          relation: offre.relation
+          relation: offre.relation,
+          email_body: relance.email_body   // corps pré-rédigé depuis l'app
         }, rNum);
 
-        // Construire la signature
+        // Signature
         const sigParts = [];
-        if (fromName) sigParts.push(fromName);
-        if (cfg.role || cfg.sender_role) sigParts.push(cfg.role || cfg.sender_role);
+        if (fromName)                      sigParts.push(fromName);
+        if (cfg.role || cfg.sender_role)   sigParts.push(cfg.role || cfg.sender_role);
         if (cfg.company || cfg.sender_company) sigParts.push(cfg.company || cfg.sender_company);
         if (cfg.phone || cfg.sender_phone) sigParts.push(cfg.phone || cfg.sender_phone);
-        const signature = sigParts.length ? '\n\n--\n' + sigParts.join('\n') : '';
-        const bodyFinal = emailBody + signature;
+        const signature  = sigParts.length ? '\n\n--\n' + sigParts.join('\n') : '';
+        const bodyFinal  = emailBody + signature;
 
         const sent = await sendEmail({
-          to: offre.clients.email,
-          toName: `${offre.clients.prenom} ${offre.clients.nom}`,
+          to: client.email,
+          toName: `${client.prenom} ${client.nom}`,
           fromEmail,
           fromName,
           subject: `Re: Offre ${offre.reference} — ${offre.objet}`,
           body: bodyFinal,
-          pdfUrl: offre.pdf_url || '',
+          pdfUrl:  offre.pdf_url || '',
           pdfName: offre.fichier_nom || `${offre.reference}.pdf`,
-          offerId: offre.id   // pour le pixel de tracking
+          offerId: offre.id
         });
 
         if (sent) {
-          // Marquer la relance comme envoyée
           await sbQuery(`relances?id=eq.${relance.id}`, {
             method: 'PATCH',
             body: JSON.stringify({ statut: 'sent', date_envoyee: new Date().toISOString() })
           });
-
-          // Avancer le statut de l'offre
-          const newStatut = `relance${rNum}`;
           await sbQuery(`offres?id=eq.${offre.id}`, {
             method: 'PATCH',
-            body: JSON.stringify({ statut: newStatut })
+            body: JSON.stringify({ statut: `relance${rNum}` })
           });
-
           results.sent++;
-          results.details.push({
-            offre: offre.reference,
-            client: offre.clients.email,
-            relance: `R${rNum}`,
-            status: 'sent'
-          });
-          console.log(`✅ R${rNum} envoyée: ${offre.reference} → ${offre.clients.email}`);
+          results.details.push({ offre: offre.reference, client: client.email, relance: `R${rNum}`, status: 'sent' });
+          console.log(`✅ R${rNum} → ${offre.reference} → ${client.email}`);
         } else {
           results.errors++;
           results.details.push({ offre: offre.reference, relance: `R${rNum}`, status: 'brevo_error' });
         }
 
       } catch (e) {
-        console.error(`❌ Erreur relance ${relance.id}:`, e.message);
+        console.error(`❌ Relance ${relance.id}:`, e.message);
         results.errors++;
         results.details.push({ id: relance.id, status: 'error', reason: e.message });
       }
@@ -297,7 +301,7 @@ module.exports = async (req, res) => {
     return res.status(200).json({ success: true, date: today, ...results });
 
   } catch (e) {
-    console.error('Cron fatal error:', e);
+    console.error('Cron fatal:', e);
     return res.status(500).json({ error: e.message });
   }
 };
