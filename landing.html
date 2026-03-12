@@ -840,8 +840,26 @@ button{font-family:inherit;}
   .m-bn { font-size: 8px !important; }
   /* Masquer donut */
   .m-donut-wrap { display: none !important; }
-  /* Masquer hotspots sur mobile */
-  .hs-point, .hs-bar, .hs-ring, .hs-tip { display: none !important; }
+  /* ══ HOTSPOTS — SUPPRIMÉS TOTALEMENT SUR MOBILE ══ */
+  .hs-point,
+  .hs-point *,
+  .hs-ring,
+  .hs-dot,
+  .hs-tip,
+  .hs-pb,
+  .hs-pb-fill,
+  .hs-bar,
+  .hd {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: static !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+  #dash-mockup { overflow: hidden !important; }
 
   /* ── SECTIONS GÉNÉRALES ── */
   section {
@@ -1338,11 +1356,7 @@ button{font-family:inherit;}
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      <a href="mailto:contact@followoffer.com" class="de-s-card r d1" style="text-decoration:none;">
-        <div class="de-s-ico" style="background:rgba(21,85,168,0.15);">✉️</div>
-        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub">contact@followoffer.com</div></div>
-        <span style="margin-left:auto;color:rgba(226,232,244,0.3);font-size:18px;">→</span>
-      </a>
+      contact@followoffer.com
       <div class="de-s-card r d1" style="cursor:default">
         <div class="de-s-ico de-s-ico-g">⚡</div>
         <div><div class="de-s-title">Réponse garantie sous 24h</div><div class="de-s-sub">Jours ouvrables et week-end</div></div>
@@ -1697,7 +1711,6 @@ if(window.location.hash.startsWith('#legal-')) {
     </div>
   </div>
 </div><script>
-/* ═══ HERO CANVAS — HEXAGONES ANIMÉS ═══ */
 (function(){
   var canvas=document.getElementById('hero-canvas');
   if(!canvas)return;
@@ -1706,20 +1719,17 @@ if(window.location.hash.startsWith('#legal-')) {
   var HEX_SIZE=38,NODE_COUNT=18,LINE_COUNT=12;
   function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;buildGrid();}
   function buildGrid(){
-    hexes=[];
-    var w=HEX_SIZE*2,h=Math.sqrt(3)*HEX_SIZE;
+    hexes=[];var w=HEX_SIZE*2,h=Math.sqrt(3)*HEX_SIZE;
     var cols=Math.ceil(W/(w*0.75))+2,rows=Math.ceil(H/h)+2;
     for(var r=-1;r<rows;r++)for(var c=-1;c<cols;c++)hexes.push({x:c*w*0.75,y:r*h+(c%2===0?0:h/2)});
-    nodes=[];
-    var sh=hexes.slice().sort(function(){return Math.random()-0.5;});
-    for(var i=0;i<sh.length&&nodes.length<NODE_COUNT;i++){
+    nodes=[];var sh=hexes.slice().sort(function(){return Math.random()-0.5;});
+    for(var i=0;i<sh.length&&nodes.length<NODE_COUNT;i++)
       if(sh[i].x>20&&sh[i].x<W-20&&sh[i].y>20&&sh[i].y<H*0.72)
         nodes.push({x:sh[i].x,y:sh[i].y,pulse:Math.random()*Math.PI*2,speed:0.015+Math.random()*0.025,baseR:2+Math.random()*2.5});
-    }
     lines=[];
     for(var a=0;a<nodes.length;a++)for(var b=a+1;b<nodes.length&&lines.length<LINE_COUNT;b++){
       var dx=nodes[a].x-nodes[b].x,dy=nodes[a].y-nodes[b].y,d=Math.sqrt(dx*dx+dy*dy);
-      if(d<HEX_SIZE*3.5)lines.push({a:a,b:b,d:d});
+      if(d<HEX_SIZE*3.5)lines.push({a:a,b:b});
     }
   }
   function hexPath(cx,cy,r){
@@ -1731,8 +1741,7 @@ if(window.location.hash.startsWith('#legal-')) {
     ctx.clearRect(0,0,W,H);
     for(var i=0;i<hexes.length;i++){
       var hx=hexes[i].x,hy=hexes[i].y;
-      var distX=(hx-W/2)/W,distY=hy/H;
-      var alpha=Math.max(0,0.30-Math.abs(distX)*0.5-Math.max(0,distY-0.55)*0.9);
+      var alpha=Math.max(0,0.30-Math.abs((hx-W/2)/W)*0.5-Math.max(0,hy/H-0.55)*0.9);
       if(alpha<0.01)continue;
       ctx.strokeStyle='rgba(55,100,200,'+alpha.toFixed(3)+')';ctx.lineWidth=0.85;
       hexPath(hx,hy,HEX_SIZE-1);ctx.stroke();
@@ -1763,11 +1772,9 @@ if(window.location.hash.startsWith('#legal-')) {
     }
     requestAnimationFrame(draw);
   }
-  window.addEventListener('resize',resize);
-  resize();requestAnimationFrame(draw);
+  window.addEventListener('resize',resize);resize();requestAnimationFrame(draw);
 })();
 
-/* ═══ HOTSPOTS ═══ */
 (function(){
   var HS_COUNT=4,HS_DWELL=3600,current=-1,timer=null,tourActive=false,paused=false,pauseTimer=null;
   function activate(idx){
@@ -1783,22 +1790,18 @@ if(window.location.hash.startsWith('#legal-')) {
   function startTour(){if(tourActive)return;tourActive=true;activate(0);timer=setTimeout(next,HS_DWELL);}
   window.hsClick=function(idx){clearTimeout(timer);paused=true;clearTimeout(pauseTimer);activate(idx);pauseTimer=setTimeout(function(){paused=false;timer=setTimeout(next,HS_DWELL);},7000);};
   var mockup=document.getElementById('dash-mockup');if(!mockup)return;
+  if(window.innerWidth<=600)return;
   if(window.IntersectionObserver){
     new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){startTour();this.disconnect();}},this);},{threshold:0.15}).observe(mockup);
   }else setTimeout(startTour,800);
 })();
 
-/* ═══ NAV SCROLL ═══ */
 (function(){
   var nav=document.getElementById('mainNav'),hero=document.querySelector('.hero');
-  function upd(){if(!nav||!hero)return;var hb=hero.offsetTop+hero.offsetHeight-80;window.scrollY>=hb?nav.classList.add('is-light'):nav.classList.remove('is-light');}
+  function upd(){if(!nav||!hero)return;window.scrollY>=(hero.offsetTop+hero.offsetHeight-80)?nav.classList.add('is-light'):nav.classList.remove('is-light');}
   window.addEventListener('scroll',upd,{passive:true});upd();
 })();
-
-/* ═══ FAQ ═══ */
 function toggleFaq(b){var i=b.parentElement,o=i.classList.contains('open');document.querySelectorAll('.faq-item.open').forEach(function(x){x.classList.remove('open');});if(!o)i.classList.add('open');}
-
-/* ═══ LEGAL ═══ */
 function openLegal(t){document.getElementById('legal-modal').style.display='flex';document.body.style.overflow='hidden';if(t)switchLegalTab(t);}
 function closeLegal(){document.getElementById('legal-modal').style.display='none';document.body.style.overflow='';}
 function switchLegalTab(t){
@@ -1807,8 +1810,6 @@ function switchLegalTab(t){
   var b=document.querySelector('.legal-tab[data-tab="'+t+'"]'),p=document.getElementById('legal-'+t);
   if(b)b.classList.add('active');if(p)p.style.display='block';
 }
-
-/* ═══ COUNTERS ═══ */
 (function(){
   document.querySelectorAll('[data-count]').forEach(function(el){
     new IntersectionObserver(function(entries){entries.forEach(function(e){
@@ -1819,8 +1820,6 @@ function switchLegalTab(t){
     },this);},{threshold:0.3}).observe(el);
   });
 })();
-
-/* ═══ REVEAL ═══ */
 (function(){
   document.querySelectorAll('.r').forEach(function(el){
     new IntersectionObserver(function(entries){entries.forEach(function(e){
