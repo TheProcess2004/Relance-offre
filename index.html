@@ -1312,7 +1312,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
     <!-- Liste clients avec téléphone -->
     <div style="padding:8px 24px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;">Clients avec numéro enregistré</div>
-    <div id="appel-client-list" style="overflow-y:auto;padding:0 12px 16px;flex:1;"></div>
+    <div id="appel-client-list" style="overflow-y:auto;padding:0 12px 16px;flex:1;min-height:0;"></div>
   </div>
 </div>
 
@@ -1882,21 +1882,58 @@ function openClientModal(email){
   if(!c.length)return;
   const first=c[0];
   const totalWon=c.filter(o=>o.status==='won').reduce((s,o)=>s+o.montant,0);
-  document.getElementById('m-t').textContent=`${first.prenom} ${first.nom}`;
-  document.getElementById('m-s').textContent=email+' · '+c.length+' offre(s)';
+  const entreprise = first.entreprise || '';
   const tel = first.telephone || '';
-  // Afficher le bouton téléphone dans le header du modal
+  const nom = first.nom || '';
+  const prenom = first.prenom || '';
+  const clientId = first.client_id;
+
+  // Titre : société si présente, sinon prénom nom
+  const titleTxt = entreprise || `${prenom} ${nom}`.trim();
+  const subTxt = entreprise ? `${prenom} ${nom} · ${email} · ${c.length} offre(s)` : `${email} · ${c.length} offre(s)`;
+  document.getElementById('m-t').textContent = titleTxt;
+  document.getElementById('m-s').textContent = subTxt;
+
   const telBtn = document.getElementById('m-tel-btn');
   if(telBtn){
     if(tel){ telBtn.style.display='inline-flex'; telBtn.href='tel:'+tel; telBtn.title=tel; telBtn.querySelector('.m-tel-num').textContent=tel; }
     else { telBtn.style.display='none'; }
   }
+
   document.getElementById('m-body').innerHTML=`
     <div class="m-2grid">
       <div class="m-info"><div class="m-info-l">Offres totales</div><div class="m-info-v" style="color:var(--gold)">${c.length}</div></div>
       <div class="m-info"><div class="m-info-l">CA généré</div><div class="m-info-v" style="color:var(--green);font-family:'JetBrains Mono',monospace;">${totalWon.toLocaleString('fr-CH')} CHF</div></div>
-      ${tel ? `<div class="m-info" style="grid-column:span 2"><div class="m-info-l">Téléphone</div><div class="m-info-v"><a href="tel:${tel}" style="color:#4AAA78;text-decoration:none;font-weight:600;">📞 ${tel}</a></div></div>` : ''}
     </div>
+
+    <!-- Fiche éditable -->
+    <div style="background:var(--s2);border:1px solid var(--border2);border-radius:11px;padding:14px 16px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);">Informations client</div>
+        <button id="client-edit-btn" onclick="toggleClientEdit('${clientId}')" style="background:none;border:1px solid var(--border2);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--blue);cursor:pointer;">✎ Modifier</button>
+      </div>
+      <div id="client-view-mode">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:2px;">Société</div><div style="font-size:13px;font-weight:600;color:var(--txt);">${entreprise||'<span style="color:var(--muted);">—</span>'}</div></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:2px;">Prénom Nom</div><div style="font-size:13px;font-weight:600;color:var(--txt);">${prenom} ${nom}</div></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:2px;">Email</div><div style="font-size:13px;color:var(--txt);">${email}</div></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:2px;">Téléphone</div><div style="font-size:13px;color:var(--txt);">${tel?`<a href="tel:${tel}" style="color:#4AAA78;text-decoration:none;font-weight:600;">📞 ${tel}</a>`:'<span style="color:var(--muted);">—</span>'}</div></div>
+        </div>
+      </div>
+      <div id="client-edit-mode" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div><label style="font-size:10px;color:var(--muted);">Société</label><input id="edit-entreprise" value="${entreprise}" placeholder="Dupont SA" style="width:100%;background:var(--s1);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--txt);margin-top:3px;box-sizing:border-box;outline:none;"></div>
+          <div><label style="font-size:10px;color:var(--muted);">Prénom</label><input id="edit-prenom" value="${prenom}" placeholder="Marc" style="width:100%;background:var(--s1);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--txt);margin-top:3px;box-sizing:border-box;outline:none;"></div>
+          <div><label style="font-size:10px;color:var(--muted);">Nom</label><input id="edit-nom" value="${nom}" placeholder="Dupont" style="width:100%;background:var(--s1);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--txt);margin-top:3px;box-sizing:border-box;outline:none;"></div>
+          <div><label style="font-size:10px;color:var(--muted);">Téléphone</label><input id="edit-telephone" value="${tel}" placeholder="+41 79 000 00 00" style="width:100%;background:var(--s1);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--txt);margin-top:3px;box-sizing:border-box;outline:none;"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button onclick="saveClientEdit('${clientId}','${email}')" style="background:var(--blue);color:#fff;border:none;border-radius:7px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;">✓ Enregistrer</button>
+          <button onclick="toggleClientEdit('${clientId}')" style="background:none;border:1px solid var(--border2);border-radius:7px;padding:7px 14px;font-size:13px;color:var(--muted);cursor:pointer;">Annuler</button>
+        </div>
+      </div>
+    </div>
+
     <div class="m-tl"><div class="m-tl-t">Historique des offres</div>
     ${c.map(o=>`<div class="m-tl-item">
       <div class="m-tl-dot" style="background:${o.status==='won'?'var(--green)':o.status==='lost'?'var(--red)':'var(--gold)'}"></div>
@@ -1907,9 +1944,42 @@ function openClientModal(email){
     </div>
     <div class="m-acts">
       <button class="btn btn-gold btn-sm" onclick="go('nouvelle');closeModal();toast('📄','Préparez la nouvelle offre')">+ Nouvelle offre</button>
-      <button class="btn btn-ghost btn-sm" onclick="toast('📧','Email direct...')">📧 Email direct</button>
+      <button class="btn btn-ghost btn-sm" onclick="window.location.href='mailto:${email}';toast('📧','Ouverture messagerie...')">📧 Email direct</button>
     </div>`;
   document.getElementById('overlay').classList.add('open');
+}
+
+function toggleClientEdit(clientId){
+  const view = document.getElementById('client-view-mode');
+  const edit = document.getElementById('client-edit-mode');
+  const btn = document.getElementById('client-edit-btn');
+  if(!view||!edit)return;
+  const editing = edit.style.display !== 'none';
+  view.style.display = editing ? 'block' : 'none';
+  edit.style.display = editing ? 'none' : 'block';
+  if(btn) btn.textContent = editing ? '✎ Modifier' : '✕ Annuler';
+}
+
+async function saveClientEdit(clientId, email){
+  const entreprise = document.getElementById('edit-entreprise')?.value.trim()||'';
+  const prenom = document.getElementById('edit-prenom')?.value.trim()||'';
+  const nom = document.getElementById('edit-nom')?.value.trim()||'';
+  const telephone = document.getElementById('edit-telephone')?.value.trim()||'';
+  try {
+    await sbFetch('clients?id=eq.'+clientId, {
+      method:'PATCH',
+      body: JSON.stringify({entreprise, prenom, nom, telephone}),
+      headers:{'Prefer':'return=minimal'}
+    });
+    // Mettre à jour OFFERS en mémoire
+    OFFERS.forEach(o=>{ if(o.client_id===clientId){o.entreprise=entreprise;o.prenom=prenom;o.nom=nom;o.telephone=telephone;} });
+    toast('✅','Client mis à jour');
+    // Recharger la fiche avec les nouvelles données
+    closeModal();
+    setTimeout(()=>openClientModal(email),100);
+  } catch(e){
+    toast('❌','Erreur lors de la mise à jour');
+  }
 }
 
 // ══ MODAL ══
