@@ -796,9 +796,7 @@ button{font-family:inherit;}
   .t-item { font-size: 11px !important; }
 
   /* ── MOCKUP ── */
-  .mockup-wrap-outer {
-    padding: 0 12px 50px !important;
-  }
+  .mockup-wrap-outer { display: none !important; }
   .mockup-section { padding: 0 !important; }
   .mockup-wrap { border-radius: 10px !important; overflow: hidden !important; }
   .mw-bar {
@@ -1356,7 +1354,7 @@ button{font-family:inherit;}
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      contact@followoffer.com
+      <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>
       <div class="de-s-card r d1" style="cursor:default">
         <div class="de-s-ico de-s-ico-g">⚡</div>
         <div><div class="de-s-title">Réponse garantie sous 24h</div><div class="de-s-sub">Jours ouvrables et week-end</div></div>
@@ -1415,7 +1413,7 @@ button{font-family:inherit;}
         </div>
         <div class="cf-field"><label class="cf-label" for="cf-message">Message</label><textarea class="cf-textarea" id="cf-message" placeholder="Décrivez votre besoin en quelques lignes..."></textarea></div>
         <button class="cf-btn" id="cf-btn" onclick="submitContact()"><span id="cf-btn-txt">Envoyer le message →</span></button>
-        <div class="cf-note">Réponse garantie sous 24h · contact@followoffer.com</div>
+        <div class="cf-note">Réponse garantie sous 24h · <a href="mailto:contact@followoffer.com">contact@followoffer.com</a></div>
       </div>
       <div id="cf-success" style="display:none;text-align:center;padding:24px 0;">
         <div style="font-size:40px;margin-bottom:14px;">✅</div>
@@ -1453,7 +1451,7 @@ button{font-family:inherit;}
     <a href="#" onclick="openLegal('mentions');return false;">Mentions légales</a>
     <a href="#" onclick="openLegal('cgv');return false;">CGV</a>
     <a href="#" onclick="openLegal('confidentialite');return false;">Confidentialité</a>
-    contact@followoffer.com
+    <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -1461,163 +1459,6 @@ button{font-family:inherit;}
   </div>
 </footer>
 
-<script>
-// ══ NAV — switch dark/light au passage du hero ══
-const nav = document.getElementById('mainNav');
-const heroEl = document.querySelector('.hero');
-function updateNav() {
-  const heroBottom = heroEl ? heroEl.offsetTop + heroEl.offsetHeight - 80 : 600;
-  if(window.scrollY >= heroBottom) {
-    nav.classList.add('is-light');
-    nav.classList.remove('is-dark');
-  } else {
-    nav.classList.remove('is-light');
-  }
-}
-window.addEventListener('scroll', updateNav, {passive:true});
-updateNav();
-
-// ══ SCROLL REVEAL ══
-const ro = new IntersectionObserver(en => en.forEach(e => {
-  if(e.isIntersecting) e.target.classList.add('in');
-}), {threshold:0.06, rootMargin:'0px 0px -18px 0px'});
-document.querySelectorAll('.r').forEach(el => ro.observe(el));
-
-// ══ COUNTERS — initialisés à valeur finale, jamais à 0 ══
-const counterVals = {
-  'cnt-c':     [38, 1600],
-  'cnt-p':     [490, 1800],
-  'cnt-t':     [3, 1200],
-  'cnt-testi': [38, 1600],
-};
-// Init immédiate à valeur finale (évite 0 si IntersectionObserver non déclenché)
-Object.entries(counterVals).forEach(([id,[val]]) => {
-  const el = document.getElementById(id);
-  if(el) el.textContent = val;
-});
-// Animation au scroll
-function animCount(el, target, dur) {
-  if(!el) return;
-  const t0 = performance.now();
-  (function tick(now) {
-    const p = Math.min((now - t0) / dur, 1);
-    el.textContent = Math.round((1 - Math.pow(1-p,3)) * target);
-    if(p < 1) requestAnimationFrame(tick);
-  })(t0);
-}
-const co = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if(!entry.isIntersecting || entry.target.dataset.done) return;
-    entry.target.dataset.done = '1';
-    const cid = entry.target.dataset.counter;
-    const cfg = counterVals[cid];
-    if(!cfg) return;
-    animCount(document.getElementById(cid), cfg[0], cfg[1]);
-    co.unobserve(entry.target);
-  });
-}, {threshold:0.05});
-document.querySelectorAll('[data-counter]').forEach(el => co.observe(el));
-
-// ══ FAQ ══
-function toggleFaq(btn) {
-  const ans = btn.nextElementSibling;
-  const open = ans.classList.contains('open');
-  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
-  document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('open'));
-  if(!open) { ans.classList.add('open'); btn.classList.add('open'); }
-}
-
-// ══ TICKER SECTEURS ══
-(function(){
-  const badges = [
-    {i:'🔌',l:'Électriciens'},{i:'🪟',l:'Menuisiers'},{i:'🏡',l:'Agents immobiliers'},
-    {i:'🔧',l:'Chauffagistes'},{i:'🌿',l:'Paysagistes'},{i:'🎨',l:'Peintres'},
-    {i:'🛁',l:'Sanitaires'},{i:'💼',l:'Vendeurs B2B'},{i:'🔑',l:'Serruriers'},
-    {i:'🏗️',l:'Plâtriers'},{i:'📊',l:'Courtiers'},{i:'⚙️',l:'PME techniques'},
-    {i:'🪑',l:'Cuisinistes'},{i:'🏢',l:'Entreprises de services'},{i:'🤝',l:'Commerciaux indép.'},
-    {i:'🛠️',l:'Artisans'},{i:'📐',l:'Architectes'},{i:'🚿',l:'Plombiers'},
-  ];
-  const ticker = document.getElementById('ticker');
-  if(!ticker) return;
-  const all = [...badges,...badges];
-  ticker.innerHTML = all.map(b=>`<div class="s-badge"><span class="s-badge-ico">${b.i}</span>${b.l}</div>`).join('');
-})();
-
-// ══ CONTACT FORM ══
-async function submitContact() {
-  const name    = document.getElementById('cf-name')?.value.trim();
-  const company = document.getElementById('cf-company')?.value.trim();
-  const email   = document.getElementById('cf-email')?.value.trim();
-  const subject = document.getElementById('cf-subject')?.value;
-  const message = document.getElementById('cf-message')?.value.trim();
-  const btn     = document.getElementById('cf-btn');
-  const btnTxt  = document.getElementById('cf-btn-txt');
-
-  // Highlight required
-  ['cf-name','cf-email','cf-message'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.style.borderColor = '';
-  });
-
-  let valid = true;
-  if(!name)    { const el = document.getElementById('cf-name');    if(el) el.style.borderColor = '#C42B1C'; valid = false; }
-  if(!email || !email.includes('@')) { const el = document.getElementById('cf-email'); if(el) el.style.borderColor = '#C42B1C'; valid = false; }
-  if(!message) { const el = document.getElementById('cf-message'); if(el) el.style.borderColor = '#C42B1C'; valid = false; }
-  if(!valid) return;
-
-  if(btn)    btn.disabled = true;
-  if(btnTxt) btnTxt.textContent = 'Envoi…';
-
-  try {
-    const resp = await fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, company, email, subject, message })
-    });
-    if (!resp.ok) throw new Error('Erreur serveur');
-    if(btnTxt) btnTxt.textContent = '✅ Message envoyé !';
-    ['cf-name','cf-company','cf-email','cf-subject','cf-message'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.value = '';
-    });
-    setTimeout(() => {
-      if(btnTxt) btnTxt.textContent = 'Envoyer le message';
-      if(btn)    btn.disabled = false;
-    }, 3000);
-  } catch(e) {
-    if(btnTxt) btnTxt.textContent = '❌ Erreur — réessayez';
-    if(btn)    btn.disabled = false;
-    setTimeout(() => { if(btnTxt) btnTxt.textContent = 'Envoyer le message'; if(btn) btn.disabled = false; }, 3000);
-  }
-}
-
-// ══ LEGAL PANEL ══
-function openLegal(tab) {
-  document.getElementById('legal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if(tab) {
-    const btn = document.querySelector(`.legal-tab[data-tab="${tab}"]`);
-    legalTab(tab, btn);
-  }
-}
-function closeLegal() {
-  document.getElementById('legal-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-function legalTab(name, btn) {
-  document.querySelectorAll('.lpanel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.legal-tab').forEach(t => t.classList.remove('active'));
-  const panel = document.getElementById('lpanel-' + name);
-  if(panel) panel.classList.add('active');
-  if(btn) btn.classList.add('active');
-  const body = document.querySelector('.legal-body');
-  if(body) body.scrollTop = 0;
-}
-if(window.location.hash.startsWith('#legal-')) {
-  const tab = window.location.hash.replace('#legal-','');
-  setTimeout(() => openLegal(tab), 400);
-}
-</script>
 
 <!-- ══ LEGAL PANEL ══ -->
 <div class="legal-overlay" id="legal-overlay" onclick="if(event.target===this)closeLegal()">
@@ -1638,7 +1479,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <h2>Mentions légales</h2>
         <h3>Éditeur du service</h3>
         <p><strong>FollowOffer</strong><br>2000 Neuchâtel, Suisse<br>
-        Email : contact@followoffer.com<br>
+        Email : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a><br>
         Site : <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>Hébergement</h3>
         <p>L'application FollowOffer est hébergée par <strong>Vercel Inc.</strong><br>
@@ -1674,7 +1515,7 @@ if(window.location.hash.startsWith('#legal-')) {
           <li>Ne pas tenter de contourner les limites du plan gratuit</li>
         </ul>
         <h3>Article 6 — Résiliation</h3>
-        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à contact@followoffer.com. Suppression des données sous 30 jours.</p>
+        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>. Suppression des données sous 30 jours.</p>
         <h3>Article 7 — Droit applicable</h3>
         <p>CGV soumises au <strong>droit suisse</strong>. Tout litige relève de la compétence des tribunaux de Neuchâtel.</p>
         <p class="legal-date">CGV en vigueur depuis mars 2026.</p>
@@ -1685,7 +1526,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <div class="legal-info-box">Conforme à la <strong>Loi fédérale sur la protection des données (LPD)</strong> révisée en vigueur depuis le 1er septembre 2023, ainsi qu'au RGPD européen.</div>
         <h3>1. Responsable du traitement</h3>
         <p><strong>FollowOffer</strong> · 2000 Neuchâtel, Suisse<br>
-        contact@followoffer.com · <a href="https://followoffer.com">followoffer.com</a></p>
+        <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>2. Données collectées</h3>
         <table>
           <tr><th>Catégorie</th><th>Données</th><th>Finalité</th></tr>
@@ -1706,11 +1547,50 @@ if(window.location.hash.startsWith('#legal-')) {
         </table>
         <h3>4. Vos droits (LPD & RGPD)</h3>
         <p>Accès, rectification, effacement, portabilité (export CSV dans l'app), opposition.<br>
-        Contact : contact@followoffer.com · <a href="https://followoffer.com">followoffer.com</a></p>
+        Contact : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
       </div>
     </div>
   </div>
-</div><script>
+</div><!-- MODAL LÉGAL -->
+<div id="legal-modal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(4,8,15,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;">
+  <div class="legal-panel">
+    <div class="legal-panel-header">
+      <div style="display:flex;gap:8px;overflow-x:auto;flex:1;">
+        <button class="legal-tab active" data-tab="mentions" onclick="switchLegalTab('mentions')">Mentions légales</button>
+        <button class="legal-tab" data-tab="cgv" onclick="switchLegalTab('cgv')">CGV</button>
+        <button class="legal-tab" data-tab="confidentialite" onclick="switchLegalTab('confidentialite')">Confidentialité</button>
+      </div>
+      <button onclick="closeLegal()" style="background:rgba(255,255,255,0.1);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;flex-shrink:0;">✕</button>
+    </div>
+    <div class="legal-body">
+      <div class="legal-pane" id="legal-mentions" style="display:block;">
+        <h3>Mentions légales</h3>
+        <p><strong>Éditeur</strong><br>Aubry MR — Nicolas Aubry<br>2000 Neuchâtel, Suisse<br>Email : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a><br>Site : <a href="https://followoffer.com">followoffer.com</a></p>
+        <p><strong>Hébergement</strong><br>Vercel Inc. — 340 Pine Street, San Francisco, CA 94104, USA</p>
+        <p><strong>Droit applicable</strong><br>Soumis au droit suisse. Tribunal compétent : canton de Neuchâtel.</p>
+        <p><strong>Propriété intellectuelle</strong><br>Contenu propriété exclusive d'Aubry MR. Reproduction interdite sans autorisation.</p>
+      </div>
+      <div class="legal-pane" id="legal-cgv" style="display:none;">
+        <h3>Conditions générales de vente</h3>
+        <p><strong>Objet</strong><br>FollowOffer est un service SaaS de suivi commercial édité par Aubry MR, Neuchâtel, Suisse.</p>
+        <p><strong>Abonnements</strong><br>Pro (490 CHF/an) et Business (1490 CHF/an), facturés annuellement via Stripe. Accès activé immédiatement après paiement.</p>
+        <p><strong>Essai gratuit</strong><br>5 offres gratuites sans carte bancaire. Aucune facturation automatique à l'issue de l'essai.</p>
+        <p><strong>Résiliation</strong><br>Possible à tout moment via Configuration &gt; Abonnement ou par email à <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>. Données supprimées sous 30 jours.</p>
+        <p><strong>Remboursement</strong><br>Remboursement intégral dans les 14 jours suivant le premier paiement, sans justification.</p>
+      </div>
+      <div class="legal-pane" id="legal-confidentialite" style="display:none;">
+        <h3>Politique de confidentialité</h3>
+        <p><strong>Données collectées</strong><br>Nom, email, données d'offres, statistiques d'ouverture. Aucune donnée vendue à des tiers.</p>
+        <p><strong>Hébergement</strong><br>Données sur Supabase (EU) et Vercel, encadrées par des clauses contractuelles standard.</p>
+        <p><strong>Conservation</strong><br>Durée de l'abonnement + 30 jours après résiliation.</p>
+        <p><strong>Vos droits</strong><br>Accès, rectification, effacement, portabilité (export CSV dans l'app).<br>Contact : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a></p>
+        <p><strong>Cookies</strong><br>Cookies techniques uniquement. Aucun cookie publicitaire.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
 (function(){
   var canvas=document.getElementById('hero-canvas');
   if(!canvas)return;
@@ -1734,7 +1614,7 @@ if(window.location.hash.startsWith('#legal-')) {
   }
   function hexPath(cx,cy,r){
     ctx.beginPath();
-    for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}
+    for(var i=0;i<6;i++){var ang=Math.PI/180*(60*i-30);i===0?ctx.moveTo(cx+r*Math.cos(ang),cy+r*Math.sin(ang)):ctx.lineTo(cx+r*Math.cos(ang),cy+r*Math.sin(ang));}
     ctx.closePath();
   }
   function draw(ts){
@@ -1801,6 +1681,7 @@ if(window.location.hash.startsWith('#legal-')) {
   function upd(){if(!nav||!hero)return;window.scrollY>=(hero.offsetTop+hero.offsetHeight-80)?nav.classList.add('is-light'):nav.classList.remove('is-light');}
   window.addEventListener('scroll',upd,{passive:true});upd();
 })();
+
 function toggleFaq(b){var i=b.parentElement,o=i.classList.contains('open');document.querySelectorAll('.faq-item.open').forEach(function(x){x.classList.remove('open');});if(!o)i.classList.add('open');}
 function openLegal(t){document.getElementById('legal-modal').style.display='flex';document.body.style.overflow='hidden';if(t)switchLegalTab(t);}
 function closeLegal(){document.getElementById('legal-modal').style.display='none';document.body.style.overflow='';}
