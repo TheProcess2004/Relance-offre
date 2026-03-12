@@ -281,7 +281,7 @@ button{font-family:inherit;}
 .s-card-label{font-size:12.5px;font-weight:600;color:var(--text);}
 .s-card-sub{font-size:10.5px;color:var(--muted2);margin-top:1px;}
 .sectors-tagline{margin-top:36px;text-align:center;}
-.sectors-tagline-pill{display:inline-flex;align-items:center;gap:10px;padding:11px 22px;background:var(--blue3);border:1px solid rgba(21,85,168,0.16);border-radius:100px;font-size:13px;}
+.sectors-tagline-pill{display:flex;align-items:center;gap:10px;padding:11px 22px;background:var(--blue3);border:1px solid rgba(21,85,168,0.16);border-radius:100px;font-size:13px;width:fit-content;max-width:100%;flex-wrap:wrap;justify-content:center;}
 
 /* ═══ FEATURES ═══ */
 .features-section{padding:104px 24px;background:var(--bg2);border-top:1px solid var(--border);}
@@ -718,7 +718,9 @@ button{font-family:inherit;}
     height: 56px !important;
   }
   .nav-links { display: none !important; }
-  /* Cacher "Se connecter" sur mobile, garder juste le CTA */
+  .nav-actions { gap: 0 !important; }
+  /* Cacher "Se connecter" sur mobile — seulement le CTA */
+  .nav-actions .btn-ghost,
   .btn-ghost { display: none !important; }
   .btn-nav {
     padding: 9px 16px !important;
@@ -816,11 +818,13 @@ button{font-family:inherit;}
     padding: 8px !important;
     gap: 6px !important;
     background: var(--bg) !important;
+    overflow: hidden !important;
   }
   /* Garder seulement les 2 premiers KPI */
-  .m-kpi { padding: 8px 10px !important; }
+  .m-kpi { padding: 8px 10px !important; min-width: 0 !important; }
   .m-kpi:nth-child(3),
   .m-kpi:nth-child(4) { display: none !important; }
+  .m-chart, .m-donut-wrap { min-width: 0 !important; }
   .m-kv {
     font-size: 20px !important;
     white-space: nowrap !important;
@@ -836,8 +840,8 @@ button{font-family:inherit;}
   .m-bn { font-size: 8px !important; }
   /* Masquer donut */
   .m-donut-wrap { display: none !important; }
-  /* Masquer hotspots */
-  .hs-point, .hs-bar { display: none !important; }
+  /* Masquer hotspots sur mobile */
+  .hs-point, .hs-bar, .hs-ring, .hs-tip { display: none !important; }
 
   /* ── SECTIONS GÉNÉRALES ── */
   section {
@@ -856,6 +860,24 @@ button{font-family:inherit;}
   }
   .section-title { font-size: 26px !important; line-height: 1.15 !important; }
   .section-sub { font-size: 14px !important; }
+
+  /* ── SECTORS ── */
+  .sectors-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+  .s-card-item { padding: 10px 12px !important; gap: 8px !important; border-radius: 10px !important; }
+  .s-card-ico { width: 30px !important; height: 30px !important; font-size: 14px !important; }
+  .s-card-label { font-size: 12px !important; }
+  .s-card-sub { font-size: 10px !important; }
+  /* Tagline pill: une ligne sur mobile */
+  .sectors-tagline { margin-top: 20px !important; }
+  .sectors-tagline-pill {
+    border-radius: 14px !important;
+    padding: 12px 16px !important;
+    gap: 8px !important;
+    text-align: left !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+  }
+  .sectors-tagline-pill span:first-child { flex-shrink: 0; margin-top: 1px; }
 
   /* ── TICKER ── */
   .sectors-ticker-wrap { margin: 20px 0 0 !important; overflow: hidden !important; }
@@ -1379,7 +1401,7 @@ button{font-family:inherit;}
         </div>
         <div class="cf-field"><label class="cf-label" for="cf-message">Message</label><textarea class="cf-textarea" id="cf-message" placeholder="Décrivez votre besoin en quelques lignes..."></textarea></div>
         <button class="cf-btn" id="cf-btn" onclick="submitContact()"><span id="cf-btn-txt">Envoyer le message →</span></button>
-        <div class="cf-note">Réponse garantie sous 24h · <a href="mailto:contact@followoffer.com">contact@followoffer.com</a></div>
+        <div class="cf-note">Réponse garantie sous 24h · contact@followoffer.com</div>
       </div>
       <div id="cf-success" style="display:none;text-align:center;padding:24px 0;">
         <div style="font-size:40px;margin-bottom:14px;">✅</div>
@@ -1417,7 +1439,7 @@ button{font-family:inherit;}
     <a href="#" onclick="openLegal('mentions');return false;">Mentions légales</a>
     <a href="#" onclick="openLegal('cgv');return false;">CGV</a>
     <a href="#" onclick="openLegal('confidentialite');return false;">Confidentialité</a>
-    <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>
+    contact@followoffer.com
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -1602,7 +1624,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <h2>Mentions légales</h2>
         <h3>Éditeur du service</h3>
         <p><strong>FollowOffer</strong><br>2000 Neuchâtel, Suisse<br>
-        Email : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a><br>
+        Email : contact@followoffer.com<br>
         Site : <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>Hébergement</h3>
         <p>L'application FollowOffer est hébergée par <strong>Vercel Inc.</strong><br>
@@ -1638,7 +1660,7 @@ if(window.location.hash.startsWith('#legal-')) {
           <li>Ne pas tenter de contourner les limites du plan gratuit</li>
         </ul>
         <h3>Article 6 — Résiliation</h3>
-        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>. Suppression des données sous 30 jours.</p>
+        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à contact@followoffer.com. Suppression des données sous 30 jours.</p>
         <h3>Article 7 — Droit applicable</h3>
         <p>CGV soumises au <strong>droit suisse</strong>. Tout litige relève de la compétence des tribunaux de Neuchâtel.</p>
         <p class="legal-date">CGV en vigueur depuis mars 2026.</p>
@@ -1649,7 +1671,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <div class="legal-info-box">Conforme à la <strong>Loi fédérale sur la protection des données (LPD)</strong> révisée en vigueur depuis le 1er septembre 2023, ainsi qu'au RGPD européen.</div>
         <h3>1. Responsable du traitement</h3>
         <p><strong>FollowOffer</strong> · 2000 Neuchâtel, Suisse<br>
-        <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
+        contact@followoffer.com · <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>2. Données collectées</h3>
         <table>
           <tr><th>Catégorie</th><th>Données</th><th>Finalité</th></tr>
@@ -1670,51 +1692,39 @@ if(window.location.hash.startsWith('#legal-')) {
         </table>
         <h3>4. Vos droits (LPD & RGPD)</h3>
         <p>Accès, rectification, effacement, portabilité (export CSV dans l'app), opposition.<br>
-        Contact : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
+        Contact : contact@followoffer.com · <a href="https://followoffer.com">followoffer.com</a></p>
       </div>
     </div>
   </div>
 </div><script>
-/* ═══════════════════════════════════════
-   HERO CANVAS — HEXAGONES ANIMÉS
-   ═══════════════════════════════════════ */
+/* ═══ HERO CANVAS — HEXAGONES ANIMÉS ═══ */
 (function(){
-  var canvas = document.getElementById('hero-canvas');
-  if(!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var W, H, hexes=[], nodes=[], lines=[];
-  var HEX_SIZE=38, NODE_COUNT=18, LINE_COUNT=12;
-  function resize(){
-    W=canvas.width=canvas.offsetWidth;
-    H=canvas.height=canvas.offsetHeight;
-    buildGrid();
-  }
+  var canvas=document.getElementById('hero-canvas');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+  var W,H,hexes=[],nodes=[],lines=[];
+  var HEX_SIZE=38,NODE_COUNT=18,LINE_COUNT=12;
+  function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;buildGrid();}
   function buildGrid(){
     hexes=[];
-    var w=HEX_SIZE*2, h=Math.sqrt(3)*HEX_SIZE;
-    var cols=Math.ceil(W/(w*0.75))+2, rows=Math.ceil(H/h)+2;
-    for(var r=-1;r<rows;r++){
-      for(var c=-1;c<cols;c++){
-        hexes.push({x:c*w*0.75, y:r*h+(c%2===0?0:h/2)});
-      }
-    }
+    var w=HEX_SIZE*2,h=Math.sqrt(3)*HEX_SIZE;
+    var cols=Math.ceil(W/(w*0.75))+2,rows=Math.ceil(H/h)+2;
+    for(var r=-1;r<rows;r++)for(var c=-1;c<cols;c++)hexes.push({x:c*w*0.75,y:r*h+(c%2===0?0:h/2)});
     nodes=[];
-    var shuffled=hexes.slice().sort(function(){return Math.random()-0.5;});
-    for(var i=0;i<shuffled.length&&nodes.length<NODE_COUNT;i++){
-      var hx=shuffled[i].x,hy=shuffled[i].y;
-      if(hx>20&&hx<W-20&&hy>20&&hy<H*0.72) nodes.push({x:hx,y:hy,pulse:Math.random()*Math.PI*2,speed:0.015+Math.random()*0.025,baseR:2+Math.random()*2.5});
+    var sh=hexes.slice().sort(function(){return Math.random()-0.5;});
+    for(var i=0;i<sh.length&&nodes.length<NODE_COUNT;i++){
+      if(sh[i].x>20&&sh[i].x<W-20&&sh[i].y>20&&sh[i].y<H*0.72)
+        nodes.push({x:sh[i].x,y:sh[i].y,pulse:Math.random()*Math.PI*2,speed:0.015+Math.random()*0.025,baseR:2+Math.random()*2.5});
     }
     lines=[];
-    for(var a=0;a<nodes.length;a++){
-      for(var b=a+1;b<nodes.length&&lines.length<LINE_COUNT;b++){
-        var dx=nodes[a].x-nodes[b].x,dy=nodes[a].y-nodes[b].y,d=Math.sqrt(dx*dx+dy*dy);
-        if(d<HEX_SIZE*3.5) lines.push({a:a,b:b,d:d});
-      }
+    for(var a=0;a<nodes.length;a++)for(var b=a+1;b<nodes.length&&lines.length<LINE_COUNT;b++){
+      var dx=nodes[a].x-nodes[b].x,dy=nodes[a].y-nodes[b].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<HEX_SIZE*3.5)lines.push({a:a,b:b,d:d});
     }
   }
   function hexPath(cx,cy,r){
     ctx.beginPath();
-    for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);var px=cx+r*Math.cos(a),py=cy+r*Math.sin(a);i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}
+    for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}
     ctx.closePath();
   }
   function draw(ts){
@@ -1723,16 +1733,13 @@ if(window.location.hash.startsWith('#legal-')) {
       var hx=hexes[i].x,hy=hexes[i].y;
       var distX=(hx-W/2)/W,distY=hy/H;
       var alpha=Math.max(0,0.30-Math.abs(distX)*0.5-Math.max(0,distY-0.55)*0.9);
-      if(alpha<0.01) continue;
-      ctx.strokeStyle='rgba(55,100,200,'+alpha.toFixed(3)+')';
-      ctx.lineWidth=0.85;
-      hexPath(hx,hy,HEX_SIZE-1);
-      ctx.stroke();
+      if(alpha<0.01)continue;
+      ctx.strokeStyle='rgba(55,100,200,'+alpha.toFixed(3)+')';ctx.lineWidth=0.85;
+      hexPath(hx,hy,HEX_SIZE-1);ctx.stroke();
     }
     for(var l=0;l<lines.length;l++){
       var na=nodes[lines[l].a],nb=nodes[lines[l].b];
-      var p=(Math.sin(ts*0.001+l)+1)/2;
-      var a2=0.08+p*0.20;
+      var p=(Math.sin(ts*0.001+l)+1)/2,a2=0.08+p*0.20;
       var g=ctx.createLinearGradient(na.x,na.y,nb.x,nb.y);
       g.addColorStop(0,'rgba(77,143,232,'+a2.toFixed(3)+')');
       g.addColorStop(0.5,'rgba(100,165,255,'+(a2*1.7).toFixed(3)+')');
@@ -1742,8 +1749,7 @@ if(window.location.hash.startsWith('#legal-')) {
     }
     for(var n=0;n<nodes.length;n++){
       var nd=nodes[n];nd.pulse+=nd.speed;
-      var gw=(Math.sin(nd.pulse)+1)/2;
-      var r=nd.baseR+gw*2.5;
+      var gw=(Math.sin(nd.pulse)+1)/2,r=nd.baseR+gw*2.5;
       var h1=ctx.createRadialGradient(nd.x,nd.y,0,nd.x,nd.y,r*5);
       h1.addColorStop(0,'rgba(100,170,255,'+(0.55+gw*0.35).toFixed(2)+')');
       h1.addColorStop(0.4,'rgba(77,143,232,'+(0.15+gw*0.15).toFixed(2)+')');
@@ -1757,9 +1763,8 @@ if(window.location.hash.startsWith('#legal-')) {
     }
     requestAnimationFrame(draw);
   }
-  window.addEventListener('resize',function(){resize();});
-  resize();
-  requestAnimationFrame(draw);
+  window.addEventListener('resize',resize);
+  resize();requestAnimationFrame(draw);
 })();
 
 /* ═══ HOTSPOTS ═══ */
@@ -1786,7 +1791,7 @@ if(window.location.hash.startsWith('#legal-')) {
 /* ═══ NAV SCROLL ═══ */
 (function(){
   var nav=document.getElementById('mainNav'),hero=document.querySelector('.hero');
-  function upd(){if(!nav||!hero)return;var hb=hero.offsetTop+hero.offsetHeight-80;window.scrollY>=hb?(nav.classList.add('is-light'),nav.classList.remove('is-dark')):(nav.classList.remove('is-light'));}
+  function upd(){if(!nav||!hero)return;var hb=hero.offsetTop+hero.offsetHeight-80;window.scrollY>=hb?nav.classList.add('is-light'):nav.classList.remove('is-light');}
   window.addEventListener('scroll',upd,{passive:true});upd();
 })();
 
