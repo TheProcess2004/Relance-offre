@@ -79,6 +79,9 @@ body.light-mode .nc-gold{background:#1555A8!important;color:#fff!important;}
 body.light-mode .nc-blue{background:#1555A8!important;color:#fff!important;}
 body.light-mode .sb-logo{color:var(--gold)!important;}
 body.light-mode .logo-text{color:#0A1220!important;}
+body.light-mode .logo-follow{color:#0A1220!important;}
+body.light-mode .logo-offer{color:#1555A8!important;}
+body.light-mode .sb-tagline{color:rgba(15,23,40,0.35)!important;}
 body.light-mode .sb-tagline{color:rgba(15,23,40,0.38)!important;}
 body.light-mode .sb-tagline{color:rgba(15,23,40,0.45)!important;}
 body.light-mode #sb-plan-label{color:#0F1728!important;font-weight:600;}
@@ -652,7 +655,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="sb-glow" style="pointer-events:none;"></div>
   <div class="sb-brand">
     <div class="sb-logo" style="display:flex;align-items:center;gap:6px;padding:2px 0;">
-      <span class="logo-text" style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;letter-spacing:-0.3px;">Follow<span style="color:#4D90DC;">Offer</span></span>
+      <span class="logo-text" style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;letter-spacing:-0.3px;"><span class="logo-follow">Follow</span><span class="logo-offer" style="color:#4D90DC;">Offer</span></span>
       <svg width="13" height="13" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;flex-shrink:0;">
         <rect width="32" height="32" fill="#D42B1E"/>
         <rect x="13" y="6" width="6" height="20" fill="white"/>
@@ -1102,6 +1105,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
             <div class="fg"><label class="fl">Entreprise</label><input class="fi" id="cfg-company" placeholder="Mon Entreprise SA" oninput="updateSigPreview()"></div>
             <div class="fg"><label class="fl">Téléphone</label><input class="fi" id="cfg-phone" placeholder="+41 79 000 00 00" oninput="updateSigPreview()"></div>
           </div>
+          <div class="fg" style="margin-bottom:12px;"><label class="fl">Site web <span style="color:var(--muted);font-weight:400;">(optionnel)</span></label><input class="fi" id="cfg-website" type="url" placeholder="https://www.monentreprise.ch" oninput="updateSigPreview()"></div>
         </div>
         <div class="fcard" style="margin-bottom:18px;">
           <div class="fcard-t">✍️ Aperçu signature email</div>
@@ -4349,7 +4353,7 @@ function injectMobileNav() {
   const header = document.createElement('div');
   header.id = 'mob-header';
   header.className = 'mob-header';
-  header.innerHTML = `<div class="mob-logo" style="display:flex;align-items:center;gap:6px;"><span style="font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;letter-spacing:-0.3px;color:#ECF0FA;">Follow<span style="color:#4D90DC;">Offer</span></span><svg width="13" height="13" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;flex-shrink:0;"><rect width="32" height="32" fill="#D42B1E"/><rect x="13" y="6" width="6" height="20" fill="white"/><rect x="6" y="13" width="20" height="6" fill="white"/></svg></div><div class="mob-burger" onclick="toggleMobileMenu()">☰</div>`;
+  header.innerHTML = `<div class="mob-logo" style="display:flex;align-items:center;gap:6px;"><span style="font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;letter-spacing:-0.3px;" class="logo-text"><span class="logo-follow">Follow</span><span class="logo-offer" style="color:#4D90DC;">Offer</span></span><svg width="13" height="13" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;flex-shrink:0;"><rect width="32" height="32" fill="#D42B1E"/><rect x="13" y="6" width="6" height="20" fill="white"/><rect x="6" y="13" width="20" height="6" fill="white"/></svg></div><div class="mob-burger" onclick="toggleMobileMenu()">☰</div>`;
   document.body.appendChild(header);
 
   const overlay = document.createElement('div');
