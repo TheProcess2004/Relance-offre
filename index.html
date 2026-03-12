@@ -75,6 +75,8 @@ body.light-mode .nb.active{background:rgba(21,85,168,0.10)!important;color:#0A12
 body.light-mode .nb.active .ic{color:var(--gold)!important;}
 body.light-mode .nb .nc{background:var(--red)!important;}
 body.light-mode .sb-logo{color:var(--gold)!important;}
+body.light-mode .logo-text{color:#0A1220!important;}
+body.light-mode .sb-tagline{color:rgba(15,23,40,0.38)!important;}
 body.light-mode .sb-tagline{color:rgba(15,23,40,0.45)!important;}
 body.light-mode #sb-plan-label{color:#0F1728!important;font-weight:600;}
 body.light-mode #sb-plan-sub,body.light-mode .sb-sitelink,body.light-mode .sb-legal-link{color:rgba(15,23,40,0.50)!important;}
@@ -647,14 +649,14 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="sb-glow" style="pointer-events:none;"></div>
   <div class="sb-brand">
     <div class="sb-logo" style="display:flex;align-items:center;gap:6px;padding:2px 0;">
-      <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;letter-spacing:-0.3px;color:#ECF0FA;">Follow<span style="color:#4D90DC;">Offer</span></span>
+      <span class="logo-text" style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;letter-spacing:-0.3px;">Follow<span style="color:#4D90DC;">Offer</span></span>
       <svg width="13" height="13" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;flex-shrink:0;">
         <rect width="32" height="32" fill="#D42B1E"/>
         <rect x="13" y="6" width="6" height="20" fill="white"/>
         <rect x="6" y="13" width="20" height="6" fill="white"/>
       </svg>
     </div>
-    <div style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(160,185,215,0.32);padding-left:2px;margin-top:3px;font-family:'Outfit',sans-serif;">Chaque relance compte</div>
+    <div style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(160,185,215,0.32);padding-left:2px;margin-top:3px;font-family:'Outfit',sans-serif;" class="sb-tagline">Chaque relance compte</div>
   </div>
   <nav class="sb-nav" id="sb-nav">
     <div class="sb-section">
