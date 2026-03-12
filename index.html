@@ -33,24 +33,84 @@ body.light-mode{
   --text:#0F1728;--muted:rgba(30,50,90,0.65);--muted2:rgba(30,50,90,0.35);
 }
 /* ── Light mode overrides ── */
-body.light-mode .topbar{background:rgba(240,244,250,0.96)!important;border-bottom:1px solid rgba(30,60,120,0.12)!important;}
+/* ── Structure ── */
+body.light-mode .topbar{background:rgba(240,244,250,0.97)!important;border-bottom:1px solid rgba(30,60,120,0.12)!important;}
 body.light-mode .sb{background:var(--s1)!important;border-right:1px solid rgba(30,60,120,0.10)!important;}
-body.light-mode input,body.light-mode select,body.light-mode textarea{background:var(--s2)!important;color:var(--text)!important;border-color:rgba(30,60,120,0.15)!important;}
-body.light-mode .kcard,body.light-mode .fcard,body.light-mode .offer-card,body.light-mode .client-card{background:var(--s1)!important;border-color:var(--border)!important;}
-body.light-mode .overlay-box,body.light-mode .auth-box,body.light-mode .toast-el{background:var(--s1)!important;border-color:var(--border2)!important;}
-body.light-mode .modal-box{background:var(--s1)!important;}
-body.light-mode .nb{color:rgba(30,50,90,0.75)!important;}
-body.light-mode .nb:hover{background:rgba(21,85,168,0.07)!important;color:var(--text)!important;}
-body.light-mode .nb.active{background:rgba(21,85,168,0.10)!important;color:var(--text)!important;}
-body.light-mode .ep-card,body.light-mode .rtl,body.light-mode .ai-load,body.light-mode .pdf-extract,body.light-mode .sig-preview-wrap{background:var(--s2)!important;}
-body.light-mode .sb-logo{color:var(--gold)!important;}
-body.light-mode .sb-tagline,body.light-mode #sb-plan-label,body.light-mode #sb-plan-sub,body.light-mode .sb-sitelink,body.light-mode .sb-legal-link,body.light-mode .sb-logout-btn,body.light-mode .sb-home-link,body.light-mode #sb-upgrade-lbl{color:var(--muted)!important;}
+body.light-mode .panel{background:#F0F4FA!important;}
+body.light-mode body::before{opacity:0.06;}
+
+/* ── Textes globaux ── */
+body.light-mode{color:#0F1728!important;}
+body.light-mode h1,body.light-mode h2,body.light-mode h3,body.light-mode h4,body.light-mode strong{color:#0A1220!important;}
+body.light-mode p,body.light-mode span,body.light-mode div,body.light-mode label{color:inherit;}
+body.light-mode .tb-title{color:#0A1220!important;}
+
+/* ── KPI cards ── */
+body.light-mode .k-lbl{color:rgba(15,23,40,0.55)!important;}
+body.light-mode .k-val{color:#0A1220!important;}
+body.light-mode .k-sub{color:rgba(15,23,40,0.60)!important;}
+body.light-mode .kcard.g .k-val{color:#157A50!important;}
+body.light-mode .kcard.gr .k-val{color:#157A50!important;}
+body.light-mode .kcard.rd .k-val{color:#B03030!important;}
+body.light-mode .kcard.bl .k-val{color:#2868B8!important;}
+body.light-mode .kcard.pu .k-val{color:#4A52A0!important;}
+body.light-mode .kcard.or .k-val{color:#9A6020!important;}
+body.light-mode .kcard,body.light-mode .fcard{background:var(--s1)!important;border-color:var(--border)!important;}
+
+/* ── Section headers ── */
+body.light-mode .sh-t{color:#0A1220!important;}
+body.light-mode .sh .btn-ghost{color:#2868B8!important;}
+
+/* ── Tableaux / listes ── */
+body.light-mode .offer-card,body.light-mode .client-card{background:var(--s1)!important;border-color:var(--border)!important;}
+body.light-mode .rtl{background:var(--s1)!important;}
+body.light-mode .rtl td,body.light-mode .rtl th{color:#0F1728!important;border-color:var(--border)!important;}
+body.light-mode th{color:rgba(15,23,40,0.55)!important;font-size:10px;}
+body.light-mode td{color:#0F1728!important;}
+
+/* ── Sidebar nav ── */
+body.light-mode .nb{color:rgba(15,23,40,0.72)!important;}
+body.light-mode .nb:hover{background:rgba(21,85,168,0.07)!important;color:#0A1220!important;}
+body.light-mode .nb.active{background:rgba(21,85,168,0.10)!important;color:#0A1220!important;font-weight:700;}
 body.light-mode .nb.active .ic{color:var(--gold)!important;}
-body.light-mode .panel{background:var(--bg)!important;}
-body.light-mode body::before{opacity:0.08;}
-body.light-mode .btn-ghost{color:var(--text)!important;}
-body.light-mode .cfg-tab-btn{color:var(--muted)!important;}
-body.light-mode .cfg-tab-btn.active{background:var(--s1)!important;color:var(--text)!important;}
+body.light-mode .nb .nc{background:var(--red)!important;}
+body.light-mode .sb-logo{color:var(--gold)!important;}
+body.light-mode .sb-tagline{color:rgba(15,23,40,0.45)!important;}
+body.light-mode #sb-plan-label{color:#0F1728!important;font-weight:600;}
+body.light-mode #sb-plan-sub,body.light-mode .sb-sitelink,body.light-mode .sb-legal-link{color:rgba(15,23,40,0.50)!important;}
+body.light-mode .sb-logout-btn,body.light-mode .sb-home-link{color:rgba(15,23,40,0.60)!important;}
+body.light-mode #sb-upgrade-lbl{color:#2868B8!important;font-weight:600;}
+
+/* ── Section labels (SYSTÈME, CLIENTS, OFFRES...) ── */
+body.light-mode .sb-section-lbl,body.light-mode [style*="letter-spacing"]{color:rgba(15,23,40,0.40)!important;}
+
+/* ── Formulaires ── */
+body.light-mode input,body.light-mode select,body.light-mode textarea{background:var(--s1)!important;color:#0F1728!important;border-color:rgba(30,60,120,0.18)!important;}
+body.light-mode input::placeholder,body.light-mode textarea::placeholder{color:rgba(15,23,40,0.38)!important;}
+body.light-mode label{color:#0F1728!important;}
+
+/* ── Modales / overlays ── */
+body.light-mode .overlay-box,body.light-mode .auth-box,body.light-mode .toast-el,body.light-mode .modal-box{background:var(--s1)!important;border-color:var(--border2)!important;}
+body.light-mode .modal-t{color:#0A1220!important;}
+body.light-mode .modal-s{color:rgba(15,23,40,0.60)!important;}
+
+/* ── Ep-cards / AI / PDF ── */
+body.light-mode .ep-card,body.light-mode .ai-load,body.light-mode .pdf-extract,body.light-mode .sig-preview-wrap{background:var(--s2)!important;}
+body.light-mode .ai-step{color:rgba(15,23,40,0.65)!important;}
+
+/* ── Boutons ── */
+body.light-mode .btn-ghost{color:#0F1728!important;border-color:rgba(30,60,120,0.18)!important;}
+body.light-mode .btn-ghost:hover{background:rgba(21,85,168,0.07)!important;}
+
+/* ── Config tabs ── */
+body.light-mode .cfg-tab-btn{color:rgba(15,23,40,0.55)!important;}
+body.light-mode .cfg-tab-btn.active{background:var(--s1)!important;color:#0A1220!important;font-weight:700;}
+
+/* ── Tags / badges ── */
+body.light-mode .tag-sent,.light-mode .tag-relance1,.light-mode .tag-relance2,.light-mode .tag-relance3{opacity:1!important;}
+
+/* ── Muted générique ── */
+body.light-mode .muted-text,[class*="muted"]{color:rgba(15,23,40,0.55)!important;}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
 ::-webkit-scrollbar{width:4px;height:4px;}
