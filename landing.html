@@ -566,27 +566,60 @@ button{font-family:inherit;}
 
 /* ═══ HOTSPOT SYSTEM ═══ */
 .hs-layer{position:absolute;inset:0;pointer-events:none;z-index:10;}
-.hs-point{position:absolute;width:28px;height:28px;transform:translate(-50%,-50%);pointer-events:all;cursor:pointer;}
-.hs-pulse{position:absolute;inset:0;border-radius:50%;background:rgba(21,85,168,0.35);animation:hsPulse 2.4s ease-out infinite;}
-.hs-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#fff;border:2.5px solid #1555A8;box-shadow:0 0 0 3px rgba(21,85,168,0.25),0 2px 8px rgba(0,0,0,0.35);transition:transform 0.18s,box-shadow 0.18s;z-index:2;}
-.hs-point:hover .hs-dot{transform:translate(-50%,-50%) scale(1.25);box-shadow:0 0 0 5px rgba(21,85,168,0.35),0 4px 16px rgba(0,0,0,0.4);}
-@keyframes hsPulse{0%{transform:scale(0.7);opacity:0.8;}100%{transform:scale(2.4);opacity:0;}}
+
+/* Dot */
+.hs-point{position:absolute;width:36px;height:36px;transform:translate(-50%,-50%);pointer-events:all;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.hs-pulse{position:absolute;inset:0;border-radius:50%;background:rgba(21,85,168,0.30);animation:hsPulse 2.6s ease-out infinite;}
+.hs-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:13px;height:13px;border-radius:50%;background:#fff;border:2.5px solid #1555A8;box-shadow:0 0 0 3px rgba(21,85,168,0.25),0 2px 8px rgba(0,0,0,0.35);transition:transform 0.18s,box-shadow 0.18s;z-index:2;}
+.hs-point.hs-active .hs-dot{transform:translate(-50%,-50%) scale(1.3);background:#1555A8;border-color:#fff;box-shadow:0 0 0 5px rgba(21,85,168,0.30),0 4px 16px rgba(0,0,0,0.4);}
+.hs-point.hs-active .hs-pulse{background:rgba(21,85,168,0.50);animation-duration:1.8s;}
 
 /* Tooltip */
-.hs-tip{position:absolute;bottom:calc(100% + 10px);width:230px;background:rgba(8,12,22,0.97);border:1px solid rgba(21,85,168,0.35);border-radius:12px;padding:14px;box-shadow:0 8px 36px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.04);backdrop-filter:blur(12px);opacity:0;transform:translateY(6px) scale(0.96);transition:opacity 0.2s cubic-bezier(.16,1,.3,1),transform 0.2s cubic-bezier(.16,1,.3,1);pointer-events:none;z-index:20;}
-.hs-tip-below{bottom:auto;top:calc(100% + 10px);transform:translateY(-6px) scale(0.96);}
-.hs-point:hover .hs-tip-below{transform:translateY(0) scale(1);}
-.hs-tip-right{left:16px;}
-.hs-tip-left{right:16px;}
-.hs-point:hover .hs-tip{opacity:1;transform:translateY(0) scale(1);}
-.hs-tip-ico{font-size:20px;margin-bottom:8px;}
-.hs-tip-title{font-size:12px;font-weight:700;color:#E8EDF6;margin-bottom:4px;letter-spacing:-0.1px;}
-.hs-tip-desc{font-size:11px;color:rgba(232,237,246,0.55);line-height:1.6;}
+.hs-tip{
+  position:absolute;
+  width:240px;
+  background:rgba(6,10,20,0.97);
+  border:1px solid rgba(21,85,168,0.40);
+  border-radius:14px;
+  padding:0;
+  box-shadow:0 12px 48px rgba(0,0,0,0.65),0 0 0 1px rgba(255,255,255,0.04);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  opacity:0;
+  transform:translateY(8px) scale(0.95);
+  transition:opacity 0.25s cubic-bezier(.16,1,.3,1),transform 0.25s cubic-bezier(.16,1,.3,1);
+  pointer-events:none;
+  z-index:100;
+  overflow:hidden;
+}
+.hs-point.hs-active .hs-tip{opacity:1;transform:translateY(0) scale(1);pointer-events:all;}
 
-/* Légende */
+/* Tooltip directions */
+.hs-tip-right{left:22px;}
+.hs-tip-left{right:22px;}
+.hs-tip-above{bottom:calc(100% + 12px);}
+.hs-tip-below{top:calc(100% + 12px);}
+
+/* Progress bar inside tooltip */
+.hs-tip-progress{height:3px;background:rgba(21,85,168,0.20);width:100%;}
+.hs-tip-bar{height:100%;background:linear-gradient(90deg,#1555A8,#4D90DC);width:0%;transition:none;}
+.hs-tip-bar.hs-animating{transition:width linear;}
+
+/* Tooltip body */
+.hs-tip-body{padding:14px 16px 16px;}
+.hs-tip-ico{font-size:18px;margin-bottom:7px;}
+.hs-tip-title{font-size:12px;font-weight:700;color:#E8EDF6;margin-bottom:5px;letter-spacing:-0.1px;}
+.hs-tip-desc{font-size:11px;color:rgba(232,237,246,0.58);line-height:1.65;}
+
+/* Dot index indicator */
+.hs-tip-dots{display:flex;gap:5px;margin-top:12px;}
+.hs-tip-idx{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.15);transition:background 0.2s;}
+.hs-tip-idx.active{background:#4D90DC;}
+
+/* Legend */
 .hs-legend{display:flex;justify-content:center;margin-top:18px;}
-.hs-leg-item{display:flex;align-items:center;gap:8px;font-size:11.5px;color:rgba(232,237,246,0.35);font-weight:500;}
-.hs-leg-dot{width:8px;height:8px;border-radius:50%;background:#1555A8;box-shadow:0 0 0 3px rgba(21,85,168,0.25);flex-shrink:0;animation:hsPulse 2.4s ease-out infinite;}
+.hs-leg-item{display:flex;align-items:center;gap:8px;font-size:11.5px;color:rgba(232,237,246,0.32);font-weight:500;}
+.hs-leg-dot{width:8px;height:8px;border-radius:50%;background:#1555A8;box-shadow:0 0 0 3px rgba(21,85,168,0.22);flex-shrink:0;animation:hsPulse 2.4s ease-out infinite;}
 
 /* Mockup positioning fix */
 .mw-body{position:relative;}
@@ -635,11 +668,11 @@ button{font-family:inherit;}
 .m-kpi:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(21,85,168,0.12);}
 
 /* Hotspot entrance animation */
-.hs-point{animation:hsIn 0.6s both cubic-bezier(.34,1.56,.64,1);}
-.hs-point:nth-child(1){animation-delay:1.4s;}
-.hs-point:nth-child(2){animation-delay:1.7s;}
-.hs-point:nth-child(3){animation-delay:2.0s;}
-.hs-point:nth-child(4){animation-delay:2.3s;}
+.hs-point{animation:hsIn 0.5s both cubic-bezier(.34,1.56,.64,1);opacity:0;}
+.hs-point:nth-child(1){animation-delay:1.2s;}
+.hs-point:nth-child(2){animation-delay:1.5s;}
+.hs-point:nth-child(3){animation-delay:1.8s;}
+.hs-point:nth-child(4){animation-delay:2.1s;}
 @keyframes hsIn{from{opacity:0;transform:translate(-50%,-50%) scale(0);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
 
 /* Floating badge above mockup */
@@ -679,6 +712,27 @@ button{font-family:inherit;}
 .msb-nav.demo-active{background:var(--blue3)!important;color:var(--blue)!important;}
 .m-kpi.demo-hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(21,85,168,0.12);}
 @keyframes clickRing{0%{transform:translate(-4px,-4px) scale(0);opacity:0.9;}100%{transform:translate(-4px,-4px) scale(1.8);opacity:0;}}
+
+/* ═══ RESPONSIVE HOTSPOTS ═══ */
+@media(max-width:640px){
+  /* Mockup body already stacks, sidebar hidden */
+  .hs-tip{width:200px;}
+  .hs-tip-left{right:auto;left:50%;transform:translateX(-50%) translateY(8px) scale(0.95);}
+  .hs-point.hs-active .hs-tip.hs-tip-left{transform:translateX(-50%) translateY(0) scale(1);}
+  /* Reposition points for mobile (no sidebar) */
+  .hs-point[data-hs="3"]{left:10% !important;top:40% !important;} /* sidebar hidden → move to content */
+  /* Larger tap target */
+  .hs-point{width:44px;height:44px;}
+  .hs-tip-body{padding:12px 14px 14px;}
+  .hs-tip-title{font-size:11px;}
+  .hs-tip-desc{font-size:10px;}
+}
+@media(max-width:480px){
+  .hs-tip{width:180px;}
+  .hs-tip-right{left:10px;}
+  .hs-tip-left{right:10px;left:auto;transform:none;}
+  .hs-point.hs-active .hs-tip.hs-tip-left{transform:none;}
+}
 
 </style>
 </head>
@@ -794,51 +848,79 @@ button{font-family:inherit;}
       </div>
       <!-- HOTSPOTS interactifs -->
       <div class="hs-layer" id="hs-layer">
-        <!-- Point 1 — KPIs (haut gauche) -->
-        <div class="hs-point" style="left:39%;top:42%;" data-hs="1">
+        <!-- Point 1 — KPIs -->
+        <div class="hs-point" style="left:39%;top:42%;" data-hs="0">
           <span class="hs-pulse"></span>
           <span class="hs-dot"></span>
           <div class="hs-tip hs-tip-right hs-tip-below">
-            <div class="hs-tip-ico">📊</div>
-            <div class="hs-tip-content">
+            <div class="hs-tip-progress"><div class="hs-tip-bar" id="hs-bar-0"></div></div>
+            <div class="hs-tip-body">
+              <div class="hs-tip-ico">📊</div>
               <div class="hs-tip-title">Pipeline en temps réel</div>
               <div class="hs-tip-desc">CA gagné, pipeline actif et taux de conversion mis à jour à chaque action.</div>
+              <div class="hs-tip-dots">
+                <div class="hs-tip-idx active" data-goto="0"></div>
+                <div class="hs-tip-idx" data-goto="1"></div>
+                <div class="hs-tip-idx" data-goto="2"></div>
+                <div class="hs-tip-idx" data-goto="3"></div>
+              </div>
             </div>
           </div>
         </div>
-        <!-- Point 2 — Chart barres (milieu) -->
-        <div class="hs-point" style="left:65%;top:68%;" data-hs="2">
+        <!-- Point 2 — Chart barres -->
+        <div class="hs-point" style="left:63%;top:70%;" data-hs="1">
           <span class="hs-pulse" style="animation-delay:.4s"></span>
           <span class="hs-dot"></span>
-          <div class="hs-tip hs-tip-left">
-            <div class="hs-tip-ico">🔔</div>
-            <div class="hs-tip-content">
-              <div class="hs-tip-title">Suivi des relances IA</div>
-              <div class="hs-tip-desc">J+3, J+7, J+14 — chaque offre suit son cycle automatiquement, sans action de votre part.</div>
+          <div class="hs-tip hs-tip-left hs-tip-above">
+            <div class="hs-tip-progress"><div class="hs-tip-bar" id="hs-bar-1"></div></div>
+            <div class="hs-tip-body">
+              <div class="hs-tip-ico">🔔</div>
+              <div class="hs-tip-title">Relances IA automatiques</div>
+              <div class="hs-tip-desc">J+3, J+7, J+14 — chaque offre suit son cycle sans aucune action de votre part.</div>
+              <div class="hs-tip-dots">
+                <div class="hs-tip-idx" data-goto="0"></div>
+                <div class="hs-tip-idx active" data-goto="1"></div>
+                <div class="hs-tip-idx" data-goto="2"></div>
+                <div class="hs-tip-idx" data-goto="3"></div>
+              </div>
             </div>
           </div>
         </div>
-        <!-- Point 3 — Donut (droite) -->
-        <div class="hs-point" style="left:88%;top:65%;" data-hs="3">
+        <!-- Point 3 — Donut -->
+        <div class="hs-point" style="left:87%;top:63%;" data-hs="2">
           <span class="hs-pulse" style="animation-delay:.8s"></span>
           <span class="hs-dot"></span>
-          <div class="hs-tip hs-tip-left">
-            <div class="hs-tip-ico">👁</div>
-            <div class="hs-tip-content">
+          <div class="hs-tip hs-tip-left hs-tip-above">
+            <div class="hs-tip-progress"><div class="hs-tip-bar" id="hs-bar-2"></div></div>
+            <div class="hs-tip-body">
+              <div class="hs-tip-ico">👁</div>
               <div class="hs-tip-title">Statuts en un coup d'œil</div>
-              <div class="hs-tip-desc">Envoyées, en relance, gagnées ou perdues — votre pipeline commercial toujours lisible.</div>
+              <div class="hs-tip-desc">Envoyées, en relance, gagnées ou perdues — votre pipeline toujours lisible.</div>
+              <div class="hs-tip-dots">
+                <div class="hs-tip-idx" data-goto="0"></div>
+                <div class="hs-tip-idx" data-goto="1"></div>
+                <div class="hs-tip-idx active" data-goto="2"></div>
+                <div class="hs-tip-idx" data-goto="3"></div>
+              </div>
             </div>
           </div>
         </div>
-        <!-- Point 4 — Sidebar nav -->
-        <div class="hs-point" style="left:11%;top:55%;" data-hs="4">
+        <!-- Point 4 — Sidebar -->
+        <div class="hs-point" style="left:11%;top:55%;" data-hs="3">
           <span class="hs-pulse" style="animation-delay:1.2s"></span>
           <span class="hs-dot"></span>
-          <div class="hs-tip hs-tip-right">
-            <div class="hs-tip-ico">⚡</div>
-            <div class="hs-tip-content">
+          <div class="hs-tip hs-tip-right hs-tip-above">
+            <div class="hs-tip-progress"><div class="hs-tip-bar" id="hs-bar-3"></div></div>
+            <div class="hs-tip-body">
+              <div class="hs-tip-ico">⚡</div>
               <div class="hs-tip-title">Navigation ultra-simple</div>
-              <div class="hs-tip-desc">Offres, clients, calendrier et rapports — tout accessible en 1 clic, sans formation.</div>
+              <div class="hs-tip-desc">Offres, clients, calendrier, rapports — tout en 1 clic, sans formation.</div>
+              <div class="hs-tip-dots">
+                <div class="hs-tip-idx" data-goto="0"></div>
+                <div class="hs-tip-idx" data-goto="1"></div>
+                <div class="hs-tip-idx" data-goto="2"></div>
+                <div class="hs-tip-idx active" data-goto="3"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -846,7 +928,7 @@ button{font-family:inherit;}
     </div>
     <!-- Légende hotspots -->
     <div class="hs-legend r">
-      <div class="hs-leg-item"><span class="hs-leg-dot"></span>Survolez les points pour explorer les fonctionnalités</div>
+      <div class="hs-leg-item"><span class="hs-leg-dot"></span>Cliquez sur les points · Tour automatique</div>
     </div>
   </div>
 </div>
@@ -1121,9 +1203,9 @@ button{font-family:inherit;}
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      <a href="mailto:contact@followoffer.com" class="de-s-card r d1" style="text-decoration:none;">
+      <a href="/cdn-cgi/l/email-protection#a5c6cacbd1c4c6d1e5c3cac9c9cad2cac3c3c0d78bc6cac8" class="de-s-card r d1" style="text-decoration:none;">
         <div class="de-s-ico" style="background:rgba(21,85,168,0.15);">✉️</div>
-        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub">contact@followoffer.com</div></div>
+        <div><div class="de-s-title">Email · 7j/7</div><div class="de-s-sub"><span class="__cf_email__" data-cfemail="b4d7dbdac0d5d7c0f4d2dbd8d8dbc3dbd2d2d1c69ad7dbd9">[email&#160;protected]</span></div></div>
         <span style="margin-left:auto;color:rgba(226,232,244,0.3);font-size:18px;">→</span>
       </a>
       <div class="de-s-card r d1" style="cursor:default">
@@ -1184,7 +1266,7 @@ button{font-family:inherit;}
         </div>
         <div class="cf-field"><label class="cf-label" for="cf-message">Message</label><textarea class="cf-textarea" id="cf-message" placeholder="Décrivez votre besoin en quelques lignes..."></textarea></div>
         <button class="cf-btn" id="cf-btn" onclick="submitContact()"><span id="cf-btn-txt">Envoyer le message →</span></button>
-        <div class="cf-note">Réponse garantie sous 24h · <a href="mailto:contact@followoffer.com">contact@followoffer.com</a></div>
+        <div class="cf-note">Réponse garantie sous 24h · <a href="/cdn-cgi/l/email-protection#294a46475d484a5d694f464545465e464f4f4c5b074a4644"><span class="__cf_email__" data-cfemail="197a76776d787a6d597f767575766e767f7f7c6b377a7674">[email&#160;protected]</span></a></div>
       </div>
       <div id="cf-success" style="display:none;text-align:center;padding:24px 0;">
         <div style="font-size:40px;margin-bottom:14px;">✅</div>
@@ -1247,7 +1329,7 @@ button{font-family:inherit;}
     <a href="#" onclick="openLegal('mentions');return false;">Mentions légales</a>
     <a href="#" onclick="openLegal('cgv');return false;">CGV</a>
     <a href="#" onclick="openLegal('confidentialite');return false;">Confidentialité</a>
-    <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>
+    <a href="/cdn-cgi/l/email-protection#30535f5e4451534470565f5c5c5f475f565655421e535f5d"><span class="__cf_email__" data-cfemail="d6b5b9b8a2b7b5a296b0b9babab9a1b9b0b0b3a4f8b5b9bb">[email&#160;protected]</span></a>
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -1255,7 +1337,7 @@ button{font-family:inherit;}
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══ NAV — switch dark/light au passage du hero ══
 const nav = document.getElementById('mainNav');
 const heroEl = document.querySelector('.hero');
@@ -1432,7 +1514,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <h2>Mentions légales</h2>
         <h3>Éditeur du service</h3>
         <p><strong>FollowOffer</strong><br>2000 Neuchâtel, Suisse<br>
-        Email : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a><br>
+        Email : <a href="/cdn-cgi/l/email-protection#30535f5e4451534470565f5c5c5f475f565655421e535f5d"><span class="__cf_email__" data-cfemail="eb8884859f8a889fab8d848787849c848d8d8e99c5888486">[email&#160;protected]</span></a><br>
         Site : <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>Hébergement</h3>
         <p>L'application FollowOffer est hébergée par <strong>Vercel Inc.</strong><br>
@@ -1468,7 +1550,7 @@ if(window.location.hash.startsWith('#legal-')) {
           <li>Ne pas tenter de contourner les limites du plan gratuit</li>
         </ul>
         <h3>Article 6 — Résiliation</h3>
-        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>. Suppression des données sous 30 jours.</p>
+        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="/cdn-cgi/l/email-protection#71121e1f0510120531171e1d1d1e061e171714035f121e1c"><span class="__cf_email__" data-cfemail="70131f1e0411130430161f1c1c1f071f161615025e131f1d">[email&#160;protected]</span></a>. Suppression des données sous 30 jours.</p>
         <h3>Article 7 — Droit applicable</h3>
         <p>CGV soumises au <strong>droit suisse</strong>. Tout litige relève de la compétence des tribunaux de Neuchâtel.</p>
         <p class="legal-date">CGV en vigueur depuis mars 2026.</p>
@@ -1479,7 +1561,7 @@ if(window.location.hash.startsWith('#legal-')) {
         <div class="legal-info-box">Conforme à la <strong>Loi fédérale sur la protection des données (LPD)</strong> révisée en vigueur depuis le 1er septembre 2023, ainsi qu'au RGPD européen.</div>
         <h3>1. Responsable du traitement</h3>
         <p><strong>FollowOffer</strong> · 2000 Neuchâtel, Suisse<br>
-        <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
+        <a href="/cdn-cgi/l/email-protection#bfdcd0d1cbdedccbffd9d0d3d3d0c8d0d9d9dacd91dcd0d2"><span class="__cf_email__" data-cfemail="36555958425755427650595a5a594159505053441855595b">[email&#160;protected]</span></a> · <a href="https://followoffer.com">followoffer.com</a></p>
         <h3>2. Données collectées</h3>
         <table>
           <tr><th>Catégorie</th><th>Données</th><th>Finalité</th></tr>
@@ -1498,23 +1580,3 @@ if(window.location.hash.startsWith('#legal-')) {
           <tr><td>Stripe</td><td>USA (SCCs)</td><td>Paiement</td></tr>
           <tr><td>Anthropic</td><td>USA (SCCs)</td><td>Génération de texte IA</td></tr>
         </table>
-        <h3>4. Vos droits (LPD & RGPD)</h3>
-        <p>Accès, rectification, effacement, portabilité (export CSV dans l'app), opposition.<br>
-        Contact : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a></p>
-        <h3>5. Conservation</h3>
-        <p>Données conservées pendant la durée de la relation contractuelle + 2 ans. Suppression sous 30 jours sur demande.</p>
-        <p class="legal-date">Politique mise à jour en mars 2026.</p>
-      </div>
-
-      <div class="lpanel" id="lpanel-cookies">
-        <h2>Politique cookies</h2>
-        <p>FollowOffer utilise uniquement des cookies techniques strictement nécessaires au fonctionnement du service (session d'authentification). Aucun cookie publicitaire ou de tracking tiers n'est utilisé.</p>
-        <p class="legal-date">Document mis à jour en mars 2026.</p>
-      </div>
-
-    </div><!-- .legal-body -->
-  </div><!-- .legal-panel -->
-</div><!-- .legal-overlay -->
-
-</body>
-</html>
