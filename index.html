@@ -20,6 +20,37 @@
   --orange:#A86828;--orange-d:rgba(168,104,40,0.11);
   --text:#ECF0FA;--muted:rgba(195,210,235,0.70);--muted2:rgba(160,185,215,0.38);
 }
+body.light-mode{
+  --bg:#F0F4FA;--s1:#FFFFFF;--s2:#EEF2F8;--s3:#E6EBF4;
+  --border:rgba(30,60,120,0.10);--border2:rgba(30,60,120,0.18);
+  --gold:#1555A8;--gold-d:rgba(21,85,168,0.10);
+  --accent:#B8860B;--accent-d:rgba(184,134,11,0.10);
+  --green:#157A50;--green-d:rgba(21,122,80,0.10);
+  --red:#B03030;--red-d:rgba(176,48,48,0.10);
+  --blue:#2868B8;--blue-d:rgba(40,104,184,0.10);
+  --purple:#4A52A0;--purple-d:rgba(74,82,160,0.10);
+  --orange:#9A6020;--orange-d:rgba(154,96,32,0.10);
+  --text:#0F1728;--muted:rgba(30,50,90,0.65);--muted2:rgba(30,50,90,0.35);
+}
+/* ── Light mode overrides ── */
+body.light-mode .topbar{background:rgba(240,244,250,0.96)!important;border-bottom:1px solid rgba(30,60,120,0.12)!important;}
+body.light-mode .sb{background:var(--s1)!important;border-right:1px solid rgba(30,60,120,0.10)!important;}
+body.light-mode input,body.light-mode select,body.light-mode textarea{background:var(--s2)!important;color:var(--text)!important;border-color:rgba(30,60,120,0.15)!important;}
+body.light-mode .kcard,body.light-mode .fcard,body.light-mode .offer-card,body.light-mode .client-card{background:var(--s1)!important;border-color:var(--border)!important;}
+body.light-mode .overlay-box,body.light-mode .auth-box,body.light-mode .toast-el{background:var(--s1)!important;border-color:var(--border2)!important;}
+body.light-mode .modal-box{background:var(--s1)!important;}
+body.light-mode .nb{color:rgba(30,50,90,0.75)!important;}
+body.light-mode .nb:hover{background:rgba(21,85,168,0.07)!important;color:var(--text)!important;}
+body.light-mode .nb.active{background:rgba(21,85,168,0.10)!important;color:var(--text)!important;}
+body.light-mode .ep-card,body.light-mode .rtl,body.light-mode .ai-load,body.light-mode .pdf-extract,body.light-mode .sig-preview-wrap{background:var(--s2)!important;}
+body.light-mode .sb-logo{color:var(--gold)!important;}
+body.light-mode .sb-tagline,body.light-mode #sb-plan-label,body.light-mode #sb-plan-sub,body.light-mode .sb-sitelink,body.light-mode .sb-legal-link,body.light-mode .sb-logout-btn,body.light-mode .sb-home-link,body.light-mode #sb-upgrade-lbl{color:var(--muted)!important;}
+body.light-mode .nb.active .ic{color:var(--gold)!important;}
+body.light-mode .panel{background:var(--bg)!important;}
+body.light-mode body::before{opacity:0.08;}
+body.light-mode .btn-ghost{color:var(--text)!important;}
+body.light-mode .cfg-tab-btn{color:var(--muted)!important;}
+body.light-mode .cfg-tab-btn.active{background:var(--s1)!important;color:var(--text)!important;}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
 ::-webkit-scrollbar{width:4px;height:4px;}
@@ -631,6 +662,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="topbar">
     <div class="tb-title" id="page-title">Dashboard</div>
     <div class="tb-right">
+      <button class="btn btn-ghost btn-sm" id="theme-toggle" onclick="toggleTheme()" title="Mode clair / sombre" style="font-size:15px;width:34px;height:34px;padding:0;justify-content:center;">🌙</button>
       <button class="btn btn-ghost btn-sm" onclick="go('config')">⚙ Config</button>
       <button class="btn btn-ghost btn-sm" onclick="go('rapport')">📊 Rapport semaine</button>
       <button class="btn btn-gold" onclick="go('nouvelle')">+ Envoyer une offre</button>
@@ -3159,6 +3191,22 @@ function toast(ico,txt){
   tt=setTimeout(()=>el.classList.remove('show'),3400);
 }
 
+// ══ THEME ══
+function toggleTheme(){
+  const isLight = document.body.classList.toggle('light-mode');
+  const btn = document.getElementById('theme-toggle');
+  if(btn) btn.textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('of_theme', isLight ? 'light' : 'dark');
+}
+function applyTheme(){
+  const saved = localStorage.getItem('of_theme');
+  if(saved === 'light'){
+    document.body.classList.add('light-mode');
+    const btn = document.getElementById('theme-toggle');
+    if(btn) btn.textContent = '☀️';
+  }
+}
+
 // ══ INIT ══
 // ══ AUTH ══
 let CURRENT_USER = null;
@@ -3795,6 +3843,7 @@ async function doLogin() {
     CFG = { name:'', role:'', company:'', phone:'', website:'', provider:null, accessToken:null, senderEmail:'', brevoKey:'', onboarding_done:'' };
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('app-shell').style.display = '';
+    applyTheme();
     injectMobileNav();
     updateUserUI();
     await loadApp();
@@ -3839,6 +3888,7 @@ async function doRegister() {
     CFG.senderEmail = email;
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('app-shell').style.display = '';
+    applyTheme();
     injectMobileNav();
     updateUserUI();
     await loadApp();
