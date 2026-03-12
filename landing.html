@@ -75,7 +75,7 @@ button{font-family:inherit;}
   min-height:100vh;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:130px 24px 120px;text-align:center;
-  position:relative;overflow:hidden;
+  position:relative;
   background:#04080F;
 }
 /* Canvas hexagones géré par JS */
@@ -113,14 +113,16 @@ button{font-family:inherit;}
   position:relative;
   background:linear-gradient(180deg,
     #04080F 0%,
-    #060C1A 15%,
-    #0A1628 35%,
-    #0D1D3A 50%,
-    #122348 62%,
-    #1a2f5e 72%,
-    #e8eef8 85%,
-    #F0F4FA 92%,
-    #F7F8FA 100%
+    #04080F 20%,
+    #060d1c 40%,
+    #09152e 55%,
+    #0d1c3f 65%,
+    #132550 72%,
+    #1e3570 78%,
+    #c8d8f0 87%,
+    #dce8f4 92%,
+    #eef3f9 96%,
+    #F4F7FB 100%
   );
   padding:0 24px 90px;
   overflow:hidden;
@@ -558,13 +560,8 @@ button{font-family:inherit;}
 }
 
 /* ══ LEGAL PANEL ══ */
-.legal-overlay {
-  position: fixed; inset: 0; z-index: 9000;
-  display: flex; align-items: flex-end; justify-content: center;
-  background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
-  opacity: 0; pointer-events: none; transition: opacity 0.3s;
-}
-.legal-overlay.open { opacity: 1; pointer-events: all; }
+
+
 .legal-panel {
   width: 100%; max-width: 880px; max-height: 86vh;
   background: #F8F9FB; border-radius: 20px 20px 0 0;
@@ -572,7 +569,7 @@ button{font-family:inherit;}
   overflow: hidden; box-shadow: 0 -20px 60px rgba(0,0,0,0.4);
   margin-top: auto;
 }
-.legal-overlay.open .legal-panel { transform: translateY(0); }
+
 .legal-panel-header {
   background: #07080C; padding: 16px 28px;
   display: flex; align-items: center; justify-content: space-between;
@@ -651,8 +648,14 @@ button{font-family:inherit;}
   .mockup-wrap-outer { display: none !important; height: 0 !important; padding: 0 !important; overflow: hidden !important; }
   .mockup-section { display: none !important; }
 
-  /* SECTIONS */
+  /* SECTIONS — mobile épuré */
   .section-title { font-size: 26px !important; }
+  /* Cacher les sections lourdes sur mobile pour fluidité */
+  .problem-section, .solution-section, .how-section, .testi-section { display: none !important; }
+  /* Garder stats, sectors simple, pricing, FAQ, support, contact, footer */
+  .stats-inner { grid-template-columns: 1fr 1fr !important; gap: 16px !important; }
+  .features-grid { grid-template-columns: 1fr !important; }
+  .sectors-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
   .problem-inner, .support-inner, .contact-inner { grid-template-columns: 1fr !important; gap: 32px !important; }
   .features-grid { grid-template-columns: 1fr !important; }
   .how-steps { grid-template-columns: 1fr !important; }
@@ -686,6 +689,9 @@ button{font-family:inherit;}
 
   /* HOTSPOTS — cachés sur mobile */
   .hs-point, .hs-tip, .hs-ring, .hs-dot, .hs-pb, .hs-pb-fill, .hd { display: none !important; visibility: hidden !important; }
+
+  /* SCROLL REVEAL — tout visible immédiatement sur mobile */
+  .r { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
 
@@ -1542,97 +1548,7 @@ button{font-family:inherit;}
 
 
 <!-- ══ LEGAL PANEL ══ -->
-<div class="legal-overlay" id="legal-overlay" onclick="if(event.target===this)closeLegal()">
-  <div class="legal-panel">
-    <div class="legal-panel-header">
-      <h2>Informations légales — FollowOffer 🇨🇭</h2>
-      <button class="legal-close" onclick="closeLegal()">✕</button>
-    </div>
-    <div class="legal-tabs">
-      <button class="legal-tab active" data-tab="mentions" onclick="legalTab('mentions',this)">Mentions légales</button>
-      <button class="legal-tab" data-tab="cgv" onclick="legalTab('cgv',this)">CGV</button>
-      <button class="legal-tab" data-tab="confidentialite" onclick="legalTab('confidentialite',this)">Confidentialité</button>
-      <button class="legal-tab" data-tab="cookies" onclick="legalTab('cookies',this)">Cookies</button>
-    </div>
-    <div class="legal-body">
-
-      <div class="lpanel active" id="lpanel-mentions">
-        <h2>Mentions légales</h2>
-        <h3>Éditeur du service</h3>
-        <p><strong>FollowOffer</strong><br>2000 Neuchâtel, Suisse<br>
-        Email : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a><br>
-        Site : <a href="https://followoffer.com">followoffer.com</a></p>
-        <h3>Hébergement</h3>
-        <p>L'application FollowOffer est hébergée par <strong>Vercel Inc.</strong><br>
-        Les données utilisateurs sont stockées par <strong>Supabase Inc.</strong> sur des serveurs situés dans l'Union Européenne (région EU West).</p>
-        <h3>Responsabilité</h3>
-        <p>FollowOffer s'efforce de maintenir l'exactitude des informations diffusées. L'utilisateur reconnaît utiliser ces informations sous sa responsabilité exclusive.</p>
-        <h3>Propriété intellectuelle</h3>
-        <p>L'ensemble des éléments constituant le service FollowOffer sont la propriété exclusive de l'éditeur. Toute reproduction non autorisée est strictement interdite.</p>
-        <p class="legal-date">Document mis à jour en mars 2026.</p>
-      </div>
-
-      <div class="lpanel" id="lpanel-cgv">
-        <h2>Conditions Générales de Vente</h2>
-        <div class="legal-info-box">Ces conditions régissent l'accès et l'utilisation du service FollowOffer. En créant un compte, vous les acceptez dans leur intégralité.</div>
-        <h3>Article 1 — Objet</h3>
-        <p>FollowOffer est un service SaaS permettant de créer, envoyer et suivre des offres commerciales avec relances automatisées. Accessible sur <strong>followoffer.com</strong>.</p>
-        <h3>Article 2 — Plans et tarification</h3>
-        <table>
-          <tr><th>Plan</th><th>Prix</th><th>Inclus</th></tr>
-          <tr><td><strong>Gratuit</strong></td><td>0 CHF</td><td>Jusqu'à 10 offres, relances manuelles, 1 utilisateur</td></tr>
-          <tr><td><strong>Pro</strong></td><td>490 CHF / an</td><td>Offres illimitées, relances automatiques, tracking ouvertures, rapport IA, CRM clients, support prioritaire</td></tr>
-        </table>
-        <p>Tous les prix sont indiqués en Francs Suisses (CHF).</p>
-        <h3>Article 3 — Paiement</h3>
-        <p>Le paiement s'effectue par carte bancaire via <strong>Stripe</strong>. Facturation annuelle. Aucune donnée de paiement stockée sur nos serveurs.</p>
-        <h3>Article 4 — Remboursement</h3>
-        <p>Aucun remboursement après activation du plan payant. En cas de résiliation, l'accès Pro reste actif jusqu'à la fin de la période payée.</p>
-        <h3>Article 5 — Obligations de l'utilisateur</h3>
-        <ul>
-          <li>Utiliser le service dans un cadre professionnel légal</li>
-          <li>Ne pas envoyer de communications non sollicitées (spam)</li>
-          <li>Obtenir le consentement des destinataires de ses emails commerciaux (LPD)</li>
-          <li>Ne pas tenter de contourner les limites du plan gratuit</li>
-        </ul>
-        <h3>Article 6 — Résiliation</h3>
-        <p>Résiliation possible à tout moment via Configuration > Abonnement ou par email à <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>. Suppression des données sous 30 jours.</p>
-        <h3>Article 7 — Droit applicable</h3>
-        <p>CGV soumises au <strong>droit suisse</strong>. Tout litige relève de la compétence des tribunaux de Neuchâtel.</p>
-        <p class="legal-date">CGV en vigueur depuis mars 2026.</p>
-      </div>
-
-      <div class="lpanel" id="lpanel-confidentialite">
-        <h2>Politique de confidentialité</h2>
-        <div class="legal-info-box">Conforme à la <strong>Loi fédérale sur la protection des données (LPD)</strong> révisée en vigueur depuis le 1er septembre 2023, ainsi qu'au RGPD européen.</div>
-        <h3>1. Responsable du traitement</h3>
-        <p><strong>FollowOffer</strong> · 2000 Neuchâtel, Suisse<br>
-        <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
-        <h3>2. Données collectées</h3>
-        <table>
-          <tr><th>Catégorie</th><th>Données</th><th>Finalité</th></tr>
-          <tr><td><strong>Compte</strong></td><td>Email, mot de passe (hashé), prénom, nom</td><td>Authentification, communication</td></tr>
-          <tr><td><strong>Utilisation</strong></td><td>Offres créées, clients, textes générés</td><td>Fonctionnement du service</td></tr>
-          <tr><td><strong>Facturation</strong></td><td>Email, transactions (via Stripe)</td><td>Paiement, obligations comptables</td></tr>
-          <tr><td><strong>Tracking email</strong></td><td>Ouvertures d'emails (horodatage)</td><td>Suivi des offres</td></tr>
-          <tr><td><strong>Technique</strong></td><td>Logs d'accès, tokens de session</td><td>Sécurité, débogage</td></tr>
-        </table>
-        <h3>3. Sous-traitants</h3>
-        <table>
-          <tr><th>Sous-traitant</th><th>Pays</th><th>Rôle</th></tr>
-          <tr><td>Supabase</td><td>UE (EU West)</td><td>Base de données, authentification</td></tr>
-          <tr><td>Vercel</td><td>USA (SCCs)</td><td>Hébergement</td></tr>
-          <tr><td>Brevo</td><td>France / UE</td><td>Envoi d'emails</td></tr>
-          <tr><td>Stripe</td><td>USA (SCCs)</td><td>Paiement</td></tr>
-          <tr><td>Anthropic</td><td>USA (SCCs)</td><td>Génération de texte IA</td></tr>
-        </table>
-        <h3>4. Vos droits (LPD & RGPD)</h3>
-        <p>Accès, rectification, effacement, portabilité (export CSV dans l'app), opposition.<br>
-        Contact : <a href="mailto:contact@followoffer.com">contact@followoffer.com</a> · <a href="https://followoffer.com">followoffer.com</a></p>
-      </div>
-    </div>
-  </div>
-</div><!-- MODAL LÉGAL -->
+<!-- MODAL LÉGAL -->
 <div id="legal-modal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(4,8,15,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;">
   <div class="legal-panel">
     <div class="legal-panel-header">
@@ -1692,7 +1608,12 @@ button{font-family:inherit;}
 (function(){
   var canvas = document.getElementById('hero-canvas');
   if(!canvas) return;
-  if(window.innerWidth <= 600){ canvas.style.display='none'; return; }
+  if(window.innerWidth <= 600){
+    canvas.style.display='none';
+    /* Forcer toutes les sections visibles sur mobile */
+    document.querySelectorAll('.r').forEach(function(el){ el.classList.add('visible'); });
+    return;
+  }
   var ctx = canvas.getContext('2d');
   var W, H, hexes = [], nodes = [], LINES = [];
   var HEX = 36, NC = 20;
