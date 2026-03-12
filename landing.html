@@ -115,9 +115,9 @@ button{font-family:inherit;}
     #060d1c 20%,
     #0a1428 40%,
     #112040 55%,
-    rgba(180,210,245,0.6) 72%,
+    rgba(180,210,245,0.55) 72%,
     #EEF4FB 82%,
-    #F7F9FC 90%,
+    #F7F9FC 91%,
     #ffffff 100%
   );
   padding:0 16px 80px;
@@ -195,7 +195,9 @@ button{font-family:inherit;}
 .section-sub{font-size:15px;color:var(--muted);line-height:1.68;max-width:480px;}
 
 /* ═══ REVEAL ═══ */
-.r{opacity:0;transform:translateY(20px);transition:opacity 0.65s cubic-bezier(.16,1,.3,1),transform 0.65s cubic-bezier(.16,1,.3,1);}
+.r{opacity:1;transform:none;transition:opacity 0.65s cubic-bezier(.16,1,.3,1),transform 0.65s cubic-bezier(.16,1,.3,1);}
+html.js-anim .r{opacity:0;transform:translateY(20px);}
+html.js-anim .r.visible{opacity:1;transform:none;}
 .r.visible{opacity:1;transform:translateY(0);}
 .r.d1{transition-delay:.08s;}.r.d2{transition-delay:.16s;}.r.d3{transition-delay:.24s;}.r.d4{transition-delay:.32s;}
 .r.in{opacity:1;transform:none;}
@@ -1206,9 +1208,9 @@ button{font-family:inherit;}
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      <a href="/cdn-cgi/l/email-protection#b9dad6d7cdd8dacdf9dfd6d5d5d6ced6dfdfdccb97dad6d4" class="de-s-card r d0" style="text-decoration:none;">
+      <a href="mailto:contact@followoffer.com" class="de-s-card r d0" style="text-decoration:none;">
         <div class="de-s-ico" style="background:rgba(21,85,168,0.20);border:1px solid rgba(21,85,168,0.35);">✉️</div>
-        <div><div class="de-s-title"><span class="__cf_email__" data-cfemail="4e2d21203a2f2d3a0e2821222221392128282b3c602d2123">[email&#160;protected]</span></div><div class="de-s-sub">Réponse directe · Sans intermédiaire</div></div>
+        <div><div class="de-s-title">contact&#64;followoffer.com</div><div class="de-s-sub">Réponse directe · Sans intermédiaire</div></div>
       </a>
       <div class="de-s-card r d1" style="cursor:default">
         <div class="de-s-ico de-s-ico-g">⚡</div>
@@ -1268,7 +1270,7 @@ button{font-family:inherit;}
         </div>
         <div class="cf-field"><label class="cf-label" for="cf-message">Message</label><textarea class="cf-textarea" id="cf-message" placeholder="Décrivez votre besoin en quelques lignes..."></textarea></div>
         <button class="cf-btn" id="cf-btn" onclick="submitContact()"><span id="cf-btn-txt">Envoyer le message →</span></button>
-        <div class="cf-note">Réponse garantie sous 24h · <a href="/cdn-cgi/l/email-protection#aac9c5c4decbc9deeaccc5c6c6c5ddc5cccccfd884c9c5c7"><span class="__cf_email__" data-cfemail="57343839233634231731383b3b382038313132257934383a">[email&#160;protected]</span></a></div>
+        <div class="cf-note">Réponse garantie sous 24h · contact&#64;followoffer.com</div>
       </div>
       <div id="cf-success" style="display:none;text-align:center;padding:24px 0;">
         <div style="font-size:40px;margin-bottom:14px;">✅</div>
@@ -1306,7 +1308,7 @@ button{font-family:inherit;}
     <a href="#" onclick="openLegal('mentions');return false;">Mentions légales</a>
     <a href="#" onclick="openLegal('cgv');return false;">CGV</a>
     <a href="#" onclick="openLegal('confidentialite');return false;">Confidentialité</a>
-    <a href="/cdn-cgi/l/email-protection#4e2d21203a2f2d3a0e2821222221392128282b3c602d2123"><span class="__cf_email__" data-cfemail="7b1814150f1a180f3b1d141717140c141d1d1e0955181416">[email&#160;protected]</span></a>
+    contact&#64;followoffer.com
   </div>
   <div class="foot-copy">
     © 2026 FollowOffer · Aubry MR
@@ -1333,7 +1335,7 @@ button{font-family:inherit;}
         <p><strong>Éditeur du site</strong><br>
         Raison sociale : Aubry MR<br>
         Adresse : 2000 Neuchâtel, Suisse<br>
-        Email : <a href="/cdn-cgi/l/email-protection#ccafa3a2b8adafb88caaa3a0a0a3bba3aaaaa9bee2afa3a1"><span class="__cf_email__" data-cfemail="e784888993868493a781888b8b88908881818295c984888a">[email&#160;protected]</span></a><br>
+        Email : contact&#64;followoffer.com<br>
         Site web : <a href="https://followoffer.com">followoffer.com</a></p>
 
         <p><strong>Hébergement</strong><br>
@@ -1357,7 +1359,7 @@ button{font-family:inherit;}
         <p><strong>Objet</strong><br>FollowOffer est un service SaaS de suivi commercial édité par Aubry MR, Neuchâtel, Suisse.</p>
         <p><strong>Abonnements</strong><br>Le plan Pro (490 CHF/an) est facturé annuellement via Stripe. L'accès est activé immédiatement après paiement.</p>
         <p><strong>Essai gratuit</strong><br>5 offres gratuites sans carte bancaire. Aucune facturation automatique à l'issue de l'essai.</p>
-        <p><strong>Résiliation</strong><br>Possible à tout moment via Configuration &gt; Abonnement ou par email à <a href="/cdn-cgi/l/email-protection#12717d7c6673716652747d7e7e7d657d747477603c717d7f"><span class="__cf_email__" data-cfemail="2f4c40415b4e4c5b6f4940434340584049494a5d014c4042">[email&#160;protected]</span></a>. Données supprimées sous 30 jours.</p>
+        <p><strong>Résiliation</strong><br>Possible à tout moment via Configuration &gt; Abonnement ou par email à contact&#64;followoffer.com. Données supprimées sous 30 jours.</p>
         <p><strong>Remboursement</strong><br>Remboursement intégral dans les 14 jours suivant le premier paiement, sans justification.</p>
       </div>
       <div class="legal-pane" id="legal-confidentialite" style="display:none;">
@@ -1365,22 +1367,24 @@ button{font-family:inherit;}
         <p><strong>Données collectées</strong><br>Nom, email, données d'offres, statistiques d'ouverture. Aucune donnée vendue à des tiers.</p>
         <p><strong>Hébergement</strong><br>Données sur Supabase (EU) et Vercel, encadrées par des clauses contractuelles standard.</p>
         <p><strong>Conservation</strong><br>Durée de l'abonnement + 30 jours après résiliation.</p>
-        <p><strong>Vos droits</strong><br>Accès, rectification, effacement, portabilité (export CSV dans l'app).<br>Contact : <a href="/cdn-cgi/l/email-protection#60030f0e1401031420060f0c0c0f170f060605124e030f0d"><span class="__cf_email__" data-cfemail="ee8d81809a8f8d9aae8881828281998188888b9cc08d8183">[email&#160;protected]</span></a></p>
+        <p><strong>Vos droits</strong><br>Accès, rectification, effacement, portabilité (export CSV dans l'app).<br>Contact : contact&#64;followoffer.com</p>
         <p><strong>Cookies</strong><br>Cookies techniques uniquement. Aucun cookie publicitaire.</p>
       </div>
     </div>
   </div>
 </div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>/* ══ GUARD IMMÉDIAT MOBILE ══ */
+<script>/* ══ ACTIVATION ANIMATION (desktop uniquement) ══ */
 (function(){
-  if(window.innerWidth <= 1024){
-    var style = document.createElement('style');
-    style.textContent = '.r{opacity:1!important;transform:none!important;visibility:visible!important;}section,div{max-height:none!important;}';
-    document.head.appendChild(style);
-    document.documentElement.style.overflow = '';
-    document.documentElement.style.height = 'auto';
-    document.body && (document.body.style.overflow = '');
-    document.body && (document.body.style.height = 'auto');
+  /* Sur desktop uniquement, on active les animations scroll reveal */
+  if(window.innerWidth > 768){
+    document.documentElement.classList.add('js-anim');
+  }
+  /* Toujours : scroll libre */
+  document.documentElement.style.overflow = '';
+  document.documentElement.style.height = 'auto';
+  if(document.body){
+    document.body.style.overflow = '';
+    document.body.style.height = 'auto';
   }
 })();
 
@@ -1692,22 +1696,25 @@ function switchLegalTab(t){
     el.classList.add('visible');
   }
 
-  /* Forcer immédiatement les éléments   /* Forcer immédiatement les éléments déjà visibles */
+  /* Forcer immédiatement les éléments   /* Forcer immédiatement les éléments déjà dans le viewport */
   document.querySelectorAll('.r').forEach(function(el){
     var rect=el.getBoundingClientRect();
-    if(rect.top < window.innerHeight){makeVisible(el);}
+    if(rect.top < window.innerHeight){ el.classList.add('visible'); }
   });
 
   if(!window.IntersectionObserver){
-    document.querySelectorAll('.r').forEach(makeVisible);
+    document.querySelectorAll('.r').forEach(function(el){ el.classList.add('visible'); });
     return;
   }
 
   var revealObs = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
-      if(entry.isIntersecting){ makeVisible(entry.target); revealObs.unobserve(entry.target); }
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        revealObs.unobserve(entry.target);
+      }
     });
-  },{threshold:0.05, rootMargin:'0px 0px -30px 0px'});
+  },{threshold:0.05, rootMargin:'0px 0px -20px 0px'});
 
   document.querySelectorAll('.r').forEach(function(el){
     revealObs.observe(el);
