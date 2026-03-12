@@ -2227,36 +2227,45 @@ async function genEmail(){
   const relDesc={nouveau:'Premier contact — sois attentionné, crée confiance',connu:'Client connu — relation établie, ton naturel',fidele:'Client fidèle depuis longtemps — proximité, chaleur'};
 
   const societeLabel = societeRaw ? `\n- Société : ${societeRaw}` : '';
-  const prompt=`Tu es un commercial expert. Rédige un email d'accompagnement d'offre commerciale qui semble écrit à la main.
+  const prompt=`Tu es un commercial B2B suisse francophone. Rédige un email professionnel d'accompagnement d'offre, sobre et efficace — dans le style des affaires en Suisse romande.
 
 DONNÉES :
-- Prénom / Contact : ${prenom}${societeLabel}
+- Contact : ${prenom}${societeLabel}
 - Objet de l'offre : ${objet}
 - Montant : ${montant} CHF
 - Référence : ${ref}
 - Fichier joint : ${fileName}
-- Contexte de l'échange : ${contexte||'Pas de contexte spécifique'}
+- Contexte : ${contexte||'Aucun contexte fourni'}
 - Détail à mentionner : ${detail||'Aucun'}
-- Lignes exactes de l'offre (UTILISE CES DONNÉES, NE PAS INVENTER) : ${lignesPDF||'Non disponible'}
+- Lignes exactes de l'offre : ${lignesPDF||'Non disponible'}
 - Relation : ${relDesc[rel]}
 - Ton : ${tonDesc[ton]}
 
+STRUCTURE OBLIGATOIRE — respecte ces 4 blocs séparés chacun par une ligne vide :
+
+Bloc 1 — Salutation (1 ligne) :
+"Bonjour ${prenom},"
+
+Bloc 2 — Introduction (1 ligne) :
+Phrase d'introduction courte qui annonce la raison de l'email. Ex : "Veuillez trouver ci-joint notre offre n° ${ref} concernant [objet concret]."
+
+Bloc 3 — Corps (2-3 lignes max) :
+Développe si contexte ou détail pertinent. Sinon, 1 ligne sobre. Intègre les données réelles de l'offre (dimensions, prix, conditions). Ne pas inventer.
+
+Bloc 4 — Formule de politesse adaptée au ton (1 ligne) :
+- Ton chaleureux → "Au plaisir d'en discuter avec vous, je reste disponible pour toute question."
+- Ton professionnel → "Pour tout complément d'information, je reste à votre disposition."
+- Ton formel → "Nous vous remercions de l'intérêt porté à notre offre et restons à votre entière disposition."
+- Ton direct → "N'hésitez pas à me contacter pour toute question."
+
 RÈGLES ABSOLUES :
-1. Sonne 100% humain — jamais robotique ni "template"
-2. Intègre le contexte naturellement si pertinent
-3. DONNEES STRICTES : si lignes produits fournies, utilise UNIQUEMENT ces donnees (dimensions/quantites/prix). Ne pas inventer.\n4. Mentionne l'objet concret de l'offre (pas juste "votre offre")
-5. Maximum 3-4 lignes de corps — percutant et naturel
-6. Commence DIRECTEMENT par "Bonjour ${prenom}," — RIEN avant (${prenom} contient déjà la civilité si applicable)
-8. INTERDIT : N'écris JAMAIS "Objet :", "**Objet", ou tout en-tête
-7. INTERDIT : N'écris JAMAIS de placeholders [Prénom], [Nom], [Signature]
-9. Ne mets PAS de signature — elle sera ajoutée automatiquement
-10. STRUCTURE OBLIGATOIRE en 3 blocs séparés par une ligne vide :
-   - Bloc 1 : "Bonjour ${prenom},"
-   - Bloc 2 : Corps du message (2-3 lignes max)
-   - Bloc 3 : Formule de salutation adaptée au ton :
-     * Ton chaleureux → "Au plaisir d\'en discuter avec toi,"
-     * Ton pro → "Pour tout complément d\'information, n\'hésitez pas à nous contacter. Meilleures salutations,"
-     * Ton direct → "Bien cordialement,"
+1. Commence DIRECTEMENT par "Bonjour ${prenom}," — RIEN avant
+2. Utilise UNIQUEMENT les données fournies — ne pas inventer de chiffres ou conditions
+3. Jamais de : "Objet :", "**Objet", placeholders [Prénom], [Signature], ni signature
+4. Pas de formule creuse type "je vous espère en bonne santé" ou "j'espère que ce message vous trouve bien"
+5. Si contexte fourni et détaillé → développe en corps, utilise-le concrètement
+6. Standard suisse : sobre, précis, respectueux — pas trop familier même en ton chaleureux
+7. La signature sera ajoutée automatiquement — ne pas la écrire
 
 Réponds UNIQUEMENT avec le corps de l'email, rien d'autre.`;
 
@@ -2343,7 +2352,7 @@ async function sendOffer(){
       if(existingClients.length > 0) {
         clientId = existingClients[0].id;
       } else {
-        const newClient = await sbFetch('clients', {method:'POST', body:JSON.stringify({prenom,nom,email,entreprise:entreprise||'',telephone:document.getElementById('ex-tel')?.value?.trim()||''})});
+        const newClient = await sbFetch('clients', {method:'POST', body:JSON.stringify({prenom,nom,email,entreprise:entreprise||'',...(document.getElementById('ex-tel')?.value?.trim()?{telephone:document.getElementById('ex-tel').value.trim()}:{})})});
         clientId = newClient[0]?.id;
         // Si toujours pas d'id (doublon email autre user), récupérer l'existant
         if(!clientId) {
