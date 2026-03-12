@@ -113,13 +113,13 @@ button{font-family:inherit;}
   position:relative;
   background:linear-gradient(180deg,
     #04080F 0%,
-    #04080F 8%,
-    #070F1E 22%,
-    #0B1630 38%,
-    #0F1E42 52%,
-    #1A3068 62%,
-    rgba(200,215,240,0.6) 78%,
-    #EEF2F8 88%,
+    #060C1A 15%,
+    #0A1628 35%,
+    #0D1D3A 50%,
+    #122348 62%,
+    #1a2f5e 72%,
+    #e8eef8 85%,
+    #F0F4FA 92%,
     #F7F8FA 100%
   );
   padding:0 24px 90px;
@@ -648,7 +648,8 @@ button{font-family:inherit;}
   .hero-trust { flex-direction: column !important; gap: 8px !important; align-items: center !important; }
 
   /* MOCKUP */
-  .mockup-wrap-outer { display: none !important; }
+  .mockup-wrap-outer { display: none !important; height: 0 !important; padding: 0 !important; overflow: hidden !important; }
+  .mockup-section { display: none !important; }
 
   /* SECTIONS */
   .section-title { font-size: 26px !important; }
@@ -1670,7 +1671,7 @@ button{font-family:inherit;}
       <div class="legal-pane" id="legal-cgv" style="display:none;">
         <h3>Conditions générales de vente</h3>
         <p><strong>Objet</strong><br>FollowOffer est un service SaaS de suivi commercial édité par Aubry MR, Neuchâtel, Suisse.</p>
-        <p><strong>Abonnements</strong><br>Pro (490 CHF/an) et Business (1490 CHF/an), facturés annuellement via Stripe. Accès activé immédiatement après paiement.</p>
+        <p><strong>Abonnements</strong><br>Le plan Pro (490 CHF/an) est facturé annuellement via Stripe. L'accès est activé immédiatement après paiement.</p>
         <p><strong>Essai gratuit</strong><br>5 offres gratuites sans carte bancaire. Aucune facturation automatique à l'issue de l'essai.</p>
         <p><strong>Résiliation</strong><br>Possible à tout moment via Configuration &gt; Abonnement ou par email à <a href="mailto:contact@followoffer.com">contact@followoffer.com</a>. Données supprimées sous 30 jours.</p>
         <p><strong>Remboursement</strong><br>Remboursement intégral dans les 14 jours suivant le premier paiement, sans justification.</p>
@@ -1691,6 +1692,7 @@ button{font-family:inherit;}
 (function(){
   var canvas = document.getElementById('hero-canvas');
   if(!canvas) return;
+  if(window.innerWidth <= 600){ canvas.style.display='none'; return; }
   var ctx = canvas.getContext('2d');
   var W, H, hexes = [], nodes = [], LINES = [];
   var HEX = 36, NC = 20;
