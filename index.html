@@ -2441,6 +2441,16 @@ async function sendOffer(){
       const existingClients = await sbFetch('clients?email=eq.'+encodeURIComponent(email)+'&select=id');
       if(existingClients.length > 0) {
         clientId = existingClients[0].id;
+        // Mettre à jour entreprise + téléphone si renseignés (même si client existe déjà)
+        const telVal = document.getElementById('ex-tel')?.value?.trim()||'';
+        const patchData = {};
+        if(entreprise) patchData.entreprise = entreprise;
+        if(telVal) patchData.telephone = telVal;
+        if(prenom) patchData.prenom = prenom;
+        if(nom) patchData.nom = nom;
+        if(Object.keys(patchData).length > 0) {
+          await sbFetch('clients?id=eq.'+clientId, {method:'PATCH', body:JSON.stringify(patchData), headers:{'Prefer':'return=minimal'}});
+        }
       } else {
         const newClient = await sbFetch('clients', {method:'POST', body:JSON.stringify({prenom,nom,email,entreprise:entreprise||'',...(document.getElementById('ex-tel')?.value?.trim()?{telephone:document.getElementById('ex-tel').value.trim()}:{})})});
         clientId = newClient[0]?.id;
@@ -3295,15 +3305,16 @@ function updateBrevoStatus() {
 function updateSigPreview() {
   const n = document.getElementById('cfg-name')?.value||'';
   const r = document.getElementById('cfg-role')?.value||'';
-  const c = document.getElementById('cfg-company')?.value||'';
+  const co = document.getElementById('cfg-company')?.value||'';
   const p = document.getElementById('cfg-phone')?.value||'';
+  const w = document.getElementById('cfg-website')?.value||'';
   const el = document.getElementById('sig-preview');
   if(!el) return;
   if(!n) { el.innerHTML='<em style="color:var(--muted)">Aperçu signature — remplissez les champs ci-dessus</em>'; return; }
-  el.innerHTML = `<span style="color:var(--text);font-weight:600;">${n}</span>${r?`<br><span style="color:var(--muted)">${r}</span>`:''}${c?`<br><span style="color:var(--muted)">${c}</span>`:''}${p?`<br><span style="color:var(--blue)">${p}</span>`:''}`;
+  el.innerHTML = `<span style="color:var(--text);font-weight:600;">${n}</span>${r?`<br><span style="color:var(--muted)">${r}</span>`:''}${co?`<br><span style="color:var(--muted)">${co}</span>`:''}${p?`<br><span style="color:var(--blue)">${p}</span>`:''}${w?`<br><a href="${w}" style="color:var(--blue);text-decoration:none;">${w}</a>`:''}`;
 }
 
-['cfg-name','cfg-role','cfg-company','cfg-phone'].forEach(id => {
+['cfg-name','cfg-role','cfg-company','cfg-phone','cfg-website'].forEach(id => {
   document.addEventListener('DOMContentLoaded',()=>{
     const el=document.getElementById(id);
     if(el) el.addEventListener('input',updateSigPreview);
@@ -3398,11 +3409,11 @@ async function sendRealEmail({to, toName, subject, body, pdfUrl, pdfName, offerI
 function buildSignature() {
   const n = CFG.name || CURRENT_USER?.user_metadata?.full_name || '';
   const r = CFG.role || '';
-  const c = CFG.company || '';
+  const co = CFG.company || '';
   const p = CFG.phone || '';
   const w = CFG.website || '';
-  if(!n && !c) return '';
-  return `\n\n--\n${n||''}${r?'\n'+r:''}${c?'\n'+c:''}${p?'\n'+p:''}${w?'\n'+w:''}`;
+  if(!n && !co) return '';
+  return `\n\n--\n${n||''}${r?'\n'+r:''}${co?'\n'+co:''}${p?'\n'+p:''}${w?'\n'+w:''}`;
 }
 
 // ══ TOAST ══
