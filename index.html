@@ -2018,9 +2018,9 @@ function openModal(id){
     ${o.opens>0?`<div style="background:var(--blue-d);border:1px solid rgba(56,189,248,0.2);border-radius:9px;padding:11px 14px;margin-bottom:14px;font-size:12px;color:var(--blue);">👁 Ouvert ${o.opens}× — Dernière ouverture : ${o.lastOpen}</div>`:''}
     <div class="m-tl"><div class="m-tl-t">Suivi des relances</div>
       <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--blue)"></div><div class="m-tl-info"><strong>Offre envoyée</strong></div><div class="m-tl-date">${o.sendDate}</div><div class="tag-done">✓</div></div>
-      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--gold)"></div><div class="m-tl-info"><strong>Relance 1</strong></div><div class="m-tl-date">${o.relances.r1}</div>${['relance2','relance3','won','lost'].includes(o.status)?'<div class="tag-done">✓</div>':'<span class="tag-auto">AUTO</span>'}</div>
-      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--purple)"></div><div class="m-tl-info"><strong>Relance 2</strong></div><div class="m-tl-date">${o.relances.r2}</div>${['relance3','won','lost'].includes(o.status)?'<div class="tag-done">✓</div>':'<span class="tag-auto">AUTO</span>'}</div>
-      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--orange)"></div><div class="m-tl-info"><strong>Relance 3</strong></div><div class="m-tl-date">${o.relances.r3}</div><span class="tag-auto">AUTO</span></div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--gold)"></div><div class="m-tl-info"><strong>Relance 1</strong></div><div class="m-tl-date">${o.relances.r1}</div>${['relance1','relance2','relance3','won','lost'].includes(o.status)?'<div class="tag-done">✓</div>':'<span class="tag-auto">AUTO</span>'}</div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--purple)"></div><div class="m-tl-info"><strong>Relance 2</strong></div><div class="m-tl-date">${o.relances.r2}</div>${['relance2','relance3','won','lost'].includes(o.status)?'<div class="tag-done">✓</div>':'<span class="tag-auto">AUTO</span>'}</div>
+      <div class="m-tl-item"><div class="m-tl-dot" style="background:var(--orange)"></div><div class="m-tl-info"><strong>Relance 3</strong></div><div class="m-tl-date">${o.relances.r3}</div>${['relance3','won','lost'].includes(o.status)?'<div class="tag-done">✓</div>':'<span class="tag-auto">AUTO</span>'}</div>
     </div>
     <div style="margin-bottom:14px;">
       <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">📝 Notes commerciales</div>
@@ -2050,6 +2050,8 @@ async function actR(id){
   const rNum = {relance1:1,relance2:2,relance3:3}[next]||1;
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:next}), prefer:'return=minimal', headers:{'Prefer':'return=minimal'}});
+    // Marquer la relance correspondante comme envoyée manuellement
+    try { await sbFetch('relances?offre_id=eq.'+id+'&numero=eq.'+rNum+'&statut=eq.pending', {method:'PATCH', body:JSON.stringify({statut:'sent', sent_at:new Date().toISOString()}), headers:{'Prefer':'return=minimal'}}); } catch(e){}
     o.status=next;
 
     // Generate relance email via AI then send
