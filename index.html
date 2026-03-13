@@ -1965,18 +1965,39 @@ async function saveClientEdit(clientId, email){
   const nom = document.getElementById('edit-nom')?.value.trim()||'';
   const telephone = document.getElementById('edit-telephone')?.value.trim()||'';
   try {
-    await sbFetch('clients?id=eq.'+clientId, {
+    let resolvedId = clientId;
+    // Si clientId undefined (offres test sans client lié), chercher par email
+    if(!resolvedId || resolvedId === 'undefined') {
+      const found = await sbFetch('clients?email=eq.'+encodeURIComponent(email)+'&select=id');
+      if(found && found.length > 0) {
+        resolvedId = found[0].id;
+      } else {
+        const created = await sbFetch('clients', {
+          method:'POST',
+          body: JSON.stringify({prenom, nom, email, entreprise, telephone}),
+          headers:{'Prefer':'return=representation'}
+        });
+        resolvedId = created[0]?.id;
+        if(resolvedId) {
+          for(const o of OFFERS.filter(o=>o.email===email && !o.client_id)) {
+            await sbFetch('offres?id=eq.'+o.id, {method:'PATCH', body:JSON.stringify({client_id:resolvedId}), headers:{'Prefer':'return=minimal'}});
+            o.client_id = resolvedId;
+          }
+        }
+      }
+    }
+    if(!resolvedId) { toast('❌','Impossible de trouver le client'); return; }
+    await sbFetch('clients?id=eq.'+resolvedId, {
       method:'PATCH',
       body: JSON.stringify({entreprise, prenom, nom, telephone}),
       headers:{'Prefer':'return=minimal'}
     });
-    // Mettre à jour OFFERS en mémoire
-    OFFERS.forEach(o=>{ if(o.client_id===clientId){o.entreprise=entreprise;o.prenom=prenom;o.nom=nom;o.telephone=telephone;} });
+    OFFERS.forEach(o=>{ if(o.client_id===resolvedId||o.email===email){o.entreprise=entreprise;o.prenom=prenom;o.nom=nom;o.telephone=telephone;o.client_id=resolvedId;} });
     toast('✅','Client mis à jour');
-    // Recharger la fiche avec les nouvelles données
     closeModal();
     setTimeout(()=>openClientModal(email),100);
   } catch(e){
+    console.error('saveClientEdit error:', e);
     toast('❌','Erreur lors de la mise à jour');
   }
 }
