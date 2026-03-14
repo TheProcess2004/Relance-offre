@@ -1,36 +1,38 @@
 // api/cron-relances.js
-// Appelé chaque matin par Vercel Cron — envoie les relances dues via Brevo
-
 export default async function handler(req, res) {
 
-  // Sécurité : seul Vercel (ou toi) peut appeler ce endpoint
   const authHeader = req.headers['authorization'];
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).json({ error: 'Non autorisé' });
   }
 
   const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY; // service role = bypass RLS
+  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const BREVO_KEY    = process.env.BREVO_API_KEY;
+  const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
+  const today = new Date().toISOString().slice(0, 10);
 
-  const sb = (path, opts = {}) =>
-    fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+  // Helper — ne jamais appeler .json() sur une réponse vide (204)
+  const sb = async (path, opts = {}) => {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
       ...opts,
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`,
         'Content-Type': 'application/json',
-        'Prefer': 'return=representation',
         ...(opts.headers || {})
       }
-    }).then(r => r.json());
-
-  const today = new Date().toISOString().slice(0, 10); // "2026-03-13"
+    });
+    if (r.status === 204 || r.status === 201) return null; // No Content / Created sans body
+    const text = await r.text();
+    if (!text || text.trim() === '') return null;
+    return JSON.parse(text);
+  };
 
   try {
-    // 1. Récupérer toutes les relances dues (date_prevue <= aujourd'hui, statut pending)
+    // 1. Relances dues aujourd'hui — requêtes séparées pour éviter problèmes de jointure
     const relances = await sb(
-      `relances?statut=eq.pending&date_prevue=lte.${today}&select=*,offres(*,clients(*))`
+      `relances?statut=eq.pending&date_prevue=lte.${today}&select=id,offre_id,numero`
     );
 
     if (!relances || relances.length === 0) {
@@ -39,110 +41,116 @@ export default async function handler(req, res) {
     }
 
     console.log(`[CRON] ${today} — ${relances.length} relance(s) à traiter`);
-
-    let sent = 0;
-    let errors = 0;
+    let sent = 0, errors = 0, skipped = 0;
     const results = [];
 
     for (const relance of relances) {
-      const offre  = relance.offres;
-      const client = offre?.clients;
-
-      if (!offre || !client) {
-        console.warn('[CRON] Relance sans offre/client:', relance.id);
-        continue;
-      }
-
-      // 2. Récupérer les settings de l'utilisateur (senderEmail + brevoKey)
-      const settings = await sb(
-        `settings?user_id=eq.${offre.user_id}&key=in.(senderEmail,brevoKey,name,company)`
-      );
-      const cfg = {};
-      (settings || []).forEach(s => { cfg[s.key] = s.value; });
-
-      const userEmail  = cfg.senderEmail || ''; // adresse du client → replyTo uniquement
-      const senderName = cfg.name || cfg.company || '';
-
-      // Expéditeur fixe toujours validé dans Brevo — zéro action requise du client
-      const SENDER_EMAIL = 'contact@followoffer.com';
-      const SENDER_NAME  = senderName ? `${senderName} via FollowOffer` : 'FollowOffer';
-
-      // 3. Générer le corps de l'email via Claude AI
-      const tones = [
-        'Relance légère et amicale — vérifier si email bien reçu. 3-4 lignes max. Ton professionnel.',
-        'Relance plus directe — proposer un échange ou appel rapide. 4-5 lignes. Créer de l\'intérêt.',
-        'Dernière tentative — créer légère urgence, offre expire bientôt. 3-4 lignes percutantes.'
-      ];
-      const rNum = relance.numero; // 1, 2 ou 3
-
-      let emailBody = '';
       try {
-        const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': process.env.ANTHROPIC_API_KEY,
-            'anthropic-version': '2023-06-01'
-          },
-          body: JSON.stringify({
-            model: 'claude-haiku-4-5-20251001', // rapide + économique pour le cron
-            max_tokens: 350,
-            messages: [{
-              role: 'user',
-              content: `Rédige une relance commerciale automatique (Relance ${rNum}/3) pour une offre sans réponse.
-Client: ${client.prenom} ${client.nom}${client.entreprise ? ' — ' + client.entreprise : ''}
-Objet de l'offre: ${offre.objet}
-Montant: ${Number(offre.montant).toLocaleString('fr-CH')} CHF
-Référence: ${offre.reference}
+        // 2. Récupérer l'offre
+        const offres = await sb(`offres?id=eq.${relance.offre_id}&select=*`);
+        const offre = offres?.[0];
+        if (!offre) { skipped++; continue; }
+
+        // 3. Récupérer le client
+        const clients = await sb(`clients?id=eq.${offre.client_id}&select=*`);
+        const client = clients?.[0];
+        if (!client || !client.email) { skipped++; continue; }
+
+        // 4. Récupérer settings user
+        const settings = await sb(
+          `settings?user_id=eq.${offre.user_id}&key=in.(senderEmail,name,company,role,phone,website)&select=key,value`
+        );
+        const cfg = {};
+        (settings || []).forEach(s => { cfg[s.key] = s.value; });
+
+        const senderName = cfg.name || cfg.company || 'FollowOffer';
+        const userEmail  = cfg.senderEmail || '';
+        const SENDER     = 'contact@followoffer.com';
+        const DISPLAY    = senderName ? `${senderName} via FollowOffer` : 'FollowOffer';
+
+        const rNum = relance.numero;
+        const tones = [
+          'Ton léger et amical. 3-4 phrases. Vérifier si email bien reçu.',
+          'Ton direct et engagé. 4-5 phrases. Proposer un appel rapide.',
+          'Dernier contact. 3-4 phrases percutantes. Légère urgence.'
+        ];
+
+        // 5. Générer le corps via IA
+        let emailBody = '';
+        try {
+          const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': ANTHROPIC_KEY,
+              'anthropic-version': '2023-06-01'
+            },
+            body: JSON.stringify({
+              model: 'claude-haiku-4-5-20251001',
+              max_tokens: 300,
+              messages: [{
+                role: 'user',
+                content: `Rédige en français une relance commerciale courte (Relance ${rNum}/3).
+Client: ${client.prenom || ''} ${client.nom || ''}${client.entreprise ? ' — ' + client.entreprise : ''}
+Objet offre: ${offre.objet || ''}
+Montant: ${Number(offre.montant || 0).toLocaleString('fr-CH')} CHF
+Réf: ${offre.reference || ''}
 Style: ${tones[rNum - 1]}
-Expéditeur: ${senderName}
+Commence par "Bonjour ${client.prenom || ''}," — uniquement le corps, sans objet ni signature.`
+              }]
+            })
+          });
+          const aiData = await aiRes.json();
+          emailBody = aiData?.content?.[0]?.text || '';
+        } catch (aiErr) {
+          console.error('[CRON] AI error:', aiErr.message);
+        }
 
-Commence par "Bonjour ${client.prenom}," — rédige UNIQUEMENT le corps de l'email, sans objet ni signature.`
-            }]
-          })
-        });
-        const aiData = await aiRes.json();
-        emailBody = aiData.content?.[0]?.text || '';
-      } catch (aiErr) {
-        // Fallback texte générique si AI échoue
-        emailBody = `Bonjour ${client.prenom},\n\nJe me permets de revenir vers vous concernant notre offre ${offre.reference} — ${offre.objet} (${Number(offre.montant).toLocaleString('fr-CH')} CHF).\n\nN'hésitez pas à me contacter pour toute question.\n\nCordialement,\n${senderName}`;
-      }
+        // Fallback si IA échoue
+        if (!emailBody.trim()) {
+          emailBody = `Bonjour ${client.prenom || ''},\n\nJe me permets de revenir vers vous concernant notre offre ${offre.reference} — ${offre.objet} pour un montant de ${Number(offre.montant || 0).toLocaleString('fr-CH')} CHF.\n\nN'hésitez pas à me contacter pour toute question.`;
+        }
 
-      // Ajouter signature simple
-      const signature = `\n\n---\n${SENDER_NAME.replace(' via FollowOffer','')}${userEmail ? '\n' + userEmail : ''}`;
-      const fullBody = emailBody + signature;
+        // Signature
+        const sig = [
+          '\n\n--',
+          senderName,
+          cfg.role || '',
+          cfg.company || '',
+          cfg.phone || '',
+          cfg.website || '',
+          userEmail || ''
+        ].filter(Boolean).join('\n');
+        const fullBody = emailBody + sig;
 
-      // 4. Envoyer via Brevo
-      const subject = rNum === 3
-        ? `Dernier contact — Offre ${offre.reference}`
-        : `Re: Offre ${offre.reference} — ${offre.objet}`;
+        const subject = rNum === 3
+          ? `Dernier contact — Offre ${offre.reference}`
+          : `Re: Offre ${offre.reference} — ${offre.objet}`;
 
-      try {
+        // 6. Envoyer via Brevo
+        const brevoPayload = {
+          sender: { name: DISPLAY, email: SENDER },
+          to: [{ email: client.email, name: `${client.prenom || ''} ${client.nom || ''}`.trim() }],
+          subject,
+          textContent: fullBody,
+          htmlContent: fullBody.replace(/\n/g, '<br>')
+        };
+        if (userEmail) brevoPayload.replyTo = { email: userEmail, name: senderName };
+
         const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'api-key': BREVO_KEY
-          },
-          body: JSON.stringify({
-            sender: { name: SENDER_NAME, email: SENDER_EMAIL },
-            replyTo: userEmail ? { email: userEmail, name: senderName || userEmail } : undefined,
-            to: [{ email: client.email, name: `${client.prenom} ${client.nom}` }],
-            subject,
-            textContent: fullBody,
-            htmlContent: fullBody.replace(/\n/g, '<br>')
-          })
+          headers: { 'Content-Type': 'application/json', 'api-key': BREVO_KEY },
+          body: JSON.stringify(brevoPayload)
         });
 
         if (brevoRes.ok || brevoRes.status === 201) {
-          // 5. Marquer la relance comme envoyée
+          // 7. Marquer sent — sans .json() (204 No Content)
           await sb(`relances?id=eq.${relance.id}`, {
             method: 'PATCH',
             headers: { 'Prefer': 'return=minimal' },
             body: JSON.stringify({ statut: 'sent', sent_at: new Date().toISOString() })
           });
 
-          // Mettre à jour le statut de l'offre
           const nextStatut = ['relance1', 'relance2', 'relance3'][rNum - 1];
           await sb(`offres?id=eq.${offre.id}`, {
             method: 'PATCH',
@@ -150,31 +158,24 @@ Commence par "Bonjour ${client.prenom}," — rédige UNIQUEMENT le corps de l'em
             body: JSON.stringify({ statut: nextStatut })
           });
 
-          console.log(`[CRON] ✅ Relance ${rNum} → ${client.email} (${offre.reference})`);
-          results.push({ id: relance.id, status: 'sent', to: client.email, relanceNum: rNum });
+          console.log(`[CRON] ✅ R${rNum} → ${client.email}`);
+          results.push({ status: 'sent', to: client.email, rNum });
           sent++;
-
         } else {
           const errText = await brevoRes.text();
-          console.error(`[CRON] ❌ Brevo error pour ${client.email}:`, errText);
-          results.push({ id: relance.id, status: 'error', reason: errText });
+          console.error(`[CRON] ❌ Brevo: ${errText}`);
+          results.push({ status: 'error', reason: errText });
           errors++;
         }
 
-      } catch (sendErr) {
-        console.error('[CRON] Erreur envoi:', sendErr.message);
-        results.push({ id: relance.id, status: 'error', reason: sendErr.message });
+      } catch (relanceErr) {
+        console.error('[CRON] Erreur relance:', relanceErr.message);
+        results.push({ status: 'error', reason: relanceErr.message });
         errors++;
       }
     }
 
-    return res.status(200).json({
-      date: today,
-      total: relances.length,
-      sent,
-      errors,
-      results
-    });
+    return res.status(200).json({ date: today, total: relances.length, sent, errors, skipped, results });
 
   } catch (err) {
     console.error('[CRON] Erreur critique:', err);
