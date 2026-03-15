@@ -1852,7 +1852,9 @@ function renderClients(){
   const clientMap={};
   OFFERS.forEach(o=>{
     const k=o.email;
-    if(!clientMap[k])clientMap[k]={prenom:o.prenom,nom:o.nom,email:o.email,offers:[],won:0,lost:0,total:0};
+    if(!clientMap[k])clientMap[k]={prenom:o.prenom,nom:o.nom,entreprise:o.entreprise||'',email:o.email,offers:[],won:0,lost:0,total:0};
+    // Mettre à jour entreprise si disponible
+    if(o.entreprise) clientMap[k].entreprise=o.entreprise;
     clientMap[k].offers.push(o);
     if(o.status==='won'){clientMap[k].won++;clientMap[k].total+=o.montant;}
     if(o.status==='lost')clientMap[k].lost++;
@@ -1862,10 +1864,14 @@ function renderClients(){
   document.getElementById('clients-count').textContent=clients.length+' clients';
   document.getElementById('client-grid').innerHTML=clients.map((c,i)=>{
     const last=c.offers[c.offers.length-1];
+    // Afficher société en priorité, sinon prénom nom
+    const displayName = c.entreprise || `${c.prenom} ${c.nom}`.trim();
+    const subName = c.entreprise ? `${c.prenom} ${c.nom}`.trim() : c.email;
+    const avatarLetter = (c.entreprise||c.prenom||'?')[0].toUpperCase();
     return `<div class="client-card" onclick="openClientModal('${c.email}')">
       <div class="cc-top">
-        <div class="cc-av" style="background:${AVATARS[i%AVATARS.length]}22;color:${AVATARS[i%AVATARS.length]};border:1.5px solid ${AVATARS[i%AVATARS.length]}44;">${(c.prenom||'?')[0].toUpperCase()}${(c.nom||'')[0]?.toUpperCase()||''}</div>
-        <div><div class="cc-name">${c.prenom} ${c.nom}</div><div class="cc-email">${c.email}</div></div>
+        <div class="cc-av" style="background:${AVATARS[i%AVATARS.length]}22;color:${AVATARS[i%AVATARS.length]};border:1.5px solid ${AVATARS[i%AVATARS.length]}44;">${avatarLetter}</div>
+        <div><div class="cc-name">${displayName}</div><div class="cc-email">${subName}</div></div>
       </div>
       <div class="cc-stats">
         <div class="cc-stat"><div class="cc-stat-val" style="color:var(--gold)">${c.offers.length}</div><div class="cc-stat-lbl">Offres</div></div>
