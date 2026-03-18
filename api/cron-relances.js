@@ -175,7 +175,7 @@ IMPORTANT: Commence OBLIGATOIREMENT par "Bonjour ${client.prenom || ''}," puis l
           await sb(`relances?id=eq.${relance.id}`, {
             method: 'PATCH',
             headers: { 'Prefer': 'return=minimal' },
-            body: JSON.stringify({ statut: 'sent', sent_at: new Date().toISOString() })
+           body: JSON.stringify({ statut: 'envoye', date_envoyee: new Date().toISOString() })
           });
           const nextStatut = ['relance1','relance2','relance3'][rNum - 1];
           await sb(`offres?id=eq.${offre.id}`, {
