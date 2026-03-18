@@ -4185,6 +4185,7 @@ function updateUserUI() {
 }
 
 async function loadApp() {
+  setInterval(async () => { await refreshToken(); }, 45 * 60 * 1000);
   await loadOffers();
   await loadConfig();
   await loadUserPlan();   // Charger plan Stripe
