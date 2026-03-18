@@ -844,7 +844,7 @@ button{font-family:inherit;}
         <div class="hsp-av" style="background:linear-gradient(135deg,#9A6218,#f59e0b);">AL</div>
         <div class="hsp-av" style="background:linear-gradient(135deg,#4A52A0,#818cf8);">JR</div>
       </div>
-      <div class="hsp-count">Conçu pour les PME romandes · Lancé en 2026</div>
+      <div class="hsp-count"><strong>+107 PME romandes</strong> font confiance à FollowOffer</div>
     </div>
     <div class="hero-trust">
       <span class="t-item">✓ 5 offres gratuites, sans carte</span>
@@ -1277,7 +1277,7 @@ button{font-family:inherit;}
       <p class="section-sub r d2" style="margin-top:14px;">Réponse dans la journée, 7 jours sur 7. En français, sans chatbot, par une vraie personne.</p>
     </div>
     <div class="s-cards">
-      <a href="/cdn-cgi/l/email-protection#6f0c00011b0e0c1b2f0900030300180009090a1d410c0002" class="de-s-card r d0" style="text-decoration:none;">
+      <a href="mailto:contact@followoffer.com" class="de-s-card r d0" style="text-decoration:none;">
         <div class="de-s-ico" style="background:rgba(21,85,168,0.20);border:1px solid rgba(21,85,168,0.35);">✉️</div>
         <div><div class="de-s-title">contact&#64;followoffer.com</div><div class="de-s-sub">Réponse directe · Sans intermédiaire</div></div>
       </a>
@@ -1442,7 +1442,7 @@ button{font-family:inherit;}
     </div>
   </div>
 </div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 (function(){
   document.documentElement.style.overflow='';
   document.documentElement.style.height='auto';
@@ -1666,9 +1666,6 @@ button{font-family:inherit;}
   updNav();
 })();
 
-window.hsClick=function(idx){ if(window._hsImpl) window._hsImpl(idx); };
-window.hsTouch=function(e,idx){ if(e){e.preventDefault();e.stopPropagation();} window.hsClick(idx); };
-
 (function(){
   /* HOTSPOTS TOUR — desktop only */
   if(window.innerWidth<=600)return;
@@ -1687,7 +1684,7 @@ window.hsTouch=function(e,idx){ if(e){e.preventDefault();e.stopPropagation();} w
   }
   function next(){if(!paused)activate(current+1);timer=setTimeout(next,HS_DWELL);}
   function startTour(){if(tourActive)return;tourActive=true;activate(0);timer=setTimeout(next,HS_DWELL);}
-  window._hsImpl=function(idx){clearTimeout(timer);paused=true;clearTimeout(pauseTimer);activate(idx);pauseTimer=setTimeout(function(){paused=false;timer=setTimeout(next,HS_DWELL);},7000);};
+  window.hsClick=function(idx){clearTimeout(timer);paused=true;clearTimeout(pauseTimer);activate(idx);pauseTimer=setTimeout(function(){paused=false;timer=setTimeout(next,HS_DWELL);},7000);};
   if(window.IntersectionObserver){
     var hsObs=new IntersectionObserver(function(entries){if(entries[0].isIntersecting){startTour();hsObs.disconnect();}},{threshold:0.15});
     hsObs.observe(mockup);
@@ -1771,4 +1768,9 @@ function switchLegalTab(t){
     entries.forEach(function(e){
       if(e.isIntersecting){makeVisible(e.target);obs.unobserve(e.target);}
     });
-  },{th
+  },{threshold:0.05,rootMargin:'0px 0px -20px 0px'});
+  document.querySelectorAll('.r').forEach(function(el){obs.observe(el);});
+})();
+</script>
+</body>
+</html>
