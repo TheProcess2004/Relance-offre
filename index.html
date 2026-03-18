@@ -2058,7 +2058,7 @@ async function actR(id){
   try {
     await sbFetch('offres?id=eq.'+id, {method:'PATCH', body:JSON.stringify({statut:next}), prefer:'return=minimal', headers:{'Prefer':'return=minimal'}});
     // Marquer la relance correspondante comme envoyée manuellement
-    try { await sbFetch('relances?offre_id=eq.'+id+'&numero=eq.'+rNum+'&statut=eq.pending', {method:'PATCH', body:JSON.stringify({statut:'sent', sent_at:new Date().toISOString()}), headers:{'Prefer':'return=minimal'}}); } catch(e){}
+    try { await sbFetch('relances?offre_id=eq.'+id+'&numero=eq.'+rNum+'&statut=eq.pending', {method:'PATCH', body:JSON.stringify({statut:'envoye', date_envoyee:new Date().toISOString()}), headers:{'Prefer':'return=minimal'}}); } catch(e){}
     o.status=next;
 
     // Generate relance email via AI then send
