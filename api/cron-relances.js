@@ -2,7 +2,10 @@
 export default async function handler(req, res) {
 
   const authHeader = req.headers['authorization'];
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const urlSecret = req.query?.secret;
+  const valid = authHeader === `Bearer ${process.env.CRON_SECRET}`
+             || urlSecret === process.env.CRON_SECRET;
+  if (!valid) {
     return res.status(401).json({ error: 'Non autorisé' });
   }
 
