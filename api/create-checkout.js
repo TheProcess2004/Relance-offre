@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
       'metadata[user_id]': user_id,
       'metadata[plan]': plan || 'pro',
       'subscription_data[metadata][user_id]': user_id,
-      success_url: (success_url || 'https://followoffer.com') + '?payment=success',
+      success_url: (success_url || 'https://followoffer.com/app') + '?payment=success',
       cancel_url: cancel_url || 'https://followoffer.com',
       locale: 'fr',
       allow_promotion_codes: 'true',
